@@ -26,6 +26,91 @@ export const Colors = {
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
+export const BrandColors = {
+  primary: {
+    light: '#FFA29D',
+    medium: '#C7170E',
+    dark: '#881A14',
+  },
+  accessory: {
+    darkBlue: '#494266',
+    lightGray: '#666666',
+    darkGray: '#424242',
+    red: '#EE2E24',
+  },
+  neutral: {
+    white: '#FFFFFF',
+    xlight: '#FDFDFD',
+    light: '#E6E8E3',
+    medium: '#757575',
+    dark: '#434242',
+    xdark: '#2C2C2C',
+    black: '#121418',
+  },
+  feedback: {
+    success: {
+      light: '#DCFCE8',
+      medium: '#22C55E',
+      dark: '#052E14',
+    },
+    warning: {
+      light: '#FEEFC7',
+      medium: '#FBBF24',
+      dark: '#453303',
+    },
+    error: {
+      light: '#FEE2E2',
+      medium: '#FF6767',
+      dark: '#450A0A',
+    },
+  },
+} as const;
+
+export type BrandGradientDefinition = {
+  colors: readonly [string, string];
+  /** CSS angle in degrees (used by LinearGradient via angleToPoints). */
+  angleDeg: number;
+  /** Color stop locations in CSS percent units (may be < 0 or > 100). */
+  locationsPercent: readonly [number, number];
+  borderRadius?: number;
+};
+
+export const BrandGradients = {
+  ctaMedium: {
+    colors: [BrandColors.primary.medium, BrandColors.neutral.xdark],
+    angleDeg: 95,
+    locationsPercent: [-6.62, 54.31],
+  },
+  borderGlass: {
+    colors: [BrandColors.accessory.darkBlue, BrandColors.accessory.lightGray],
+    angleDeg: 206,
+    locationsPercent: [-2.49, 83.45],
+    borderRadius: 100,
+  },
+  gradient: {
+    colors: ['rgba(66, 66, 66, 0.30)', 'rgba(96, 120, 128, 0.30)'],
+    angleDeg: 182,
+    locationsPercent: [3.52, 98.66],
+    borderRadius: 100,
+  },
+} as const satisfies Record<string, BrandGradientDefinition>;
+
+/** Converts a CSS gradient angle to LinearGradient start/end points. */
+export function angleToPoints(angleDeg: number) {
+  const radians = ((90 - angleDeg) * Math.PI) / 180;
+  return {
+    start: { x: 0.5 - Math.sin(radians) / 2, y: 0.5 - Math.cos(radians) / 2 },
+    end: { x: 0.5 + Math.sin(radians) / 2, y: 0.5 + Math.cos(radians) / 2 },
+  };
+}
+
+/** Clamps CSS percent stops into the 0–1 range expected by LinearGradient. */
+export function toGradientLocations(locationsPercent: readonly [number, number]) {
+  return locationsPercent.map((percent) =>
+    Math.min(1, Math.max(0, percent / 100)),
+  ) as [number, number];
+}
+
 /** Inter font family names by weight (offline via @expo-google-fonts/inter). */
 export const InterFontFamily = {
   400: 'Inter_400Regular',

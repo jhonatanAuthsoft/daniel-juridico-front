@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,8 +18,19 @@ import {
   LinkSmall,
 } from '@/atomic/typography';
 import { ThemedView } from '@/components/themed-view';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import {
+  angleToPoints,
+  BottomTabInset,
+  BrandColors,
+  BrandGradients,
+  type BrandGradientDefinition,
+  MaxContentWidth,
+  Spacing,
+  toGradientLocations,
+} from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+
+const SWATCH_SIZE = 50;
 
 type StyleGuideRowProps = {
   label: string;
@@ -36,16 +48,160 @@ function StyleGuideRow({ label, children }: StyleGuideRowProps) {
   );
 }
 
+type ColorSwatchProps = {
+  label: string;
+  color: string;
+};
+
+function ColorSwatch({ label, color }: ColorSwatchProps) {
+  return (
+    <View style={styles.swatchItem}>
+      <View
+        style={[
+          styles.swatch,
+          {
+            backgroundColor: color,
+            borderColor: BrandColors.neutral.light,
+          },
+        ]}
+      />
+      <Body2>{label}</Body2>
+      <InputCaption color={BrandColors.neutral.medium}>{color}</InputCaption>
+    </View>
+  );
+}
+
+type GradientSwatchProps = {
+  label: string;
+  gradient: BrandGradientDefinition;
+};
+
+function GradientSwatch({ label, gradient }: GradientSwatchProps) {
+  const points = angleToPoints(gradient.angleDeg);
+
+  return (
+    <View style={styles.swatchItem}>
+      <LinearGradient
+        colors={[...gradient.colors]}
+        locations={toGradientLocations(gradient.locationsPercent)}
+        start={points.start}
+        end={points.end}
+        style={[
+          styles.swatch,
+          {
+            borderRadius: gradient.borderRadius ? Math.min(gradient.borderRadius, SWATCH_SIZE / 2) : 0,
+            borderColor: BrandColors.neutral.light,
+          },
+        ]}
+      />
+      <Body2>{label}</Body2>
+    </View>
+  );
+}
+
+type ColorGroupProps = {
+  title: string;
+  swatches: ColorSwatchProps[];
+};
+
+function ColorGroup({ title, swatches }: ColorGroupProps) {
+  return (
+    <View style={styles.colorGroup}>
+      <Heading2>{title}</Heading2>
+      <View style={styles.swatchGrid}>
+        {swatches.map((swatch) => (
+          <ColorSwatch key={swatch.label} {...swatch} />
+        ))}
+      </View>
+    </View>
+  );
+}
+
 export default function HomeScreen() {
   const theme = useTheme();
 
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-        <ScrollView
-          contentContainerStyle={styles.content}
-          showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <Display>Style Guide</Display>
+
+          <Body1 color={theme.textSecondary}>Colors</Body1>
+
+          <ColorGroup
+            title="Primary"
+            swatches={[
+              { label: 'light', color: BrandColors.primary.light },
+              { label: 'medium', color: BrandColors.primary.medium },
+              { label: 'dark', color: BrandColors.primary.dark },
+            ]}
+          />
+
+          <View style={styles.colorGroup}>
+            <Heading2>CTA</Heading2>
+            <View style={styles.swatchGrid}>
+              <GradientSwatch label="ctaMedium" gradient={BrandGradients.ctaMedium} />
+            </View>
+          </View>
+
+          <ColorGroup
+            title="Accessory"
+            swatches={[
+              { label: 'darkBlue', color: BrandColors.accessory.darkBlue },
+              { label: 'lightGray', color: BrandColors.accessory.lightGray },
+              { label: 'darkGray', color: BrandColors.accessory.darkGray },
+              { label: 'red', color: BrandColors.accessory.red },
+            ]}
+          />
+
+          <View style={styles.colorGroup}>
+            <Heading2>Gradient</Heading2>
+            <View style={styles.swatchGrid}>
+              <GradientSwatch label="borderGlass" gradient={BrandGradients.borderGlass} />
+              <GradientSwatch label="gradient" gradient={BrandGradients.gradient} />
+            </View>
+          </View>
+
+          <ColorGroup
+            title="Neutral"
+            swatches={[
+              { label: 'white', color: BrandColors.neutral.white },
+              { label: 'xlight', color: BrandColors.neutral.xlight },
+              { label: 'light', color: BrandColors.neutral.light },
+              { label: 'medium', color: BrandColors.neutral.medium },
+              { label: 'dark', color: BrandColors.neutral.dark },
+              { label: 'xdark', color: BrandColors.neutral.xdark },
+              { label: 'black', color: BrandColors.neutral.black },
+            ]}
+          />
+
+          <ColorGroup
+            title="Feedback · Success"
+            swatches={[
+              { label: 'light', color: BrandColors.feedback.success.light },
+              { label: 'medium', color: BrandColors.feedback.success.medium },
+              { label: 'dark', color: BrandColors.feedback.success.dark },
+            ]}
+          />
+
+          <ColorGroup
+            title="Feedback · Warning"
+            swatches={[
+              { label: 'light', color: BrandColors.feedback.warning.light },
+              { label: 'medium', color: BrandColors.feedback.warning.medium },
+              { label: 'dark', color: BrandColors.feedback.warning.dark },
+            ]}
+          />
+
+          <ColorGroup
+            title="Feedback · Error"
+            swatches={[
+              { label: 'light', color: BrandColors.feedback.error.light },
+              { label: 'medium', color: BrandColors.feedback.error.medium },
+              { label: 'dark', color: BrandColors.feedback.error.dark },
+            ]}
+          />
+
           <Body1 color={theme.textSecondary}>Typography</Body1>
 
           <StyleGuideRow label="Display · 700 · Large · 130%">
@@ -128,5 +284,22 @@ const styles = StyleSheet.create({
   },
   row: {
     gap: Spacing.one,
+  },
+  colorGroup: {
+    gap: Spacing.two,
+  },
+  swatchGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: Spacing.three,
+  },
+  swatchItem: {
+    width: 88,
+    gap: Spacing.half,
+  },
+  swatch: {
+    width: SWATCH_SIZE,
+    height: SWATCH_SIZE,
+    borderWidth: 1,
   },
 });
