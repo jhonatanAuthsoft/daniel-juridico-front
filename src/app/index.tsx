@@ -25,6 +25,7 @@ import {
   BrandGradients,
   type BrandGradientDefinition,
   MaxContentWidth,
+  Radius,
   Spacing,
   toGradientLocations,
 } from '@/constants/theme';
@@ -202,6 +203,65 @@ export default function HomeScreen() {
             ]}
           />
 
+          <Body1 color={theme.textSecondary}>Radius</Body1>
+          <View style={styles.swatchGrid}>
+            {(
+              [
+                ['small', Radius.small],
+                ['medium', Radius.medium],
+                ['large', Radius.large],
+              ] as const
+            ).map(([label, value]) => (
+              <View key={label} style={styles.swatchItem}>
+                <View
+                  style={[
+                    styles.radiusSwatch,
+                    {
+                      borderRadius: value,
+                      borderColor: BrandColors.primary.medium,
+                      backgroundColor: BrandColors.primary.light,
+                    },
+                  ]}
+                />
+                <Body2>{label}</Body2>
+                <InputCaption color={BrandColors.neutral.medium}>{value}px</InputCaption>
+              </View>
+            ))}
+          </View>
+
+          <Body1 color={theme.textSecondary}>Spacing</Body1>
+          <View style={styles.spacingList}>
+            {(
+              [
+                ['xxxs', Spacing.xxxs],
+                ['xxs', Spacing.xxs],
+                ['xs', Spacing.xs],
+                ['sm', Spacing.sm],
+                ['md', Spacing.md],
+                ['lg', Spacing.lg],
+                ['xl', Spacing.xl],
+                ['xxl', Spacing.xxl],
+                ['xxxl', Spacing.xxxl],
+              ] as const
+            ).map(([label, value]) => (
+              <View key={label} style={styles.spacingRow}>
+                <View style={styles.spacingMeta}>
+                  <Body2>{label}</Body2>
+                  <InputCaption color={BrandColors.neutral.medium}>{value}px</InputCaption>
+                </View>
+                <View
+                  style={[
+                    styles.spacingBar,
+                    {
+                      width: value,
+                      backgroundColor: BrandColors.primary.medium,
+                    },
+                  ]}
+                />
+              </View>
+            ))}
+          </View>
+
           <Body1 color={theme.textSecondary}>Typography</Body1>
 
           <StyleGuideRow label="Display · 700 · Large · 130%">
@@ -277,29 +337,50 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   content: {
-    paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.four,
-    paddingBottom: BottomTabInset + Spacing.five,
-    gap: Spacing.four,
+    paddingHorizontal: Spacing.md,
+    paddingTop: Spacing.md,
+    paddingBottom: BottomTabInset + Spacing.lg,
+    gap: Spacing.md,
   },
   row: {
-    gap: Spacing.one,
+    gap: Spacing.xxxs,
   },
   colorGroup: {
-    gap: Spacing.two,
+    gap: Spacing.xxs,
   },
   swatchGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: Spacing.three,
+    gap: Spacing.sm,
   },
   swatchItem: {
     width: 88,
-    gap: Spacing.half,
+    gap: Spacing.xxxs,
   },
   swatch: {
     width: SWATCH_SIZE,
     height: SWATCH_SIZE,
     borderWidth: 1,
+  },
+  radiusSwatch: {
+    width: SWATCH_SIZE,
+    height: SWATCH_SIZE,
+    borderWidth: 2,
+  },
+  spacingList: {
+    gap: Spacing.sm,
+  },
+  spacingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+  },
+  spacingMeta: {
+    width: 72,
+    gap: Spacing.xxxs,
+  },
+  spacingBar: {
+    height: Spacing.xxs,
+    borderRadius: Radius.small,
   },
 });

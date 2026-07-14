@@ -172,14 +172,22 @@ export const Fonts = Platform.select({
   },
 });
 
+export const Radius = {
+  small: 8,
+  medium: 12,
+  large: 24,
+} as const;
+
 export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
+  xxxs: 4,
+  xxs: 8,
+  xs: 12,
+  sm: 16,
+  md: 24,
+  lg: 32,
+  xl: 48,
+  xxl: 64,
+  xxxl: 96,
 } as const;
 
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
