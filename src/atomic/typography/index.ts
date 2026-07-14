@@ -1,0 +1,15 @@
+export {
+  Body1,
+  Body2,
+  Display,
+  Heading1,
+  Heading2,
+  Heading3,
+  Heading4,
+  InputCaption,
+  InputLabel,
+  InputValue,
+  Link,
+  LinkSmall,
+  type TypographProps,
+} from './typograph.component';
