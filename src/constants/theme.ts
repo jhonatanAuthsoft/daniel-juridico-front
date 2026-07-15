@@ -93,7 +93,44 @@ export const BrandGradients = {
     locationsPercent: [3.52, 98.66],
     borderRadius: 100,
   },
+  /** CTA base — gray glass layer (0.50 alpha). */
+  ctaGlass: {
+    colors: ['rgba(66, 66, 66, 0.50)', 'rgba(96, 120, 128, 0.50)'],
+    angleDeg: 182,
+    locationsPercent: [3.52, 98.66],
+  },
+  /**
+   * CTA base — red wash. CSS end stop is 230.82%; visible end color
+   * is pre-interpolated for the 0–100% range.
+   */
+  ctaRedWash: {
+    colors: ['rgba(199, 23, 14, 0)', 'rgba(199, 23, 14, 0.214)'],
+    angleDeg: 87,
+    locationsPercent: [2.15, 100],
+  },
+  /** CTA pressed — gray glass layer (0.13 alpha). */
+  ctaGlassPressed: {
+    colors: ['rgba(66, 66, 66, 0.13)', 'rgba(96, 120, 128, 0.13)'],
+    angleDeg: 182,
+    locationsPercent: [3.52, 98.66],
+  },
+  /** CTA pressed — red wash (end stop 230.82% → ~0.43 opacity at 100%). */
+  ctaRedWashPressed: {
+    colors: ['rgba(199, 23, 14, 0)', 'rgba(199, 23, 14, 0.428)'],
+    angleDeg: 87,
+    locationsPercent: [2.15, 100],
+  },
 } as const satisfies Record<string, BrandGradientDefinition>;
+
+export const CtaButtonTokens = {
+  border: BrandColors.primary.dark,
+  blurBasePx: 36.6,
+  blurPressedPx: 12.55,
+  shadow: {
+    color: 'rgba(44, 44, 44, 0.50)',
+    radius: 21.4,
+  },
+} as const;
 
 /** Converts a CSS gradient angle to LinearGradient start/end points. */
 export function angleToPoints(angleDeg: number) {

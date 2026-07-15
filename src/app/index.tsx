@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Button } from '@/atomic/button';
+import { Form, InputTextField, useForm } from '@/atomic/form';
 import {
   Body1,
   Body2,
@@ -18,6 +20,7 @@ import {
   LinkSmall,
 } from '@/atomic/typography';
 import { ThemedView } from '@/components/themed-view';
+import { InputValidators } from '@/constants/input-validators';
 import {
   angleToPoints,
   BottomTabInset,
@@ -120,12 +123,111 @@ function ColorGroup({ title, swatches }: ColorGroupProps) {
 
 export default function HomeScreen() {
   const theme = useTheme();
+  const form = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+    },
+    mode: 'onBlur',
+  });
 
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled">
           <Display>Style Guide</Display>
+
+          <Body1 color={theme.textSecondary}>Form · InputTextField</Body1>
+          <Body2 color={theme.textSecondary}>
+            Glass tokens precisam de fundo escuro (como no Figma)
+          </Body2>
+          <View style={styles.glassCanvas}>
+            <Form {...form}>
+              <View style={styles.formPreview}>
+                <InputTextField
+                  name="name"
+                  label="Nome"
+                  placeholder="Seu nome"
+                  tooltipText="Nome completo como no documento"
+                  validators={[InputValidators.minLength3]}
+                />
+                <InputTextField
+                  name="email"
+                  label="E-mail"
+                  placeholder="voce@email.com"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  validators={[InputValidators.email]}
+                />
+              </View>
+            </Form>
+          </View>
+
+          <Body1 color={theme.textSecondary}>Button</Body1>
+          <View style={styles.buttonPreview}>
+            <StyleGuideRow label="Primary">
+              <Button variant="primary" onPress={() => {}}>
+                Continuar
+              </Button>
+            </StyleGuideRow>
+            <StyleGuideRow label="Primary · loading">
+              <Button variant="primary" isLoading onPress={() => {}}>
+                Continuar
+              </Button>
+            </StyleGuideRow>
+            <StyleGuideRow label="Primary · disabled">
+              <Button variant="primary" disabled onPress={() => {}}>
+                Continuar
+              </Button>
+            </StyleGuideRow>
+          </View>
+          <View style={styles.glassCanvas}>
+            <View style={styles.row}>
+              <Body2 color={BrandColors.neutral.light}>Secondary</Body2>
+              <Button variant="secondary" onPress={() => {}}>
+                Cancelar
+              </Button>
+            </View>
+            <View style={styles.row}>
+              <Body2 color={BrandColors.neutral.light}>Secondary · disabled</Body2>
+              <Button variant="secondary" disabled onPress={() => {}}>
+                Cancelar
+              </Button>
+            </View>
+            <View style={styles.row}>
+              <Body2 color={BrandColors.neutral.light}>CTA</Body2>
+              <Button variant="cta" onPress={() => {}}>
+                Começar
+              </Button>
+            </View>
+            <View style={styles.row}>
+              <Body2 color={BrandColors.neutral.light}>CTA · disabled</Body2>
+              <Button variant="cta" disabled onPress={() => {}}>
+                Começar
+              </Button>
+            </View>
+            <View style={styles.row}>
+              <Body2 color={BrandColors.neutral.light}>Link · action</Body2>
+              <Button variant="link" linkMode="action" onPress={() => {}}>
+                Saiba mais
+              </Button>
+            </View>
+            <View style={styles.row}>
+              <Body2 color={BrandColors.neutral.light}>Link · navigation</Body2>
+              <Button variant="link" href="/explore" linkMode="navigation">
+                Ir para Explore
+              </Button>
+            </View>
+            <View style={styles.row}>
+              <Body2 color={BrandColors.neutral.light}>Link · disabled</Body2>
+              <Button variant="link" disabled onPress={() => {}}>
+                Saiba mais
+              </Button>
+            </View>
+          </View>
 
           <Body1 color={theme.textSecondary}>Colors</Body1>
 
@@ -344,6 +446,21 @@ const styles = StyleSheet.create({
   },
   row: {
     gap: Spacing.xxxs,
+  },
+  formPreview: {
+    gap: Spacing.sm,
+    width: '100%',
+  },
+  buttonPreview: {
+    gap: Spacing.sm,
+    width: '100%',
+  },
+  glassCanvas: {
+    width: '100%',
+    gap: Spacing.sm,
+    padding: Spacing.md,
+    borderRadius: Radius.large,
+    backgroundColor: BrandColors.neutral.dark,
   },
   colorGroup: {
     gap: Spacing.xxs,
