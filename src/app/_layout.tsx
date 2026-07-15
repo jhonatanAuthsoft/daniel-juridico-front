@@ -38,6 +38,8 @@ export default function RootLayout() {
           contentStyle: { backgroundColor: BrandColors.neutral.xdark },
         }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="login" />
+        <Stack.Screen name="forgot-password" />
         <Stack.Screen name="(tabs)" />
       </Stack>
     </ThemeProvider>
