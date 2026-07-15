@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Eye } from '@/assets/icon/eye';
-import { Logo } from '@/assets/icon/logo';
+import { EyeIcon } from '@/assets/icon/eye';
+import { LogoIcon } from '@/assets/icon/logo';
 import { Button } from '@/atomic/button';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
@@ -54,7 +54,7 @@ export default function LoginScreen() {
               accessible
               accessibilityRole="image"
               accessibilityLabel="Laweact — Democratização do direito">
-              <Logo />
+              <LogoIcon />
             </View>
 
             <Separator size="md" />
@@ -99,7 +99,7 @@ export default function LoginScreen() {
                       }
                       hitSlop={Spacing.xxs}
                       onPress={() => setPasswordVisible((visible) => !visible)}>
-                      <Eye color={BrandColors.neutral.xlight} />
+                      <EyeIcon color={BrandColors.neutral.xlight} />
                     </Pressable>
                   }
                 />
@@ -122,7 +122,7 @@ export default function LoginScreen() {
             <Separator size="lg" />
 
             <View style={styles.footer}>
-              <Button variant="link" linkMode="action" onPress={() => {}}>
+              <Button variant="link" href="/select-profile" linkMode="navigation">
                 Não tem conta? Cadastre-se
               </Button>
             </View>

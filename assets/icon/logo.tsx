@@ -1,6 +1,6 @@
 import Svg, { Path, type SvgProps } from 'react-native-svg';
 
-export function Logo(props: SvgProps) {
+export function LogoIcon(props: SvgProps) {
   return (
     <Svg width={176} height={74} viewBox="0 0 176 74" fill="none" {...props}>
     <Path d="M18.7275 12.0012L24.64 12L24.6491 34.4963L35.2736 34.5022C35.278 35.842 35.3504 38.2203 35.2457 39.4928C33.3219 39.5676 31.1065 39.5278 29.1669 39.5278L18.7382 39.5151L18.7275 12.0012Z" fill="white" />

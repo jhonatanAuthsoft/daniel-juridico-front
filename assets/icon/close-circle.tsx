@@ -1,15 +1,15 @@
 import Svg, { Path, type SvgProps } from 'react-native-svg';
 
-type CloseCircleProps = SvgProps & {
+type CloseCircleIconProps = SvgProps & {
   color?: string;
   size?: number;
 };
 
-export function CloseCircle({
+export function CloseCircleIcon({
   color = '#FFA29D',
   size = 16,
   ...props
-}: CloseCircleProps) {
+}: CloseCircleIconProps) {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
       <Path

@@ -1,10 +1,10 @@
 import Svg, { Path, type SvgProps } from 'react-native-svg';
 
-type EyeProps = SvgProps & {
+type EyeIconProps = SvgProps & {
   color?: string;
 };
 
-export function Eye({ color = '#FDFDFD', ...props }: EyeProps) {
+export function EyeIcon({ color = '#FDFDFD', ...props }: EyeIconProps) {
   return (
     <Svg width={20} height={20} viewBox="0 0 20 20" fill="none" {...props}>
       <Path

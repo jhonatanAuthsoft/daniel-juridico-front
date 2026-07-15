@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Eye } from '@/assets/icon/eye';
+import { EyeIcon } from '@/assets/icon/eye';
 import { XIcon } from '@/assets/icon/x';
 import { Button } from '@/atomic/button';
 import { Form, InputTextField, useForm, useWatch } from '@/atomic/form';
@@ -96,7 +96,7 @@ function NewPasswordField({ showErrors }: { showErrors: boolean }) {
             accessibilityLabel={passwordVisible ? 'Ocultar senha' : 'Mostrar senha'}
             hitSlop={Spacing.xxs}
             onPress={() => setPasswordVisible((visible) => !visible)}>
-            <Eye color={BrandColors.neutral.xlight} />
+            <EyeIcon color={BrandColors.neutral.xlight} />
           </Pressable>
         }
       />
