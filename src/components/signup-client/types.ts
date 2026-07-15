@@ -1,0 +1,22 @@
+export type ClientSignupFormValues = {
+  email: string;
+  phone: string;
+  password: string;
+  fullName: string;
+  rg: string;
+  issuingAuthority: string;
+  uf: string;
+  cpf: string;
+  cep: string;
+  state: string;
+  city: string;
+  neighborhood: string;
+  street: string;
+  number: string;
+  complement: string;
+  maritalStatus: string;
+  profession: string;
+  monthlyIncome: string;
+  pronouns: string;
+  profileImageUri: string;
+};

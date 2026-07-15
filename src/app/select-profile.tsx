@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useRouter } from 'expo-router';
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -34,6 +35,8 @@ function ProfileOption({ label, icon, onPress }: ProfileOptionProps) {
 }
 
 export default function SelectProfileScreen() {
+  const router = useRouter();
+
   return (
     <View style={styles.root}>
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
@@ -52,7 +55,7 @@ export default function SelectProfileScreen() {
           <ProfileOption
             label="Preciso de um advogado"
             icon={<UserIcon color={BrandColors.neutral.xlight} />}
-            onPress={() => {}}
+            onPress={() => router.push('/signup/client')}
           />
 
           <Separator size="sm" />

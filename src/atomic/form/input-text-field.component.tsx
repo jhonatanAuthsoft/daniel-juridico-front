@@ -23,6 +23,7 @@ export type InputTextFieldProps<TFieldValues extends FieldValues = FieldValues> 
   validators?: InputValidatorPattern[];
   tooltipText?: string;
   placeholder?: string;
+  iconLeft?: ReactNode;
   iconRight?: ReactNode;
 } & Omit<TextInputProps, 'value' | 'onChangeText' | 'onBlur'>;
 
@@ -41,6 +42,7 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
   validators = [],
   tooltipText,
   placeholder,
+  iconLeft,
   iconRight,
   ...textInputProps
 }: InputTextFieldProps<TFieldValues>) {
@@ -88,6 +90,7 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
             <View style={[styles.fieldShell, hasError && styles.fieldShellError]}>
               <GlassBackground blurPx={25} />
               <View style={styles.fieldContent}>
+                {iconLeft ? <View style={styles.iconLeft}>{iconLeft}</View> : null}
                 <TextInput
                   {...textInputProps}
                   value={value ?? ''}
@@ -189,6 +192,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   iconRight: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconLeft: {
     alignItems: 'center',
     justifyContent: 'center',
   },

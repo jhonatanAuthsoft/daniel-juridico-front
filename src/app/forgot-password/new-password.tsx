@@ -10,70 +10,17 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EyeIcon } from '@/assets/icon/eye';
-import { XIcon } from '@/assets/icon/x';
 import { Button } from '@/atomic/button';
 import { Form, InputTextField, useForm, useWatch } from '@/atomic/form';
+import { PasswordRequirementsFeedback } from '@/atomic/password-requirements-feedback';
 import { Separator } from '@/atomic/separator';
-import { Body1, Display, InputCaption } from '@/atomic/typography';
+import { Body1, Display } from '@/atomic/typography';
+import { PasswordRequirements } from '@/constants/password-requirements';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
 
 type NewPasswordFormValues = {
   password: string;
 };
-
-const PASSWORD_REQUIREMENTS = [
-  {
-    id: 'min-length',
-    label: 'Mínimo de 8 caracteres',
-    test: (value: string) => value.length >= 8,
-  },
-  {
-    id: 'has-number',
-    label: 'Pelo menos um número',
-    test: (value: string) => /\d/.test(value),
-  },
-  {
-    id: 'has-uppercase',
-    label: 'Pelo menos uma letra maiúscula',
-    test: (value: string) => /[A-Z]/.test(value),
-  },
-  {
-    id: 'has-lowercase',
-    label: 'Pelo menos uma letra minúscula',
-    test: (value: string) => /[a-z]/.test(value),
-  },
-] as const;
-
-function PasswordRequirementsFeedback({
-  password,
-  showErrors,
-}: {
-  password: string;
-  showErrors: boolean;
-}) {
-  return (
-    <View style={styles.requirements}>
-      {PASSWORD_REQUIREMENTS.map((requirement) => {
-        const met = requirement.test(password);
-        const isPositive = password.length > 0 && met;
-        const isNegative = showErrors && !met;
-
-        const color = isPositive
-          ? BrandColors.feedback.success.medium
-          : isNegative
-            ? BrandColors.feedback.error.light
-            : BrandColors.neutral.white;
-
-        return (
-          <View key={requirement.id} style={styles.requirementRow}>
-            {isNegative ? <XIcon color={BrandColors.feedback.error.medium} /> : null}
-            <InputCaption color={color}>{requirement.label}</InputCaption>
-          </View>
-        );
-      })}
-    </View>
-  );
-}
 
 function NewPasswordField({ showErrors }: { showErrors: boolean }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -101,7 +48,11 @@ function NewPasswordField({ showErrors }: { showErrors: boolean }) {
         }
       />
       <Separator size="xxxs" />
-      <PasswordRequirementsFeedback password={password} showErrors={showErrors} />
+      <PasswordRequirementsFeedback
+        password={password}
+        showErrors={showErrors}
+        requirements={PasswordRequirements}
+      />
     </View>
   );
 }
@@ -189,14 +140,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     textAlign: 'center',
-  },
-  requirements: {
-    gap: Spacing.xxxs,
-  },
-  requirementRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xxxs,
   },
   footer: {
     alignItems: 'center',
