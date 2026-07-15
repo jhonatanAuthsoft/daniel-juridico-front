@@ -6,16 +6,16 @@ import {
   Inter_800ExtraBold,
   useFonts,
 } from '@expo-google-fonts/inter';
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from 'react-native';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { BrandColors } from '@/constants/theme';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function TabLayout() {
+export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [fontsLoaded, fontError] = useFonts({
     Inter_400Regular,
@@ -32,7 +32,14 @@ export default function TabLayout() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AnimatedSplashOverlay />
-      <AppTabs />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: BrandColors.neutral.xdark },
+        }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(tabs)" />
+      </Stack>
     </ThemeProvider>
   );
 }

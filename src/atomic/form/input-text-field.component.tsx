@@ -1,5 +1,4 @@
-import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import {
   Platform,
   Pressable,
@@ -9,7 +8,9 @@ import {
   type TextInputProps,
 } from 'react-native';
 import { Controller, useFormContext, type FieldPath, type FieldValues } from 'react-hook-form';
+import { SymbolView } from 'expo-symbols';
 
+import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
 import { Separator } from '@/atomic/separator';
 import { InputCaption, InputLabel } from '@/atomic/typography';
@@ -22,6 +23,7 @@ export type InputTextFieldProps<TFieldValues extends FieldValues = FieldValues> 
   validators?: InputValidatorPattern[];
   tooltipText?: string;
   placeholder?: string;
+  iconRight?: ReactNode;
 } & Omit<TextInputProps, 'value' | 'onChangeText' | 'onBlur'>;
 
 function runValidators(value: string, validators: InputValidatorPattern[] = []) {
@@ -39,6 +41,7 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
   validators = [],
   tooltipText,
   placeholder,
+  iconRight,
   ...textInputProps
 }: InputTextFieldProps<TFieldValues>) {
   const { control } = useFormContext<TFieldValues>();
@@ -94,13 +97,19 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
                   placeholderTextColor={BrandColors.neutral.light}
                   style={[styles.input, textInputProps.style]}
                 />
+                {iconRight ? <View style={styles.iconRight}>{iconRight}</View> : null}
               </View>
             </View>
 
             {hasError ? (
               <>
                 <Separator size="xxxs" />
-                <InputCaption color={BrandColors.feedback.error.medium}>{error?.message}</InputCaption>
+                <View style={styles.errorRow}>
+                  <XIcon color={BrandColors.feedback.error.medium} />
+                  <InputCaption color={BrandColors.feedback.error.light}>
+                    {error?.message}
+                  </InputCaption>
+                </View>
               </>
             ) : null}
           </View>
@@ -163,7 +172,7 @@ const styles = StyleSheet.create({
   },
   fieldShellError: {
     borderWidth: 1.8,
-    borderColor: BrandColors.primary.light,
+    borderColor: BrandColors.feedback.error.medium,
   },
   fieldContent: {
     flexDirection: 'row',
@@ -178,5 +187,14 @@ const styles = StyleSheet.create({
     color: BrandColors.neutral.white,
     fontSize: 16,
     backgroundColor: 'transparent',
+  },
+  iconRight: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxxs,
   },
 });

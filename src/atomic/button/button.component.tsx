@@ -167,7 +167,7 @@ const ctaShadow = Platform.select({
 
 const styles = StyleSheet.create({
   base: {
-    height: 40,
+    height: 48,
     borderRadius: Radius.large,
     alignSelf: 'stretch',
     overflow: 'hidden',

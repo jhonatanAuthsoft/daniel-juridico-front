@@ -6,6 +6,7 @@
     "@expo-google-fonts/inter": "^0.4.2",
     "@expo/ui": "~57.0.4",
     "expo": "~57.0.4",
+    "expo-asset": "~57.0.3",
     "expo-blur": "~57.0.0",
     "expo-constants": "~57.0.3",
     "expo-device": "~57.0.0",
@@ -28,6 +29,7 @@
     "react-native-reanimated": "4.5.0",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.25.2",
+    "react-native-svg": "15.15.4",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.10.0"
   },
@@ -43,5 +45,6 @@
     "web": "expo start --web",
     "lint": "expo lint"
   },
-  "private": true
+  "private": true,
+  "packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c"
 }
