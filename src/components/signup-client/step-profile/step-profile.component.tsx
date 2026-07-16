@@ -2,12 +2,13 @@ import { SymbolView } from 'expo-symbols';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { InputSelectField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption } from '@/atomic/typography';
+import { PRONOUN_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { pickImageFromGallery } from '@/utils/pick-image-from-gallery';
 
-import { SelectFieldShell } from '../select-field-shell';
 import { signupClientSharedStyles } from '../shared.styles';
 import type { ClientSignupFormValues } from '../types';
 
@@ -28,10 +29,11 @@ export function StepProfile() {
 
   return (
     <View style={signupClientSharedStyles.fields}>
-      <SelectFieldShell
+      <InputSelectField
         name="pronouns"
         label="Pronomes de tratamento"
         placeholder="Selecione o pronome"
+        options={PRONOUN_OPTIONS}
       />
 
       {profileImageUri ? (

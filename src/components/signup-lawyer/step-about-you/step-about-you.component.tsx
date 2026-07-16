@@ -3,13 +3,13 @@ import { Image, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { GlassBackground } from '@/atomic/glass';
-import { InputTextField } from '@/atomic/form';
+import { InputSelectField, InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption } from '@/atomic/typography';
+import { PRONOUN_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { pickImageFromGallery } from '@/utils/pick-image-from-gallery';
 
-import { SelectFieldShell } from '../select-field-shell';
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
 
@@ -33,10 +33,11 @@ export function StepAboutYou() {
 
   return (
     <View style={signupLawyerSharedStyles.fields}>
-      <SelectFieldShell
+      <InputSelectField
         name="pronouns"
         label="Pronome de tratamento"
         placeholder="Selecione o pronome"
+        options={PRONOUN_OPTIONS}
       />
 
       {profileImageUri ? (

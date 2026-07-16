@@ -366,3 +366,7 @@
 {"_e":"metro:bundling:started","_t":1784164779842,"id":"1j","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
 {"_e":"metro:bundling:progress","_t":1784164779842,"id":"1j","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1784164779935,"id":"1j","total":1,"ms":92.54525}
+{"_e":"metro:server_log","_t":1784164933083,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:bundling:started","_t":1784165637086,"id":"1k","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784165637086,"id":"1k","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784165637160,"id":"1k","total":1,"ms":74.040458}

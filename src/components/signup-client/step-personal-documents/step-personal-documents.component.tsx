@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 
-import { InputTextField } from '@/atomic/form';
+import { InputSelectField, InputTextField } from '@/atomic/form';
+import { ISSUING_AUTHORITY_OPTIONS, UF_OPTIONS } from '@/constants/select-options';
 import { Spacing } from '@/constants/theme';
 
-import { SelectFieldShell } from '../select-field-shell';
 import { signupClientSharedStyles } from '../shared.styles';
 
 export function StepPersonalDocuments() {
@@ -20,15 +20,15 @@ export function StepPersonalDocuments() {
       <InputTextField name="rg" label="RG" placeholder="84587810" keyboardType="number-pad" />
       <View style={styles.row}>
         <View style={styles.rowItemGrow}>
-          <InputTextField
+          <InputSelectField
             name="issuingAuthority"
             label="Órgão Emissor"
             placeholder="SSP"
-            autoCapitalize="characters"
+            options={ISSUING_AUTHORITY_OPTIONS}
           />
         </View>
         <View style={styles.rowItemUf}>
-          <SelectFieldShell name="uf" label="UF" placeholder="BA" />
+          <InputSelectField name="uf" label="UF" placeholder="BA" options={UF_OPTIONS} />
         </View>
       </View>
       <InputTextField

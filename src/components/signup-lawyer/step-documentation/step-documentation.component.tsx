@@ -1,13 +1,13 @@
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { InputTextField } from '@/atomic/form';
+import { InputSelectField, InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body2, InputLabel } from '@/atomic/typography';
+import { ISSUING_AUTHORITY_OPTIONS, UF_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Spacing } from '@/constants/theme';
 
 import { OptionCheckbox } from '../selectable-option';
-import { SelectFieldShell } from '../select-field-shell';
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
 
@@ -64,10 +64,14 @@ export function StepDocumentation() {
         <Separator size="xxs" />
         <View style={styles.row}>
           <View style={styles.rowItemGrow}>
-            <SelectFieldShell name="issuingAuthority" placeholder="SSP" />
+            <InputSelectField
+              name="issuingAuthority"
+              placeholder="SSP"
+              options={ISSUING_AUTHORITY_OPTIONS}
+            />
           </View>
           <View style={styles.rowItemUf}>
-            <SelectFieldShell name="uf" placeholder="BA" />
+            <InputSelectField name="uf" placeholder="BA" options={UF_OPTIONS} />
           </View>
         </View>
       </View>

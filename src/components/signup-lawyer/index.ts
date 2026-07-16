@@ -4,7 +4,6 @@ export {
   STEP_COPY,
   TOTAL_STEPS,
 } from './constants';
-export { SelectFieldShell, type SelectFieldShellProps } from './select-field-shell';
 export {
   OptionCheckbox,
   SelectableOption,

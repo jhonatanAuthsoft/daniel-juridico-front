@@ -5,13 +5,13 @@ import { useFormContext } from 'react-hook-form';
 
 import { XIcon } from '@/assets/icon/x';
 import { Button } from '@/atomic/button';
-import { InputTextField } from '@/atomic/form';
+import { InputSelectField, InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, Body2, InputCaption, InputLabel, Link as TypographLink } from '@/atomic/typography';
+import { UF_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { pickImageFromGallery } from '@/utils/pick-image-from-gallery';
 
-import { SelectFieldShell } from '../select-field-shell';
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
 
@@ -115,7 +115,12 @@ export function StepOabRegistration() {
         placeholder="Digite o número da OAB"
         keyboardType="number-pad"
       />
-      <SelectFieldShell name="oabUf" label="UF" placeholder="Selecione o estado" />
+      <InputSelectField
+        name="oabUf"
+        label="UF"
+        placeholder="Selecione o estado"
+        options={UF_OPTIONS}
+      />
 
       <UploadBox
         label="Foto da frente da carteira"
@@ -162,10 +167,11 @@ export function StepOabRegistration() {
             placeholder="Digite o número da OAB"
             keyboardType="number-pad"
           />
-          <SelectFieldShell
+          <InputSelectField
             name="supplementalOabUf"
             label="UF da OAB Suplementar"
             placeholder="Selecione o estado"
+            options={UF_OPTIONS}
           />
           <UploadBox
             label="Foto da frente da carteira"

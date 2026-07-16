@@ -4,7 +4,6 @@ export {
   STEP_COPY,
   TOTAL_STEPS,
 } from './constants';
-export { SelectFieldShell, type SelectFieldShellProps } from './select-field-shell';
 export { StepAddress } from './step-address';
 export { StepCredentials, type StepCredentialsProps } from './step-credentials';
 export { StepPersonalDocuments } from './step-personal-documents';

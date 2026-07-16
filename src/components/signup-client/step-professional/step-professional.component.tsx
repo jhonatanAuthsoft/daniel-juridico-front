@@ -1,19 +1,20 @@
 import { View } from 'react-native';
 
-import { InputTextField } from '@/atomic/form';
+import { InputSelectField, InputTextField } from '@/atomic/form';
 import { Body1 } from '@/atomic/typography';
+import { MARITAL_STATUS_OPTIONS } from '@/constants/select-options';
 import { BrandColors } from '@/constants/theme';
 
-import { SelectFieldShell } from '../select-field-shell';
 import { signupClientSharedStyles } from '../shared.styles';
 
 export function StepProfessional() {
   return (
     <View style={signupClientSharedStyles.fields}>
-      <SelectFieldShell
+      <InputSelectField
         name="maritalStatus"
         label="Estado civil"
         placeholder="Selecione o estado civil"
+        options={MARITAL_STATUS_OPTIONS}
       />
       <InputTextField
         name="profession"
