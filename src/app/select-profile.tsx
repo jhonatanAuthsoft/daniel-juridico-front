@@ -63,7 +63,7 @@ export default function SelectProfileScreen() {
           <ProfileOption
             label="Sou advogado"
             icon={<BagIcon color={BrandColors.neutral.xlight} />}
-            onPress={() => {}}
+            onPress={() => router.push('/signup/lawyer')}
           />
 
           <Separator size="xxl" />

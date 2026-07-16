@@ -312,3 +312,6 @@
 {"_e":"metro:bundling:started","_t":1784158407300,"id":"s","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
 {"_e":"metro:bundling:progress","_t":1784158407300,"id":"s","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1784158407375,"id":"s","total":1,"ms":75.512334}
+{"_e":"metro:bundling:started","_t":1784160238534,"id":"11","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784160238534,"id":"11","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784160238611,"id":"11","total":1,"ms":77.185416}

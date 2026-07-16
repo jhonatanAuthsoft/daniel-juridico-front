@@ -19,7 +19,7 @@ import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
 export type InputTextFieldProps<TFieldValues extends FieldValues = FieldValues> = {
   name: FieldPath<TFieldValues>;
-  label: string;
+  label?: string;
   validators?: InputValidatorPattern[];
   tooltipText?: string;
   placeholder?: string;
@@ -48,6 +48,7 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
 }: InputTextFieldProps<TFieldValues>) {
   const { control } = useFormContext<TFieldValues>();
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const isMultiline = Boolean(textInputProps.multiline);
 
   return (
     <Controller
@@ -61,35 +62,38 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
 
         return (
           <View style={styles.container}>
-            <View style={styles.labelRow}>
-              <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
-              {tooltipText ? (
-                <View style={styles.tooltipAnchor}>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel="Mais informações"
-                    hitSlop={Spacing.xxs}
-                    onPress={() => setTooltipVisible((visible) => !visible)}>
-                    <SymbolView
-                      name={{ ios: 'info.circle', android: 'info', web: 'info' }}
-                      size={16}
-                      tintColor={BrandColors.neutral.light}
-                    />
-                  </Pressable>
-                  {tooltipVisible ? (
-                    <View style={styles.tooltipBalloon}>
-                      <InputCaption color={BrandColors.neutral.white}>{tooltipText}</InputCaption>
+            {label ? (
+              <>
+                <View style={styles.labelRow}>
+                  <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
+                  {tooltipText ? (
+                    <View style={styles.tooltipAnchor}>
+                      <Pressable
+                        accessibilityRole="button"
+                        accessibilityLabel="Mais informações"
+                        hitSlop={Spacing.xxs}
+                        onPress={() => setTooltipVisible((visible) => !visible)}>
+                        <SymbolView
+                          name={{ ios: 'info.circle', android: 'info', web: 'info' }}
+                          size={16}
+                          tintColor={BrandColors.neutral.light}
+                        />
+                      </Pressable>
+                      {tooltipVisible ? (
+                        <View style={styles.tooltipBalloon}>
+                          <InputCaption color={BrandColors.neutral.white}>{tooltipText}</InputCaption>
+                        </View>
+                      ) : null}
                     </View>
                   ) : null}
                 </View>
-              ) : null}
-            </View>
-
-            <Separator size="xxs" />
+                <Separator size="xxs" />
+              </>
+            ) : null}
 
             <View style={[styles.fieldShell, hasError && styles.fieldShellError]}>
               <GlassBackground blurPx={25} />
-              <View style={styles.fieldContent}>
+              <View style={[styles.fieldContent, isMultiline && styles.fieldContentMultiline]}>
                 {iconLeft ? <View style={styles.iconLeft}>{iconLeft}</View> : null}
                 <TextInput
                   {...textInputProps}
@@ -98,7 +102,7 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
                   onBlur={onBlur}
                   placeholder={placeholder}
                   placeholderTextColor={BrandColors.neutral.light}
-                  style={[styles.input, textInputProps.style]}
+                  style={[styles.input, isMultiline && styles.inputMultiline, textInputProps.style]}
                 />
                 {iconRight ? <View style={styles.iconRight}>{iconRight}</View> : null}
               </View>
@@ -183,6 +187,9 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
     padding: Spacing.sm,
   },
+  fieldContentMultiline: {
+    alignItems: 'flex-start',
+  },
   input: {
     flex: 1,
     padding: 0,
@@ -190,6 +197,9 @@ const styles = StyleSheet.create({
     color: BrandColors.neutral.white,
     fontSize: 16,
     backgroundColor: 'transparent',
+  },
+  inputMultiline: {
+    minHeight: 120,
   },
   iconRight: {
     alignItems: 'center',
