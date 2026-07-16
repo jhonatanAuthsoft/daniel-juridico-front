@@ -318,3 +318,48 @@
 {"_e":"metro:bundling:failed","_t":1784160895295,"id":null,"message":"SyntaxError: /Users/samuelsantana/Documents/Projects/Laweact/app/src/components/signup-lawyer/step-specialties/step-specialties.component.tsx: Identifier 'SPECIALTY_CATEGORIES' has already been declared. (18:2)\n\n  16 |\n  17 | import {\n> 18 |   SPECIALTY_CATEGORIES,\n     |   ^\n  19 |   type SpecialtyCategory,\n  20 | } from '../specialties.data';\n  21 | import { OptionCheckbox } from '../selectable-option';","importStack":null,"filename":"src/components/signup-lawyer/step-specialties/step-specialties.component.tsx","targetModuleName":null,"originModulePath":null}
 {"_e":"metro:bundling:failed","_t":1784160896067,"id":null,"message":"SyntaxError: /Users/samuelsantana/Documents/Projects/Laweact/app/src/components/signup-lawyer/step-specialties/step-specialties.component.tsx: Identifier 'SPECIALTY_CATEGORIES' has already been declared. (18:2)\n\n  16 |\n  17 | import {\n> 18 |   SPECIALTY_CATEGORIES,\n     |   ^\n  19 |   type SpecialtyCategory,\n  20 | } from '../specialties.data';\n  21 | import { OptionCheckbox } from '../selectable-option';","importStack":null,"filename":"src/components/signup-lawyer/step-specialties/step-specialties.component.tsx","targetModuleName":null,"originModulePath":null}
 {"_e":"metro:bundling:failed","_t":1784160896171,"id":null,"message":"SyntaxError: /Users/samuelsantana/Documents/Projects/Laweact/app/src/components/signup-lawyer/step-specialties/step-specialties.component.tsx: Identifier 'SPECIALTY_CATEGORIES' has already been declared. (18:2)\n\n  16 |\n  17 | import {\n> 18 |   SPECIALTY_CATEGORIES,\n     |   ^\n  19 |   type SpecialtyCategory,\n  20 | } from '../specialties.data';\n  21 | import { OptionCheckbox } from '../selectable-option';","importStack":null,"filename":"src/components/signup-lawyer/step-specialties/step-specialties.component.tsx","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:started","_t":1784163339900,"id":"13","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163339902,"id":"13","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163340018,"id":"13","total":1,"ms":117.058209}
+{"_e":"metro:bundling:started","_t":1784163349296,"id":"14","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163349296,"id":"14","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163349366,"id":"14","total":1,"ms":69.412416}
+{"_e":"metro:bundling:started","_t":1784163359270,"id":"15","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163359270,"id":"15","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163359330,"id":"15","total":1,"ms":59.308125}
+{"_e":"metro:bundling:started","_t":1784163574103,"id":"16","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163574104,"id":"16","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163574214,"id":"16","total":1,"ms":110.742041}
+{"_e":"metro:client_log","_t":1784163574497,"level":"warn","data":["No native ExponentConstants module found, are you sure the expo-constants's module is linked properly?"]}
+{"_e":"metro:client_log","_t":1784163574499,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1784163574499,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1784163574499,"level":"error","data":["[runtime not ready]: Invariant Violation: \"main\" has not been registered. This can happen if:\n* Metro (the local dev server) is run from the wrong folder. Check if Metro is running, stop it and restart it in the current project.\n* A module failed to load due to an error and `AppRegistry.registerComponent` wasn't called."]}
+{"_e":"metro:client_log","_t":1784163619977,"level":"error","data":["[runtime not ready]: Error: Non-js exception: AppRegistryBinding::stopSurface failed. Global was not installed."]}
+{"_e":"metro:bundling:started","_t":1784163619992,"id":"17","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163619992,"id":"17","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163620071,"id":"17","total":1,"ms":78.918458}
+{"_e":"metro:client_log","_t":1784163624949,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:bundling:started","_t":1784163642972,"id":"18","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163642972,"id":"18","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163643030,"id":"18","total":1,"ms":58.842042}
+{"_e":"metro:client_log","_t":1784163647697,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:bundling:started","_t":1784163650451,"id":"19","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163650451,"id":"19","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163650509,"id":"19","total":1,"ms":57.394542}
+{"_e":"metro:client_log","_t":1784163655100,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"metro:bundling:started","_t":1784163875188,"id":"1a","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163875189,"id":"1a","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163875262,"id":"1a","total":1,"ms":73.110167}
+{"_e":"metro:bundling:started","_t":1784163942497,"id":"1b","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163942498,"id":"1b","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163942571,"id":"1b","total":1,"ms":73.499042}
+{"_e":"metro:client_log","_t":1784163949153,"level":"error","data":["[ReferenceError: Property 'LOGO_HEIGHT' doesn't exist]","\n\n\u001b[1mCode: login.tsx\u001b[22m\n\u001b[0m \u001b[90m 177 |\u001b[39m     justifyContent\u001b[33m:\u001b[39m \u001b[32m'center'\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 178 |\u001b[39m     width\u001b[33m:\u001b[39m \u001b[32m'100%'\u001b[39m\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 179 |\u001b[39m     height\u001b[33m:\u001b[39m \u001b[33mLOGO_HEIGHT\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 180 |\u001b[39m     minHeight\u001b[33m:\u001b[39m \u001b[33mLOGO_HEIGHT\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 181 |\u001b[39m   }\u001b[33m,\u001b[39m\n \u001b[90m 182 |\u001b[39m   intro\u001b[33m:\u001b[39m {\u001b[0m\n\u001b[1mCall Stack\u001b[22m\n\u001b[90m  <global> (\u001b]8;;src/app/login.tsx:179:13\u0007src/app/login.tsx:179:13\u001b]8;;\u0007)\u001b[39m"]}
+{"_e":"metro:bundling:started","_t":1784163966926,"id":"1f","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163966927,"id":"1f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163967012,"id":"1f","total":1,"ms":85.172166}
+{"_e":"metro:bundling:started","_t":1784163975566,"id":"1g","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784163975566,"id":"1g","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784163975635,"id":"1g","total":1,"ms":69.192}
+{"_e":"metro:bundling:started","_t":1784164300227,"id":"1h","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784164300227,"id":"1h","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784164300305,"id":"1h","total":1,"ms":78.3525}

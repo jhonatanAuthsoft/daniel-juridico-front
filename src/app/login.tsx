@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -16,8 +16,12 @@ import { Button } from '@/atomic/button';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, Display, Link as TypographLink } from '@/atomic/typography';
+import { useSplashGate } from '@/components/splash-guard';
 import { InputValidators } from '@/constants/input-validators';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
+
+const LOGO_WIDTH = 176;
+const LOGO_HEIGHT = 74;
 
 type LoginFormValues = {
   email: string;
@@ -26,6 +30,7 @@ type LoginFormValues = {
 
 export default function LoginScreen() {
   const router = useRouter();
+  const splashGate = useSplashGate();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const form = useForm<LoginFormValues>({
     defaultValues: {
@@ -34,6 +39,14 @@ export default function LoginScreen() {
     },
     mode: 'onBlur',
   });
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      splashGate?.markContentReady();
+    }, 800);
+
+    return () => clearTimeout(timeoutId);
+  }, [splashGate]);
 
   const handleAccess = () => {
     router.replace('/(tabs)');
@@ -53,8 +66,15 @@ export default function LoginScreen() {
               style={styles.brand}
               accessible
               accessibilityRole="image"
-              accessibilityLabel="Laweact — Democratização do direito">
-              <LogoIcon />
+              accessibilityLabel="Laweact — Democratização do direito"
+              onLayout={() => {
+                requestAnimationFrame(() => {
+                  requestAnimationFrame(() => {
+                    splashGate?.markContentReady();
+                  });
+                });
+              }}>
+              <LogoIcon width={LOGO_WIDTH} height={LOGO_HEIGHT} />
             </View>
 
             <Separator size="md" />
@@ -146,6 +166,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flexGrow: 1,
+    justifyContent: 'flex-start',
     paddingHorizontal: Spacing.sm,
     paddingTop: Spacing.lg,
     paddingBottom: Spacing.sm,
@@ -155,6 +176,10 @@ const styles = StyleSheet.create({
   },
   brand: {
     alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    height: LOGO_HEIGHT,
+    minHeight: LOGO_HEIGHT,
   },
   intro: {
     alignItems: 'center',
