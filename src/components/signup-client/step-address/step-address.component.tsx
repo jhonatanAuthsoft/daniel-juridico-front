@@ -1,41 +1,44 @@
-import { useEffect, useRef } from 'react';
-import { View } from 'react-native';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { ActivityIndicator, View } from 'react-native';
 
 import { InputSelectField, InputTextField } from '@/atomic/form';
-import {
-  CITIES_BY_UF,
-  NEIGHBORHOOD_OPTIONS,
-  STATE_OPTIONS,
-} from '@/constants/select-options';
+import { Separator } from '@/atomic/separator';
+import { InputCaption } from '@/atomic/typography';
+import { STATE_OPTIONS } from '@/constants/select-options';
+import { BrandColors } from '@/constants/theme';
+import { useAddressCepAutofill } from '@/hooks/use-address-cep-autofill';
 
 import { signupClientSharedStyles } from '../shared.styles';
 import type { ClientSignupFormValues } from '../types';
 
 export function StepAddress() {
-  const { setValue } = useFormContext<ClientSignupFormValues>();
-  const state = useWatch<ClientSignupFormValues, 'state'>({ name: 'state' });
-  const previousState = useRef(state);
-  const cityOptions = state ? (CITIES_BY_UF[state] ?? []) : [];
-
-  useEffect(() => {
-    if (previousState.current === state) {
-      return;
-    }
-    previousState.current = state;
-    setValue('city', '');
-    setValue('neighborhood', '');
-  }, [setValue, state]);
+  const { isFetchingCep, cepErrorMessage, cityOptions, neighborhoodOptions } =
+    useAddressCepAutofill<ClientSignupFormValues>();
 
   return (
     <View style={signupClientSharedStyles.fields}>
-      <InputTextField
-        name="cep"
-        label="CEP"
-        placeholder="Digite seu CEP"
-        keyboardType="number-pad"
-        textContentType="postalCode"
-      />
+      <View>
+        <InputTextField
+          name="cep"
+          label="CEP"
+          placeholder="Digite seu CEP"
+          keyboardType="number-pad"
+          textContentType="postalCode"
+        />
+        {isFetchingCep ? (
+          <>
+            <Separator size="xxxs" />
+            <ActivityIndicator color={BrandColors.primary.light} />
+          </>
+        ) : null}
+        {cepErrorMessage ? (
+          <>
+            <Separator size="xxxs" />
+            <InputCaption color={BrandColors.feedback.error.light}>
+              {cepErrorMessage}
+            </InputCaption>
+          </>
+        ) : null}
+      </View>
       <InputSelectField
         name="state"
         label="Estado"
@@ -45,16 +48,14 @@ export function StepAddress() {
       <InputSelectField
         name="city"
         label="Cidade"
-        placeholder={state ? 'Selecione a cidade' : 'Selecione o estado primeiro'}
+        placeholder="Selecione a cidade"
         options={cityOptions}
-        disabled={!state}
       />
       <InputSelectField
         name="neighborhood"
         label="Bairro"
-        placeholder={state ? 'Selecione o bairro' : 'Selecione o estado primeiro'}
-        options={NEIGHBORHOOD_OPTIONS}
-        disabled={!state}
+        placeholder="Selecione o bairro"
+        options={neighborhoodOptions}
       />
       <InputTextField name="street" label="Logradouro" placeholder="Digite o endereço" />
       <InputTextField name="number" label="Número" placeholder="Ex 12" keyboardType="number-pad" />

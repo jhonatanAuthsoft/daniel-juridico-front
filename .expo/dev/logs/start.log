@@ -370,3 +370,7 @@
 {"_e":"metro:bundling:started","_t":1784165637086,"id":"1k","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
 {"_e":"metro:bundling:progress","_t":1784165637086,"id":"1k","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1784165637160,"id":"1k","total":1,"ms":74.040458}
+{"_e":"metro:bundling:started","_t":1784167551084,"id":"1l","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784167551085,"id":"1l","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784167551175,"id":"1l","total":1,"ms":90.845875}
+{"_e":"metro:client_log","_t":1784168007066,"level":"log","data":["[useCep] address response","{\"address\": {\"cep\": \"05801050\", \"city\": \"São Paulo\", \"complement\": \"\", \"neighborhood\": \"Jardim Mirante\", \"state\": \"SP\", \"street\": \"Rua Luiz Grassmann\"}, \"cep\": \"05801050\"}"]}

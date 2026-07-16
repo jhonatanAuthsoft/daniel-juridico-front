@@ -44,7 +44,7 @@ export function InputSelectField<TFieldValues extends FieldValues = FieldValues>
       render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
         const hasError = Boolean(error?.message);
         const selected = options.find((option) => option.value === value);
-        const displayValue = selected?.label ?? '';
+        const displayValue = selected?.label ?? (typeof value === 'string' ? value : '');
 
         return (
           <View style={styles.container}>

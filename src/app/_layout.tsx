@@ -12,6 +12,7 @@ import { useColorScheme } from 'react-native';
 
 import { SplashGuard } from '@/components/splash-guard';
 import { BrandColors } from '@/constants/theme';
+import { QueryProvider } from '@/providers';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,23 +35,25 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <SplashGuard>
-        <Stack
-          initialRouteName="login"
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: BrandColors.neutral.xdark },
-            animation: 'none',
-          }}>
-          <Stack.Screen name="login" />
-          <Stack.Screen name="index" />
-          <Stack.Screen name="select-profile" />
-          <Stack.Screen name="signup" />
-          <Stack.Screen name="forgot-password" />
-          <Stack.Screen name="(tabs)" />
-        </Stack>
-      </SplashGuard>
-    </ThemeProvider>
+    <QueryProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <SplashGuard>
+          <Stack
+            initialRouteName="login"
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: BrandColors.neutral.xdark },
+              animation: 'none',
+            }}>
+            <Stack.Screen name="login" />
+            <Stack.Screen name="index" />
+            <Stack.Screen name="select-profile" />
+            <Stack.Screen name="signup" />
+            <Stack.Screen name="forgot-password" />
+            <Stack.Screen name="(tabs)" />
+          </Stack>
+        </SplashGuard>
+      </ThemeProvider>
+    </QueryProvider>
   );
 }
