@@ -4,8 +4,9 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body2, InputLabel } from '@/atomic/typography';
-import { BrandColors, Radius, Spacing } from '@/constants/theme';
+import { BrandColors, Spacing } from '@/constants/theme';
 
+import { OptionCheckbox } from '../selectable-option';
 import { SelectFieldShell } from '../select-field-shell';
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
@@ -49,7 +50,7 @@ export function StepDocumentation() {
                 }
               }}
               style={styles.checkboxRow}>
-              <View style={[styles.checkbox, value ? styles.checkboxChecked : null]} />
+              <OptionCheckbox checked={Boolean(value)} />
               <Body2 color={BrandColors.neutral.white}>Não consta nome de pai</Body2>
             </Pressable>
           )}
@@ -81,17 +82,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.xxs,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderRadius: Radius.small,
-    borderWidth: 1.5,
-    borderColor: BrandColors.neutral.white,
-  },
-  checkboxChecked: {
-    backgroundColor: BrandColors.primary.light,
-    borderColor: BrandColors.primary.light,
   },
   row: {
     flexDirection: 'row',

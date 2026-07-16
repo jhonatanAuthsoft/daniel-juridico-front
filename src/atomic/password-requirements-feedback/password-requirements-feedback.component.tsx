@@ -1,5 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
+import { CheckIcon } from '@/assets/icon/check';
 import { XIcon } from '@/assets/icon/x';
 import { InputCaption } from '@/atomic/typography';
 import { BrandColors, Spacing } from '@/constants/theme';
@@ -35,6 +36,9 @@ export function PasswordRequirementsFeedback({
 
         return (
           <View key={requirement.id} style={styles.requirementRow}>
+            {isPositive ? (
+              <CheckIcon color={BrandColors.feedback.success.medium} />
+            ) : null}
             {isNegative ? <XIcon color={BrandColors.feedback.error.medium} /> : null}
             <InputCaption color={color}>{requirement.label}</InputCaption>
           </View>

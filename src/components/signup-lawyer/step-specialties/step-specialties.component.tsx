@@ -11,12 +11,9 @@ import {
   SPECIALTY_CATEGORIES,
   type SpecialtyCategory,
 } from '../specialties.data';
+import { OptionCheckbox } from '../selectable-option';
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
-
-function Checkbox({ checked }: { checked: boolean }) {
-  return <View style={[styles.checkbox, checked && styles.checkboxChecked]} />;
-}
 
 type CategoryPanelProps = {
   category: SpecialtyCategory;
@@ -39,9 +36,10 @@ function CategoryPanel({
   const selectedCount = childIds.filter((id) => selected.includes(id)).length;
   const allSelected = selectedCount === childIds.length && childIds.length > 0;
   const someSelected = selectedCount > 0;
+  const panelSelected = allSelected || someSelected;
 
   return (
-    <View style={styles.panelShell}>
+    <View style={[styles.panelShell, panelSelected && styles.panelShellSelected]}>
       <GlassBackground blurPx={25} />
       <Pressable
         accessibilityRole="button"
@@ -52,9 +50,12 @@ function CategoryPanel({
           accessibilityState={{ checked: allSelected }}
           hitSlop={Spacing.xxs}
           onPress={onToggleAll}>
-          <Checkbox checked={allSelected || someSelected} />
+          <OptionCheckbox checked={allSelected} indeterminate={someSelected && !allSelected} />
         </Pressable>
-        <Body1 color={BrandColors.neutral.white} style={styles.panelTitle}>
+        <Body1
+          bold={panelSelected}
+          color={BrandColors.neutral.white}
+          style={styles.panelTitle}>
           {category.label}
         </Body1>
         <SymbolView
@@ -75,8 +76,10 @@ function CategoryPanel({
             accessibilityState={{ checked: allSelected }}
             onPress={onToggleAll}
             style={styles.childRow}>
-            <Checkbox checked={allSelected} />
-            <Body1 color={BrandColors.neutral.white}>Marcar todos</Body1>
+            <OptionCheckbox checked={allSelected} />
+            <Body1 bold={allSelected} color={BrandColors.neutral.white}>
+              Marcar todos
+            </Body1>
           </Pressable>
           {category.children.map((child) => {
             const checked = selected.includes(child.id);
@@ -87,8 +90,10 @@ function CategoryPanel({
                 accessibilityState={{ checked }}
                 onPress={() => onToggleChild(child.id)}
                 style={styles.childRow}>
-                <Checkbox checked={checked} />
-                <Body1 color={BrandColors.neutral.white}>{child.label}</Body1>
+                <OptionCheckbox checked={checked} />
+                <Body1 bold={checked} color={BrandColors.neutral.white}>
+                  {child.label}
+                </Body1>
               </Pressable>
             );
           })}
@@ -262,6 +267,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     ...glassShadow,
   },
+  panelShellSelected: {
+    borderColor: BrandColors.accessory.darkBlue,
+  },
   panelHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -283,16 +291,5 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
     paddingVertical: Spacing.xxs,
     paddingLeft: Spacing.md,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderRadius: Radius.small,
-    borderWidth: 1.5,
-    borderColor: BrandColors.neutral.white,
-  },
-  checkboxChecked: {
-    backgroundColor: BrandColors.primary.light,
-    borderColor: BrandColors.primary.light,
   },
 });

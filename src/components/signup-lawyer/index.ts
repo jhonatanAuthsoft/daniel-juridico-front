@@ -5,6 +5,14 @@ export {
   TOTAL_STEPS,
 } from './constants';
 export { SelectFieldShell, type SelectFieldShellProps } from './select-field-shell';
+export {
+  OptionCheckbox,
+  SelectableOption,
+  SelectableOptionList,
+  type OptionCheckboxProps,
+  type SelectableOptionListProps,
+  type SelectableOptionProps,
+} from './selectable-option';
 export { StepAboutYou } from './step-about-you';
 export { StepAddress } from './step-address';
 export { StepBasicData, type StepBasicDataProps } from './step-basic-data';
