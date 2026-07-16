@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { useFormContext } from 'react-hook-form';
 
 import { XIcon } from '@/assets/icon/x';
@@ -9,6 +9,7 @@ import { InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, Body2, InputCaption, InputLabel, Link as TypographLink } from '@/atomic/typography';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
+import { pickImageFromGallery } from '@/utils/pick-image-from-gallery';
 
 import { SelectFieldShell } from '../select-field-shell';
 import { signupLawyerSharedStyles } from '../shared.styles';
@@ -16,25 +17,28 @@ import type { LawyerSignupFormValues } from '../types';
 
 type UploadBoxProps = {
   label: string;
-  filled: boolean;
+  imageUri: string;
   onPress: () => void;
   onClear: () => void;
 };
 
-function UploadBox({ label, filled, onPress, onClear }: UploadBoxProps) {
+function UploadBox({ label, imageUri, onPress, onClear }: UploadBoxProps) {
+  const filled = Boolean(imageUri);
+
   if (filled) {
     return (
       <View style={styles.uploadBlock}>
         <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
         <Separator size="xxs" />
-        <View style={[styles.previewShell, styles.previewFallback]} />
+        <Image source={{ uri: imageUri }} style={styles.previewShell} resizeMode="cover" />
         <Separator size="xxs" />
         <View style={styles.previewActions}>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Remover imagem"
             onPress={onClear}
-            style={[styles.thumbAction, styles.previewFallback]}>
+            style={styles.thumbAction}>
+            <Image source={{ uri: imageUri }} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
             <View style={styles.thumbOverlay}>
               <SymbolView
                 name={{ ios: 'trash', android: 'delete', web: 'delete' }}
@@ -45,7 +49,7 @@ function UploadBox({ label, filled, onPress, onClear }: UploadBoxProps) {
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Adicionar imagem"
+            accessibilityLabel="Trocar imagem"
             onPress={onPress}
             style={styles.addThumb}>
             <SymbolView
@@ -93,7 +97,14 @@ export function StepOabRegistration() {
   const supplementalOabBackUri = watch('supplementalOabBackUri');
 
   const setUri = (name: keyof LawyerSignupFormValues, uri: string) => {
-    setValue(name, uri);
+    setValue(name, uri, { shouldDirty: true, shouldTouch: true });
+  };
+
+  const pickAndSet = async (name: keyof LawyerSignupFormValues) => {
+    const uri = await pickImageFromGallery();
+    if (uri) {
+      setUri(name, uri);
+    }
   };
 
   return (
@@ -108,14 +119,18 @@ export function StepOabRegistration() {
 
       <UploadBox
         label="Foto da frente da carteira"
-        filled={Boolean(oabFrontUri)}
-        onPress={() => setUri('oabFrontUri', 'pending')}
+        imageUri={oabFrontUri}
+        onPress={() => {
+          void pickAndSet('oabFrontUri');
+        }}
         onClear={() => setUri('oabFrontUri', '')}
       />
       <UploadBox
         label="Foto do verso da carteira"
-        filled={Boolean(oabBackUri)}
-        onPress={() => setUri('oabBackUri', 'pending')}
+        imageUri={oabBackUri}
+        onPress={() => {
+          void pickAndSet('oabBackUri');
+        }}
         onClear={() => setUri('oabBackUri', '')}
       />
 
@@ -154,14 +169,18 @@ export function StepOabRegistration() {
           />
           <UploadBox
             label="Foto da frente da carteira"
-            filled={Boolean(supplementalOabFrontUri)}
-            onPress={() => setUri('supplementalOabFrontUri', 'pending')}
+            imageUri={supplementalOabFrontUri}
+            onPress={() => {
+              void pickAndSet('supplementalOabFrontUri');
+            }}
             onClear={() => setUri('supplementalOabFrontUri', '')}
           />
           <UploadBox
             label="Foto do verso da carteira"
-            filled={Boolean(supplementalOabBackUri)}
-            onPress={() => setUri('supplementalOabBackUri', 'pending')}
+            imageUri={supplementalOabBackUri}
+            onPress={() => {
+              void pickAndSet('supplementalOabBackUri');
+            }}
             onClear={() => setUri('supplementalOabBackUri', '')}
           />
 
@@ -208,12 +227,11 @@ const styles = StyleSheet.create({
   },
   previewShell: {
     height: 160,
+    width: '100%',
     borderRadius: Radius.large,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
-  },
-  previewFallback: {
     backgroundColor: BrandColors.neutral.dark,
   },
   previewActions: {
@@ -225,6 +243,7 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: Radius.medium,
     overflow: 'hidden',
+    backgroundColor: BrandColors.neutral.dark,
   },
   thumbOverlay: {
     ...StyleSheet.absoluteFillObject,

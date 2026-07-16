@@ -33,7 +33,13 @@
           "imageWidth": 76
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "O Laweact precisa acessar suas fotos para anexar documentos e a imagem de perfil."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

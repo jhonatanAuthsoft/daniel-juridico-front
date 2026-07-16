@@ -363,3 +363,6 @@
 {"_e":"metro:bundling:started","_t":1784164300227,"id":"1h","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
 {"_e":"metro:bundling:progress","_t":1784164300227,"id":"1h","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1784164300305,"id":"1h","total":1,"ms":78.3525}
+{"_e":"metro:bundling:started","_t":1784164779842,"id":"1j","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784164779842,"id":"1j","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784164779935,"id":"1j","total":1,"ms":92.54525}
