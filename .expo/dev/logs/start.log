@@ -492,3 +492,29 @@
 {"_e":"metro:bundling:started","_t":1784253574935,"id":"a","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
 {"_e":"metro:bundling:progress","_t":1784253574936,"id":"a","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1784253575105,"id":"a","total":1,"ms":169.564542}
+{"_e":"metro:bundling:started","_t":1784254327323,"id":"j","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784254327323,"id":"j","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784254327452,"id":"j","total":1,"ms":129.45725}
+{"_e":"metro:client_log","_t":1784254327905,"level":"warn","data":["No native ExponentConstants module found, are you sure the expo-constants's module is linked properly?"]}
+{"_e":"metro:client_log","_t":1784254327906,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1784254327906,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1784254327906,"level":"error","data":["[runtime not ready]: Invariant Violation: \"main\" has not been registered. This can happen if:\n* Metro (the local dev server) is run from the wrong folder. Check if Metro is running, stop it and restart it in the current project.\n* A module failed to load due to an error and `AppRegistry.registerComponent` wasn't called."]}
+{"_e":"metro:client_log","_t":1784254482473,"level":"error","data":["[runtime not ready]: Error: Non-js exception: AppRegistryBinding::stopSurface failed. Global was not installed."]}
+{"_e":"metro:bundling:started","_t":1784254482528,"id":"k","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784254482529,"id":"k","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784254482608,"id":"k","total":1,"ms":79.493417}
+{"_e":"metro:client_log","_t":1784255407464,"level":"warn","data":["[Layout children]: No route named \"(tabs)\" exists in nested children:","[\"index\", \"login\", \"select-profile\", \"client/(tabs)\", \"forgot-password\", \"lawyer/(tabs)/index\", \"signup\"]"]}
+{"_e":"metro:client_log","_t":1784255407731,"level":"warn","data":["[Layout children]: No route named \"(tabs)\" exists in nested children:","[\"index\", \"login\", \"select-profile\", \"client/(tabs)\", \"forgot-password\", \"lawyer/(tabs)\", \"signup\"]"]}
+{"_e":"metro:client_log","_t":1784255411734,"level":"warn","data":["[Layout children]: No route named \"(tabs)\" exists in nested children:","[\"index\", \"login\", \"select-profile\", \"client\", \"forgot-password\", \"lawyer/(tabs)\", \"signup\"]"]}
+{"_e":"metro:client_log","_t":1784255411977,"level":"warn","data":["[Layout children]: No route named \"(tabs)\" exists in nested children:","[\"index\", \"login\", \"select-profile\", \"client\", \"forgot-password\", \"lawyer\", \"signup\"]"]}
+{"_e":"metro:bundling:started","_t":1784255453132,"id":"m","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784255453132,"id":"m","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784255453198,"id":"m","total":1,"ms":66.196708}
+{"_e":"metro:client_log","_t":1784255453461,"level":"warn","data":["No native ExponentConstants module found, are you sure the expo-constants's module is linked properly?"]}
+{"_e":"metro:client_log","_t":1784255453461,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1784255453461,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1784255453462,"level":"error","data":["[runtime not ready]: Invariant Violation: \"main\" has not been registered. This can happen if:\n* Metro (the local dev server) is run from the wrong folder. Check if Metro is running, stop it and restart it in the current project.\n* A module failed to load due to an error and `AppRegistry.registerComponent` wasn't called."]}
+{"_e":"metro:client_log","_t":1784255583766,"level":"error","data":["[runtime not ready]: Error: Non-js exception: AppRegistryBinding::stopSurface failed. Global was not installed."]}
+{"_e":"metro:bundling:started","_t":1784255583804,"id":"n","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784255583804,"id":"n","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784255583869,"id":"n","total":1,"ms":64.958125}

@@ -1,32 +1,36 @@
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
-import { useColorScheme } from 'react-native';
+import { Tabs } from 'expo-router';
 
-import { Colors } from '@/constants/theme';
+import { AppTabBar, type TabVisual } from '@/components/app-tab-bar';
+import { CLIENT_TAB_VISUALS } from '@/components/app-tab-bar';
+import { BrandColors } from '@/constants/theme';
 
-export default function AppTabs() {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
+type AppTabsProps = {
+  visuals?: Record<string, TabVisual>;
+};
 
+export default function AppTabs({ visuals = CLIENT_TAB_VISUALS }: AppTabsProps) {
   return (
-    <NativeTabs
-      backgroundColor={colors.background}
-      indicatorColor={colors.backgroundElement}
-      labelStyle={{ selected: { color: colors.text } }}>
-      <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/home.png')}
-          renderingMode="template"
-        />
-      </NativeTabs.Trigger>
-
-      <NativeTabs.Trigger name="explore">
-        <NativeTabs.Trigger.Label>Explore</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/explore.png')}
-          renderingMode="template"
-        />
-      </NativeTabs.Trigger>
-    </NativeTabs>
+    <Tabs
+      tabBar={(props) => <AppTabBar {...props} visuals={visuals} />}
+      screenOptions={{
+        headerShown: false,
+        sceneStyle: { backgroundColor: BrandColors.neutral.xdark },
+        tabBarStyle: {
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          margin: 0,
+          padding: 0,
+          borderTopWidth: 0,
+          elevation: 0,
+          backgroundColor: 'transparent',
+        },
+      }}>
+      <Tabs.Screen name="index" options={{ title: 'Solicitações' }} />
+      <Tabs.Screen name="historico" options={{ title: 'Histórico' }} />
+      <Tabs.Screen name="notificacoes" options={{ title: 'Notificações' }} />
+      <Tabs.Screen name="perfil" options={{ title: 'Perfil' }} />
+    </Tabs>
   );
 }

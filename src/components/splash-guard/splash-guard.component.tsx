@@ -56,7 +56,8 @@ export function SplashGuard({ children }: SplashGuardProps) {
   const segments = useSegments();
 
   const navigationReady = Boolean(navigationState?.key);
-  const leftIndexRoute = segments[0] !== undefined && segments[0] !== 'index';
+  const rootSegment = segments[0] as string | undefined;
+  const leftIndexRoute = rootSegment !== undefined && rootSegment !== 'index';
 
   const markContentReady = useCallback(() => {
     setContentReady(true);

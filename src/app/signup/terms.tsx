@@ -8,6 +8,7 @@ import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
 import { OptionCheckbox } from '@/components/signup-lawyer';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { homeHrefForRole, useAuth } from '@/domain/auth';
 
 const TERMS_PARAGRAPHS = [
   {
@@ -23,6 +24,7 @@ const TERMS_PARAGRAPHS = [
 export default function SignupTermsScreen() {
   const router = useRouter();
   const { profile } = useLocalSearchParams<{ profile?: string }>();
+  const { signInAs } = useAuth();
   const [accepted, setAccepted] = useState(false);
 
   const goNext = () => {
@@ -31,7 +33,8 @@ export default function SignupTermsScreen() {
       return;
     }
 
-    router.replace('/(tabs)');
+    signInAs('CLIENT');
+    router.replace(homeHrefForRole('CLIENT'));
   };
 
   return (

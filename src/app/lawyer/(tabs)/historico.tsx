@@ -121,7 +121,7 @@ function ColorGroup({ title, swatches }: ColorGroupProps) {
   );
 }
 
-export default function HomeScreen() {
+export default function HistoricoScreen() {
   const theme = useTheme();
   const form = useForm({
     defaultValues: {
@@ -217,8 +217,8 @@ export default function HomeScreen() {
             </View>
             <View style={styles.row}>
               <Body2 color={BrandColors.neutral.light}>Link · navigation</Body2>
-              <Button variant="link" href="/explore" linkMode="navigation">
-                Ir para Explore
+              <Button variant="link" href="/lawyer/historico" linkMode="navigation">
+                Ir para Histórico
               </Button>
             </View>
             <View style={styles.row}>
