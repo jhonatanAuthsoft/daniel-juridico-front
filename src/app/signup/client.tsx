@@ -48,6 +48,7 @@ export default function ClientSignupScreen() {
 
   const goNext = () => {
     if (step >= TOTAL_STEPS) {
+      router.push('/signup/terms');
       return;
     }
 
@@ -87,7 +88,7 @@ export default function ClientSignupScreen() {
             <Separator size="xl" />
 
             <Button variant="cta" onPress={goNext}>
-              {step === 4 ? 'Começar' : 'Continuar'}
+              {step === TOTAL_STEPS ? 'Começar' : 'Continuar'}
             </Button>
 
             <Separator size="sm" />
