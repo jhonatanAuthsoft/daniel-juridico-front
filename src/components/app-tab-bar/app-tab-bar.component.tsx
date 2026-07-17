@@ -1,8 +1,9 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { GlassBackground } from '@/atomic/glass';
 import { InputCaption } from '@/atomic/typography';
-import { BrandColors, Radius, Spacing } from '@/constants/theme';
+import { BrandColors, BrandGradients, Radius, Spacing } from '@/constants/theme';
 
 import type { TabVisual } from './tab-visuals';
 import { CLIENT_TAB_VISUALS } from './tab-visuals';
@@ -41,6 +42,7 @@ export function AppTabBar({
 
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, Spacing.xs) }]}>
+      <GlassBackground blurPx={25} gradient={BrandGradients.gradient} />
       {state.routes.map((route, index) => {
         const visual = visuals[route.name];
         if (!visual) {
@@ -80,25 +82,48 @@ export function AppTabBar({
   );
 }
 
+const glassShadow = Platform.select({
+  ios: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 16,
+  },
+  android: {
+    elevation: 12,
+  },
+  default: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 16,
+  },
+});
+
 const styles = StyleSheet.create({
   bar: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
+    overflow: 'hidden',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: BrandColors.neutral.black,
+    backgroundColor: 'transparent',
     borderTopLeftRadius: Radius.large,
     borderTopRightRadius: Radius.large,
-    borderTopWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: 0,
+    // TODO(tab-bar): revisitar borda glass (opacidade / 1px vs hairline) no polish de UI
+    borderColor: 'rgba(255, 255, 255, 0.28)',
     paddingTop: Spacing.sm,
     paddingHorizontal: Spacing.xxs,
+    ...glassShadow,
   },
   item: {
     flex: 1,
+    zIndex: 1,
     alignItems: 'center',
     gap: Spacing.xxxs,
     paddingVertical: Spacing.xxxs,

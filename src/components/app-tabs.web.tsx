@@ -16,11 +16,13 @@ import { useAuth } from '@/domain/auth';
 
 type AppTabsProps = {
   visuals?: unknown;
+  showHistorico?: boolean;
 };
 
-export default function AppTabs(_props: AppTabsProps = {}) {
+export default function AppTabs({ showHistorico = false }: AppTabsProps = {}) {
   const { user } = useAuth();
   const base = user?.role === 'LAWYER' ? '/lawyer' : '/client';
+  const includeHistorico = showHistorico || user?.role === 'LAWYER';
 
   return (
     <Tabs>
@@ -30,9 +32,11 @@ export default function AppTabs(_props: AppTabsProps = {}) {
           <TabTrigger name="solicitacoes" href={base} asChild>
             <TabButton>Solicitações</TabButton>
           </TabTrigger>
-          <TabTrigger name="historico" href={`${base}/historico`} asChild>
-            <TabButton>Histórico</TabButton>
-          </TabTrigger>
+          {includeHistorico ? (
+            <TabTrigger name="historico" href={`${base}/historico`} asChild>
+              <TabButton>Histórico</TabButton>
+            </TabTrigger>
+          ) : null}
           <TabTrigger name="notificacoes" href={`${base}/notificacoes`} asChild>
             <TabButton>Notificações</TabButton>
           </TabTrigger>

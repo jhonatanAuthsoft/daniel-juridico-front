@@ -34,14 +34,11 @@ function profileVisual(): TabVisual {
   };
 }
 
+/** Client: Solicitações, Notificações, Perfil (sem Histórico). */
 export const CLIENT_TAB_VISUALS: Record<string, TabVisual> = {
   index: {
     label: 'Solicitações',
     renderIcon: (color) => <PaperPlaneIcon width={22} height={22} color={color} />,
-  },
-  historico: {
-    label: 'Histórico',
-    renderIcon: (color) => <HistoryIcon width={22} height={22} color={color} />,
   },
   notificacoes: {
     label: 'Notificações',
@@ -50,7 +47,7 @@ export const CLIENT_TAB_VISUALS: Record<string, TabVisual> = {
   perfil: profileVisual(),
 };
 
-/** Lawyer shell — same slots for now; labels can diverge as product grows. */
+/** Lawyer: Solicitações, Histórico, Notificações, Perfil. */
 export const LAWYER_TAB_VISUALS: Record<string, TabVisual> = {
   index: {
     label: 'Solicitações',

@@ -518,3 +518,8 @@
 {"_e":"metro:bundling:started","_t":1784255583804,"id":"n","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
 {"_e":"metro:bundling:progress","_t":1784255583804,"id":"n","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1784255583869,"id":"n","total":1,"ms":64.958125}
+{"_e":"metro:bundling:started","_t":1784255944447,"id":"o","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784255944447,"id":"o","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784255944508,"id":"o","total":1,"ms":61.571667}
+{"_e":"metro:client_log","_t":1784255951723,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1784256326464,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
