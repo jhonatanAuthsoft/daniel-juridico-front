@@ -48,7 +48,7 @@ export default function ClientSignupScreen() {
 
   const goNext = () => {
     if (step >= TOTAL_STEPS) {
-      router.push('/signup/terms');
+      router.push('/signup/terms?profile=client');
       return;
     }
 

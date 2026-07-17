@@ -489,3 +489,6 @@
 {"_e":"metro:server_log","_t":1784248605097,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
 {"_e":"metro:server_log","_t":1784248738588,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
 {"_e":"metro:server_log","_t":1784248884920,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:bundling:started","_t":1784253574935,"id":"a","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784253574936,"id":"a","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784253575105,"id":"a","total":1,"ms":169.564542}

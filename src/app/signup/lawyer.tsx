@@ -53,7 +53,7 @@ export default function LawyerSignupScreen() {
 
   const goNext = () => {
     if (step >= TOTAL_STEPS) {
-      router.push('/signup/terms');
+      router.push('/signup/terms?profile=lawyer');
       return;
     }
 

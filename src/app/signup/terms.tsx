@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -22,9 +22,15 @@ const TERMS_PARAGRAPHS = [
 
 export default function SignupTermsScreen() {
   const router = useRouter();
+  const { profile } = useLocalSearchParams<{ profile?: string }>();
   const [accepted, setAccepted] = useState(false);
 
-  const goHome = () => {
+  const goNext = () => {
+    if (profile === 'lawyer') {
+      router.push('/signup/subscription');
+      return;
+    }
+
     router.replace('/(tabs)');
   };
 
@@ -65,7 +71,7 @@ export default function SignupTermsScreen() {
 
           <Separator size="lg" />
 
-          <Button variant="cta" disabled={!accepted} onPress={goHome}>
+          <Button variant="cta" disabled={!accepted} onPress={goNext}>
             Começar
           </Button>
         </ScrollView>
