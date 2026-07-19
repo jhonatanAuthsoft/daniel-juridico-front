@@ -2,6 +2,12 @@ import { fireEvent, render } from '@testing-library/react-native';
 
 import LawyerHomeScreen from '@/app/lawyer/(tabs)/index';
 
+const mockPush = jest.fn();
+
+jest.mock('expo-router', () => ({
+  useRouter: () => ({ push: mockPush }),
+}));
+
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
 }));
@@ -19,6 +25,10 @@ const ONE_URGENT_SOLICITATION = [
 ];
 
 describe('LawyerHomeScreen', () => {
+  beforeEach(() => {
+    mockPush.mockClear();
+  });
+
   it('shows the no-data state when no solicitations exist', () => {
     const screen = render(<LawyerHomeScreen solicitations={[]} />);
 
@@ -49,5 +59,15 @@ describe('LawyerHomeScreen', () => {
 
     expect(screen.queryByText('Seus resultados')).toBeNull();
     expect(screen.getByText('Sem resultados compatíveis')).toBeTruthy();
+  });
+
+  it('opens a client solicitation from a card', () => {
+    const screen = render(
+      <LawyerHomeScreen solicitations={ONE_URGENT_SOLICITATION} />,
+    );
+
+    fireEvent.press(screen.getByText('Maria Gomes'));
+
+    expect(mockPush).toHaveBeenCalledWith('/lawyer/solicitacao/1');
   });
 });

@@ -263,7 +263,12 @@ export default function ClientHomeScreen({
               </View>
             )
           }
-          renderItem={({ item }) => <ClientSolicitationCard {...item} />}
+          renderItem={({ item }) => (
+            <ClientSolicitationCard
+              {...item}
+              onPress={() => router.push(`/client/solicitacao/${item.id}`)}
+            />
+          )}
         />
       </View>
 

@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import {
   FlatList,
@@ -65,6 +66,7 @@ type LawyerHomeScreenProps = {
 export default function LawyerHomeScreen({
   solicitations = MOCK_LAWYER_SOLICITATIONS,
 }: LawyerHomeScreenProps) {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [activeFilter, setActiveFilter] = useState<FilterId>('all');
   const [searchOpen, setSearchOpen] = useState(false);
@@ -204,7 +206,12 @@ export default function LawyerHomeScreen({
               variant={hasSolicitations ? 'no-results' : 'no-data'}
             />
           }
-          renderItem={({ item }) => <LawyerSolicitationCard {...item} />}
+          renderItem={({ item }) => (
+            <LawyerSolicitationCard
+              {...item}
+              onPress={() => router.push(`/lawyer/solicitacao/${item.id}`)}
+            />
+          )}
         />
       </View>
     </View>

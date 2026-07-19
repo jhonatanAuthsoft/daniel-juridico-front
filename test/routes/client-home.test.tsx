@@ -25,6 +25,14 @@ describe('ClientHomeScreen', () => {
     expect(mockPush).toHaveBeenCalledWith('/client/nova-solicitacao');
   });
 
+  it('opens the client solicitation details from a card', () => {
+    const screen = render(<ClientHomeScreen />);
+
+    fireEvent.press(screen.getAllByText('Pensão Alimentícia')[0]);
+
+    expect(mockPush).toHaveBeenCalledWith('/client/solicitacao/sol-1');
+  });
+
   it('shows the empty state and replaces the floating CTA when there are no results', () => {
     const screen = render(<ClientHomeScreen solicitations={[]} />);
 
