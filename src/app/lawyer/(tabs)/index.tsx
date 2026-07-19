@@ -13,9 +13,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SearchIcon } from '@/assets/icon/search';
 import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
-import { Body2, Display } from '@/atomic/typography';
 import { Separator } from '@/atomic/separator';
+import { Body2, Display, Heading1 } from '@/atomic/typography';
 import type { SolicitationStatus } from '@/components/client-solicitation-card';
+import { LawyerEmptyState } from '@/components/lawyer-empty-state';
 import {
   LawyerSolicitationCard,
   MOCK_LAWYER_SOLICITATIONS,
@@ -57,7 +58,13 @@ function matchesFilter(item: LawyerSolicitationCardData, filter: FilterId): bool
   return item.status === filter;
 }
 
-export default function LawyerHomeScreen() {
+type LawyerHomeScreenProps = {
+  solicitations?: LawyerSolicitationCardData[];
+};
+
+export default function LawyerHomeScreen({
+  solicitations = MOCK_LAWYER_SOLICITATIONS,
+}: LawyerHomeScreenProps) {
   const insets = useSafeAreaInsets();
   const [activeFilter, setActiveFilter] = useState<FilterId>('all');
   const [searchOpen, setSearchOpen] = useState(false);
@@ -68,7 +75,7 @@ export default function LawyerHomeScreen() {
   const filteredData = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
 
-    return MOCK_LAWYER_SOLICITATIONS.filter((item) => {
+    return solicitations.filter((item) => {
       if (!matchesFilter(item, activeFilter)) {
         return false;
       }
@@ -81,7 +88,9 @@ export default function LawyerHomeScreen() {
         item.location.toLowerCase().includes(query)
       );
     });
-  }, [activeFilter, searchQuery]);
+  }, [activeFilter, searchQuery, solicitations]);
+  const hasSolicitations = solicitations.length > 0;
+  const hasSearchQuery = searchQuery.trim().length > 0;
 
   return (
     <View style={styles.root}>
@@ -129,43 +138,59 @@ export default function LawyerHomeScreen() {
             </View>
           )}
 
-          <Separator size="sm" />
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.filtersRow}>
-            {FILTER_CHIPS.map((chip) => {
-              const selected = activeFilter === chip.id;
-              return (
-                <Pressable
-                  key={chip.id}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected }}
-                  onPress={() => setActiveFilter(chip.id)}
-                  style={({ pressed }) => [styles.filterChip, pressed && styles.pressed]}>
-                  {selected ? (
-                    <GlassBackground
-                      blurPx={25}
-                      gradient={{
-                        colors: ['rgba(255, 255, 255, 0.20)', 'rgba(255, 255, 255, 0.20)'],
-                        angleDeg: 182,
-                        locationsPercent: [0, 100],
-                      }}
-                    />
-                  ) : (
-                    <GlassBackground blurPx={25} gradient={BrandGradients.gradient} />
-                  )}
-                  <View style={styles.filterChipContent}>
-                    <Body2 color={BrandColors.neutral.white}>{chip.label}</Body2>
-                    {chip.count != null ? (
-                      <Body2 color={BrandColors.primary.light}>{String(chip.count)}</Body2>
-                    ) : null}
-                  </View>
-                </Pressable>
-              );
-            })}
-          </ScrollView>
+          {searchOpen ? (
+            hasSearchQuery ? (
+              <>
+                <Separator size="sm" />
+                <Heading1 color={BrandColors.neutral.white}>Seus resultados</Heading1>
+              </>
+            ) : null
+          ) : (
+            <>
+              <Separator size="sm" />
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.filtersRow}>
+                {FILTER_CHIPS.map((chip) => {
+                  const selected = activeFilter === chip.id;
+                  return (
+                    <Pressable
+                      key={chip.id}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected }}
+                      onPress={() => setActiveFilter(chip.id)}
+                      style={({ pressed }) => [
+                        styles.filterChip,
+                        pressed && styles.pressed,
+                      ]}>
+                      {selected ? (
+                        <GlassBackground
+                          blurPx={25}
+                          gradient={{
+                            colors: [
+                              'rgba(255, 255, 255, 0.20)',
+                              'rgba(255, 255, 255, 0.20)',
+                            ],
+                            angleDeg: 182,
+                            locationsPercent: [0, 100],
+                          }}
+                        />
+                      ) : (
+                        <GlassBackground blurPx={25} gradient={BrandGradients.gradient} />
+                      )}
+                      <View style={styles.filterChipContent}>
+                        <Body2 color={BrandColors.neutral.white}>{chip.label}</Body2>
+                        {chip.count != null ? (
+                          <Body2 color={BrandColors.primary.light}>{String(chip.count)}</Body2>
+                        ) : null}
+                      </View>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+            </>
+          )}
         </View>
 
         <FlatList
@@ -175,9 +200,9 @@ export default function LawyerHomeScreen() {
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <Separator size="sm" />}
           ListEmptyComponent={
-            <Body2 color={BrandColors.neutral.light} style={styles.emptyText}>
-              Nenhuma solicitação neste filtro.
-            </Body2>
+            <LawyerEmptyState
+              variant={hasSolicitations ? 'no-results' : 'no-data'}
+            />
           }
           renderItem={({ item }) => <LawyerSolicitationCard {...item} />}
         />
@@ -284,9 +309,6 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     flexGrow: 1,
-  },
-  emptyText: {
-    marginTop: Spacing.md,
   },
   pressed: {
     opacity: 0.75,
