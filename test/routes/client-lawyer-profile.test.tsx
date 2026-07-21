@@ -152,7 +152,7 @@ describe('ClientLawyerProfileScreen', () => {
     fireEvent.press(
       screen.getByRole('button', { name: 'Deixar uma avaliação' }),
     );
-    fireEvent.press(screen.getByRole('button', { name: 'Dar 4 estrelas' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Dar 4,5 estrelas' }));
     fireEvent.changeText(
       screen.getByPlaceholderText('Descreva sua experiência...'),
       'Excelente atendimento e comunicação.',
@@ -166,6 +166,30 @@ describe('ClientLawyerProfileScreen', () => {
       screen.getByRole('button', { name: 'Avaliação enviada' }),
     ).toBeDisabled();
     expect(screen.getAllByTestId('lawyer-review-card')).toHaveLength(3);
+  });
+
+  it('allows selecting half-star ratings', () => {
+    mockLawyerId = 'lawyer-3';
+    const screen = render(<ClientLawyerProfileScreen />);
+
+    fireEvent.press(screen.getByRole('button', { name: 'Excluir avaliação' }));
+    fireEvent.press(
+      screen.getByRole('button', {
+        name: 'Confirmar exclusão da avaliação',
+      }),
+    );
+    fireEvent.press(
+      screen.getByRole('button', { name: 'Deixar uma avaliação' }),
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Dar 0,5 estrelas' }),
+    ).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Dar 1 estrela' })).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: 'Dar 4,5 estrelas' }),
+    ).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Dar 5 estrelas' })).toBeTruthy();
   });
 
   it('shows the client review without a duplicate review action', () => {

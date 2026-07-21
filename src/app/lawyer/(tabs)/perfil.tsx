@@ -1,5 +1,5 @@
-import { ProfileScreen } from '@/components/profile';
+import { LawyerAccountScreen } from '@/components/lawyer-account';
 
 export default function LawyerPerfilScreen() {
-  return <ProfileScreen />;
+  return <LawyerAccountScreen />;
 }

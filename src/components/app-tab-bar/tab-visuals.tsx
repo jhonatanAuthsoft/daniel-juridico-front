@@ -26,7 +26,7 @@ function profileVisual(): TabVisual {
     label: 'Perfil',
     renderIcon: () => (
       <Image
-        source={require('@/assets/images/icon.png')}
+        source={require('@/assets/images/profile.png')}
         style={avatarStyle}
         contentFit="cover"
       />

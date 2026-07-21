@@ -29,14 +29,14 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 const MOCK_USERS: Record<UserRole, AuthUser> = {
   CLIENT: {
     id: 'mock-client',
-    email: 'cliente@laweact.dev',
-    name: 'Cliente Mock',
+    email: 'maria_silvalima@gmail.com',
+    name: 'Maria Silva Lima',
     role: 'CLIENT',
   },
   LAWYER: {
     id: 'mock-lawyer',
-    email: 'advogado@laweact.dev',
-    name: 'Advogado Mock',
+    email: 'luizabitt@gmail.com',
+    name: 'Luiza Bittencourt',
     role: 'LAWYER',
   },
 };

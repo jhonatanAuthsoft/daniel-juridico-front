@@ -10,6 +10,7 @@ import {
   LawyerClientContactsCard,
   LawyerClientProfileAccordion,
   LawyerSolicitationDataAccordion,
+  LawyerSolicitationDecisionCard,
   LawyerSolicitationDescriptionAccordion,
   MOCK_LAWYER_SOLICITATION_DETAILS,
 } from '@/components/lawyer-solicitation-details';
@@ -41,6 +42,11 @@ export default function LawyerSolicitationDetailsScreen() {
       </SafeAreaView>
     );
   }
+
+  const isHistoryDecision = solicitation.decision != null;
+  const showContacts =
+    solicitation.decision === 'accepted' || (!isHistoryDecision && accepted);
+  const showPendingActions = !isHistoryDecision && !accepted;
 
   return (
     <SafeAreaView
@@ -74,17 +80,21 @@ export default function LawyerSolicitationDetailsScreen() {
 
         <LawyerClientProfileAccordion client={solicitation.client} />
 
-        {accepted ? (
+        {showContacts ? (
           <LawyerClientContactsCard client={solicitation.client} />
-        ) : (
+        ) : !isHistoryDecision ? (
           <LawyerSolicitationDataAccordion solicitation={solicitation} />
-        )}
+        ) : null}
 
         <LawyerSolicitationDescriptionAccordion
           description={solicitation.description}
         />
 
-        {!accepted ? (
+        {solicitation.decision ? (
+          <LawyerSolicitationDecisionCard decision={solicitation.decision} />
+        ) : null}
+
+        {showPendingActions ? (
           <View style={styles.actions}>
             <Button
               accessibilityLabel="Aceitar solicitação"

@@ -704,3 +704,103 @@
 {"_e":"metro:client_log","_t":1784425445395,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
 {"_e":"metro:client_log","_t":1784426378591,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
 {"_e":"metro:client_log","_t":1784427628314,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"root:init","_t":1784595516306,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"env:mode","_t":1784595516307,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1784595516308,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1784595516630,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1784595516922,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1784595517080,"plugins":[]}
+{"_e":"metro:instantiate","_t":1784595517694,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1784595521137,"id":"2","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784595521137,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1784595521139,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1784595521239,"id":"2","progress":0.10870877966813695,"total":276,"current":91}
+{"_e":"metro:bundling:progress","_t":1784595521344,"id":"2","progress":0.24804306036139948,"total":510,"current":254}
+{"_e":"metro:bundling:progress","_t":1784595521443,"id":"2","progress":0.3176556318056091,"total":676,"current":381}
+{"_e":"metro:bundling:progress","_t":1784595521543,"id":"2","progress":0.3401613539388289,"total":835,"current":487}
+{"_e":"metro:bundling:progress","_t":1784595521643,"id":"2","progress":0.45642031464218735,"total":934,"current":631}
+{"_e":"metro:bundling:progress","_t":1784595521743,"id":"2","progress":0.632430249474149,"total":1138,"current":905}
+{"_e":"metro:bundling:progress","_t":1784595521843,"id":"2","progress":0.7733912224974335,"total":1186,"current":1043}
+{"_e":"metro:bundling:progress","_t":1784595521944,"id":"2","progress":0.8741370711765803,"total":1276,"current":1193}
+{"_e":"metro:bundling:progress","_t":1784595522044,"id":"2","progress":0.9051502630542289,"total":1399,"current":1331}
+{"_e":"metro:bundling:progress","_t":1784595522144,"id":"2","progress":0.973694472435018,"total":1435,"current":1416}
+{"_e":"metro:bundling:progress","_t":1784595522245,"id":"2","progress":0.9766089965397925,"total":1445,"current":1428}
+{"_e":"metro:bundling:progress","_t":1784595522346,"id":"2","progress":0.9766089965397925,"total":1467,"current":1437}
+{"_e":"metro:bundling:progress","_t":1784595522446,"id":"2","progress":0.9766089965397925,"total":1480,"current":1454}
+{"_e":"metro:bundling:progress","_t":1784595522547,"id":"2","progress":0.9766089965397925,"total":1518,"current":1472}
+{"_e":"metro:bundling:progress","_t":1784595522648,"id":"2","progress":0.9766089965397925,"total":1542,"current":1486}
+{"_e":"metro:bundling:progress","_t":1784595522748,"id":"2","progress":0.9766089965397925,"total":1625,"current":1519}
+{"_e":"metro:bundling:progress","_t":1784595522848,"id":"2","progress":0.9766089965397925,"total":1631,"current":1533}
+{"_e":"metro:bundling:progress","_t":1784595522949,"id":"2","progress":0.9766089965397925,"total":1633,"current":1559}
+{"_e":"metro:bundling:progress","_t":1784595523056,"id":"2","progress":0.9766089965397925,"total":1645,"current":1606}
+{"_e":"metro:bundling:progress","_t":1784595523158,"id":"2","progress":0.9963866334869149,"total":1659,"current":1656}
+{"_e":"metro:bundling:progress","_t":1784595523279,"id":"2","progress":0.999,"total":1665,"current":1665}
+{"_e":"metro:bundling:done","_t":1784595523345,"id":"2","total":1665,"ms":2208.071083}
+{"_e":"metro:client_log","_t":1784595564783,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1784596328040,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1784596328430,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1784596467954,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1784596535350,"id":"5","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784596535350,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784596535422,"id":"5","total":1,"ms":72.115417}
+{"_e":"metro:client_log","_t":1784596611658,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1784598153318,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1784598231448,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1784598669271,"id":"7","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784598669271,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784598669346,"id":"7","total":1,"ms":75.37125}
+{"_e":"metro:client_log","_t":1784598669694,"level":"warn","data":["No native ExponentConstants module found, are you sure the expo-constants's module is linked properly?"]}
+{"_e":"metro:client_log","_t":1784598669694,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1784598669695,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1784598669695,"level":"error","data":["[runtime not ready]: Invariant Violation: \"main\" has not been registered. This can happen if:\n* Metro (the local dev server) is run from the wrong folder. Check if Metro is running, stop it and restart it in the current project.\n* A module failed to load due to an error and `AppRegistry.registerComponent` wasn't called."]}
+{"_e":"metro:client_log","_t":1784598842043,"level":"error","data":["[runtime not ready]: Error: Non-js exception: AppRegistryBinding::stopSurface failed. Global was not installed."]}
+{"_e":"metro:bundling:started","_t":1784598842065,"id":"8","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784598842066,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784598842140,"id":"8","total":1,"ms":74.244166}
+{"_e":"metro:client_log","_t":1784598847974,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1784598896841,"id":"9","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784598896842,"id":"9","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784598896939,"id":"9","total":1,"ms":97.232541}
+{"_e":"metro:client_log","_t":1784598897101,"level":"warn","data":["No native ExponentConstants module found, are you sure the expo-constants's module is linked properly?"]}
+{"_e":"metro:client_log","_t":1784598897102,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1784598897102,"level":"error","data":["[runtime not ready]: Error: Cannot find native module 'ExpoAsset'"]}
+{"_e":"metro:client_log","_t":1784598897102,"level":"error","data":["[runtime not ready]: Invariant Violation: \"main\" has not been registered. This can happen if:\n* Metro (the local dev server) is run from the wrong folder. Check if Metro is running, stop it and restart it in the current project.\n* A module failed to load due to an error and `AppRegistry.registerComponent` wasn't called."]}
+{"_e":"metro:client_log","_t":1784599003022,"level":"error","data":["[runtime not ready]: Error: Non-js exception: AppRegistryBinding::stopSurface failed. Global was not installed."]}
+{"_e":"metro:bundling:started","_t":1784599003047,"id":"a","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784599003047,"id":"a","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784599003111,"id":"a","total":1,"ms":63.647834}
+{"_e":"metro:client_log","_t":1784599165968,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1784599213908,"id":"b","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784599213908,"id":"b","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784599213970,"id":"b","total":1,"ms":62.171667}
+{"_e":"root:init","_t":1784599356120,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"env:mode","_t":1784599356121,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1784599356122,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1784599356498,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1784599356803,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1784599357061,"plugins":[]}
+{"_e":"metro:instantiate","_t":1784599357727,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:client_log","_t":1784599362783,"level":"error","data":["Project is incompatible with this version of Expo Go\n\nThis project requires a newer version of Expo Go.\n\nHow to fix this error:\nDownload the latest version of Expo Go from the Play Store."]}
+{"_e":"metro:bundling:started","_t":1784599635391,"id":"1","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784599635392,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1784599635395,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1784599635494,"id":"1","progress":0.06697016403147933,"total":313,"current":81}
+{"_e":"metro:bundling:progress","_t":1784599635596,"id":"1","progress":0.21742835500568108,"total":534,"current":249}
+{"_e":"metro:bundling:progress","_t":1784599635696,"id":"1","progress":0.3211937811528904,"total":914,"current":518}
+{"_e":"metro:bundling:progress","_t":1784599635796,"id":"1","progress":0.5433428042943498,"total":1145,"current":844}
+{"_e":"metro:bundling:progress","_t":1784599635896,"id":"1","progress":0.7637878680884118,"total":1309,"current":1144}
+{"_e":"metro:bundling:progress","_t":1784599635996,"id":"1","progress":0.9067444507346281,"total":1591,"current":1515}
+{"_e":"metro:bundling:progress","_t":1784599636097,"id":"1","progress":0.9988098781179139,"total":1680,"current":1679}
+{"_e":"metro:bundling:started","_t":1784599636475,"id":"2","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784599636475,"id":"1","progress":0.9988098781179139,"total":1680,"current":1679}
+{"_e":"metro:bundling:progress","_t":1784599636475,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1784599636763,"id":"1","progress":0.999,"total":1680,"current":1680}
+{"_e":"metro:bundling:progress","_t":1784599636763,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784599636854,"id":"1","total":1680,"ms":1462.547708}
+{"_e":"metro:bundling:progress","_t":1784599636854,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784599636891,"id":"2","total":1,"ms":416.231292}
+{"_e":"metro:client_log","_t":1784599642649,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1784600031855,"id":"3","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1784600031855,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1784600031928,"id":"3","total":1,"ms":73.208084}
+{"_e":"metro:client_log","_t":1784600037527,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
