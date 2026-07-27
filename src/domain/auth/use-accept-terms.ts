@@ -4,8 +4,8 @@ import { useAuth } from './auth-provider';
 import { acceptTermsUseCase } from './accept-terms.use-case';
 
 type AcceptTermsVariables = {
-  checkboxConfirmado: boolean;
-  scrollConfirmado?: boolean;
+  checkboxConfirmed: boolean;
+  scrollConfirmed?: boolean;
 };
 
 /**
@@ -22,11 +22,11 @@ export function useAcceptTerms() {
 
       const result = await acceptTermsUseCase({
         token,
-        checkboxConfirmado: variables.checkboxConfirmado,
-        scrollConfirmado: variables.scrollConfirmado,
+        checkboxConfirmed: variables.checkboxConfirmed,
+        scrollConfirmed: variables.scrollConfirmed,
       });
 
-      if (!result.termosAceitos) {
+      if (!result.termsAccepted) {
         throw new Error('O aceite dos termos não foi confirmado pelo servidor.');
       }
 

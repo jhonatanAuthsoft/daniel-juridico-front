@@ -1,16 +1,16 @@
 export type {
-  ApiErrorItem,
-  ApiResponse,
-  CadastrarClienteRequest,
-  CadastrarClienteResponse,
-  CadastrarClienteUsuarioResponse,
-  PronomesApi,
-  TipoDocumentoApi,
+  DocumentTypeApi,
+  PronounsApi,
+  RegisterClientRequest,
+  RegisterClientResult,
+  RegisterClientUserWire,
+  RegisterClientWireResponse,
 } from './client.types';
+export type { ApiErrorItem, ApiResponse } from '@/data/http';
 export {
-  MOCK_PHOTO_URL,
-  mapClientSignupFormToCadastrarRequest,
+  mapClientSignupFormToRegisterRequest,
   mapPronounsToApi,
+  mapRegisterClientWireToResult,
   toIsoBirthDate,
 } from './client.mapper';
-export { cadastrarCliente } from './client.api';
+export { registerClient } from './client.api';

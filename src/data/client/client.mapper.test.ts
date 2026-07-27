@@ -1,5 +1,5 @@
 import {
-  mapClientSignupFormToCadastrarRequest,
+  mapClientSignupFormToRegisterRequest,
   mapPronounsToApi,
   MOCK_PHOTO_URL,
   toIsoBirthDate,
@@ -35,7 +35,7 @@ const baseForm: ClientSignupFormValues = {
 
 describe('client.mapper', () => {
   it('maps CPF form to API payload', () => {
-    const payload = mapClientSignupFormToCadastrarRequest(baseForm);
+    const payload = mapClientSignupFormToRegisterRequest(baseForm);
 
     expect(payload).toMatchObject({
       email: 'maria@laweact.com',
@@ -52,7 +52,7 @@ describe('client.mapper', () => {
   });
 
   it('maps CNPJ form with business area', () => {
-    const payload = mapClientSignupFormToCadastrarRequest({
+    const payload = mapClientSignupFormToRegisterRequest({
       ...baseForm,
       personType: 'cnpj',
       fullName: 'Empresa Exemplo LTDA',

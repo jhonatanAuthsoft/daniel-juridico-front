@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { Alert } from 'react-native';
 
 import { BackLink } from '@/atomic/back-link';
 import { Button } from '@/atomic/button';
@@ -25,6 +26,7 @@ import {
   type LawyerSignupFormValues,
 } from '@/components/signup-lawyer';
 import { SignupMultiStepShell } from '@/components/signup-shell';
+import { useRegisterLawyer } from '@/domain/lawyer';
 
 export default function LawyerSignupScreen() {
   const router = useRouter();
@@ -33,10 +35,15 @@ export default function LawyerSignupScreen() {
     defaultValues,
     mode: 'onBlur',
   });
+  const registerLawyer = useRegisterLawyer();
 
   const stepCopy = STEP_COPY[step];
+  const isSubmitting = registerLawyer.isPending;
 
   const goBack = () => {
+    if (isSubmitting) {
+      return;
+    }
     if (step === 1) {
       router.back();
       return;
@@ -44,6 +51,18 @@ export default function LawyerSignupScreen() {
     const practiceAreas = form.getValues('practiceAreas');
     setStep(getPreviousLawyerSignupStep(step, practiceAreas));
   };
+
+  const submitRegistration = form.handleSubmit(async (values) => {
+    try {
+      await registerLawyer.mutateAsync(values);
+      router.push('/signup/terms?profile=lawyer');
+    } catch (error) {
+      Alert.alert(
+        'Cadastro',
+        error instanceof Error ? error.message : 'Não foi possível concluir o cadastro.',
+      );
+    }
+  });
 
   const goNext = () => {
     const practiceAreas = form.getValues('practiceAreas');
@@ -54,7 +73,7 @@ export default function LawyerSignupScreen() {
     );
 
     if (nextStep === 'done') {
-      router.push('/signup/terms?profile=lawyer');
+      void submitRegistration();
       return;
     }
 
@@ -91,7 +110,7 @@ export default function LawyerSignupScreen() {
 
       <Separator size="xl" />
 
-      <Button variant="cta" onPress={goNext}>
+      <Button variant="cta" disabled={isSubmitting} isLoading={isSubmitting} onPress={goNext}>
         {step === TOTAL_STEPS ? 'Começar' : 'Continuar'}
       </Button>
 

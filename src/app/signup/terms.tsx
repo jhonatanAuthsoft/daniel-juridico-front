@@ -45,8 +45,8 @@ export default function SignupTermsScreen() {
     if (isAuthenticated) {
       try {
         await acceptTerms.mutateAsync({
-          checkboxConfirmado: true,
-          scrollConfirmado: true,
+          checkboxConfirmed: true,
+          scrollConfirmed: true,
         });
       } catch (error) {
         Alert.alert(

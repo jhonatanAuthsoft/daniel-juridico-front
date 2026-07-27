@@ -1,6 +1,7 @@
 export type SupplementalOabEntry = {
   number: string;
   uf: string;
+  issueDate: string;
   frontUri: string;
   backUri: string;
 };
@@ -32,6 +33,7 @@ export type LawyerSignupFormValues = {
   complement: string;
   oabNumber: string;
   oabUf: string;
+  oabIssueDate: string;
   oabFrontUri: string;
   oabBackUri: string;
   supplementalOabs: SupplementalOabEntry[];

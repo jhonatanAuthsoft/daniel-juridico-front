@@ -1044,3 +1044,4 @@
 {"_e":"metro:bundling:started","_t":1785115143345,"id":"d","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
 {"_e":"metro:bundling:progress","_t":1785115143346,"id":"d","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1785115143432,"id":"d","total":1,"ms":86.058708}
+{"_e":"metro:bundling:failed","_t":1785121377688,"id":null,"message":"SyntaxError: /Users/samuelsantana/Documents/Projects/Laweact/app/src/data/client/client.mapper.ts: Export 'MOCK_PHOTO_URL' is not defined. (11:9)\n\n   9 | } from './client.types';\n  10 |\n> 11 | export { MOCK_PHOTO_URL };\n     |          ^\n  12 |\n  13 | function onlyDigits(value: string) {\n  14 |   return value.replace(/\\D/g, '');","importStack":null,"filename":"src/data/client/client.mapper.ts","targetModuleName":null,"originModulePath":null}

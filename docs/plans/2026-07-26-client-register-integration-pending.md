@@ -2,8 +2,8 @@
 
 ## 1. Aceite de termos — feito
 - Cadastro não envia mais `aceiteTermos`.
-- App chama `POST /usuarios/aceitar-termos` na tela `/signup/terms` (usuário autenticado).
-- Sessão guarda `termsAccepted` a partir de `usuario.termosAceitos`.
+- App chama `POST /usuarios/aceitar-termos` via `acceptTerms` (usuário autenticado).
+- Sessão guarda `termsAccepted` a partir do mapeamento de `usuario.termosAceitos`.
 - `TermsGuard` nas shells `/client` e `/lawyer` redireciona para `/signup/terms` se ainda não aceitou.
 
 ## 2. Mapeamento de pronomes

@@ -73,6 +73,7 @@ export const defaultValues: LawyerSignupFormValues = {
   complement: '',
   oabNumber: '',
   oabUf: '',
+  oabIssueDate: '',
   oabFrontUri: '',
   oabBackUri: '',
   supplementalOabs: [],

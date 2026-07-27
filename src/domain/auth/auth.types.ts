@@ -23,8 +23,8 @@ export function roleLabel(role: UserRole): string {
   return role === 'LAWYER' ? 'Advogado' : 'Cliente';
 }
 
-export function mapApiPerfilToRole(perfil: string): UserRole {
-  const normalized = perfil.trim().toUpperCase();
+export function mapApiProfileToRole(profile: string): UserRole {
+  const normalized = profile.trim().toUpperCase();
   if (normalized === 'ADVOGADO' || normalized === 'LAWYER') {
     return 'LAWYER';
   }

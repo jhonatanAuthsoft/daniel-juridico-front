@@ -160,3 +160,16 @@ export const PRONOUN_OPTIONS: SelectOption[] = [
   { value: 'elu-delu', label: 'Elu/Delu' },
   { value: 'nao-informar', label: 'Prefiro não informar' },
 ];
+
+/** Lawyer treatment pronouns — values match the server `PronomeTratamentoEnum`. */
+export const TREATMENT_PRONOUN_OPTIONS: SelectOption[] = [
+  { value: 'DOUTOR', label: 'Doutor' },
+  { value: 'DOUTORA', label: 'Doutora' },
+  { value: 'NEUTRO', label: 'Neutro' },
+];
+
+/** Resolves a city select value (slug) back to its display label for API payloads. */
+export function cityLabelFromValue(uf: string, value: string): string {
+  const options = CITIES_BY_UF[uf.trim().toUpperCase()] ?? [];
+  return options.find((option) => option.value === value)?.label ?? value;
+}

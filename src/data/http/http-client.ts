@@ -1,4 +1,5 @@
 import { HttpError } from './http-error';
+import { resolveApiErrorMessage } from './api-response';
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
@@ -11,6 +12,7 @@ export type HttpRequestConfig = {
 
 /**
  * Single entry-point for all network requests in the app.
+ * Failed HTTP responses throw HttpError with a user-facing mapped message.
  */
 export async function httpRequest<T>(
   url: string,
@@ -35,12 +37,10 @@ export async function httpRequest<T>(
 
   if (!response.ok) {
     throw new HttpError(
-      typeof payload === 'object' &&
-        payload !== null &&
-        'message' in payload &&
-        typeof (payload as { message: unknown }).message === 'string'
-        ? (payload as { message: string }).message
-        : `Request failed with status ${response.status}`,
+      resolveApiErrorMessage(
+        payload,
+        `Request failed with status ${response.status}`,
+      ),
       response.status,
       payload,
     );

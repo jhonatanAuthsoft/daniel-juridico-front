@@ -20,6 +20,7 @@ function createEmptySupplementalOab(): SupplementalOabEntry {
   return {
     number: '',
     uf: '',
+    issueDate: '',
     frontUri: '',
     backUri: '',
   };
@@ -103,6 +104,12 @@ export function StepOabRegistration() {
         placeholder="Selecione o estado"
         options={UF_OPTIONS}
       />
+      <InputTextField
+        name="oabIssueDate"
+        label="Data de expedição"
+        placeholder="00/00/0000"
+        keyboardType="number-pad"
+      />
 
       <InputImageField
         name="oabFrontUri"
@@ -143,6 +150,12 @@ export function StepOabRegistration() {
                 label="UF da OAB Suplementar"
                 placeholder="Selecione o estado"
                 options={UF_OPTIONS}
+              />
+              <InputTextField
+                name={`supplementalOabs.${index}.issueDate`}
+                label="Data de expedição"
+                placeholder="00/00/0000"
+                keyboardType="number-pad"
               />
               <InputImageField
                 name={`supplementalOabs.${index}.frontUri`}

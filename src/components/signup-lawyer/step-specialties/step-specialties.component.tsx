@@ -106,7 +106,7 @@ function CategoryPanel({
 export function StepSpecialties() {
   const { control } = useFormContext<LawyerSignupFormValues>();
   const [query, setQuery] = useState('');
-  const [expandedIds, setExpandedIds] = useState<string[]>(['civil']);
+  const [expandedIds, setExpandedIds] = useState<string[]>(['CIVIL']);
 
   const filteredCategories = useMemo(() => {
     const normalized = query.trim().toLowerCase();

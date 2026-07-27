@@ -7,7 +7,7 @@ import { GlassBackground } from '@/atomic/glass';
 import { InputSelectField, InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption } from '@/atomic/typography';
-import { PRONOUN_OPTIONS } from '@/constants/select-options';
+import { TREATMENT_PRONOUN_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { useImageEditFlow } from '@/hooks/use-image-edit-flow';
 
@@ -40,7 +40,7 @@ export function StepAboutYou() {
         name="pronouns"
         label="Pronome de tratamento"
         placeholder="Selecione o pronome"
-        options={PRONOUN_OPTIONS}
+        options={TREATMENT_PRONOUN_OPTIONS}
       />
 
       {profileImageUri ? (

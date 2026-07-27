@@ -1,21 +1,26 @@
-import { apiUrl } from '@/data/http/api-config';
-import { httpRequest } from '@/data/http/http-client';
+import {
+  apiUrl,
+  assertApiSuccess,
+  httpRequest,
+  type ApiResponse,
+} from '@/data/http';
 
+import { mapRegisterClientWireToResult } from './client.mapper';
 import type {
-  ApiResponse,
-  CadastrarClienteRequest,
-  CadastrarClienteResponse,
+  RegisterClientRequest,
+  RegisterClientResult,
+  RegisterClientWireResponse,
 } from './client.types';
 
 /**
  * Registers a client user + profile + address.
  * `POST /clientes/cadastrar`
  */
-export async function cadastrarCliente(
-  body: CadastrarClienteRequest,
+export async function registerClient(
+  body: RegisterClientRequest,
   signal?: AbortSignal,
-): Promise<CadastrarClienteResponse> {
-  const response = await httpRequest<ApiResponse<CadastrarClienteResponse>>(
+): Promise<RegisterClientResult> {
+  const response = await httpRequest<ApiResponse<RegisterClientWireResponse>>(
     apiUrl('/clientes/cadastrar'),
     {
       method: 'POST',
@@ -24,9 +29,6 @@ export async function cadastrarCliente(
     },
   );
 
-  if (!response.success || !response.data) {
-    throw new Error(response.message ?? 'Falha ao cadastrar cliente.');
-  }
-
-  return response.data;
+  const data = assertApiSuccess(response, 'Falha ao cadastrar cliente.');
+  return mapRegisterClientWireToResult(data);
 }
