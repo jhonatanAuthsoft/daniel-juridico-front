@@ -28,4 +28,4 @@ export { StepPlaceholder, type StepPlaceholderProps } from './step-placeholder';
 export { StepPracticeAreas } from './step-practice-areas';
 export { StepServiceRadius } from './step-service-radius';
 export { StepSpecialties } from './step-specialties';
-export type { LawyerSignupFormValues } from './types';
+export type { LawyerSignupFormValues, PostgraduateEntry, SupplementalOabEntry } from './types';

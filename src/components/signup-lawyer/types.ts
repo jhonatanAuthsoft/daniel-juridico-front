@@ -1,3 +1,16 @@
+export type SupplementalOabEntry = {
+  number: string;
+  uf: string;
+  frontUri: string;
+  backUri: string;
+};
+
+export type PostgraduateEntry = {
+  university: string;
+  course: string;
+  year: string;
+};
+
 export type LawyerSignupFormValues = {
   fullName: string;
   email: string;
@@ -21,16 +34,11 @@ export type LawyerSignupFormValues = {
   oabUf: string;
   oabFrontUri: string;
   oabBackUri: string;
-  supplementalOabNumber: string;
-  supplementalOabUf: string;
-  supplementalOabFrontUri: string;
-  supplementalOabBackUri: string;
+  supplementalOabs: SupplementalOabEntry[];
   university: string;
   course: string;
   graduationYear: string;
-  postgraduateUniversity: string;
-  postgraduateCourse: string;
-  postgraduateYear: string;
+  postgraduates: PostgraduateEntry[];
   practiceAreas: string[];
   specialties: string[];
   serviceState: string;

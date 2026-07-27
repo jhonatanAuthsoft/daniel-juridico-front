@@ -1,4 +1,5 @@
 import { SymbolView } from 'expo-symbols';
+import { useCallback } from 'react';
 import { Image, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useFormContext, useWatch } from 'react-hook-form';
 
@@ -8,7 +9,7 @@ import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption } from '@/atomic/typography';
 import { PRONOUN_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
-import { pickImageFromGallery } from '@/utils/pick-image-from-gallery';
+import { useImageEditFlow } from '@/hooks/use-image-edit-flow';
 
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
@@ -20,15 +21,17 @@ export function StepAboutYou() {
   const biography = useWatch({ control, name: 'biography' }) ?? '';
   const profileImageUri = useWatch({ control, name: 'profileImageUri' }) ?? '';
 
-  const handlePickProfileImage = async () => {
-    const uri = await pickImageFromGallery({
-      allowsEditing: true,
-      aspect: [1, 1],
-    });
-
-    if (uri) {
+  const handleConfirmProfileImage = useCallback(
+    (uri: string) => {
       setValue('profileImageUri', uri, { shouldDirty: true, shouldTouch: true });
-    }
+    },
+    [setValue],
+  );
+
+  const { pickEditedImage, editModal } = useImageEditFlow(handleConfirmProfileImage);
+
+  const handlePickProfileImage = () => {
+    void pickEditedImage({ aspect: [1, 1] });
   };
 
   return (
@@ -56,9 +59,7 @@ export function StepAboutYou() {
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Trocar imagem de perfil"
-              onPress={() => {
-                void handlePickProfileImage();
-              }}
+              onPress={handlePickProfileImage}
               style={styles.profileActionButton}>
               <Body1 color={BrandColors.primary.light}>Trocar</Body1>
             </Pressable>
@@ -69,9 +70,7 @@ export function StepAboutYou() {
           accessibilityRole="button"
           accessibilityLabel="Adicionar imagem de perfil"
           style={styles.profileImagePlaceholder}
-          onPress={() => {
-            void handlePickProfileImage();
-          }}>
+          onPress={handlePickProfileImage}>
           <GlassBackground blurPx={25} />
           <View style={styles.uploadContent}>
             <SymbolView
@@ -103,6 +102,8 @@ export function StepAboutYou() {
           {biography.length}/{BIOGRAPHY_MAX_LENGTH} caracteres
         </InputCaption>
       </View>
+
+      {editModal}
     </View>
   );
 }

@@ -1,109 +1,91 @@
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
-import { useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
 import { XIcon } from '@/assets/icon/x';
 import { Button } from '@/atomic/button';
-import { InputSelectField, InputTextField } from '@/atomic/form';
+import { InputImageField, InputSelectField, InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
-import { Body1, Body2, InputCaption, InputLabel, Link as TypographLink } from '@/atomic/typography';
+import { Body1, Body2, InputLabel, Link as TypographLink } from '@/atomic/typography';
 import { UF_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
-import { pickImageFromGallery } from '@/utils/pick-image-from-gallery';
 
 import { signupLawyerSharedStyles } from '../shared.styles';
-import type { LawyerSignupFormValues } from '../types';
+import type { LawyerSignupFormValues, SupplementalOabEntry } from '../types';
 
-type UploadBoxProps = {
-  label: string;
-  imageUri: string;
-  onPress: () => void;
-  onClear: () => void;
-};
+const MAX_SUPPLEMENTAL_OABS = 5;
 
-function UploadBox({ label, imageUri, onPress, onClear }: UploadBoxProps) {
-  const filled = Boolean(imageUri);
-
-  if (filled) {
-    return (
-      <View style={styles.uploadBlock}>
-        <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
-        <Separator size="xxs" />
-        <Image source={{ uri: imageUri }} style={styles.previewShell} resizeMode="cover" />
-        <Separator size="xxs" />
-        <View style={styles.previewActions}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Remover imagem"
-            onPress={onClear}
-            style={styles.thumbAction}>
-            <Image source={{ uri: imageUri }} style={StyleSheet.absoluteFillObject} resizeMode="cover" />
-            <View style={styles.thumbOverlay}>
-              <SymbolView
-                name={{ ios: 'trash', android: 'delete', web: 'delete' }}
-                size={16}
-                tintColor={BrandColors.neutral.white}
-              />
-            </View>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Trocar imagem"
-            onPress={onPress}
-            style={styles.addThumb}>
-            <SymbolView
-              name={{ ios: 'plus', android: 'add', web: 'add' }}
-              size={20}
-              tintColor={BrandColors.neutral.light}
-            />
-          </Pressable>
-        </View>
-      </View>
-    );
-  }
-
-  return (
-    <View style={styles.uploadBlock}>
-      <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
-      <Separator size="xxs" />
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={label}
-        style={styles.uploadPlaceholder}
-        onPress={onPress}>
-        <SymbolView
-          name={{ ios: 'square.and.arrow.up', android: 'upload', web: 'upload' }}
-          size={28}
-          tintColor={BrandColors.neutral.xlight}
-        />
-        <Separator size="xxs" />
-        <Body1 color={BrandColors.neutral.white}>Anexe as fotos de frente e verso</Body1>
-        <Separator size="xxxs" />
-        <InputCaption color={BrandColors.neutral.light}>Formato: .jpeg, .png</InputCaption>
-      </Pressable>
-    </View>
-  );
+function createEmptySupplementalOab(): SupplementalOabEntry {
+  return {
+    number: '',
+    uf: '',
+    frontUri: '',
+    backUri: '',
+  };
 }
 
 export function StepOabRegistration() {
-  const { setValue, watch } = useFormContext<LawyerSignupFormValues>();
-  const [supplementalOpen, setSupplementalOpen] = useState(false);
-  const [supplementalSaved, setSupplementalSaved] = useState(false);
+  const { control } = useFormContext<LawyerSignupFormValues>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'supplementalOabs',
+  });
+  const supplementalOabs =
+    useWatch({ control, name: 'supplementalOabs' }) ?? [];
 
-  const oabFrontUri = watch('oabFrontUri');
-  const oabBackUri = watch('oabBackUri');
-  const supplementalOabFrontUri = watch('supplementalOabFrontUri');
-  const supplementalOabBackUri = watch('supplementalOabBackUri');
+  /** Index being edited; `null` means the form is closed. */
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  /** When true, cancel/close removes the draft entry instead of keeping it. */
+  const [isCreating, setIsCreating] = useState(false);
 
-  const setUri = (name: keyof LawyerSignupFormValues, uri: string) => {
-    setValue(name, uri, { shouldDirty: true, shouldTouch: true });
+  const canAddMore =
+    editingIndex === null && fields.length < MAX_SUPPLEMENTAL_OABS;
+
+  const startCreate = () => {
+    if (fields.length >= MAX_SUPPLEMENTAL_OABS) {
+      return;
+    }
+    append(createEmptySupplementalOab());
+    setIsCreating(true);
+    setEditingIndex(fields.length);
   };
 
-  const pickAndSet = async (name: keyof LawyerSignupFormValues) => {
-    const uri = await pickImageFromGallery();
-    if (uri) {
-      setUri(name, uri);
+  const startEdit = (index: number) => {
+    setIsCreating(false);
+    setEditingIndex(index);
+  };
+
+  const cancelEdit = () => {
+    if (editingIndex == null) {
+      return;
+    }
+
+    if (isCreating) {
+      remove(editingIndex);
+    }
+
+    setIsCreating(false);
+    setEditingIndex(null);
+  };
+
+  const saveEdit = () => {
+    setIsCreating(false);
+    setEditingIndex(null);
+  };
+
+  const deleteAt = (index: number) => {
+    remove(index);
+    if (editingIndex == null) {
+      return;
+    }
+    if (editingIndex === index) {
+      setIsCreating(false);
+      setEditingIndex(null);
+      return;
+    }
+    if (editingIndex > index) {
+      setEditingIndex(editingIndex - 1);
     }
   };
 
@@ -122,154 +104,156 @@ export function StepOabRegistration() {
         options={UF_OPTIONS}
       />
 
-      <UploadBox
+      <InputImageField
+        name="oabFrontUri"
         label="Foto da frente da carteira"
-        imageUri={oabFrontUri}
-        onPress={() => {
-          void pickAndSet('oabFrontUri');
-        }}
-        onClear={() => setUri('oabFrontUri', '')}
+        emptyTitle="Anexe a foto da frente da carteira"
       />
-      <UploadBox
+      <InputImageField
+        name="oabBackUri"
         label="Foto do verso da carteira"
-        imageUri={oabBackUri}
-        onPress={() => {
-          void pickAndSet('oabBackUri');
-        }}
-        onClear={() => setUri('oabBackUri', '')}
+        emptyTitle="Anexe a foto do verso da carteira"
       />
 
-      {supplementalOpen ? (
-        <View style={styles.supplementalCard}>
-          <View style={styles.supplementalHeader}>
-            <Body1 color={BrandColors.neutral.white}>OAB Suplementar</Body1>
+      {fields.map((field, index) => {
+        if (editingIndex === index) {
+          return (
+            <View key={field.id} style={styles.editCard}>
+              <View style={styles.editHeader}>
+                <Body1 color={BrandColors.neutral.white}>OAB Suplementar</Body1>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Fechar OAB suplementar"
+                  hitSlop={Spacing.xxs}
+                  onPress={cancelEdit}>
+                  <XIcon color={BrandColors.neutral.white} />
+                </Pressable>
+              </View>
+
+              <Separator size="sm" />
+
+              <InputTextField
+                name={`supplementalOabs.${index}.number`}
+                label="Número da OAB"
+                placeholder="Digite o número da OAB"
+                keyboardType="number-pad"
+              />
+              <InputSelectField
+                name={`supplementalOabs.${index}.uf`}
+                label="UF da OAB Suplementar"
+                placeholder="Selecione o estado"
+                options={UF_OPTIONS}
+              />
+              <InputImageField
+                name={`supplementalOabs.${index}.frontUri`}
+                label="Foto da frente da carteira"
+                emptyTitle="Anexe a foto da frente da carteira"
+              />
+              <InputImageField
+                name={`supplementalOabs.${index}.backUri`}
+                label="Foto do verso da carteira"
+                emptyTitle="Anexe a foto do verso da carteira"
+              />
+
+              <Button variant="primary" onPress={saveEdit}>
+                Salvar
+              </Button>
+            </View>
+          );
+        }
+
+        const entry = supplementalOabs[index] ?? field;
+
+        return (
+          <View key={field.id} style={styles.savedCard}>
+            <View style={styles.savedHeader}>
+              <Body1 bold color={BrandColors.neutral.white}>
+                OAB Suplementar
+              </Body1>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Excluir OAB suplementar"
+                hitSlop={Spacing.xxs}
+                onPress={() => deleteAt(index)}>
+                <SymbolView
+                  name={{ ios: 'trash', android: 'delete', web: 'delete' }}
+                  size={20}
+                  tintColor={BrandColors.primary.light}
+                />
+              </Pressable>
+            </View>
+
+            <Separator size="sm" />
+
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Fechar OAB suplementar"
-              hitSlop={Spacing.xxs}
-              onPress={() => {
-                setSupplementalOpen(false);
-                setSupplementalSaved(false);
-                setUri('supplementalOabNumber', '');
-                setUri('supplementalOabUf', '');
-                setUri('supplementalOabFrontUri', '');
-                setUri('supplementalOabBackUri', '');
-              }}>
-              <XIcon color={BrandColors.neutral.white} />
+              accessibilityLabel="Editar OAB suplementar"
+              onPress={() => startEdit(index)}>
+              <View style={styles.oabMeta}>
+                <View style={styles.oabMetaLabelRow}>
+                  <SymbolView
+                    name={{ ios: 'doc.text', android: 'description', web: 'description' }}
+                    size={16}
+                    tintColor={BrandColors.neutral.white}
+                  />
+                  <InputLabel color={BrandColors.neutral.white}>Número da OAB E UF</InputLabel>
+                </View>
+                <Body1 color={BrandColors.primary.light}>
+                  {[entry.number, entry.uf].filter(Boolean).join(' - ') || '—'}
+                </Body1>
+              </View>
+
+              <Separator size="sm" />
+
+              <InputLabel color={BrandColors.neutral.white}>
+                Foto da Carteira (Frente e verso)
+              </InputLabel>
+              <Separator size="xxs" />
+              <View style={styles.photoRow}>
+                <WalletPhotoPreview uri={entry.frontUri} label="Frente" />
+                <WalletPhotoPreview uri={entry.backUri} label="Verso" />
+              </View>
             </Pressable>
           </View>
+        );
+      })}
 
-          <Separator size="sm" />
-
-          <InputTextField
-            name="supplementalOabNumber"
-            label="Número da OAB"
-            placeholder="Digite o número da OAB"
-            keyboardType="number-pad"
-          />
-          <InputSelectField
-            name="supplementalOabUf"
-            label="UF da OAB Suplementar"
-            placeholder="Selecione o estado"
-            options={UF_OPTIONS}
-          />
-          <UploadBox
-            label="Foto da frente da carteira"
-            imageUri={supplementalOabFrontUri}
-            onPress={() => {
-              void pickAndSet('supplementalOabFrontUri');
-            }}
-            onClear={() => setUri('supplementalOabFrontUri', '')}
-          />
-          <UploadBox
-            label="Foto do verso da carteira"
-            imageUri={supplementalOabBackUri}
-            onPress={() => {
-              void pickAndSet('supplementalOabBackUri');
-            }}
-            onClear={() => setUri('supplementalOabBackUri', '')}
-          />
-
-          <Button
-            variant="primary"
-            onPress={() => {
-              setSupplementalSaved(true);
-              setSupplementalOpen(false);
-            }}>
-            Salvar
-          </Button>
-        </View>
-      ) : (
+      {canAddMore ? (
         <Pressable
           accessibilityRole="button"
-          onPress={() => setSupplementalOpen(true)}
+          onPress={startCreate}
           style={styles.addSupplemental}>
           <TypographLink color={BrandColors.primary.light}>
-            {supplementalSaved ? '+ Editar OAB Suplementar' : '+ Adicionar OAB Suplementar'}
+            + Adicionar OAB Suplementar
           </TypographLink>
         </Pressable>
-      )}
-
-      {supplementalSaved && !supplementalOpen ? (
-        <Body2 color={BrandColors.neutral.light}>OAB suplementar salva nesta etapa.</Body2>
       ) : null}
     </View>
   );
 }
 
+type WalletPhotoPreviewProps = {
+  uri: string;
+  label: string;
+};
+
+function WalletPhotoPreview({ uri, label }: WalletPhotoPreviewProps) {
+  return (
+    <View accessibilityLabel={`Foto ${label} da carteira`} style={styles.photoPreview}>
+      {uri ? (
+        <Image source={{ uri }} style={styles.photoImage} resizeMode="cover" />
+      ) : (
+        <Body2 color={BrandColors.neutral.medium}>Sem foto</Body2>
+      )}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  uploadBlock: {
-    width: '100%',
-  },
-  uploadPlaceholder: {
-    minHeight: 140,
-    borderRadius: Radius.large,
-    borderWidth: 1,
-    borderColor: BrandColors.neutral.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.sm,
-  },
-  previewShell: {
-    height: 160,
-    width: '100%',
-    borderRadius: Radius.large,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: BrandColors.neutral.white,
-    backgroundColor: BrandColors.neutral.dark,
-  },
-  previewActions: {
-    flexDirection: 'row',
-    gap: Spacing.xxs,
-  },
-  thumbAction: {
-    width: 56,
-    height: 56,
-    borderRadius: Radius.medium,
-    overflow: 'hidden',
-    backgroundColor: BrandColors.neutral.dark,
-  },
-  thumbOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  addThumb: {
-    width: 56,
-    height: 56,
-    borderRadius: Radius.medium,
-    borderWidth: 1,
-    borderColor: BrandColors.neutral.white,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   addSupplemental: {
     alignSelf: 'flex-start',
   },
-  supplementalCard: {
+  editCard: {
     width: '100%',
     borderRadius: Radius.large,
     borderWidth: 1,
@@ -277,9 +261,47 @@ const styles = StyleSheet.create({
     padding: Spacing.sm,
     gap: Spacing.sm,
   },
-  supplementalHeader: {
+  editHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  savedCard: {
+    width: '100%',
+    borderRadius: Radius.large,
+    borderWidth: 1,
+    borderColor: BrandColors.neutral.dark,
+    backgroundColor: BrandColors.neutral.xdark,
+    padding: Spacing.sm,
+  },
+  savedHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  oabMeta: {
+    gap: Spacing.xxxs,
+  },
+  oabMetaLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxxs,
+  },
+  photoRow: {
+    flexDirection: 'row',
+    gap: Spacing.xs,
+  },
+  photoPreview: {
+    flex: 1,
+    aspectRatio: 1,
+    borderRadius: Radius.medium,
+    backgroundColor: BrandColors.accessory.darkBlue,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  photoImage: {
+    width: '100%',
+    height: '100%',
   },
 });
