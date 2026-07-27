@@ -1,6 +1,6 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/atomic/button';
@@ -8,7 +8,7 @@ import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
 import { OptionCheckbox } from '@/components/signup-lawyer';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
-import { homeHrefForRole, useAuth } from '@/domain/auth';
+import { homeHrefForRole, useAcceptTerms, useAuth } from '@/domain/auth';
 
 const TERMS_PARAGRAPHS = [
   {
@@ -24,15 +24,50 @@ const TERMS_PARAGRAPHS = [
 export default function SignupTermsScreen() {
   const router = useRouter();
   const { profile } = useLocalSearchParams<{ profile?: string }>();
-  const { signInAs } = useAuth();
+  const { signInAs, isAuthenticated, homeHref, user, isHydrating } = useAuth();
+  const acceptTerms = useAcceptTerms();
   const [accepted, setAccepted] = useState(false);
 
-  const goNext = () => {
-    if (profile === 'lawyer') {
+  if (isHydrating) {
+    return null;
+  }
+
+  if (isAuthenticated && user?.termsAccepted) {
+    return <Redirect href={homeHref} />;
+  }
+
+  const goNext = async () => {
+    if (profile === 'lawyer' && !isAuthenticated) {
       router.push('/signup/subscription');
       return;
     }
 
+    if (isAuthenticated) {
+      try {
+        await acceptTerms.mutateAsync({
+          checkboxConfirmado: true,
+          scrollConfirmado: true,
+        });
+      } catch (error) {
+        Alert.alert(
+          'Aceite dos termos',
+          error instanceof Error
+            ? error.message
+            : 'Não foi possível registrar o aceite dos termos.',
+        );
+        return;
+      }
+
+      if (profile === 'lawyer') {
+        router.push('/signup/subscription');
+        return;
+      }
+
+      router.replace(homeHref);
+      return;
+    }
+
+    // Fallback for unauthenticated client mock flows.
     signInAs('CLIENT');
     router.replace(homeHrefForRole('CLIENT'));
   };
@@ -74,8 +109,13 @@ export default function SignupTermsScreen() {
 
           <Separator size="lg" />
 
-          <Button variant="cta" disabled={!accepted} onPress={goNext}>
-            Começar
+          <Button
+            variant="cta"
+            disabled={!accepted || acceptTerms.isPending}
+            onPress={() => {
+              void goNext();
+            }}>
+            {acceptTerms.isPending ? 'Salvando...' : 'Começar'}
           </Button>
         </ScrollView>
       </SafeAreaView>

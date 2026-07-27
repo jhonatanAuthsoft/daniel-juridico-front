@@ -11,6 +11,8 @@ export type ClientSignupFormValues = {
   uf: string;
   cpf: string;
   cnpj: string;
+  /** Required for CNPJ (maps to API `areaAtuacao`). */
+  businessArea: string;
   birthDate: string;
   cep: string;
   state: string;

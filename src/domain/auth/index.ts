@@ -1,4 +1,7 @@
-export type { AuthUser, UserRole } from './auth.types';
-export { homeHrefForRole, roleLabel } from './auth.types';
+export type { AuthUser, AuthSessionState, UserRole } from './auth.types';
+export { homeHrefForRole, mapApiPerfilToRole, roleLabel } from './auth.types';
 export { AuthProvider, useAuth } from './auth-provider';
 export { RoleGuard } from './role-guard';
+export { TermsGuard } from './terms-guard';
+export { useAcceptTerms } from './use-accept-terms';
+export { acceptTermsUseCase } from './accept-terms.use-case';

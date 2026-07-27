@@ -76,7 +76,7 @@ export function LawyerAccountScreen() {
     TAB_BAR_CONTENT_HEIGHT + insets.bottom + LIST_GAP_ABOVE_TAB;
 
   const handleSignOut = () => {
-    signOut();
+    void signOut();
     router.replace('/login');
   };
 

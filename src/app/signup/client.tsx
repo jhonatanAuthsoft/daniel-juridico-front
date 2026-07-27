@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { Alert } from 'react-native';
 
 import { BackLink } from '@/atomic/back-link';
 import { Button } from '@/atomic/button';
@@ -17,6 +18,7 @@ import {
   type ClientSignupFormValues,
 } from '@/components/signup-client';
 import { SignupMultiStepShell } from '@/components/signup-shell';
+import { useRegisterClient } from '@/domain/client';
 
 export default function ClientSignupScreen() {
   const router = useRouter();
@@ -25,10 +27,16 @@ export default function ClientSignupScreen() {
     defaultValues,
     mode: 'onBlur',
   });
+  const registerClient = useRegisterClient();
 
   const stepCopy = STEP_COPY[step];
+  const isLastStep = step >= TOTAL_STEPS;
+  const isSubmitting = registerClient.isPending;
 
   const goBack = () => {
+    if (isSubmitting) {
+      return;
+    }
     if (step === 1) {
       router.back();
       return;
@@ -36,9 +44,21 @@ export default function ClientSignupScreen() {
     setStep((current) => current - 1);
   };
 
-  const goNext = () => {
-    if (step >= TOTAL_STEPS) {
+  const submitRegistration = form.handleSubmit(async (values) => {
+    try {
+      await registerClient.mutateAsync(values);
       router.push('/signup/terms?profile=client');
+    } catch (error) {
+      Alert.alert(
+        'Cadastro',
+        error instanceof Error ? error.message : 'Não foi possível concluir o cadastro.',
+      );
+    }
+  });
+
+  const goNext = () => {
+    if (isLastStep) {
+      void submitRegistration();
       return;
     }
 
@@ -62,8 +82,8 @@ export default function ClientSignupScreen() {
 
       <Separator size="xl" />
 
-      <Button variant="cta" onPress={goNext}>
-        {step === TOTAL_STEPS ? 'Começar' : 'Continuar'}
+      <Button variant="cta" disabled={isSubmitting} isLoading={isSubmitting} onPress={goNext}>
+        {isLastStep ? 'Começar' : 'Continuar'}
       </Button>
 
       <Separator size="sm" />

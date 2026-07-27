@@ -29,7 +29,7 @@ export function ProfileScreen() {
   };
 
   const handleSignOut = () => {
-    signOut();
+    void signOut();
     router.replace('/login');
   };
 

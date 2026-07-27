@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { StepPersonalDocuments } from '@/components/signup-client';
+import { StepPersonalDocuments } from '@/components/signup-client/step-personal-documents';
 import { defaultValues } from '@/components/signup-client/constants';
 
 function StepHarness() {
@@ -36,6 +36,7 @@ describe('StepPersonalDocuments', () => {
 
     expect(screen.getByText('Razão Social')).toBeTruthy();
     expect(screen.getByPlaceholderText('00.000.000/0000-00')).toBeTruthy();
+    expect(screen.getByText('Área de atuação')).toBeTruthy();
     expect(screen.queryByText('Nome completo (nome social)')).toBeNull();
     expect(screen.queryByText('RG')).toBeNull();
     expect(screen.queryByText('Data de Nascimento')).toBeNull();

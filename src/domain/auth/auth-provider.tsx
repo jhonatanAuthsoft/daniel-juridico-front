@@ -2,10 +2,18 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from 'react';
+
+import {
+  clearAuthSession,
+  loadAuthSession,
+  saveAuthSession,
+  type AuthSession,
+} from '@/data/auth';
 
 import {
   type AuthUser,
@@ -15,12 +23,17 @@ import {
 
 type AuthContextValue = {
   user: AuthUser | null;
+  token: string | null;
   isAuthenticated: boolean;
-  /** Mock sign-in with a fixed profile. */
+  isHydrating: boolean;
+  /** Persist a real API session (token + user). */
+  signInWithSession: (session: AuthSession) => Promise<void>;
+  /** Marks terms as accepted and persists the updated session. */
+  markTermsAccepted: () => Promise<void>;
+  /** @deprecated Mock helper — prefer signInWithSession. */
   signInAs: (role: UserRole) => void;
-  /** Switch role while staying "logged in" (dev/mock). */
   setRole: (role: UserRole) => void;
-  signOut: () => void;
+  signOut: () => Promise<void>;
   homeHref: '/client' | '/lawyer' | '/login';
 };
 
@@ -32,40 +45,101 @@ const MOCK_USERS: Record<UserRole, AuthUser> = {
     email: 'maria_silvalima@gmail.com',
     name: 'Maria Silva Lima',
     role: 'CLIENT',
+    termsAccepted: true,
   },
   LAWYER: {
     id: 'mock-lawyer',
     email: 'luizabitt@gmail.com',
     name: 'Luiza Bittencourt',
     role: 'LAWYER',
+    termsAccepted: true,
   },
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [isHydrating, setIsHydrating] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const session = await loadAuthSession();
+        if (cancelled || !session) {
+          return;
+        }
+        setUser(session.user);
+        setToken(session.token);
+      } finally {
+        if (!cancelled) {
+          setIsHydrating(false);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const signInWithSession = useCallback(async (session: AuthSession) => {
+    await saveAuthSession(session);
+    setUser(session.user);
+    setToken(session.token);
+  }, []);
+
+  const markTermsAccepted = useCallback(async () => {
+    if (!user || !token) {
+      return;
+    }
+
+    const nextUser: AuthUser = { ...user, termsAccepted: true };
+    await saveAuthSession({ token, user: nextUser });
+    setUser(nextUser);
+  }, [token, user]);
 
   const signInAs = useCallback((role: UserRole) => {
-    setUser(MOCK_USERS[role]);
+    const mockUser = MOCK_USERS[role];
+    setUser(mockUser);
+    setToken(null);
   }, []);
 
   const setRole = useCallback((role: UserRole) => {
     setUser(MOCK_USERS[role]);
+    setToken(null);
   }, []);
 
-  const signOut = useCallback(() => {
+  const signOut = useCallback(async () => {
+    await clearAuthSession();
     setUser(null);
+    setToken(null);
   }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
+      token,
       isAuthenticated: user != null,
+      isHydrating,
+      signInWithSession,
+      markTermsAccepted,
       signInAs,
       setRole,
       signOut,
       homeHref: user ? homeHrefForRole(user.role) : '/login',
     }),
-    [user, signInAs, setRole, signOut],
+    [
+      user,
+      token,
+      isHydrating,
+      signInWithSession,
+      markTermsAccepted,
+      signInAs,
+      setRole,
+      signOut,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

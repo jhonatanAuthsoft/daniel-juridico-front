@@ -40,6 +40,7 @@ export const defaultValues: ClientSignupFormValues = {
   uf: '',
   cpf: '',
   cnpj: '',
+  businessArea: '',
   birthDate: '',
   cep: '',
   state: '',

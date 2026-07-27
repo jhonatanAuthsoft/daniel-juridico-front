@@ -5,6 +5,14 @@ export type AuthUser = {
   email: string;
   name: string;
   role: UserRole;
+  phone?: string;
+  /** False until POST /usuarios/aceitar-termos — use for route guard. */
+  termsAccepted: boolean;
+};
+
+export type AuthSessionState = {
+  token: string;
+  user: AuthUser;
 };
 
 export function homeHrefForRole(role: UserRole): '/client' | '/lawyer' {
@@ -13,4 +21,12 @@ export function homeHrefForRole(role: UserRole): '/client' | '/lawyer' {
 
 export function roleLabel(role: UserRole): string {
   return role === 'LAWYER' ? 'Advogado' : 'Cliente';
+}
+
+export function mapApiPerfilToRole(perfil: string): UserRole {
+  const normalized = perfil.trim().toUpperCase();
+  if (normalized === 'ADVOGADO' || normalized === 'LAWYER') {
+    return 'LAWYER';
+  }
+  return 'CLIENT';
 }

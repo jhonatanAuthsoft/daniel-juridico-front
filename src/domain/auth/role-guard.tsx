@@ -14,7 +14,11 @@ type RoleGuardProps = {
  * Wrong role → redirect to that role's shell (not a soft "hide UI").
  */
 export function RoleGuard({ allowedRole, children }: RoleGuardProps) {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isHydrating } = useAuth();
+
+  if (isHydrating) {
+    return null;
+  }
 
   if (!isAuthenticated || !user) {
     return <Redirect href="/login" />;

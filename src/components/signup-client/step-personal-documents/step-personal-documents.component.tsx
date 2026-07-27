@@ -1,7 +1,8 @@
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { InputSelectField, InputTextField } from '@/atomic/form';
+import { InputSelectField } from '@/atomic/form/input-select-field.component';
+import { InputTextField } from '@/atomic/form/input-text-field.component';
 import { Separator } from '@/atomic/separator';
 import { Body1, InputLabel } from '@/atomic/typography';
 import { ISSUING_AUTHORITY_OPTIONS, UF_OPTIONS } from '@/constants/select-options';
@@ -72,6 +73,12 @@ export function StepPersonalDocuments() {
             label="CNPJ"
             placeholder="00.000.000/0000-00"
             keyboardType="number-pad"
+          />
+          <InputTextField
+            name="businessArea"
+            label="Área de atuação"
+            placeholder="Digite a área de atuação"
+            autoCapitalize="sentences"
           />
         </>
       ) : (
