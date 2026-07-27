@@ -1,17 +1,20 @@
 import { Stack } from 'expo-router';
 
-import { RoleGuard } from '@/domain/auth';
+import { DevelopmentGuard } from '@/components/development-guard';
 import { BrandColors } from '@/constants/theme';
+import { RoleGuard } from '@/domain/auth';
 
 export default function LawyerShellLayout() {
   return (
     <RoleGuard allowedRole="LAWYER">
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: BrandColors.neutral.xdark },
-        }}
-      />
+      <DevelopmentGuard>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: BrandColors.neutral.xdark },
+          }}
+        />
+      </DevelopmentGuard>
     </RoleGuard>
   );
 }

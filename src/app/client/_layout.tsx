@@ -1,17 +1,20 @@
 import { Stack } from 'expo-router';
 
-import { RoleGuard } from '@/domain/auth';
+import { DevelopmentGuard } from '@/components/development-guard';
 import { BrandColors } from '@/constants/theme';
+import { RoleGuard } from '@/domain/auth';
 
 export default function ClientShellLayout() {
   return (
     <RoleGuard allowedRole="CLIENT">
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: BrandColors.neutral.xdark },
-        }}
-      />
+      <DevelopmentGuard>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: BrandColors.neutral.xdark },
+          }}
+        />
+      </DevelopmentGuard>
     </RoleGuard>
   );
 }
