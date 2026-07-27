@@ -22,14 +22,13 @@ function extractApiErrorMessage(error: unknown): string {
         'message' in body && typeof body.message === 'string' ? body.message : null;
       const errors =
         'errors' in body && Array.isArray(body.errors) ? body.errors : null;
+      const firstError = errors?.[0];
       const firstDetail =
-        errors &&
-        errors[0] &&
-        typeof errors[0] === 'object' &&
-        errors[0] !== null &&
-        'detail' in errors[0] &&
-        typeof (errors[0] as { detail: unknown }).detail === 'string'
-          ? (errors[0] as { detail: string }).detail
+        firstError &&
+        typeof firstError === 'object' &&
+        'detail' in firstError &&
+        typeof (firstError as { detail: unknown }).detail === 'string'
+          ? (firstError as { detail: string }).detail
           : null;
 
       if (firstDetail) {
