@@ -804,3 +804,226 @@
 {"_e":"metro:bundling:progress","_t":1784600031855,"id":"3","progress":0,"total":1,"current":0}
 {"_e":"metro:bundling:done","_t":1784600031928,"id":"3","total":1,"ms":73.208084}
 {"_e":"metro:client_log","_t":1784600037527,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:server_log","_t":1784602693929,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784602925528,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784603038672,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784603148591,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784603294056,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784603408326,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784603533751,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784603673904,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784603901557,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784604010520,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784604125414,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784604270961,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784604381406,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784604497419,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784604640293,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784604749973,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784605696828,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784605870306,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784605991015,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784606304846,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784606543538,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784606652893,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784606987315,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784607935257,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784608921661,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784609573406,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784610520409,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784611468016,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784612414841,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784613467546,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784614166879,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784616803028,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784617750792,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784618697739,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784619644570,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784620592349,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784621540263,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784622487133,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784623434178,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784623823478,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784624770550,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784625718485,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784626591227,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784627312148,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784628259169,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784628980605,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784629928654,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784630876826,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784631119842,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784631234124,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784632181001,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784632301663,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784632561472,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784632683693,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784632878257,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784633014656,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784633134355,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784633274533,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784635741883,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784635875458,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784636064854,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784636260162,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784644819530,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784644938179,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784645175995,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784645351995,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784645491344,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784645627413,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784645767398,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784645905667,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784646032718,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784646180884,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784646383173,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784646636068,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784646768713,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784646894865,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784647031359,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784647225026,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784647375163,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784647522674,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784647662363,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784647807140,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784647948041,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784648088136,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784648239485,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784648350789,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784648477062,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784649424147,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784649548371,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784649732801,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784649964634,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784650108351,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784650254785,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784650401006,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784650549564,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784650696585,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784650840395,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784651074040,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784651239727,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784651371423,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784651520530,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784651664654,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784651975596,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784652115181,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784652370478,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784652492028,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784652628228,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784652765109,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784652884844,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784653026275,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784653173729,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784653287104,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784653425186,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784653556019,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784653700698,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784653866441,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784653990757,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784654112317,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784654256081,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784654365617,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784654514830,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784654641928,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784654780064,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784654929661,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784655057757,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784655187741,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784655325995,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784655448314,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784655555124,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784655690505,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784655824950,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784656016140,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784656139533,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784656288335,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784656550670,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784656772664,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784656903531,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784657063999,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784658674442,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784658803182,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784658936714,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784659105775,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784659238476,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784660531690,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784660644128,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784660785125,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784660927554,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784661038027,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784667656778,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784674196180,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1784674340620,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"root:init","_t":1785110137325,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"env:mode","_t":1785110137326,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1785110137328,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1785110137628,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785110137886,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785110138031,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785110138365,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1785110142293,"id":"1","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785110142293,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785110142295,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785110142749,"id":"1","progress":0.010000000000000002,"total":1,"current":1}
+{"_e":"metro:bundling:progress","_t":1785110142851,"id":"1","progress":0.18367346938775508,"total":14,"current":6}
+{"_e":"metro:bundling:progress","_t":1785110142967,"id":"1","progress":0.32653061224489793,"total":14,"current":8}
+{"_e":"metro:bundling:progress","_t":1785110143099,"id":"1","progress":0.41326530612244905,"total":14,"current":9}
+{"_e":"metro:bundling:progress","_t":1785110143201,"id":"1","progress":0.41326530612244905,"total":45,"current":23}
+{"_e":"metro:bundling:progress","_t":1785110143300,"id":"1","progress":0.41326530612244905,"total":97,"current":30}
+{"_e":"metro:bundling:progress","_t":1785110143400,"id":"1","progress":0.41326530612244905,"total":277,"current":55}
+{"_e":"metro:bundling:progress","_t":1785110143501,"id":"1","progress":0.41326530612244905,"total":329,"current":69}
+{"_e":"metro:bundling:progress","_t":1785110143602,"id":"1","progress":0.41326530612244905,"total":332,"current":71}
+{"_e":"metro:bundling:progress","_t":1785110143706,"id":"1","progress":0.41326530612244905,"total":348,"current":79}
+{"_e":"metro:bundling:progress","_t":1785110143811,"id":"1","progress":0.41326530612244905,"total":361,"current":88}
+{"_e":"metro:bundling:progress","_t":1785110143911,"id":"1","progress":0.41326530612244905,"total":369,"current":100}
+{"_e":"metro:bundling:progress","_t":1785110144012,"id":"1","progress":0.41326530612244905,"total":460,"current":146}
+{"_e":"metro:bundling:progress","_t":1785110144112,"id":"1","progress":0.41326530612244905,"total":496,"current":169}
+{"_e":"metro:bundling:progress","_t":1785110144214,"id":"1","progress":0.41326530612244905,"total":549,"current":229}
+{"_e":"metro:bundling:progress","_t":1785110144313,"id":"1","progress":0.41326530612244905,"total":600,"current":294}
+{"_e":"metro:bundling:progress","_t":1785110144413,"id":"1","progress":0.41326530612244905,"total":731,"current":352}
+{"_e":"metro:bundling:progress","_t":1785110144513,"id":"1","progress":0.41326530612244905,"total":807,"current":405}
+{"_e":"metro:bundling:progress","_t":1785110144614,"id":"1","progress":0.41326530612244905,"total":859,"current":450}
+{"_e":"metro:bundling:progress","_t":1785110144715,"id":"1","progress":0.41326530612244905,"total":907,"current":503}
+{"_e":"metro:bundling:progress","_t":1785110144815,"id":"1","progress":0.41326530612244905,"total":963,"current":559}
+{"_e":"metro:bundling:progress","_t":1785110144917,"id":"1","progress":0.41326530612244905,"total":999,"current":608}
+{"_e":"metro:bundling:progress","_t":1785110145017,"id":"1","progress":0.41326530612244905,"total":1032,"current":645}
+{"_e":"metro:bundling:progress","_t":1785110145118,"id":"1","progress":0.41326530612244905,"total":1067,"current":675}
+{"_e":"metro:bundling:progress","_t":1785110145220,"id":"1","progress":0.42058335943138037,"total":1084,"current":703}
+{"_e":"metro:bundling:progress","_t":1785110145320,"id":"1","progress":0.4314568171642959,"total":1087,"current":714}
+{"_e":"metro:bundling:progress","_t":1785110145420,"id":"1","progress":0.433934988435934,"total":1093,"current":720}
+{"_e":"metro:bundling:progress","_t":1785110145522,"id":"1","progress":0.4521193259761267,"total":1105,"current":743}
+{"_e":"metro:bundling:progress","_t":1785110145623,"id":"1","progress":0.4691643824888401,"total":1130,"current":774}
+{"_e":"metro:bundling:progress","_t":1785110145723,"id":"1","progress":0.49478854513264586,"total":1143,"current":804}
+{"_e":"metro:bundling:progress","_t":1785110145858,"id":"1","progress":0.5417365029066908,"total":1163,"current":856}
+{"_e":"metro:bundling:progress","_t":1785110145958,"id":"1","progress":0.5900208730865152,"total":1186,"current":911}
+{"_e":"metro:bundling:progress","_t":1785110146059,"id":"1","progress":0.6359895660089985,"total":1195,"current":953}
+{"_e":"metro:bundling:progress","_t":1785110146159,"id":"1","progress":0.6939876482427286,"total":1216,"current":1013}
+{"_e":"metro:bundling:progress","_t":1785110146261,"id":"1","progress":0.7346938775510203,"total":1225,"current":1050}
+{"_e":"metro:bundling:progress","_t":1785110146362,"id":"1","progress":0.7481053546613207,"total":1229,"current":1063}
+{"_e":"metro:bundling:progress","_t":1785110146463,"id":"1","progress":0.7481053546613207,"total":1280,"current":1098}
+{"_e":"metro:bundling:progress","_t":1785110146564,"id":"1","progress":0.7532675388153244,"total":1287,"current":1117}
+{"_e":"metro:bundling:progress","_t":1785110146664,"id":"1","progress":0.7831224937016442,"total":1295,"current":1146}
+{"_e":"metro:bundling:progress","_t":1785110146764,"id":"1","progress":0.8125949483865887,"total":1319,"current":1189}
+{"_e":"metro:bundling:progress","_t":1785110146864,"id":"1","progress":0.8447070092796055,"total":1347,"current":1238}
+{"_e":"metro:bundling:progress","_t":1785110146966,"id":"1","progress":0.8447070092796055,"total":1482,"current":1281}
+{"_e":"metro:bundling:progress","_t":1785110147066,"id":"1","progress":0.8447070092796055,"total":1518,"current":1321}
+{"_e":"metro:bundling:progress","_t":1785110147166,"id":"1","progress":0.8447070092796055,"total":1546,"current":1380}
+{"_e":"metro:bundling:progress","_t":1785110147266,"id":"1","progress":0.8447070092796055,"total":1553,"current":1427}
+{"_e":"metro:bundling:progress","_t":1785110147366,"id":"1","progress":0.9033451787222158,"total":1574,"current":1496}
+{"_e":"metro:bundling:progress","_t":1785110147466,"id":"1","progress":0.9150863666525187,"total":1636,"current":1565}
+{"_e":"metro:bundling:progress","_t":1785110147566,"id":"1","progress":0.97115536820876,"total":1652,"current":1628}
+{"_e":"metro:bundling:progress","_t":1785110147666,"id":"1","progress":0.9940458602105231,"total":1677,"current":1672}
+{"_e":"metro:bundling:progress","_t":1785110147767,"id":"1","progress":0.998807749733406,"total":1677,"current":1676}
+{"_e":"metro:bundling:progress","_t":1785110148005,"id":"1","progress":0.999,"total":1677,"current":1677}
+{"_e":"metro:bundling:progress","_t":1785110148106,"id":"1","progress":0.999,"total":1680,"current":1680}
+{"_e":"metro:bundling:done","_t":1785110148293,"id":"1","total":1680,"ms":6000.498875}
+{"_e":"metro:bundling:started","_t":1785110911093,"id":"2","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785110911093,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785110911161,"id":"2","total":1,"ms":67.638333}
+{"_e":"metro:bundling:started","_t":1785112095605,"id":"3","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785112095605,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785112095671,"id":"3","total":1,"ms":66.310459}
+{"_e":"metro:bundling:started","_t":1785112241516,"id":"4","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785112241516,"id":"4","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785112241577,"id":"4","total":1,"ms":60.863083}

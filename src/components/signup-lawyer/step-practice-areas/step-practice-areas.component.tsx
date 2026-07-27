@@ -6,9 +6,8 @@ import {
   SelectableOptionList,
 } from '../selectable-option';
 import { signupLawyerSharedStyles } from '../shared.styles';
+import { PRACTICE_AREA_NONE_ID } from '../signup-step-navigation';
 import type { LawyerSignupFormValues } from '../types';
-
-const NONE_ID = 'none';
 
 const PRACTICE_OPTIONS = [
   {
@@ -29,7 +28,7 @@ const PRACTICE_OPTIONS = [
     label: 'Correspondente / Outras atividades',
   },
   {
-    id: NONE_ID,
+    id: PRACTICE_AREA_NONE_ID,
     label: 'Nenhuma das anteriores',
     description: 'Selecione as especialidades a seguir.',
   },
@@ -49,12 +48,14 @@ export function StepPracticeAreas() {
           const toggle = (id: string) => {
             const isSelected = selected.includes(id);
 
-            if (id === NONE_ID) {
-              onChange(isSelected ? [] : [NONE_ID]);
+            if (id === PRACTICE_AREA_NONE_ID) {
+              onChange(isSelected ? [] : [PRACTICE_AREA_NONE_ID]);
               return;
             }
 
-            const withoutNone = selected.filter((item) => item !== NONE_ID);
+            const withoutNone = selected.filter(
+              (item) => item !== PRACTICE_AREA_NONE_ID,
+            );
             if (isSelected) {
               onChange(withoutNone.filter((item) => item !== id));
               return;

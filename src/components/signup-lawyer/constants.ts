@@ -34,12 +34,13 @@ export const STEP_COPY: Record<number, { title: string; subtitle: string }> = {
       'Selecione sua área de atuação para receber solicitações alinhadas ao seu perfil profissional.',
   },
   7: {
-    title: 'Etapa 7',
-    subtitle: 'Em breve.',
-  },
-  8: {
     title: 'Especialidades',
     subtitle: 'Escolha suas especialidades para receber demandas compatíveis.',
+  },
+  8: {
+    title: 'Raio de atuação',
+    subtitle:
+      'Informe as cidades em que você atende para auxiliar as conexões com cliente',
   },
   9: {
     title: 'Cobrança',
@@ -86,6 +87,8 @@ export const defaultValues: LawyerSignupFormValues = {
   postgraduateYear: '',
   practiceAreas: [],
   specialties: [],
+  serviceState: '',
+  serviceCity: '',
   billingMethods: [],
   pronouns: '',
   profileImageUri: '',

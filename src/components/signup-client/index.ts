@@ -9,4 +9,4 @@ export { StepCredentials, type StepCredentialsProps } from './step-credentials';
 export { StepPersonalDocuments } from './step-personal-documents';
 export { StepProfessional } from './step-professional';
 export { StepProfile } from './step-profile';
-export type { ClientSignupFormValues } from './types';
+export type { ClientPersonType, ClientSignupFormValues } from './types';

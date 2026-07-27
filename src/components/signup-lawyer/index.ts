@@ -5,6 +5,11 @@ export {
   TOTAL_STEPS,
 } from './constants';
 export {
+  getNextLawyerSignupStep,
+  getPreviousLawyerSignupStep,
+  PRACTICE_AREA_NONE_ID,
+  shouldShowSpecialtiesStep,
+} from './signup-step-navigation';export {
   OptionCheckbox,
   SelectableOption,
   SelectableOptionList,
@@ -21,5 +26,6 @@ export { StepEducation } from './step-education';
 export { StepOabRegistration } from './step-oab-registration';
 export { StepPlaceholder, type StepPlaceholderProps } from './step-placeholder';
 export { StepPracticeAreas } from './step-practice-areas';
+export { StepServiceRadius } from './step-service-radius';
 export { StepSpecialties } from './step-specialties';
 export type { LawyerSignupFormValues } from './types';

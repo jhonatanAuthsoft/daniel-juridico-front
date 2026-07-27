@@ -33,6 +33,8 @@ export type LawyerSignupFormValues = {
   postgraduateYear: string;
   practiceAreas: string[];
   specialties: string[];
+  serviceState: string;
+  serviceCity: string;
   billingMethods: string[];
   pronouns: string;
   profileImageUri: string;
