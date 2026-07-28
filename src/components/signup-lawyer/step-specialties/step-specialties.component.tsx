@@ -1,16 +1,22 @@
 import { SymbolView } from 'expo-symbols';
 import { useMemo, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 
 import { GlassBackground } from '@/atomic/glass';
 import { Body1, InputCaption } from '@/atomic/typography';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
+import { useSpecialtiesCatalog } from '@/domain/catalog';
 
-import {
-  SPECIALTY_CATEGORIES,
-  type SpecialtyCategory,
-} from '../specialties.data';
+import type { SpecialtyCategory } from '../specialties.data';
 import { OptionCheckbox } from '../selectable-option';
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
@@ -105,32 +111,68 @@ function CategoryPanel({
 
 export function StepSpecialties() {
   const { control } = useFormContext<LawyerSignupFormValues>();
+  const catalog = useSpecialtiesCatalog();
+  const categories = useMemo(
+    () => catalog.data?.categories ?? [],
+    [catalog.data?.categories],
+  );
   const [query, setQuery] = useState('');
-  const [expandedIds, setExpandedIds] = useState<string[]>(['CIVIL']);
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  const defaultExpandedId = categories[0]?.id;
 
   const filteredCategories = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) {
-      return SPECIALTY_CATEGORIES;
+      return categories;
     }
 
-    return SPECIALTY_CATEGORIES.map((category) => {
-      const categoryMatch = category.label.toLowerCase().includes(normalized);
-      const children = category.children.filter((child) =>
-        child.label.toLowerCase().includes(normalized),
-      );
+    return categories
+      .map((category) => {
+        const categoryMatch = category.label.toLowerCase().includes(normalized);
+        const children = category.children.filter((child) =>
+          child.label.toLowerCase().includes(normalized),
+        );
 
-      if (categoryMatch) {
-        return category;
-      }
+        if (categoryMatch) {
+          return category;
+        }
 
-      if (children.length > 0) {
-        return { ...category, children };
-      }
+        if (children.length > 0) {
+          return { ...category, children };
+        }
 
-      return null;
-    }).filter(Boolean) as SpecialtyCategory[];
-  }, [query]);
+        return null;
+      })
+      .filter(Boolean) as SpecialtyCategory[];
+  }, [categories, query]);
+
+  if (catalog.isLoading) {
+    return (
+      <View style={signupLawyerSharedStyles.fields}>
+        <ActivityIndicator color={BrandColors.primary.light} />
+        <InputCaption color={BrandColors.neutral.light}>
+          Carregando especialidades...
+        </InputCaption>
+      </View>
+    );
+  }
+
+  if (catalog.isError) {
+    return (
+      <View style={signupLawyerSharedStyles.fields}>
+        <InputCaption color={BrandColors.neutral.light}>
+          {getErrorMessage(catalog.error, 'Não foi possível carregar as especialidades.')}
+        </InputCaption>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            void catalog.refetch();
+          }}>
+          <Body1 color={BrandColors.primary.light}>Tentar novamente</Body1>
+        </Pressable>
+      </View>
+    );
+  }
 
   return (
     <View style={signupLawyerSharedStyles.fields}>
@@ -180,11 +222,15 @@ export function StepSpecialties() {
           };
 
           const toggleExpand = (id: string) => {
-            setExpandedIds((current) =>
-              current.includes(id)
-                ? current.filter((item) => item !== id)
-                : [...current, id],
-            );
+            setExpandedIds((current) => {
+              const baseline =
+                current.length === 0 && defaultExpandedId
+                  ? [defaultExpandedId]
+                  : current;
+              return baseline.includes(id)
+                ? baseline.filter((item) => item !== id)
+                : [...baseline, id];
+            });
           };
 
           if (filteredCategories.length === 0) {
@@ -201,7 +247,11 @@ export function StepSpecialties() {
                 <CategoryPanel
                   key={category.id}
                   category={category}
-                  expanded={expandedIds.includes(category.id) || Boolean(query.trim())}
+                  expanded={
+                    Boolean(query.trim()) ||
+                    expandedIds.includes(category.id) ||
+                    (expandedIds.length === 0 && category.id === defaultExpandedId)
+                  }
                   selected={selected}
                   onToggleExpand={() => toggleExpand(category.id)}
                   onToggleChild={toggleChild}

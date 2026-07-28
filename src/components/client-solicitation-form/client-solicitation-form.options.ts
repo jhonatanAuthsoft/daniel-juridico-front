@@ -1,5 +1,5 @@
 import type { SelectOption } from '@/constants/select-options';
-import { SPECIALTY_CATEGORIES } from '@/components/signup-lawyer/specialties.data';
+import type { SpecialtyCategory } from '@/components/signup-lawyer/specialties.data';
 
 export const PRACTICE_OPTIONS: SelectOption[] = [
   { value: 'consultoria', label: 'Consultoria jurídica' },
@@ -7,18 +7,30 @@ export const PRACTICE_OPTIONS: SelectOption[] = [
   { value: 'mediacao', label: 'Mediação e acordo' },
 ];
 
-export const SPECIALTY_OPTIONS: SelectOption[] = SPECIALTY_CATEGORIES.map((category) => ({
-  value: category.id,
-  label: category.label,
-}));
+export function specialtyOptionsFromCategories(
+  categories: SpecialtyCategory[],
+): SelectOption[] {
+  return categories.map((category) => ({
+    value: category.id,
+    label: category.label,
+  }));
+}
 
-export const SUBSPECIALTY_OPTIONS: SelectOption[] = SPECIALTY_CATEGORIES.flatMap(
-  (category) =>
+export function subspecialtyOptionsFromCategories(
+  categories: SpecialtyCategory[],
+  specialtyCode?: string,
+): SelectOption[] {
+  const source = specialtyCode
+    ? categories.filter((category) => category.id === specialtyCode)
+    : categories;
+
+  return source.flatMap((category) =>
     category.children.map((specialty) => ({
       value: specialty.id,
       label: specialty.label,
     })),
-);
+  );
+}
 
 export const URGENCY_OPTIONS: SelectOption[] = [
   { value: 'baixa', label: 'Baixa' },

@@ -24,12 +24,13 @@ import {
   Spacing,
 } from '@/constants/theme';
 import { useConnectivityGuard } from '@/hooks/use-connectivity-guard';
+import { useSpecialtiesCatalog } from '@/domain/catalog';
 
 import {
   BILLING_OPTIONS,
   PRACTICE_OPTIONS,
-  SPECIALTY_OPTIONS,
-  SUBSPECIALTY_OPTIONS,
+  specialtyOptionsFromCategories,
+  subspecialtyOptionsFromCategories,
   URGENCY_OPTIONS,
 } from './client-solicitation-form.options';
 
@@ -78,6 +79,13 @@ export function ClientSolicitationForm({
   const values = form.watch();
   const { checkConnection, hasConnectionError, isCheckingConnection } =
     useConnectivityGuard(onSubmitted);
+  const specialtiesCatalog = useSpecialtiesCatalog();
+  const specialtyCategories = specialtiesCatalog.data?.categories ?? [];
+  const specialtyOptions = specialtyOptionsFromCategories(specialtyCategories);
+  const subspecialtyOptions = subspecialtyOptionsFromCategories(
+    specialtyCategories,
+    values.specialty || undefined,
+  );
 
   const cityOptions = CITIES_BY_UF[values.state] ?? [];
   const requiredValues = [
@@ -142,7 +150,7 @@ export function ClientSolicitationForm({
                 name="specialty"
                 label="Especialidade"
                 placeholder="Selecione a especialidade"
-                options={SPECIALTY_OPTIONS}
+                options={specialtyOptions}
               />
               <InputSelectField
                 name="state"
@@ -212,7 +220,7 @@ export function ClientSolicitationForm({
                     name="subspecialty"
                     label="Subespecialidade"
                     placeholder="Selecione a subespecialidade"
-                    options={SUBSPECIALTY_OPTIONS}
+                    options={subspecialtyOptions}
                   />
                   <InputSelectField
                     name="billingMethod"
