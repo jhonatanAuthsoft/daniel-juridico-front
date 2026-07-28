@@ -19,6 +19,7 @@ export function useRegisterLawyer() {
       const result = await registerLawyerUseCase(form);
       await signInWithSession({
         token: result.token,
+        refreshToken: result.refreshToken,
         user: result.user,
       });
       return result;

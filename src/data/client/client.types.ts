@@ -38,8 +38,6 @@ export type RegisterClientUserWire = {
   perfil: string;
   telefone: string;
   termosAceitos: boolean;
-  termosAceitosEm?: string | null;
-  termosVersao?: string | null;
 };
 
 /** Wire response for `POST /clientes/cadastrar`. */
@@ -48,11 +46,13 @@ export type RegisterClientWireResponse = {
   cliente: Record<string, unknown>;
   endereco: Record<string, unknown>;
   token: string;
+  refreshToken: string;
 };
 
 /** Domain-friendly view of the register-client response. */
 export type RegisterClientResult = {
   token: string;
+  refreshToken: string;
   user: {
     id: string;
     email: string;
@@ -60,8 +60,6 @@ export type RegisterClientResult = {
     profile: string;
     phone: string;
     termsAccepted: boolean;
-    termsAcceptedAt?: string | null;
-    termsVersion?: string | null;
   };
   raw: RegisterClientWireResponse;
 };

@@ -5,3 +5,4 @@ export * from './shared';
 export * from './user';
 export * from './client';
 export * from './lawyer';
+export * from './password-recovery';

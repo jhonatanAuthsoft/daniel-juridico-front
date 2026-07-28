@@ -1,7 +1,6 @@
 import { acceptTerms, type AcceptTermsResult } from '@/data/user';
 
 export type AcceptTermsInput = {
-  token: string;
   checkboxConfirmed: boolean;
   scrollConfirmed?: boolean;
   version?: string;
@@ -20,7 +19,6 @@ export async function acceptTermsUseCase(
       scrollConfirmed: input.scrollConfirmed,
       version: input.version,
     },
-    input.token,
     signal,
   );
 }

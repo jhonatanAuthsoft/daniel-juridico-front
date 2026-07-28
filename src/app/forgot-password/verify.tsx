@@ -1,5 +1,7 @@
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect } from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -14,19 +16,96 @@ import { Form, InputOTP, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, Display, Link as TypographLink } from '@/atomic/typography';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
+import {
+  useCountdownSeconds,
+  useRequestPasswordRecovery,
+  useValidateRecoveryCode,
+} from '@/domain/password-recovery';
 
 type VerifyCodeFormValues = {
   code: string;
 };
 
+function parseWaitSeconds(value: string | string[] | undefined): number {
+  const raw = Array.isArray(value) ? value[0] : value;
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.floor(parsed) : 0;
+}
+
+function resolveEmail(value: string | string[] | undefined): string {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return (raw ?? '').trim().toLowerCase();
+}
+
 export default function VerifyRecoveryCodeScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ email?: string; waitSeconds?: string }>();
+  const email = resolveEmail(params.email);
+  const validateCode = useValidateRecoveryCode();
+  const requestRecovery = useRequestPasswordRecovery();
+  const { secondsLeft, label, start } = useCountdownSeconds(parseWaitSeconds(params.waitSeconds));
+
   const form = useForm<VerifyCodeFormValues>({
     defaultValues: {
       code: '',
     },
     mode: 'onBlur',
   });
+
+  useEffect(() => {
+    if (!email) {
+      router.replace('/forgot-password');
+    }
+  }, [email, router]);
+
+  const isBusy = validateCode.isPending || requestRecovery.isPending;
+
+  const onSubmit = async (values: VerifyCodeFormValues) => {
+    if (!email) {
+      return;
+    }
+
+    const code = values.code.trim();
+    if (!/^\d{4}$/.test(code)) {
+      Alert.alert('Recuperação de senha', 'Informe o código de 4 dígitos.');
+      return;
+    }
+
+    try {
+      await validateCode.mutateAsync({ email, code });
+      router.push({
+        pathname: '/forgot-password/new-password',
+        params: { email, code },
+      });
+    } catch (error) {
+      Alert.alert(
+        'Recuperação de senha',
+        getErrorMessage(error, 'Código inválido ou expirado. Solicite um novo código.'),
+      );
+    }
+  };
+
+  const resendCode = async () => {
+    if (!email || secondsLeft > 0 || requestRecovery.isPending) {
+      return;
+    }
+
+    try {
+      const result = await requestRecovery.mutateAsync({ email });
+      start(result.waitSeconds);
+      Alert.alert(
+        'Recuperação de senha',
+        result.message ||
+          'Se existir uma conta com este e-mail, enviaremos um código de redefinição.',
+      );
+    } catch (error) {
+      Alert.alert(
+        'Recuperação de senha',
+        getErrorMessage(error, 'Não foi possível reenviar o código.'),
+      );
+    }
+  };
 
   return (
     <View style={styles.root}>
@@ -44,8 +123,7 @@ export default function VerifyRecoveryCodeScreen() {
               <Display color={BrandColors.neutral.white}>Recuperação de Senha</Display>
               <Separator size="xxs" />
               <Body1 color={BrandColors.neutral.white} style={styles.subtitle}>
-                Informe seu e-mail cadastrado para receber um código de recuperação da sua
-                conta
+                Digite o código de 4 dígitos enviado para o e-mail cadastrado
               </Body1>
             </View>
 
@@ -58,8 +136,22 @@ export default function VerifyRecoveryCodeScreen() {
             <Separator size="xxs" />
 
             <View style={styles.resendRow}>
-              <Pressable accessibilityRole="link" onPress={() => {}}>
-                <TypographLink color={BrandColors.neutral.white}>Reenviar código</TypographLink>
+              <Pressable
+                accessibilityRole="link"
+                disabled={secondsLeft > 0 || requestRecovery.isPending}
+                onPress={() => {
+                  void resendCode();
+                }}>
+                <TypographLink
+                  color={
+                    secondsLeft > 0 ? BrandColors.neutral.medium : BrandColors.neutral.white
+                  }>
+                  {secondsLeft > 0
+                    ? `Reenviar código (${label})`
+                    : requestRecovery.isPending
+                      ? 'Reenviando...'
+                      : 'Reenviar código'}
+                </TypographLink>
               </Pressable>
             </View>
 
@@ -67,7 +159,11 @@ export default function VerifyRecoveryCodeScreen() {
 
             <Button
               variant="cta"
-              onPress={() => router.push('/forgot-password/new-password')}>
+              disabled={isBusy}
+              isLoading={validateCode.isPending}
+              onPress={() => {
+                void form.handleSubmit(onSubmit)();
+              }}>
               Validar
             </Button>
 

@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -15,15 +16,15 @@ import { LogoIcon } from '@/assets/icon/logo';
 import { Button } from '@/atomic/button';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
-import { Body1, Body2, Display, Link as TypographLink } from '@/atomic/typography';
+import { Body1, Display, Link as TypographLink } from '@/atomic/typography';
 import { useSplashGate } from '@/components/splash-guard';
 import { InputValidators } from '@/constants/input-validators';
-import { BrandColors, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
-import { homeHrefForRole, roleLabel, useAuth, type UserRole } from '@/domain/auth';
+import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
+import { homeHrefForRole, useLogin } from '@/domain/auth';
 
 const LOGO_WIDTH = 176;
 const LOGO_HEIGHT = 74;
-const MOCK_ROLES: UserRole[] = ['CLIENT', 'LAWYER'];
 
 type LoginFormValues = {
   email: string;
@@ -33,9 +34,8 @@ type LoginFormValues = {
 export default function LoginScreen() {
   const router = useRouter();
   const splashGate = useSplashGate();
-  const { signInAs } = useAuth();
+  const login = useLogin();
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [mockRole, setMockRole] = useState<UserRole>('CLIENT');
   const form = useForm<LoginFormValues>({
     defaultValues: {
       email: '',
@@ -52,9 +52,22 @@ export default function LoginScreen() {
     return () => clearTimeout(timeoutId);
   }, [splashGate]);
 
-  const handleAccess = () => {
-    signInAs(mockRole);
-    router.replace(homeHrefForRole(mockRole));
+  const onSubmit = async (values: LoginFormValues) => {
+    try {
+      const result = await login.mutateAsync({
+        email: values.email,
+        password: values.password,
+      });
+
+      if (!result.user.termsAccepted) {
+        router.replace('/signup/terms');
+        return;
+      }
+
+      router.replace(homeHrefForRole(result.user.role));
+    } catch (error) {
+      Alert.alert('Login', getErrorMessage(error, 'Usuário ou senha inválidos'));
+    }
   };
 
   return (
@@ -138,29 +151,15 @@ export default function LoginScreen() {
               <TypographLink color={BrandColors.neutral.white}>Esqueceu a senha?</TypographLink>
             </Pressable>
 
-            <Separator size="sm" />
-
-            <Body2 color={BrandColors.neutral.light}>Mock — entrar como</Body2>
-            <Separator size="xxs" />
-            <View style={styles.roleRow}>
-              {MOCK_ROLES.map((role) => {
-                const active = mockRole === role;
-                return (
-                  <Pressable
-                    key={role}
-                    onPress={() => setMockRole(role)}
-                    style={[styles.roleChip, active && styles.roleChipActive]}>
-                    <Body2 color={active ? BrandColors.neutral.xdark : BrandColors.neutral.white}>
-                      {roleLabel(role)}
-                    </Body2>
-                  </Pressable>
-                );
-              })}
-            </View>
-
             <Separator size="xl" />
 
-            <Button variant="cta" onPress={handleAccess}>
+            <Button
+              variant="cta"
+              disabled={login.isPending}
+              isLoading={login.isPending}
+              onPress={() => {
+                void form.handleSubmit(onSubmit)();
+              }}>
               Acessar
             </Button>
 
@@ -222,20 +221,5 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-  },
-  roleRow: {
-    flexDirection: 'row',
-    gap: Spacing.sm,
-  },
-  roleChip: {
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: Spacing.xs,
-    borderRadius: Radius.large,
-    borderWidth: 1,
-    borderColor: BrandColors.neutral.white,
-  },
-  roleChipActive: {
-    backgroundColor: BrandColors.primary.light,
-    borderColor: BrandColors.primary.light,
   },
 });

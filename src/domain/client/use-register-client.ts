@@ -19,6 +19,7 @@ export function useRegisterClient() {
       const result = await registerClientUseCase(form);
       await signInWithSession({
         token: result.token,
+        refreshToken: result.refreshToken,
         user: result.user,
       });
       return result;

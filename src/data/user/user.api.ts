@@ -1,7 +1,7 @@
 import {
   apiUrl,
   assertApiSuccess,
-  httpRequest,
+  authenticatedHttpRequest,
   type ApiResponse,
 } from '@/data/http';
 
@@ -17,22 +17,19 @@ import type {
 
 /**
  * Registers terms acceptance for the authenticated user.
+ * Uses the authenticated HTTP middleware (proactive refresh).
  * `POST /usuarios/aceitar-termos`
  */
 export async function acceptTerms(
   params: AcceptTermsParams,
-  token: string,
   signal?: AbortSignal,
 ): Promise<AcceptTermsResult> {
-  const response = await httpRequest<ApiResponse<AcceptTermsWireResponse>>(
+  const response = await authenticatedHttpRequest<ApiResponse<AcceptTermsWireResponse>>(
     apiUrl('/usuarios/aceitar-termos'),
     {
       method: 'POST',
       body: mapAcceptTermsParamsToWire(params),
       signal,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     },
   );
 

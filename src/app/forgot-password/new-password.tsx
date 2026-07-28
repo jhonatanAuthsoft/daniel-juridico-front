@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -17,10 +19,18 @@ import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
 import { PasswordRequirements } from '@/constants/password-requirements';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
+import { useResetPassword } from '@/domain/password-recovery';
 
 type NewPasswordFormValues = {
   password: string;
+  confirmPassword: string;
 };
+
+function resolveParam(value: string | string[] | undefined): string {
+  const raw = Array.isArray(value) ? value[0] : value;
+  return (raw ?? '').trim();
+}
 
 function NewPasswordField({ showErrors }: { showErrors: boolean }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -57,17 +67,93 @@ function NewPasswordField({ showErrors }: { showErrors: boolean }) {
   );
 }
 
+function ConfirmPasswordField() {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  return (
+    <InputTextField
+      name="confirmPassword"
+      label="Confirmar nova senha"
+      placeholder="Digite a senha novamente"
+      secureTextEntry={!passwordVisible}
+      autoCapitalize="none"
+      autoComplete="new-password"
+      textContentType="newPassword"
+      validators={[]}
+      iconRight={
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={passwordVisible ? 'Ocultar senha' : 'Mostrar senha'}
+          hitSlop={Spacing.xxs}
+          onPress={() => setPasswordVisible((visible) => !visible)}>
+          <EyeIcon color={BrandColors.neutral.xlight} />
+        </Pressable>
+      }
+    />
+  );
+}
+
 export default function NewPasswordScreen() {
+  const router = useRouter();
+  const params = useLocalSearchParams<{ email?: string; code?: string }>();
+  const email = resolveParam(params.email).toLowerCase();
+  const code = resolveParam(params.code);
+  const resetPassword = useResetPassword();
   const [showErrors, setShowErrors] = useState(false);
   const form = useForm<NewPasswordFormValues>({
     defaultValues: {
       password: '',
+      confirmPassword: '',
     },
     mode: 'onChange',
   });
 
-  const handleSubmit = () => {
+  useEffect(() => {
+    if (!email || !code) {
+      router.replace('/forgot-password');
+    }
+  }, [email, code, router]);
+
+  const onSubmit = async (values: NewPasswordFormValues) => {
     setShowErrors(true);
+
+    const passwordOk = PasswordRequirements.every((requirement) =>
+      requirement.test(values.password),
+    );
+    if (!passwordOk) {
+      Alert.alert('Nova senha', 'A senha não atende aos requisitos mínimos.');
+      return;
+    }
+
+    if (values.password !== values.confirmPassword) {
+      Alert.alert('Nova senha', 'A confirmação de senha não confere.');
+      return;
+    }
+
+    try {
+      const result = await resetPassword.mutateAsync({
+        email,
+        code,
+        newPassword: values.password,
+        confirmPassword: values.confirmPassword,
+      });
+
+      Alert.alert(
+        'Senha alterada',
+        result.message || 'Senha alterada com sucesso',
+        [
+          {
+            text: 'Ir para o login',
+            onPress: () => router.replace('/login'),
+          },
+        ],
+      );
+    } catch (error) {
+      Alert.alert(
+        'Nova senha',
+        getErrorMessage(error, 'Não foi possível redefinir a senha.'),
+      );
+    }
   };
 
   return (
@@ -94,11 +180,19 @@ export default function NewPasswordScreen() {
 
             <Form {...form}>
               <NewPasswordField showErrors={showErrors} />
+              <Separator size="sm" />
+              <ConfirmPasswordField />
             </Form>
 
             <Separator size="xxl" />
 
-            <Button variant="cta" onPress={handleSubmit}>
+            <Button
+              variant="cta"
+              disabled={resetPassword.isPending}
+              isLoading={resetPassword.isPending}
+              onPress={() => {
+                void form.handleSubmit(onSubmit)();
+              }}>
               Enviar
             </Button>
 

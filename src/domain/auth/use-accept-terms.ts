@@ -12,16 +12,15 @@ type AcceptTermsVariables = {
  * Domain hook: accepts terms and updates the persisted auth session.
  */
 export function useAcceptTerms() {
-  const { token, user, markTermsAccepted } = useAuth();
+  const { user, markTermsAccepted } = useAuth();
 
   return useMutation({
     mutationFn: async (variables: AcceptTermsVariables) => {
-      if (!token || !user) {
+      if (!user) {
         throw new Error('É necessário estar autenticado para aceitar os termos.');
       }
 
       const result = await acceptTermsUseCase({
-        token,
         checkboxConfirmed: variables.checkboxConfirmed,
         scrollConfirmed: variables.scrollConfirmed,
       });

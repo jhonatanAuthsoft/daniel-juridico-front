@@ -74,8 +74,6 @@ export type RegisterLawyerUserWire = {
   perfil: string;
   telefone: string;
   termosAceitos: boolean;
-  termosAceitosEm?: string | null;
-  termosVersao?: string | null;
 };
 
 /** Wire response for `POST /advogados/cadastrar`. */
@@ -90,11 +88,13 @@ export type RegisterLawyerWireResponse = {
   formasCobranca: Record<string, unknown>[];
   posGraduacoes: Record<string, unknown>[];
   token: string;
+  refreshToken: string;
 };
 
 /** Domain-friendly view of the register-lawyer response. */
 export type RegisterLawyerResult = {
   token: string;
+  refreshToken: string;
   user: {
     id: string;
     email: string;
@@ -102,8 +102,6 @@ export type RegisterLawyerResult = {
     profile: string;
     phone: string;
     termsAccepted: boolean;
-    termsAcceptedAt?: string | null;
-    termsVersion?: string | null;
   };
   raw: RegisterLawyerWireResponse;
 };

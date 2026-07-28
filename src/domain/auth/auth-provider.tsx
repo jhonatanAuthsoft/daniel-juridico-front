@@ -9,9 +9,11 @@ import {
 } from 'react';
 
 import {
-  clearAuthSession,
-  loadAuthSession,
-  saveAuthSession,
+  clearAuthSessionStore,
+  hydrateAuthSession,
+  setAuthSession,
+  subscribeAuthSession,
+  updateAuthUser,
   type AuthSession,
 } from '@/data/auth';
 
@@ -24,9 +26,10 @@ import {
 type AuthContextValue = {
   user: AuthUser | null;
   token: string | null;
+  refreshToken: string | null;
   isAuthenticated: boolean;
   isHydrating: boolean;
-  /** Persist a real API session (token + user). */
+  /** Persist a real API session (access + refresh + user). */
   signInWithSession: (session: AuthSession) => Promise<void>;
   /** Marks terms as accepted and persists the updated session. */
   markTermsAccepted: () => Promise<void>;
@@ -59,6 +62,7 @@ const MOCK_USERS: Record<UserRole, AuthUser> = {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [isHydrating, setIsHydrating] = useState(true);
 
   useEffect(() => {
@@ -66,12 +70,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     void (async () => {
       try {
-        const session = await loadAuthSession();
+        const session = await hydrateAuthSession();
         if (cancelled || !session) {
           return;
         }
         setUser(session.user);
         setToken(session.token);
+        setRefreshToken(session.refreshToken || null);
       } finally {
         if (!cancelled) {
           setIsHydrating(false);
@@ -84,43 +89,62 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  useEffect(() => {
+    return subscribeAuthSession((session) => {
+      if (!session) {
+        setUser(null);
+        setToken(null);
+        setRefreshToken(null);
+        return;
+      }
+      setUser(session.user);
+      setToken(session.token);
+      setRefreshToken(session.refreshToken || null);
+    });
+  }, []);
+
   const signInWithSession = useCallback(async (session: AuthSession) => {
-    await saveAuthSession(session);
+    await setAuthSession(session);
     setUser(session.user);
     setToken(session.token);
+    setRefreshToken(session.refreshToken || null);
   }, []);
 
   const markTermsAccepted = useCallback(async () => {
-    if (!user || !token) {
+    if (!user) {
       return;
     }
 
     const nextUser: AuthUser = { ...user, termsAccepted: true };
-    await saveAuthSession({ token, user: nextUser });
+    await updateAuthUser(nextUser);
     setUser(nextUser);
-  }, [token, user]);
+  }, [user]);
 
   const signInAs = useCallback((role: UserRole) => {
     const mockUser = MOCK_USERS[role];
     setUser(mockUser);
     setToken(null);
+    setRefreshToken(null);
   }, []);
 
   const setRole = useCallback((role: UserRole) => {
     setUser(MOCK_USERS[role]);
     setToken(null);
+    setRefreshToken(null);
   }, []);
 
   const signOut = useCallback(async () => {
-    await clearAuthSession();
+    await clearAuthSessionStore();
     setUser(null);
     setToken(null);
+    setRefreshToken(null);
   }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       token,
+      refreshToken,
       isAuthenticated: user != null,
       isHydrating,
       signInWithSession,
@@ -133,6 +157,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [
       user,
       token,
+      refreshToken,
       isHydrating,
       signInWithSession,
       markTermsAccepted,

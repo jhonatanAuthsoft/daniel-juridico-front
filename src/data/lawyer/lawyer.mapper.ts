@@ -169,6 +169,7 @@ export function mapRegisterLawyerWireToResult(
 ): RegisterLawyerResult {
   return {
     token: response.token,
+    refreshToken: response.refreshToken,
     user: {
       id: response.usuario.id,
       email: response.usuario.email,
@@ -176,8 +177,6 @@ export function mapRegisterLawyerWireToResult(
       profile: response.usuario.perfil,
       phone: response.usuario.telefone,
       termsAccepted: Boolean(response.usuario.termosAceitos),
-      termsAcceptedAt: response.usuario.termosAceitosEm,
-      termsVersion: response.usuario.termosVersao,
     },
     raw: response,
   };

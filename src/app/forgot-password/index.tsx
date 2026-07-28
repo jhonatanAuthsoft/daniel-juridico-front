@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -14,6 +15,11 @@ import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
 import { InputValidators } from '@/constants/input-validators';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
+import {
+  useCountdownSeconds,
+  useRequestPasswordRecovery,
+} from '@/domain/password-recovery';
 
 type ForgotPasswordFormValues = {
   email: string;
@@ -21,12 +27,37 @@ type ForgotPasswordFormValues = {
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
+  const requestRecovery = useRequestPasswordRecovery();
+  const { secondsLeft, label, start } = useCountdownSeconds();
   const form = useForm<ForgotPasswordFormValues>({
     defaultValues: {
       email: '',
     },
     mode: 'onBlur',
   });
+
+  const isSubmitting = requestRecovery.isPending;
+  const canSubmit = !isSubmitting && secondsLeft <= 0;
+
+  const onSubmit = async (values: ForgotPasswordFormValues) => {
+    try {
+      const result = await requestRecovery.mutateAsync({ email: values.email });
+      start(result.waitSeconds);
+
+      router.push({
+        pathname: '/forgot-password/verify',
+        params: {
+          email: values.email.trim().toLowerCase(),
+          waitSeconds: String(result.waitSeconds ?? 0),
+        },
+      });
+    } catch (error) {
+      Alert.alert(
+        'Recuperação de senha',
+        getErrorMessage(error, 'Não foi possível solicitar a recuperação de senha.'),
+      );
+    }
+  };
 
   return (
     <View style={styles.root}>
@@ -66,8 +97,14 @@ export default function ForgotPasswordScreen() {
 
             <Separator size="xxl" />
 
-            <Button variant="cta" onPress={() => router.push('/forgot-password/verify')}>
-              Enviar
+            <Button
+              variant="cta"
+              disabled={!canSubmit}
+              isLoading={isSubmitting}
+              onPress={() => {
+                void form.handleSubmit(onSubmit)();
+              }}>
+              {secondsLeft > 0 ? `Aguarde ${label}` : 'Enviar'}
             </Button>
 
             <Separator size="xl" />

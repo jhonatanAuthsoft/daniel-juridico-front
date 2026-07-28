@@ -7,6 +7,7 @@ const SESSION_KEY = 'laweact.auth.session';
 
 export type AuthSession = {
   token: string;
+  refreshToken: string;
   user: AuthUser;
 };
 
@@ -70,6 +71,7 @@ export async function loadAuthSession(): Promise<AuthSession | null> {
 
     return {
       token: parsed.token,
+      refreshToken: typeof parsed.refreshToken === 'string' ? parsed.refreshToken : '',
       user: {
         ...parsed.user,
         termsAccepted: parsed.user.termsAccepted === true,

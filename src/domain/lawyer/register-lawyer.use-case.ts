@@ -8,6 +8,7 @@ import { mapApiProfileToRole, type AuthUser } from '@/domain/auth/auth.types';
 
 export type RegisterLawyerResult = {
   token: string;
+  refreshToken: string;
   user: AuthUser;
 };
 
@@ -32,6 +33,7 @@ export async function registerLawyerUseCase(
 
   return {
     token: result.token,
+    refreshToken: result.refreshToken,
     user,
   };
 }
