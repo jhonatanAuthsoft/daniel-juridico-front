@@ -63,6 +63,15 @@ export function maskDigitsOnly(value: string, maxLength?: number): string {
   return maxLength !== undefined ? digits.slice(0, maxLength) : digits;
 }
 
+/** Progressive RG mask (padrão comum): 00.000.000-0 — até 9 dígitos. */
+export function maskRg(value: string): string {
+  const digits = onlyDigits(value).slice(0, 9);
+  return digits
+    .replace(/(\d{2})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
 /** Simple BRL-ish amount: digits + optional decimal comma (2 places). */
 export function maskCurrencyBr(value: string): string {
   const cleaned = value.replace(/[^\d,]/g, '');

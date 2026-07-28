@@ -102,9 +102,9 @@ export function StepPersonalDocuments() {
           <InputTextField
             name="rg"
             label="RG"
-            placeholder="84587810"
+            placeholder="00.000.000-0"
             keyboardType="number-pad"
-            format={InputMasks.digitsMax(12)}
+            format={InputMasks.rg}
             validate={FieldValidators.digitsMin(5, 'RG inválido')}
             maxLength={12}
           />

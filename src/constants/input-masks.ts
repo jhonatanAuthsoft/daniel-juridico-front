@@ -7,6 +7,7 @@ import {
   maskDateBr,
   maskDigitsOnly,
   maskPhone,
+  maskRg,
 } from '@/utils/br-input';
 import { FieldValidators, type FieldValidateFn } from '@/constants/field-validators';
 
@@ -17,6 +18,7 @@ export const InputMasks = {
   cep: maskCep,
   dateBr: maskDateBr,
   currencyBr: maskCurrencyBr,
+  rg: maskRg,
   digits: maskDigitsOnly,
   digitsMax: (max: number) => (value: string) => maskDigitsOnly(value, max),
 } as const;
