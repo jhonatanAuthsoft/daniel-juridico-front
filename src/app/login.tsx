@@ -18,7 +18,7 @@ import { Form, InputTextField, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, Display, Link as TypographLink } from '@/atomic/typography';
 import { useSplashGate } from '@/components/splash-guard';
-import { InputValidators } from '@/constants/input-validators';
+import { FieldValidators } from '@/constants/field-validators';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import { homeHrefForRole, useLogin } from '@/domain/auth';
@@ -117,7 +117,7 @@ export default function LoginScreen() {
                   autoCapitalize="none"
                   autoComplete="email"
                   textContentType="emailAddress"
-                  validators={[InputValidators.email]}
+                  validate={FieldValidators.email}
                 />
 
                 <InputTextField
@@ -128,7 +128,7 @@ export default function LoginScreen() {
                   autoCapitalize="none"
                   autoComplete="password"
                   textContentType="password"
-                  validators={[InputValidators.minLength3]}
+                  validate={FieldValidators.required('Informe sua senha')}
                   iconRight={
                     <Pressable
                       accessibilityRole="button"

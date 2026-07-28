@@ -4,6 +4,8 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { InputSelectField, InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body2, InputLabel } from '@/atomic/typography';
+import { FieldValidators } from '@/constants/field-validators';
+import { InputMasks } from '@/constants/input-masks';
 import { ISSUING_AUTHORITY_OPTIONS, UF_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Spacing } from '@/constants/theme';
 
@@ -24,6 +26,7 @@ export function StepDocumentation() {
         label="Nome de mãe"
         placeholder="Digite o nome da sua mãe"
         autoCapitalize="words"
+        validate={FieldValidators.required()}
       />
 
       <View>
@@ -33,6 +36,11 @@ export function StepDocumentation() {
           placeholder="Digite o nome do seu pai"
           autoCapitalize="words"
           editable={!noFatherName}
+          validate={
+            noFatherName
+              ? undefined
+              : FieldValidators.required('Informe o nome do pai ou marque a opção abaixo')
+          }
         />
         <Separator size="xxs" />
         <Controller
@@ -57,7 +65,15 @@ export function StepDocumentation() {
         />
       </View>
 
-      <InputTextField name="rg" label="RG" placeholder="000.000.00-00" keyboardType="number-pad" />
+      <InputTextField
+        name="rg"
+        label="RG"
+        placeholder="84587810"
+        keyboardType="number-pad"
+        format={InputMasks.digitsMax(12)}
+        validate={FieldValidators.digitsMin(5, 'RG inválido')}
+        maxLength={12}
+      />
 
       <View>
         <InputLabel color={BrandColors.neutral.white}>Órgão Emissor e UF</InputLabel>
@@ -68,15 +84,24 @@ export function StepDocumentation() {
               name="issuingAuthority"
               placeholder="SSP"
               options={ISSUING_AUTHORITY_OPTIONS}
+              required
             />
           </View>
           <View style={styles.rowItemUf}>
-            <InputSelectField name="uf" placeholder="BA" options={UF_OPTIONS} />
+            <InputSelectField name="uf" placeholder="BA" options={UF_OPTIONS} required />
           </View>
         </View>
       </View>
 
-      <InputTextField name="cpf" label="CPF" placeholder="000.000.00-00" keyboardType="number-pad" />
+      <InputTextField
+        name="cpf"
+        label="CPF"
+        placeholder="000.000.000-00"
+        keyboardType="number-pad"
+        format={InputMasks.cpf}
+        validate={FieldValidators.cpf}
+        maxLength={14}
+      />
     </View>
   );
 }

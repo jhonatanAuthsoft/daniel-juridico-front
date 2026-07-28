@@ -45,6 +45,8 @@ export type InputSelectFieldProps<
   placeholder?: string;
   options: readonly SelectOption[];
   disabled?: boolean;
+  /** When true, empty selection fails validation with "Campo obrigatório". */
+  required?: boolean;
   /** Shows a search field above the options. Defaults to true. */
   searchable?: boolean;
   searchPlaceholder?: string;
@@ -58,6 +60,7 @@ export function InputSelectField<
   placeholder = 'Selecione',
   options,
   disabled = false,
+  required = false,
   searchable = true,
   searchPlaceholder = 'Buscar...',
 }: InputSelectFieldProps<TFieldValues>) {
@@ -74,6 +77,15 @@ export function InputSelectField<
     <Controller
       control={control}
       name={name}
+      rules={{
+        validate: (value) => {
+          if (!required) {
+            return true;
+          }
+          const text = typeof value === 'string' ? value.trim() : String(value ?? '');
+          return text.length > 0 ? true : 'Campo obrigatório';
+        },
+      }}
       render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
         const hasError = Boolean(error?.message);
         const selected = options.find((option) => option.value === value);

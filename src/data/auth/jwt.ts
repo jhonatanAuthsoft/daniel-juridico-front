@@ -22,15 +22,43 @@ export function decodeJwtPayload(token: string): Record<string, unknown> | null 
   }
 }
 
+const BASE64_ALPHABET =
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+/**
+ * Base64 → binary string without Node `buffer` (Metro/RN cannot import it).
+ * JWT payloads used here are ASCII JSON (`exp`, etc.).
+ */
 function decodeBase64(value: string): string {
   if (typeof globalThis.atob === 'function') {
     return globalThis.atob(value);
   }
 
-  // Jest / Node fallback without pulling a polyfill into the app bundle.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { Buffer } = require('buffer') as typeof import('buffer');
-  return Buffer.from(value, 'base64').toString('utf8');
+  let output = '';
+  const cleaned = value.replace(/[^A-Za-z0-9+/=]/g, '');
+
+  for (let i = 0; i < cleaned.length; i += 4) {
+    const c1 = cleaned[i] ?? 'A';
+    const c2 = cleaned[i + 1] ?? 'A';
+    const c3 = cleaned[i + 2] ?? '=';
+    const c4 = cleaned[i + 3] ?? '=';
+
+    const enc1 = BASE64_ALPHABET.indexOf(c1);
+    const enc2 = BASE64_ALPHABET.indexOf(c2);
+    const enc3 = c3 === '=' ? 0 : BASE64_ALPHABET.indexOf(c3);
+    const enc4 = c4 === '=' ? 0 : BASE64_ALPHABET.indexOf(c4);
+
+    const bitmap = (enc1 << 18) | (enc2 << 12) | (enc3 << 6) | enc4;
+    output += String.fromCharCode((bitmap >> 16) & 255);
+    if (c3 !== '=') {
+      output += String.fromCharCode((bitmap >> 8) & 255);
+    }
+    if (c4 !== '=') {
+      output += String.fromCharCode(bitmap & 255);
+    }
+  }
+
+  return output;
 }
 
 /** Returns JWT `exp` in epoch milliseconds, or null if missing/invalid. */

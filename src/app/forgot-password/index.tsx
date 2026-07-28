@@ -13,7 +13,7 @@ import { Button } from '@/atomic/button';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
-import { InputValidators } from '@/constants/input-validators';
+import { FieldValidators } from '@/constants/field-validators';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import {
@@ -91,7 +91,7 @@ export default function ForgotPasswordScreen() {
                 autoCapitalize="none"
                 autoComplete="email"
                 textContentType="emailAddress"
-                validators={[InputValidators.email]}
+                validate={FieldValidators.email}
               />
             </Form>
 

@@ -17,12 +17,14 @@ import {
   TOTAL_STEPS,
   type ClientSignupFormValues,
 } from '@/components/signup-client';
+import { getClientSignupStepFields } from '@/components/signup-client/step-fields';
 import { SignupMultiStepShell } from '@/components/signup-shell';
 import { useRegisterClient } from '@/domain/client';
 
 export default function ClientSignupScreen() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const [showPasswordErrors, setShowPasswordErrors] = useState(false);
   const form = useForm<ClientSignupFormValues>({
     defaultValues,
     mode: 'onBlur',
@@ -56,7 +58,17 @@ export default function ClientSignupScreen() {
     }
   });
 
-  const goNext = () => {
+  const goNext = async () => {
+    const personType = form.getValues('personType');
+    const fields = getClientSignupStepFields(step, personType);
+    if (step === 1) {
+      setShowPasswordErrors(true);
+    }
+    const valid = await form.trigger(fields);
+    if (!valid) {
+      return;
+    }
+
     if (isLastStep) {
       void submitRegistration();
       return;
@@ -73,7 +85,7 @@ export default function ClientSignupScreen() {
       title={stepCopy.title}
       totalSteps={TOTAL_STEPS}>
       <Form {...form}>
-        {step === 1 ? <StepCredentials showPasswordErrors={false} /> : null}
+        {step === 1 ? <StepCredentials showPasswordErrors={showPasswordErrors} /> : null}
         {step === 2 ? <StepPersonalDocuments /> : null}
         {step === 3 ? <StepAddress /> : null}
         {step === 4 ? <StepProfessional /> : null}
@@ -82,7 +94,7 @@ export default function ClientSignupScreen() {
 
       <Separator size="xl" />
 
-      <Button variant="cta" disabled={isSubmitting} isLoading={isSubmitting} onPress={goNext}>
+      <Button variant="cta" disabled={isSubmitting} isLoading={isSubmitting} onPress={() => void goNext()}>
         {isLastStep ? 'Começar' : 'Continuar'}
       </Button>
 

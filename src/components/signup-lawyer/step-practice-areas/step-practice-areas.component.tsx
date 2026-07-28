@@ -1,6 +1,10 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import { View } from 'react-native';
 
+import { Separator } from '@/atomic/separator';
+import { InputCaption } from '@/atomic/typography';
+import { BrandColors } from '@/constants/theme';
+
 import {
   SelectableOption,
   SelectableOptionList,
@@ -42,7 +46,11 @@ export function StepPracticeAreas() {
       <Controller
         control={control}
         name="practiceAreas"
-        render={({ field: { value, onChange } }) => {
+        rules={{
+          validate: (value) =>
+            (value?.length ?? 0) > 0 ? true : 'Selecione ao menos uma opção',
+        }}
+        render={({ field: { value, onChange }, fieldState: { error } }) => {
           const selected = value ?? [];
 
           const toggle = (id: string) => {
@@ -64,19 +72,29 @@ export function StepPracticeAreas() {
           };
 
           return (
-            <SelectableOptionList>
-              {PRACTICE_OPTIONS.map((option) => (
-                <SelectableOption
-                  key={option.id}
-                  checked={selected.includes(option.id)}
-                  label={option.label}
-                  description={
-                    'description' in option ? option.description : undefined
-                  }
-                  onPress={() => toggle(option.id)}
-                />
-              ))}
-            </SelectableOptionList>
+            <View>
+              <SelectableOptionList>
+                {PRACTICE_OPTIONS.map((option) => (
+                  <SelectableOption
+                    key={option.id}
+                    checked={selected.includes(option.id)}
+                    label={option.label}
+                    description={
+                      'description' in option ? option.description : undefined
+                    }
+                    onPress={() => toggle(option.id)}
+                  />
+                ))}
+              </SelectableOptionList>
+              {error?.message ? (
+                <>
+                  <Separator size="xxxs" />
+                  <InputCaption color={BrandColors.feedback.error.light}>
+                    {error.message}
+                  </InputCaption>
+                </>
+              ) : null}
+            </View>
           );
         }}
       />

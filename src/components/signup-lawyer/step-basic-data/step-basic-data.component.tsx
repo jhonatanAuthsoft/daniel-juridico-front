@@ -5,6 +5,8 @@ import { EyeIcon } from '@/assets/icon/eye';
 import { InputTextField, useWatch } from '@/atomic/form';
 import { PasswordRequirementsFeedback } from '@/atomic/password-requirements-feedback';
 import { Separator } from '@/atomic/separator';
+import { FieldValidators } from '@/constants/field-validators';
+import { InputMasks } from '@/constants/input-masks';
 import { BrandColors, Spacing } from '@/constants/theme';
 
 import { PASSWORD_REQUIREMENTS } from '../constants';
@@ -28,6 +30,7 @@ export function StepBasicData({ showPasswordErrors = false }: StepBasicDataProps
         autoCapitalize="words"
         autoComplete="name"
         textContentType="name"
+        validate={FieldValidators.required()}
       />
       <InputTextField
         name="email"
@@ -37,6 +40,7 @@ export function StepBasicData({ showPasswordErrors = false }: StepBasicDataProps
         autoCapitalize="none"
         autoComplete="email"
         textContentType="emailAddress"
+        validate={FieldValidators.email}
       />
       <InputTextField
         name="phone"
@@ -45,6 +49,9 @@ export function StepBasicData({ showPasswordErrors = false }: StepBasicDataProps
         keyboardType="phone-pad"
         autoComplete="tel"
         textContentType="telephoneNumber"
+        format={InputMasks.phone}
+        validate={FieldValidators.phone}
+        maxLength={15}
       />
       <View>
         <InputTextField
@@ -55,6 +62,7 @@ export function StepBasicData({ showPasswordErrors = false }: StepBasicDataProps
           autoCapitalize="none"
           autoComplete="new-password"
           textContentType="newPassword"
+          validate={FieldValidators.passwordRequirements}
           iconRight={
             <Pressable
               accessibilityRole="button"

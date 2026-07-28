@@ -1112,3 +1112,85 @@
 {"_e":"metro:server_log","_t":1785151523127,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
 {"_e":"metro:server_log","_t":1785151654921,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
 {"_e":"metro:server_log","_t":1785151866889,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"root:init","_t":1785203932911,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"env:mode","_t":1785203932912,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1785203932915,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"http://localhost:8080"}}
+{"_e":"devserver:start","_t":1785203933345,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785203933928,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785203934111,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785203934772,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1785203960685,"id":"1","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785203960685,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785203960688,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785203960787,"id":"1","progress":0.03305785123966942,"total":165,"current":30}
+{"_e":"metro:bundling:progress","_t":1785203960887,"id":"1","progress":0.21494115257109023,"total":481,"current":223}
+{"_e":"metro:bundling:progress","_t":1785203960987,"id":"1","progress":0.3247438543816851,"total":730,"current":416}
+{"_e":"metro:bundling:progress","_t":1785203961087,"id":"1","progress":0.4298664627776348,"total":1028,"current":674}
+{"_e":"metro:bundling:progress","_t":1785203961199,"id":"1","progress":0.5605314975723913,"total":1142,"current":855}
+{"_e":"metro:bundling:progress","_t":1785203961298,"id":"1","progress":0.619317717853531,"total":1197,"current":942}
+{"_e":"metro:bundling:progress","_t":1785203961406,"id":"1","progress":0.7446796082601863,"total":1255,"current":1083}
+{"_e":"metro:bundling:progress","_t":1785203961507,"id":"1","progress":0.7532152549671526,"total":1264,"current":1097}
+{"_e":"metro:bundling:progress","_t":1785203961614,"id":"1","progress":0.7737724897279705,"total":1346,"current":1184}
+{"_e":"metro:bundling:progress","_t":1785203961714,"id":"1","progress":0.7737724897279705,"total":1538,"current":1289}
+{"_e":"metro:bundling:progress","_t":1785203961814,"id":"1","progress":0.7737724897279705,"total":1704,"current":1430}
+{"_e":"metro:bundling:progress","_t":1785203961914,"id":"1","progress":0.838507840875149,"total":1898,"current":1738}
+{"_e":"metro:bundling:progress","_t":1785203962016,"id":"1","progress":0.9328590914262348,"total":1991,"current":1923}
+{"_e":"metro:bundling:progress","_t":1785203962118,"id":"1","progress":0.942097442445184,"total":2042,"current":1982}
+{"_e":"metro:bundling:progress","_t":1785203962220,"id":"1","progress":0.9681220764648496,"total":2116,"current":2082}
+{"_e":"metro:bundling:progress","_t":1785203962321,"id":"1","progress":0.9822225765306123,"total":2128,"current":2109}
+{"_e":"metro:bundling:progress","_t":1785203962421,"id":"1","progress":0.9822225765306123,"total":2132,"current":2112}
+{"_e":"metro:bundling:progress","_t":1785203962536,"id":"1","progress":0.9822557807588468,"total":2132,"current":2113}
+{"_e":"metro:bundling:progress","_t":1785203962637,"id":"1","progress":0.9841531288313466,"total":2137,"current":2120}
+{"_e":"metro:bundling:progress","_t":1785203962747,"id":"1","progress":0.9869526094453264,"total":2139,"current":2125}
+{"_e":"metro:bundling:progress","_t":1785203962848,"id":"1","progress":0.9869526094453264,"total":2175,"current":2152}
+{"_e":"metro:bundling:progress","_t":1785203962948,"id":"1","progress":0.9880980689270197,"total":2178,"current":2165}
+{"_e":"metro:bundling:progress","_t":1785203963049,"id":"1","progress":0.9981693367682378,"total":2184,"current":2182}
+{"_e":"metro:bundling:failed","_t":1785203963091,"id":"1","message":"You attempted to import the Node standard library module \"buffer\" from \"src/data/auth/jwt.ts\".\nIt failed because the native React runtime does not include the Node standard library.\nLearn more\n  30 |   // Jest / Node fallback without pulling a polyfill into the app bundle.\n  31 |   // eslint-disable-next-line @typescript-eslint/no-require-imports\n> 32 |   const { Buffer } = require('buffer') as typeof import('buffer');\n     |                                                          ^\n  33 |   return Buffer.from(value, 'base64').toString('utf8');\n  34 | }\n  35 |","importStack":"\u001b[1mImport stack:\u001b[22m\n\n\u001b[90m \u001b[39msrc/data/auth/jwt.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"buffer\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/data/auth/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./jwt\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/domain/auth/auth-provider.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/data/auth\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/domain/auth/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./auth-provider\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app/client/_layout.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/domain/auth\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app\u001b[2m (require.context)\u001b[22m\n","filename":null,"targetModuleName":"buffer","originModulePath":"src/data/auth/jwt.ts"}
+{"_e":"metro:bundling:started","_t":1785203965167,"id":"2","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785203965168,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785203965169,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785203965273,"id":"2","progress":0.19837447145569548,"total":586,"current":261}
+{"_e":"metro:bundling:progress","_t":1785203965383,"id":"2","progress":0.40400825670857576,"total":1095,"current":696}
+{"_e":"metro:bundling:progress","_t":1785203965483,"id":"2","progress":0.5767517074209787,"total":1218,"current":925}
+{"_e":"metro:bundling:progress","_t":1785203965586,"id":"2","progress":0.7582180667943744,"total":1532,"current":1334}
+{"_e":"metro:bundling:progress","_t":1785203965686,"id":"2","progress":0.9083599212253077,"total":2046,"current":1950}
+{"_e":"metro:bundling:failed","_t":1785203965742,"id":"2","message":"You attempted to import the Node standard library module \"buffer\" from \"src/data/auth/jwt.ts\".\nIt failed because the native React runtime does not include the Node standard library.\nLearn more\n  30 |   // Jest / Node fallback without pulling a polyfill into the app bundle.\n  31 |   // eslint-disable-next-line @typescript-eslint/no-require-imports\n> 32 |   const { Buffer } = require('buffer') as typeof import('buffer');\n     |                                                          ^\n  33 |   return Buffer.from(value, 'base64').toString('utf8');\n  34 | }\n  35 |","importStack":"\u001b[1mImport stack:\u001b[22m\n\n\u001b[90m \u001b[39msrc/data/auth/jwt.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"buffer\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/data/auth/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./jwt\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/domain/auth/auth-provider.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/data/auth\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/domain/auth/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./auth-provider\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app/client/_layout.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/domain/auth\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app\u001b[2m (require.context)\u001b[22m\n","filename":null,"targetModuleName":"buffer","originModulePath":"src/data/auth/jwt.ts"}
+{"_e":"root:init","_t":1785204444471,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"env:mode","_t":1785204444472,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1785204444475,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"http://localhost:8080"}}
+{"_e":"devserver:start","_t":1785204444893,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785204445124,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785204445272,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785204445637,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1785204455182,"id":"2","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785204455185,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785204455225,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785204455326,"id":"2","progress":0.014744897959183673,"total":140,"current":17}
+{"_e":"metro:bundling:progress","_t":1785204455427,"id":"2","progress":0.1560737692424935,"total":405,"current":160}
+{"_e":"metro:bundling:progress","_t":1785204455526,"id":"2","progress":0.2985066444454191,"total":604,"current":330}
+{"_e":"metro:bundling:progress","_t":1785204455626,"id":"2","progress":0.37947623846286826,"total":974,"current":600}
+{"_e":"metro:bundling:progress","_t":1785204455726,"id":"2","progress":0.4754525668261023,"total":1108,"current":764}
+{"_e":"metro:bundling:progress","_t":1785204455826,"id":"2","progress":0.7274279887511501,"total":1244,"current":1061}
+{"_e":"metro:bundling:progress","_t":1785204455926,"id":"2","progress":0.7274279887511501,"total":1415,"current":1179}
+{"_e":"metro:bundling:progress","_t":1785204456026,"id":"2","progress":0.7274279887511501,"total":1626,"current":1358}
+{"_e":"metro:bundling:progress","_t":1785204456126,"id":"2","progress":0.7680959520812844,"total":1772,"current":1553}
+{"_e":"metro:bundling:progress","_t":1785204456226,"id":"2","progress":0.8443619336459212,"total":1985,"current":1824}
+{"_e":"metro:bundling:progress","_t":1785204456326,"id":"2","progress":0.9475408694855891,"total":2069,"current":2014}
+{"_e":"metro:bundling:progress","_t":1785204456426,"id":"2","progress":0.9843644624512634,"total":2166,"current":2149}
+{"_e":"metro:bundling:progress","_t":1785204456627,"id":"2","progress":0.9852807895717326,"total":2166,"current":2150}
+{"_e":"metro:bundling:progress","_t":1785204456729,"id":"2","progress":0.9852807895717326,"total":2205,"current":2185}
+{"_e":"metro:bundling:progress","_t":1785204456839,"id":"2","progress":0.9882593024705945,"total":2208,"current":2195}
+{"_e":"metro:bundling:progress","_t":1785204456940,"id":"2","progress":0.9927700191877297,"total":2209,"current":2201}
+{"_e":"metro:bundling:progress","_t":1785204457041,"id":"2","progress":0.999,"total":2211,"current":2210}
+{"_e":"metro:bundling:failed","_t":1785204457048,"id":"2","message":"You attempted to import the Node standard library module \"buffer\" from \"src/data/auth/jwt.ts\".\nIt failed because the native React runtime does not include the Node standard library.\nLearn more\n  30 |   // Jest / Node fallback without pulling a polyfill into the app bundle.\n  31 |   // eslint-disable-next-line @typescript-eslint/no-require-imports\n> 32 |   const { Buffer } = require('buffer') as typeof import('buffer');\n     |                                                          ^\n  33 |   return Buffer.from(value, 'base64').toString('utf8');\n  34 | }\n  35 |","importStack":"\u001b[1mImport stack:\u001b[22m\n\n\u001b[90m \u001b[39msrc/data/auth/jwt.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"buffer\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/data/auth/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./jwt\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/domain/auth/auth-provider.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/data/auth\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/domain/auth/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./auth-provider\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app/index.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/domain/auth\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app\u001b[2m (require.context)\u001b[22m\n","filename":null,"targetModuleName":"buffer","originModulePath":"src/data/auth/jwt.ts"}
+{"_e":"metro:bundling:started","_t":1785204604575,"id":"3","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785204604576,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785204604577,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785204604677,"id":"3","progress":0.19524067063277448,"total":301,"current":133}
+{"_e":"metro:bundling:progress","_t":1785204604777,"id":"3","progress":0.30946011139862284,"total":755,"current":420}
+{"_e":"metro:bundling:progress","_t":1785204604877,"id":"3","progress":0.5141328349955188,"total":1145,"current":821}
+{"_e":"metro:bundling:progress","_t":1785204604977,"id":"3","progress":0.766621150821703,"total":1318,"current":1154}
+{"_e":"metro:bundling:progress","_t":1785204605077,"id":"3","progress":0.766621150821703,"total":1772,"current":1495}
+{"_e":"metro:bundling:progress","_t":1785204605177,"id":"3","progress":0.963898482234207,"total":2086,"current":2048}
+{"_e":"metro:bundling:done","_t":1785204605306,"id":"3","total":2086,"ms":730.130291}
+{"_e":"metro:client_log","_t":1785204605983,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}

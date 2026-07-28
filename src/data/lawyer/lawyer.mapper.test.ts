@@ -48,7 +48,7 @@ const baseForm: LawyerSignupFormValues = {
   practiceAreas: ['generalista'],
   specialties: ['CIVIL:CONTRATOS', 'IMOBILIARIO:DESPEJO'],
   serviceState: 'SP',
-  serviceCity: 'sao-paulo',
+  serviceCity: 'São Paulo',
   billingMethods: ['contractual', 'to_be_agreed'],
   pronouns: 'DOUTOR',
   profileImageUri: 'file://profile.jpg',

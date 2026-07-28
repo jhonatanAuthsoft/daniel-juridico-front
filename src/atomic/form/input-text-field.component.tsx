@@ -14,23 +14,46 @@ import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
 import { Separator } from '@/atomic/separator';
 import { InputCaption, InputLabel } from '@/atomic/typography';
+import type { FieldValidateFn } from '@/constants/field-validators';
 import type { InputValidatorPattern } from '@/constants/input-validators';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
 export type InputTextFieldProps<TFieldValues extends FieldValues = FieldValues> = {
   name: FieldPath<TFieldValues>;
   label?: string;
+  /** Legacy regex validators (message: "Valor inválido"). Prefer `validate`. */
   validators?: InputValidatorPattern[];
+  /** Custom validator(s) with specific error messages. */
+  validate?: FieldValidateFn | FieldValidateFn[];
+  /** Transforms raw text before storing in the form (masks, digits-only, etc.). */
+  format?: (text: string) => string;
   tooltipText?: string;
   placeholder?: string;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
 } & Omit<TextInputProps, 'value' | 'onChangeText' | 'onBlur'>;
 
-function runValidators(value: string, validators: InputValidatorPattern[] = []) {
+function runRegexValidators(value: string, validators: InputValidatorPattern[] = []) {
   for (const pattern of validators) {
     if (!pattern.test(value)) {
       return 'Valor inválido';
+    }
+  }
+  return true as const;
+}
+
+function runValidateFns(
+  value: string,
+  validate?: FieldValidateFn | FieldValidateFn[],
+): true | string {
+  if (!validate) {
+    return true;
+  }
+  const list = Array.isArray(validate) ? validate : [validate];
+  for (const fn of list) {
+    const result = fn(value);
+    if (result !== true) {
+      return result;
     }
   }
   return true;
@@ -40,6 +63,8 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
   name,
   label,
   validators = [],
+  validate,
+  format,
   tooltipText,
   placeholder,
   iconLeft,
@@ -55,7 +80,14 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
       control={control}
       name={name}
       rules={{
-        validate: (value) => runValidators(String(value ?? ''), validators),
+        validate: (value) => {
+          const text = String(value ?? '');
+          const custom = runValidateFns(text, validate);
+          if (custom !== true) {
+            return custom;
+          }
+          return runRegexValidators(text, validators);
+        },
       }}
       render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
         const hasError = Boolean(error?.message);
@@ -98,7 +130,9 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
                 <TextInput
                   {...textInputProps}
                   value={value ?? ''}
-                  onChangeText={onChange}
+                  onChangeText={(text) => {
+                    onChange(format ? format(text) : text);
+                  }}
                   onBlur={onBlur}
                   placeholder={placeholder}
                   placeholderTextColor={BrandColors.neutral.light}

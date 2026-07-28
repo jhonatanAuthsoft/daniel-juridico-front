@@ -5,6 +5,8 @@ import { InputSelectField } from '@/atomic/form/input-select-field.component';
 import { InputTextField } from '@/atomic/form/input-text-field.component';
 import { Separator } from '@/atomic/separator';
 import { Body1, InputLabel } from '@/atomic/typography';
+import { FieldValidators } from '@/constants/field-validators';
+import { InputMasks } from '@/constants/input-masks';
 import { ISSUING_AUTHORITY_OPTIONS, UF_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
@@ -67,18 +69,23 @@ export function StepPersonalDocuments() {
             label="Razão Social"
             placeholder="Empresa Exemplo LTDA"
             autoCapitalize="words"
+            validate={FieldValidators.required()}
           />
           <InputTextField
             name="cnpj"
             label="CNPJ"
             placeholder="00.000.000/0000-00"
             keyboardType="number-pad"
+            format={InputMasks.cnpj}
+            validate={FieldValidators.cnpj}
+            maxLength={18}
           />
           <InputTextField
             name="businessArea"
             label="Área de atuação"
             placeholder="Digite a área de atuação"
             autoCapitalize="sentences"
+            validate={FieldValidators.required()}
           />
         </>
       ) : (
@@ -90,12 +97,16 @@ export function StepPersonalDocuments() {
             autoCapitalize="words"
             autoComplete="name"
             textContentType="name"
+            validate={FieldValidators.required()}
           />
           <InputTextField
             name="rg"
             label="RG"
             placeholder="84587810"
             keyboardType="number-pad"
+            format={InputMasks.digitsMax(12)}
+            validate={FieldValidators.digitsMin(5, 'RG inválido')}
+            maxLength={12}
           />
           <View>
             <InputLabel color={BrandColors.neutral.white}>
@@ -108,6 +119,7 @@ export function StepPersonalDocuments() {
                   name="issuingAuthority"
                   placeholder="SSP"
                   options={ISSUING_AUTHORITY_OPTIONS}
+                  required
                 />
               </View>
               <View style={styles.rowItemUf}>
@@ -115,6 +127,7 @@ export function StepPersonalDocuments() {
                   name="uf"
                   placeholder="BA"
                   options={UF_OPTIONS}
+                  required
                 />
               </View>
             </View>
@@ -122,14 +135,20 @@ export function StepPersonalDocuments() {
           <InputTextField
             name="cpf"
             label="CPF"
-            placeholder="78524414-15"
+            placeholder="000.000.000-00"
             keyboardType="number-pad"
+            format={InputMasks.cpf}
+            validate={FieldValidators.cpf}
+            maxLength={14}
           />
           <InputTextField
             name="birthDate"
             label="Data de Nascimento"
             placeholder="00/00/0000"
             keyboardType="number-pad"
+            format={InputMasks.dateBr}
+            validate={FieldValidators.dateBr}
+            maxLength={10}
           />
         </>
       )}

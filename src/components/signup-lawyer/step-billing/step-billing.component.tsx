@@ -1,6 +1,10 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import { View } from 'react-native';
 
+import { Separator } from '@/atomic/separator';
+import { InputCaption } from '@/atomic/typography';
+import { BrandColors } from '@/constants/theme';
+
 import {
   SelectableOption,
   SelectableOptionList,
@@ -35,7 +39,11 @@ export function StepBilling() {
       <Controller
         control={control}
         name="billingMethods"
-        render={({ field: { value, onChange } }) => {
+        rules={{
+          validate: (value) =>
+            (value?.length ?? 0) > 0 ? true : 'Selecione ao menos uma opção',
+        }}
+        render={({ field: { value, onChange }, fieldState: { error } }) => {
           const selected = value ?? [];
 
           const toggle = (id: string) => {
@@ -47,16 +55,26 @@ export function StepBilling() {
           };
 
           return (
-            <SelectableOptionList>
-              {BILLING_OPTIONS.map((option) => (
-                <SelectableOption
-                  key={option.id}
-                  checked={selected.includes(option.id)}
-                  label={option.label}
-                  onPress={() => toggle(option.id)}
-                />
-              ))}
-            </SelectableOptionList>
+            <View>
+              <SelectableOptionList>
+                {BILLING_OPTIONS.map((option) => (
+                  <SelectableOption
+                    key={option.id}
+                    checked={selected.includes(option.id)}
+                    label={option.label}
+                    onPress={() => toggle(option.id)}
+                  />
+                ))}
+              </SelectableOptionList>
+              {error?.message ? (
+                <>
+                  <Separator size="xxxs" />
+                  <InputCaption color={BrandColors.feedback.error.light}>
+                    {error.message}
+                  </InputCaption>
+                </>
+              ) : null}
+            </View>
           );
         }}
       />

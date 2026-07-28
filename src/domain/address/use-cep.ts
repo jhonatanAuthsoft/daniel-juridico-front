@@ -17,11 +17,7 @@ export function useCep(cep: string, options: UseCepOptions = {}) {
 
   return useQuery({
     queryKey: addressKeys.cep(digits),
-    queryFn: async ({ signal }) => {
-      const address = await fetchAddressByCep(digits, signal);
-      console.log('[useCep] address response', { cep: digits, address });
-      return address;
-    },
+    queryFn: ({ signal }) => fetchAddressByCep(digits, signal),
     enabled: canFetch,
     staleTime: 1000 * 60 * 60,
     gcTime: 1000 * 60 * 60 * 24,

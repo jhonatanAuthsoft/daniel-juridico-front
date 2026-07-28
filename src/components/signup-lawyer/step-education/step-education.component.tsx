@@ -8,6 +8,8 @@ import { Button } from '@/atomic/button';
 import { InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, Link as TypographLink } from '@/atomic/typography';
+import { FieldValidators } from '@/constants/field-validators';
+import { InputMasks } from '@/constants/input-masks';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
 import { signupLawyerSharedStyles } from '../shared.styles';
@@ -85,18 +87,23 @@ export function StepEducation() {
         label="Universidade de Formação"
         placeholder="Digite o nome da universidade"
         autoCapitalize="words"
+        validate={FieldValidators.required()}
       />
       <InputTextField
         name="course"
         label="Curso"
         placeholder="Digite o curso"
         autoCapitalize="sentences"
+        validate={FieldValidators.required()}
       />
       <InputTextField
         name="graduationYear"
         label="Ano de formação"
         placeholder="Digite o ano de formação"
         keyboardType="number-pad"
+        format={InputMasks.digitsMax(4)}
+        validate={FieldValidators.year}
+        maxLength={4}
       />
 
       {fields.map((field, index) => {
@@ -133,6 +140,8 @@ export function StepEducation() {
                 label="Ano de formação"
                 placeholder="Digite o ano de formação"
                 keyboardType="number-pad"
+                format={InputMasks.digitsMax(4)}
+                maxLength={4}
               />
 
               <Button variant="primary" onPress={saveEdit}>

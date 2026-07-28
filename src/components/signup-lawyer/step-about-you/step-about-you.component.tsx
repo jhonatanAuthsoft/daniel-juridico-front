@@ -7,6 +7,7 @@ import { GlassBackground } from '@/atomic/glass';
 import { InputSelectField, InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption } from '@/atomic/typography';
+import { FieldValidators } from '@/constants/field-validators';
 import { TREATMENT_PRONOUN_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { useImageEditFlow } from '@/hooks/use-image-edit-flow';
@@ -41,6 +42,7 @@ export function StepAboutYou() {
         label="Pronome de tratamento"
         placeholder="Selecione o pronome"
         options={TREATMENT_PRONOUN_OPTIONS}
+        required
       />
 
       {profileImageUri ? (
@@ -96,6 +98,7 @@ export function StepAboutYou() {
           maxLength={BIOGRAPHY_MAX_LENGTH}
           numberOfLines={5}
           textAlignVertical="top"
+          validate={FieldValidators.required()}
         />
         <Separator size="xxxs" />
         <InputCaption color={BrandColors.neutral.light}>

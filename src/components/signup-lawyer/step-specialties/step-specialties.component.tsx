@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { GlassBackground } from '@/atomic/glass';
+import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption } from '@/atomic/typography';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
@@ -199,7 +200,11 @@ export function StepSpecialties() {
       <Controller
         control={control}
         name="specialties"
-        render={({ field: { value, onChange } }) => {
+        rules={{
+          validate: (value) =>
+            (value?.length ?? 0) > 0 ? true : 'Selecione ao menos uma especialidade',
+        }}
+        render={({ field: { value, onChange }, fieldState: { error } }) => {
           const selected = value ?? [];
 
           const toggleChild = (id: string) => {
@@ -242,22 +247,32 @@ export function StepSpecialties() {
           }
 
           return (
-            <View style={styles.list}>
-              {filteredCategories.map((category) => (
-                <CategoryPanel
-                  key={category.id}
-                  category={category}
-                  expanded={
-                    Boolean(query.trim()) ||
-                    expandedIds.includes(category.id) ||
-                    (expandedIds.length === 0 && category.id === defaultExpandedId)
-                  }
-                  selected={selected}
-                  onToggleExpand={() => toggleExpand(category.id)}
-                  onToggleChild={toggleChild}
-                  onToggleAll={() => toggleAll(category)}
-                />
-              ))}
+            <View>
+              <View style={styles.list}>
+                {filteredCategories.map((category) => (
+                  <CategoryPanel
+                    key={category.id}
+                    category={category}
+                    expanded={
+                      Boolean(query.trim()) ||
+                      expandedIds.includes(category.id) ||
+                      (expandedIds.length === 0 && category.id === defaultExpandedId)
+                    }
+                    selected={selected}
+                    onToggleExpand={() => toggleExpand(category.id)}
+                    onToggleChild={toggleChild}
+                    onToggleAll={() => toggleAll(category)}
+                  />
+                ))}
+              </View>
+              {error?.message ? (
+                <>
+                  <Separator size="xxxs" />
+                  <InputCaption color={BrandColors.feedback.error.light}>
+                    {error.message}
+                  </InputCaption>
+                </>
+              ) : null}
             </View>
           );
         }}

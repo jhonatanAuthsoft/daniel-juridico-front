@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { InputSelectField } from '@/atomic/form';
-import { CITIES_BY_UF, STATE_OPTIONS } from '@/constants/select-options';
+import { STATE_OPTIONS } from '@/constants/select-options';
+import { useCitiesByUf } from '@/domain/address';
 
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
@@ -13,11 +14,17 @@ export function StepServiceRadius() {
   const serviceState = useWatch<LawyerSignupFormValues, 'serviceState'>({
     name: 'serviceState',
   });
-  const cityOptions = serviceState ? (CITIES_BY_UF[serviceState] ?? []) : [];
+  const normalizedState = (serviceState ?? '').trim().toUpperCase();
+  const { data: cityOptions = [], isFetching } = useCitiesByUf(normalizedState);
+  const previousStateRef = useRef(normalizedState);
 
   useEffect(() => {
+    if (previousStateRef.current === normalizedState) {
+      return;
+    }
+    previousStateRef.current = normalizedState;
     setValue('serviceCity', '');
-  }, [serviceState, setValue]);
+  }, [normalizedState, setValue]);
 
   return (
     <View style={signupLawyerSharedStyles.fields}>
@@ -26,13 +33,17 @@ export function StepServiceRadius() {
         label="Estado"
         placeholder="Selecione o Estado"
         options={STATE_OPTIONS}
+        required
       />
       <InputSelectField
         name="serviceCity"
         label="Cidade"
-        placeholder="Selecione a cidade"
+        placeholder={
+          isFetching ? 'Carregando cidades...' : 'Selecione a cidade'
+        }
         options={cityOptions}
-        disabled={!serviceState}
+        disabled={!normalizedState || isFetching}
+        required
       />
     </View>
   );

@@ -1,5 +1,5 @@
 import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -16,15 +16,16 @@ import { Button } from '@/atomic/button';
 import { Form, InputSelectField, InputTextField, useForm } from '@/atomic/form';
 import { Body2, Display, Link } from '@/atomic/typography';
 import { ConnectionError } from '@/components/connection-error';
-import { CITIES_BY_UF, STATE_OPTIONS } from '@/constants/select-options';
+import { STATE_OPTIONS } from '@/constants/select-options';
 import {
   BrandColors,
   MaxContentWidth,
   Radius,
   Spacing,
 } from '@/constants/theme';
-import { useConnectivityGuard } from '@/hooks/use-connectivity-guard';
+import { useCitiesByUf } from '@/domain/address';
 import { useSpecialtiesCatalog } from '@/domain/catalog';
+import { useConnectivityGuard } from '@/hooks/use-connectivity-guard';
 
 import {
   BILLING_OPTIONS,
@@ -87,7 +88,19 @@ export function ClientSolicitationForm({
     values.specialty || undefined,
   );
 
-  const cityOptions = CITIES_BY_UF[values.state] ?? [];
+  const normalizedState = values.state.trim().toUpperCase();
+  const { data: cityOptions = [], isFetching: isLoadingCities } =
+    useCitiesByUf(normalizedState);
+  const previousStateRef = useRef(normalizedState);
+
+  useEffect(() => {
+    if (previousStateRef.current === normalizedState) {
+      return;
+    }
+    previousStateRef.current = normalizedState;
+    form.setValue('city', '');
+  }, [form, normalizedState]);
+
   const requiredValues = [
     values.title,
     values.practice,
@@ -161,9 +174,11 @@ export function ClientSolicitationForm({
               <InputSelectField
                 name="city"
                 label="Cidade"
-                placeholder="Selecione a cidade"
+                placeholder={
+                  isLoadingCities ? 'Carregando cidades...' : 'Selecione a cidade'
+                }
                 options={cityOptions}
-                disabled={!values.state}
+                disabled={!normalizedState || isLoadingCities}
               />
               <InputSelectField
                 name="urgency"

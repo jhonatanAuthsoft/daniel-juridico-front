@@ -8,6 +8,8 @@ import { Button } from '@/atomic/button';
 import { InputImageField, InputSelectField, InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, Body2, InputLabel, Link as TypographLink } from '@/atomic/typography';
+import { FieldValidators } from '@/constants/field-validators';
+import { InputMasks } from '@/constants/input-masks';
 import { UF_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
@@ -97,18 +99,25 @@ export function StepOabRegistration() {
         label="OAB"
         placeholder="Digite o número da OAB"
         keyboardType="number-pad"
+        format={InputMasks.digitsMax(10)}
+        validate={FieldValidators.digitsMin(3, 'Número da OAB inválido')}
+        maxLength={10}
       />
       <InputSelectField
         name="oabUf"
         label="UF"
         placeholder="Selecione o estado"
         options={UF_OPTIONS}
+        required
       />
       <InputTextField
         name="oabIssueDate"
         label="Data de expedição"
         placeholder="00/00/0000"
         keyboardType="number-pad"
+        format={InputMasks.dateBr}
+        validate={FieldValidators.dateBr}
+        maxLength={10}
       />
 
       <InputImageField
@@ -144,6 +153,8 @@ export function StepOabRegistration() {
                 label="Número da OAB"
                 placeholder="Digite o número da OAB"
                 keyboardType="number-pad"
+                format={InputMasks.digitsMax(10)}
+                maxLength={10}
               />
               <InputSelectField
                 name={`supplementalOabs.${index}.uf`}
@@ -156,6 +167,8 @@ export function StepOabRegistration() {
                 label="Data de expedição"
                 placeholder="00/00/0000"
                 keyboardType="number-pad"
+                format={InputMasks.dateBr}
+                maxLength={10}
               />
               <InputImageField
                 name={`supplementalOabs.${index}.frontUri`}

@@ -1,149 +1,170 @@
 import { useEffect, useMemo, useRef } from 'react';
 import {
-  useFormContext,
-  useWatch,
   type FieldValues,
   type Path,
   type PathValue,
-  type UseFormSetValue,
+  useFormContext,
+  useWatch,
 } from 'react-hook-form';
 
 import type { SelectOption } from '@/constants/select-options';
-import { CITIES_BY_UF, NEIGHBORHOOD_OPTIONS } from '@/constants/select-options';
-import { useCep } from '@/domain/address';
+import { useCep, useCitiesByUf } from '@/domain/address';
 
-type AddressFormFields = {
-  cep: string;
-  state: string;
-  city: string;
-  neighborhood: string;
-  street: string;
-  complement: string;
+type AddressFieldNames<T extends FieldValues> = {
+  zipCode: Path<T>;
+  state: Path<T>;
+  city: Path<T>;
+  neighborhood: Path<T>;
+  street: Path<T>;
+  complement?: Path<T>;
 };
 
-type UseAddressCepAutofillResult = {
-  isFetchingCep: boolean;
-  cepErrorMessage?: string;
-  cityOptions: SelectOption[];
-  neighborhoodOptions: SelectOption[];
-};
+const DEFAULT_FIELDS = {
+  zipCode: 'cep',
+  state: 'state',
+  city: 'city',
+  neighborhood: 'neighborhood',
+  street: 'street',
+  complement: 'complement',
+} as const;
 
-function withDynamicOption(options: SelectOption[], value: string): SelectOption[] {
-  if (!value) {
+function withDynamicOption(
+  options: SelectOption[],
+  value: string | undefined,
+): SelectOption[] {
+  const trimmed = value?.trim();
+  if (!trimmed) {
     return options;
   }
-
-  const exists = options.some(
-    (option) =>
-      option.value === value || option.label.toLowerCase() === value.toLowerCase(),
-  );
-
-  if (exists) {
+  if (options.some((option) => option.value === trimmed)) {
     return options;
   }
-
-  return [...options, { value, label: value }];
+  return [{ value: trimmed, label: trimmed }, ...options];
 }
 
-function resolveCityValue(state: string, cityLabel: string): string {
-  const cities = CITIES_BY_UF[state] ?? [];
-  const match = cities.find(
-    (option) => option.label.toLowerCase() === cityLabel.toLowerCase(),
+function resolveCityValue(cities: SelectOption[], cityName: string): string {
+  const trimmed = cityName.trim();
+  if (!trimmed) {
+    return '';
+  }
+  const byValue = cities.find((city) => city.value === trimmed);
+  if (byValue) {
+    return byValue.value;
+  }
+  const byLabel = cities.find(
+    (city) => city.label.toLowerCase() === trimmed.toLowerCase(),
   );
-  return match?.value ?? cityLabel;
-}
-
-function resolveNeighborhoodValue(neighborhoodLabel: string): string {
-  const match = NEIGHBORHOOD_OPTIONS.find(
-    (option) => option.label.toLowerCase() === neighborhoodLabel.toLowerCase(),
-  );
-  return match?.value ?? neighborhoodLabel;
+  return byLabel?.value ?? trimmed;
 }
 
 /**
- * Watches CEP, calls useCep, and fills address fields when data arrives.
+ * Autofills address fields from CEP (ViaCEP) and loads cities by UF (BrasilAPI).
+ * Neighborhood stays free text; city is a searchable select cascaded from state.
  */
-export function useAddressCepAutofill<
-  TFieldValues extends FieldValues & AddressFormFields,
->(): UseAddressCepAutofillResult {
-  const { setValue, control } = useFormContext<TFieldValues>();
-  const cep = (useWatch({ control, name: 'cep' as Path<TFieldValues> }) as string) ?? '';
-  const state =
-    (useWatch({ control, name: 'state' as Path<TFieldValues> }) as string) ?? '';
-  const city = (useWatch({ control, name: 'city' as Path<TFieldValues> }) as string) ?? '';
-  const neighborhood =
-    (useWatch({ control, name: 'neighborhood' as Path<TFieldValues> }) as string) ?? '';
+export function useAddressCepAutofill<T extends FieldValues>(
+  fields: AddressFieldNames<T> = DEFAULT_FIELDS as AddressFieldNames<T>,
+) {
+  const { control, setValue } = useFormContext<T>();
 
-  const previousState = useRef(state);
-  const lastFilledCep = useRef<string | null>(null);
-  const isFillingFromCep = useRef(false);
+  const zipCode = useWatch({ control, name: fields.zipCode }) as string;
+  const state = ((useWatch({ control, name: fields.state }) as string) ?? '')
+    .trim()
+    .toUpperCase();
+  const city = (useWatch({ control, name: fields.city }) as string) ?? '';
 
-  const { data, isFetching, isError, error, isSuccess } = useCep(cep);
+  const { data, isFetching, isError, error, isSuccess } = useCep(zipCode);
+  const {
+    data: cities = [],
+    isFetching: isLoadingCities,
+    isError: isCitiesError,
+  } = useCitiesByUf(state);
+
+  const lastAppliedCepRef = useRef<string | null>(null);
+  const previousStateRef = useRef(state);
 
   useEffect(() => {
-    if (previousState.current === state) {
+    if (previousStateRef.current === state) {
       return;
     }
-
-    previousState.current = state;
-
-    if (isFillingFromCep.current) {
-      return;
-    }
-
-    setValue('city' as Path<TFieldValues>, '' as PathValue<TFieldValues, Path<TFieldValues>>);
-    setValue(
-      'neighborhood' as Path<TFieldValues>,
-      '' as PathValue<TFieldValues, Path<TFieldValues>>,
-    );
-  }, [setValue, state]);
+    previousStateRef.current = state;
+    setValue(fields.city, '' as PathValue<T, Path<T>>, {
+      shouldDirty: true,
+      shouldValidate: false,
+    });
+    setValue(fields.neighborhood, '' as PathValue<T, Path<T>>, {
+      shouldDirty: true,
+      shouldValidate: false,
+    });
+  }, [fields.city, fields.neighborhood, setValue, state]);
 
   useEffect(() => {
     if (!isSuccess || !data) {
       return;
     }
-
-    if (lastFilledCep.current === data.cep) {
+    if (lastAppliedCepRef.current === data.cep) {
       return;
     }
+    lastAppliedCepRef.current = data.cep;
 
-    lastFilledCep.current = data.cep;
-    isFillingFromCep.current = true;
+    const nextState = data.state.trim().toUpperCase();
+    previousStateRef.current = nextState;
 
-    const fill = setValue as UseFormSetValue<AddressFormFields>;
-    fill('state', data.state, { shouldDirty: true });
-    fill('city', resolveCityValue(data.state, data.city), { shouldDirty: true });
-    fill('neighborhood', resolveNeighborhoodValue(data.neighborhood), {
+    setValue(fields.state, nextState as PathValue<T, Path<T>>, {
       shouldDirty: true,
+      shouldValidate: true,
     });
-    fill('street', data.street, { shouldDirty: true });
-    if (data.complement) {
-      fill('complement', data.complement, { shouldDirty: true });
+    setValue(
+      fields.city,
+      resolveCityValue(cities, data.city) as PathValue<T, Path<T>>,
+      { shouldDirty: true, shouldValidate: true },
+    );
+    setValue(
+      fields.neighborhood,
+      data.neighborhood as PathValue<T, Path<T>>,
+      { shouldDirty: true, shouldValidate: true },
+    );
+    setValue(fields.street, data.street as PathValue<T, Path<T>>, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    if (fields.complement && data.complement) {
+      setValue(
+        fields.complement,
+        data.complement as PathValue<T, Path<T>>,
+        { shouldDirty: true, shouldValidate: true },
+      );
     }
+  }, [cities, data, fields, isSuccess, setValue]);
 
-    queueMicrotask(() => {
-      isFillingFromCep.current = false;
-    });
-  }, [data, isSuccess, setValue]);
+  useEffect(() => {
+    if (!city.trim() || cities.length === 0) {
+      return;
+    }
+    const resolved = resolveCityValue(cities, city);
+    if (resolved !== city) {
+      setValue(fields.city, resolved as PathValue<T, Path<T>>, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  }, [cities, city, fields.city, setValue]);
 
-  const cityOptions = useMemo(() => {
-    const base = state ? (CITIES_BY_UF[state] ?? []) : [];
-    return withDynamicOption(base, city);
-  }, [city, state]);
-
-  const neighborhoodOptions = useMemo(
-    () => withDynamicOption([...NEIGHBORHOOD_OPTIONS], neighborhood),
-    [neighborhood],
+  const cityOptions = useMemo(
+    () => withDynamicOption(cities, city),
+    [cities, city],
   );
 
   return {
     isFetchingCep: isFetching,
+    isCepError: isError,
     cepErrorMessage: isError
       ? error instanceof Error
         ? error.message
-        : 'Não foi possível buscar o CEP.'
-      : undefined,
+        : 'Não foi possível buscar o CEP'
+      : null,
     cityOptions,
-    neighborhoodOptions,
+    isLoadingCities,
+    isCitiesError,
+    hasState: state.length === 2,
   };
 }

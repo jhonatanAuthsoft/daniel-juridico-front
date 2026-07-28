@@ -25,12 +25,14 @@ import {
   TOTAL_STEPS,
   type LawyerSignupFormValues,
 } from '@/components/signup-lawyer';
+import { getLawyerSignupStepFields } from '@/components/signup-lawyer/step-fields';
 import { SignupMultiStepShell } from '@/components/signup-shell';
 import { useRegisterLawyer } from '@/domain/lawyer';
 
 export default function LawyerSignupScreen() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const [showPasswordErrors, setShowPasswordErrors] = useState(false);
   const form = useForm<LawyerSignupFormValues>({
     defaultValues,
     mode: 'onBlur',
@@ -64,8 +66,21 @@ export default function LawyerSignupScreen() {
     }
   });
 
-  const goNext = () => {
-    const practiceAreas = form.getValues('practiceAreas');
+  const goNext = async () => {
+    const values = form.getValues();
+    if (step === 1) {
+      setShowPasswordErrors(true);
+    }
+
+    const fields = getLawyerSignupStepFields(step, values);
+    if (fields.length > 0) {
+      const valid = await form.trigger(fields);
+      if (!valid) {
+        return;
+      }
+    }
+
+    const practiceAreas = values.practiceAreas;
     const nextStep = getNextLawyerSignupStep(
       step,
       practiceAreas,
@@ -96,7 +111,7 @@ export default function LawyerSignupScreen() {
       title={stepCopy.title}
       totalSteps={TOTAL_STEPS}>
       <Form {...form}>
-        {step === 1 ? <StepBasicData showPasswordErrors={false} /> : null}
+        {step === 1 ? <StepBasicData showPasswordErrors={showPasswordErrors} /> : null}
         {step === 2 ? <StepDocumentation /> : null}
         {step === 3 ? <StepAddress /> : null}
         {step === 4 ? <StepOabRegistration /> : null}
@@ -110,7 +125,11 @@ export default function LawyerSignupScreen() {
 
       <Separator size="xl" />
 
-      <Button variant="cta" disabled={isSubmitting} isLoading={isSubmitting} onPress={goNext}>
+      <Button
+        variant="cta"
+        disabled={isSubmitting}
+        isLoading={isSubmitting}
+        onPress={() => void goNext()}>
         {step === TOTAL_STEPS ? 'Começar' : 'Continuar'}
       </Button>
 

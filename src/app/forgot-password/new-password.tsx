@@ -18,6 +18,7 @@ import { PasswordRequirementsFeedback } from '@/atomic/password-requirements-fee
 import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
 import { PasswordRequirements } from '@/constants/password-requirements';
+import { FieldValidators } from '@/constants/field-validators';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import { useResetPassword } from '@/domain/password-recovery';
@@ -46,7 +47,7 @@ function NewPasswordField({ showErrors }: { showErrors: boolean }) {
         autoCapitalize="none"
         autoComplete="new-password"
         textContentType="newPassword"
-        validators={[]}
+        validate={FieldValidators.passwordRequirements}
         iconRight={
           <Pressable
             accessibilityRole="button"
@@ -69,6 +70,7 @@ function NewPasswordField({ showErrors }: { showErrors: boolean }) {
 
 function ConfirmPasswordField() {
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const password = useWatch<NewPasswordFormValues, 'password'>({ name: 'password' }) ?? '';
 
   return (
     <InputTextField
@@ -79,7 +81,10 @@ function ConfirmPasswordField() {
       autoCapitalize="none"
       autoComplete="new-password"
       textContentType="newPassword"
-      validators={[]}
+      validate={[
+        FieldValidators.required('Confirme a senha'),
+        FieldValidators.matches(password, 'A confirmação de senha não confere'),
+      ]}
       iconRight={
         <Pressable
           accessibilityRole="button"

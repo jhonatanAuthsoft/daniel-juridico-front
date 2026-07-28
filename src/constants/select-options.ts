@@ -168,8 +168,15 @@ export const TREATMENT_PRONOUN_OPTIONS: SelectOption[] = [
   { value: 'NEUTRO', label: 'Neutro' },
 ];
 
-/** Resolves a city select value (slug) back to its display label for API payloads. */
+/**
+ * Resolves a city select value to its display label for API payloads.
+ * Prefer storing the city name as the select value; falls back to static catalog or raw value.
+ */
 export function cityLabelFromValue(uf: string, value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return '';
+  }
   const options = CITIES_BY_UF[uf.trim().toUpperCase()] ?? [];
-  return options.find((option) => option.value === value)?.label ?? value;
+  return options.find((option) => option.value === trimmed)?.label ?? trimmed;
 }
