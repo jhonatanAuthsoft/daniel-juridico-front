@@ -7,8 +7,8 @@ export type OabWireRequest = {
   numero: string;
   uf: string;
   dataExpedicao: string;
-  fotoFrenteUrl?: string | null;
-  fotoVersoUrl?: string | null;
+  /** S3 object keys (N photos per OAB card). */
+  fotosUrls?: string[] | null;
 };
 
 export type PracticeAreaWireRequest = {

@@ -29,7 +29,7 @@ export function getLawyerSignupStepFields(
     case 3:
       return ['cep', 'state', 'city', 'neighborhood', 'street', 'number'];
     case 4:
-      return ['oabNumber', 'oabUf', 'oabIssueDate', 'oabFrontUri', 'oabBackUri'];
+      return ['oabNumber', 'oabUf', 'oabIssueDate', 'oabPhotoUris'];
     case 5:
       return ['university', 'course', 'graduationYear'];
     case 6:

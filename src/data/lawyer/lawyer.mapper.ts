@@ -81,15 +81,17 @@ function mapOab(
   numero: string,
   uf: string,
   issueDate: string,
-  fotoFrenteKey: string,
-  fotoVersoKey: string,
+  photoKeys: string[],
 ): OabWireRequest {
+  const fotosUrls = photoKeys
+    .map((key) => key.trim())
+    .filter((key) => key.length > 0);
+
   return {
     numero: numero.trim(),
     uf: uf.trim().toUpperCase(),
     dataExpedicao: toIsoDate(issueDate) ?? '',
-    fotoFrenteUrl: fotoFrenteKey.trim(),
-    fotoVersoUrl: fotoVersoKey.trim(),
+    fotosUrls: fotosUrls.length > 0 ? fotosUrls : undefined,
   };
 }
 
@@ -97,7 +99,7 @@ function mapSupplementalOabs(entries: SupplementalOabEntry[]): OabWireRequest[] 
   return entries
     .filter((entry) => entry.number.trim())
     .map((entry) =>
-      mapOab(entry.number, entry.uf, entry.issueDate, entry.frontKey, entry.backKey),
+      mapOab(entry.number, entry.uf, entry.issueDate, entry.photoKeys ?? []),
     );
 }
 
@@ -125,8 +127,7 @@ export function mapLawyerSignupFormToRegisterRequest(
     form.oabNumber,
     form.oabUf,
     form.oabIssueDate,
-    form.oabFrontKey,
-    form.oabBackKey,
+    form.oabPhotoKeys ?? [],
   );
   const supplementalOabs = mapSupplementalOabs(form.supplementalOabs);
   const fatherName = form.noFatherName ? '' : form.fatherName.trim();

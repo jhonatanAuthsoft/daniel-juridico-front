@@ -17,16 +17,15 @@ import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues, SupplementalOabEntry } from '../types';
 
 const MAX_SUPPLEMENTAL_OABS = 5;
+const OAB_PHOTO_MAX = 2;
 
 function createEmptySupplementalOab(): SupplementalOabEntry {
   return {
     number: '',
     uf: '',
     issueDate: '',
-    frontUri: '',
-    backUri: '',
-    frontKey: '',
-    backKey: '',
+    photoUris: [],
+    photoKeys: [],
   };
 }
 
@@ -123,19 +122,15 @@ export function StepOabRegistration() {
       />
 
       <InputImageField
-        name="oabFrontUri"
-        keyName="oabFrontKey"
+        multiple
+        name="oabPhotoUris"
+        keyName="oabPhotoKeys"
         uploadFinalidade="OAB"
-        label="Foto da frente da carteira"
-        emptyTitle="Anexe a foto da frente da carteira"
-        required
-      />
-      <InputImageField
-        name="oabBackUri"
-        keyName="oabBackKey"
-        uploadFinalidade="OAB"
-        label="Foto do verso da carteira"
-        emptyTitle="Anexe a foto do verso da carteira"
+        label="Foto da frente e verso da carteira"
+        emptyTitle="Anexe as fotos de frente e verso"
+        emptyCaption="Formato: .jpeg, .png"
+        maxCount={OAB_PHOTO_MAX}
+        minCount={2}
         required
       />
 
@@ -179,18 +174,14 @@ export function StepOabRegistration() {
                 maxLength={10}
               />
               <InputImageField
-                name={`supplementalOabs.${index}.frontUri`}
-                keyName={`supplementalOabs.${index}.frontKey`}
+                multiple
+                name={`supplementalOabs.${index}.photoUris`}
+                keyName={`supplementalOabs.${index}.photoKeys`}
                 uploadFinalidade="OAB"
-                label="Foto da frente da carteira"
-                emptyTitle="Anexe a foto da frente da carteira"
-              />
-              <InputImageField
-                name={`supplementalOabs.${index}.backUri`}
-                keyName={`supplementalOabs.${index}.backKey`}
-                uploadFinalidade="OAB"
-                label="Foto do verso da carteira"
-                emptyTitle="Anexe a foto do verso da carteira"
+                label="Foto da frente e verso da carteira"
+                emptyTitle="Anexe as fotos de frente e verso"
+                emptyCaption="Formato: .jpeg, .png"
+                maxCount={OAB_PHOTO_MAX}
               />
 
               <Button variant="primary" onPress={saveEdit}>
@@ -201,6 +192,7 @@ export function StepOabRegistration() {
         }
 
         const entry = supplementalOabs[index] ?? field;
+        const photoUris = entry.photoUris ?? [];
 
         return (
           <View key={field.id} style={styles.savedCard}>
@@ -248,8 +240,8 @@ export function StepOabRegistration() {
               </InputLabel>
               <Separator size="xxs" />
               <View style={styles.photoRow}>
-                <WalletPhotoPreview uri={entry.frontUri} label="Frente" />
-                <WalletPhotoPreview uri={entry.backUri} label="Verso" />
+                <WalletPhotoPreview uri={photoUris[0] ?? ''} label="Frente" />
+                <WalletPhotoPreview uri={photoUris[1] ?? ''} label="Verso" />
               </View>
             </Pressable>
           </View>

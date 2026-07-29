@@ -25,11 +25,13 @@ type InputImageFieldBaseProps<TFieldValues extends FieldValues> = {
   emptyCaption?: string;
   aspect?: [number, number];
   maxCount?: number;
-  /** When set with `keyName`, uploads to S3 after crop and stores the object key. */
+  /** When set with `keyName`, uploads to S3 after crop and stores the object key(s). */
   uploadFinalidade?: ArquivoFinalidade;
   keyName?: FieldPath<TFieldValues>;
-  /** When true, empty URI fails validation. */
+  /** When true, empty value fails validation. */
   required?: boolean;
+  /** Minimum images when `multiple` (defaults to 1 if required). */
+  minCount?: number;
 };
 
 export type InputImageFieldSingleProps<TFieldValues extends FieldValues = FieldValues> =
@@ -62,10 +64,11 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
     uploadFinalidade,
     keyName,
     required = false,
+    minCount,
   } = props;
   const [isUploading, setIsUploading] = useState(false);
 
-  const uploadAndSet = useCallback(
+  const uploadSingle = useCallback(
     async (uri: string, onChangeUri: (next: string) => void) => {
       if (!uploadFinalidade || !keyName) {
         onChangeUri(uri);
@@ -95,15 +98,80 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
     [clearErrors, keyName, name, setError, setValue, uploadFinalidade],
   );
 
+  const syncMultiKeys = useCallback(
+    (nextUris: string[], previousUris: string[], previousKeys: string[]) => {
+      return previousUris
+        .map((uri, index) => ({ uri, key: previousKeys[index] ?? '' }))
+        .filter((item) => nextUris.includes(item.uri))
+        .map((item) => item.key)
+        .filter(Boolean);
+    },
+    [],
+  );
+
+  const uploadMultiAppend = useCallback(
+    async (
+      newUri: string,
+      previousUris: string[],
+      onChangeUris: (next: string[]) => void,
+    ) => {
+      if (!uploadFinalidade || !keyName) {
+        onChangeUris([...previousUris, newUri]);
+        return;
+      }
+
+      const previousKeys = (getValues(keyName) as string[] | undefined) ?? [];
+      setIsUploading(true);
+      try {
+        const key = await uploadLocalImage({
+          uri: newUri,
+          finalidade: uploadFinalidade,
+        });
+        const nextUris = [...previousUris, newUri];
+        const nextKeys = [...previousKeys, key];
+        onChangeUris(nextUris);
+        setValue(keyName, nextKeys as PathValue<TFieldValues, FieldPath<TFieldValues>>, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+        clearErrors([name, keyName]);
+      } catch (error) {
+        const message = getErrorMessage(error, 'Não foi possível enviar a imagem.');
+        Alert.alert('Upload', message);
+        setError(keyName, { type: 'manual', message });
+      } finally {
+        setIsUploading(false);
+      }
+    },
+    [clearErrors, getValues, keyName, name, setError, setValue, uploadFinalidade],
+  );
+
   return (
     <Controller
       control={control}
       name={name}
       rules={{
         validate: (value) => {
-          if (!required) {
+          if (!required && !minCount) {
             return true;
           }
+          if (multiple) {
+            const uris = Array.isArray(value) ? value.filter(Boolean) : [];
+            const minimum = minCount ?? (required ? 1 : 0);
+            if (uris.length < minimum) {
+              return minimum >= 2
+                ? 'Anexe as fotos de frente e verso'
+                : 'Campo obrigatório';
+            }
+            if (keyName) {
+              const keys = (getValues(keyName) as string[] | undefined) ?? [];
+              if (keys.filter(Boolean).length < uris.length) {
+                return 'Aguarde o envio da imagem ou tente novamente';
+              }
+            }
+            return true;
+          }
+
           const uri = typeof value === 'string' ? value.trim() : '';
           if (!uri) {
             return 'Campo obrigatório';
@@ -119,6 +187,7 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
       }}
       render={({ field: { value, onChange }, fieldState: { error } }) => {
         if (multiple) {
+          const currentUris = Array.isArray(value) ? value.filter(Boolean) : [];
           const fieldProps: ImageFieldMultiProps = {
             multiple: true,
             label,
@@ -126,10 +195,39 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
             emptyCaption,
             aspect,
             maxCount,
-            value: Array.isArray(value) ? value : [],
-            onChange,
+            value: currentUris,
             isUploading,
             errorMessage: error?.message,
+            onChange: (nextUris) => {
+              const previousUris = currentUris;
+              const previousKeys =
+                (keyName
+                  ? ((getValues(keyName) as string[] | undefined) ?? [])
+                  : []) ?? [];
+
+              if (nextUris.length < previousUris.length) {
+                onChange(nextUris);
+                if (keyName) {
+                  const nextKeys = syncMultiKeys(nextUris, previousUris, previousKeys);
+                  setValue(
+                    keyName,
+                    nextKeys as PathValue<TFieldValues, FieldPath<TFieldValues>>,
+                    { shouldDirty: true, shouldValidate: true },
+                  );
+                }
+                return;
+              }
+
+              if (nextUris.length > previousUris.length) {
+                const addedUri = nextUris[nextUris.length - 1];
+                if (addedUri) {
+                  void uploadMultiAppend(addedUri, previousUris, onChange);
+                }
+                return;
+              }
+
+              onChange(nextUris);
+            },
           };
           return <ImageField {...fieldProps} />;
         }
@@ -155,7 +253,7 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
               }
               return;
             }
-            void uploadAndSet(nextUri, onChange);
+            void uploadSingle(nextUri, onChange);
           },
         };
         return <ImageField {...fieldProps} />;

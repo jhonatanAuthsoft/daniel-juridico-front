@@ -2,10 +2,10 @@ export type SupplementalOabEntry = {
   number: string;
   uf: string;
   issueDate: string;
-  frontUri: string;
-  backUri: string;
-  frontKey: string;
-  backKey: string;
+  /** Local preview URIs (frente/verso). */
+  photoUris: string[];
+  /** S3 object keys aligned with `photoUris`. */
+  photoKeys: string[];
 };
 
 export type PostgraduateEntry = {
@@ -36,10 +36,10 @@ export type LawyerSignupFormValues = {
   oabNumber: string;
   oabUf: string;
   oabIssueDate: string;
-  oabFrontUri: string;
-  oabBackUri: string;
-  oabFrontKey: string;
-  oabBackKey: string;
+  /** Local preview URIs for primary OAB card (frente + verso). */
+  oabPhotoUris: string[];
+  /** S3 keys aligned with `oabPhotoUris`. */
+  oabPhotoKeys: string[];
   supplementalOabs: SupplementalOabEntry[];
   university: string;
   course: string;

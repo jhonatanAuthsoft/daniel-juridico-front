@@ -29,19 +29,15 @@ const baseForm: LawyerSignupFormValues = {
   oabNumber: '123456',
   oabUf: 'sp',
   oabIssueDate: '15/03/2016',
-  oabFrontUri: 'file://front.jpg',
-  oabBackUri: 'file://back.jpg',
-  oabFrontKey: 'tmp/advogados/oab/front.jpg',
-  oabBackKey: 'tmp/advogados/oab/back.jpg',
+  oabPhotoUris: ['file://front.jpg', 'file://back.jpg'],
+  oabPhotoKeys: ['tmp/advogados/oab/front.jpg', 'tmp/advogados/oab/back.jpg'],
   supplementalOabs: [
     {
       number: '654321',
       uf: 'rj',
       issueDate: '10/01/2018',
-      frontUri: '',
-      backUri: '',
-      frontKey: 'tmp/advogados/oab/front2.jpg',
-      backKey: 'tmp/advogados/oab/back2.jpg',
+      photoUris: [],
+      photoKeys: ['tmp/advogados/oab/front2.jpg', 'tmp/advogados/oab/back2.jpg'],
     },
   ],
   university: 'USP',
@@ -90,8 +86,7 @@ describe('lawyer.mapper', () => {
       numero: '123456',
       uf: 'SP',
       dataExpedicao: '2016-03-15',
-      fotoFrenteUrl: 'tmp/advogados/oab/front.jpg',
-      fotoVersoUrl: 'tmp/advogados/oab/back.jpg',
+      fotosUrls: ['tmp/advogados/oab/front.jpg', 'tmp/advogados/oab/back.jpg'],
     });
     expect(payload.oabsSuplementares).toHaveLength(1);
     expect(payload.oabsSuplementares?.[0]).toMatchObject({
