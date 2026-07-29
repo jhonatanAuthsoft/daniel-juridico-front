@@ -1,7 +1,6 @@
 import {
   mapClientSignupFormToRegisterRequest,
   mapPronounsToApi,
-  MOCK_PHOTO_URL,
   toIsoBirthDate,
 } from './client.mapper';
 import type { ClientSignupFormValues } from '@/components/signup-client';
@@ -31,6 +30,7 @@ const baseForm: ClientSignupFormValues = {
   monthlyIncome: '5000',
   pronouns: 'ela-dela',
   profileImageUri: 'file://local.jpg',
+  profileImageKey: 'tmp/clientes/perfil/abc.jpg',
 };
 
 describe('client.mapper', () => {
@@ -47,7 +47,7 @@ describe('client.mapper', () => {
       pronomes: 'ELA',
       telefone: '11999999999',
       estado: 'SP',
-      fotoUrl: MOCK_PHOTO_URL,
+      fotoUrl: 'tmp/clientes/perfil/abc.jpg',
     });
   });
 

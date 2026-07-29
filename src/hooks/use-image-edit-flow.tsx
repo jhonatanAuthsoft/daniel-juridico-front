@@ -1,34 +1,45 @@
 import { useCallback, useState, type ReactElement } from 'react';
+import { Alert } from 'react-native';
 
 import {
   ImageEditModal,
   type ImageEditModalProps,
 } from '@/atomic/form/image-edit-modal.component';
+import type { ArquivoFinalidade } from '@/data/arquivo';
+import { uploadLocalImage } from '@/data/arquivo';
+import { getErrorMessage } from '@/data/http';
 import {
   pickImageFromGallery,
   type PickImageFromGalleryOptions,
 } from '@/utils/pick-image-from-gallery';
 
+export type ConfirmedSignupImage = {
+  uri: string;
+  key: string;
+};
+
 type UseImageEditFlowResult = {
-  /** Opens gallery, then the crop/rotate modal; calls `onConfirm` with the final URI. */
   pickEditedImage: (options?: PickImageFromGalleryOptions) => Promise<void>;
   editModal: ReactElement<ImageEditModalProps>;
+  isUploading: boolean;
 };
 
 /**
- * Shared gallery → crop/rotate modal → confirm flow for custom image UIs
- * (e.g. profile avatars) that do not use `ImageField`.
+ * Gallery → crop → optional S3 upload → confirm.
+ * When `uploadFinalidade` is set, `onConfirm` receives `{ uri, key }`.
  */
 export function useImageEditFlow(
-  onConfirm: (uri: string) => void,
+  onConfirm: (result: string | ConfirmedSignupImage) => void,
+  options?: { uploadFinalidade?: ArquivoFinalidade },
 ): UseImageEditFlowResult {
   const [pendingUri, setPendingUri] = useState<string | null>(null);
   const [aspect, setAspect] = useState<[number, number]>([1, 1]);
   const [visible, setVisible] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   const pickEditedImage = useCallback(
-    async (options: PickImageFromGalleryOptions = {}) => {
-      setAspect(options.aspect ?? [1, 1]);
+    async (pickOptions: PickImageFromGalleryOptions = {}) => {
+      setAspect(pickOptions.aspect ?? [1, 1]);
 
       const uri = await pickImageFromGallery({
         allowsEditing: false,
@@ -45,28 +56,52 @@ export function useImageEditFlow(
   );
 
   const handleCancel = useCallback(() => {
+    if (isUploading) {
+      return;
+    }
     setVisible(false);
     setPendingUri(null);
-  }, []);
+  }, [isUploading]);
 
   const handleConfirm = useCallback(
-    (uri: string) => {
+    async (uri: string) => {
+      const finalidade = options?.uploadFinalidade;
       setVisible(false);
       setPendingUri(null);
-      onConfirm(uri);
+
+      if (!finalidade) {
+        onConfirm(uri);
+        return;
+      }
+
+      setIsUploading(true);
+      try {
+        const key = await uploadLocalImage({ uri, finalidade });
+        onConfirm({ uri, key });
+      } catch (error) {
+        Alert.alert(
+          'Upload',
+          getErrorMessage(error, 'Não foi possível enviar a imagem.'),
+        );
+      } finally {
+        setIsUploading(false);
+      }
     },
-    [onConfirm],
+    [onConfirm, options?.uploadFinalidade],
   );
 
   return {
     pickEditedImage,
+    isUploading,
     editModal: (
       <ImageEditModal
         visible={visible}
         imageUri={pendingUri}
         aspect={aspect}
         onCancel={handleCancel}
-        onConfirm={handleConfirm}
+        onConfirm={(uri) => {
+          void handleConfirm(uri);
+        }}
       />
     ),
   };

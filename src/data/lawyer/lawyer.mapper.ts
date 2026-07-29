@@ -4,7 +4,7 @@ import type {
 } from '@/components/signup-lawyer/types';
 import { parseSpecialtyId } from '@/components/signup-lawyer/specialties.data';
 import { cityLabelFromValue } from '@/constants/select-options';
-import { MOCK_PHOTO_URL, toIsoDate } from '@/data/shared';
+import { toIsoDate } from '@/data/shared';
 
 import type {
   OabWireRequest,
@@ -15,8 +15,6 @@ import type {
   SpecialtyWireRequest,
   TreatmentPronounApi,
 } from './lawyer.types';
-
-export { MOCK_PHOTO_URL };
 
 function onlyDigits(value: string) {
   return value.replace(/\D/g, '');
@@ -83,20 +81,24 @@ function mapOab(
   numero: string,
   uf: string,
   issueDate: string,
+  fotoFrenteKey: string,
+  fotoVersoKey: string,
 ): OabWireRequest {
   return {
     numero: numero.trim(),
     uf: uf.trim().toUpperCase(),
     dataExpedicao: toIsoDate(issueDate) ?? '',
-    fotoFrenteUrl: MOCK_PHOTO_URL,
-    fotoVersoUrl: MOCK_PHOTO_URL,
+    fotoFrenteUrl: fotoFrenteKey.trim(),
+    fotoVersoUrl: fotoVersoKey.trim(),
   };
 }
 
 function mapSupplementalOabs(entries: SupplementalOabEntry[]): OabWireRequest[] {
   return entries
     .filter((entry) => entry.number.trim())
-    .map((entry) => mapOab(entry.number, entry.uf, entry.issueDate));
+    .map((entry) =>
+      mapOab(entry.number, entry.uf, entry.issueDate, entry.frontKey, entry.backKey),
+    );
 }
 
 function mapPostgraduates(
@@ -114,11 +116,18 @@ function mapPostgraduates(
 /**
  * Maps the lawyer signup form into `POST /advogados/cadastrar` wire body.
  * `atuacaoDesde` is derived from the primary OAB issue date (product decision).
+ * Photo fields send S3 object keys from `/arquivos/url-upload`.
  */
 export function mapLawyerSignupFormToRegisterRequest(
   form: LawyerSignupFormValues,
 ): RegisterLawyerRequest {
-  const oabPrincipal = mapOab(form.oabNumber, form.oabUf, form.oabIssueDate);
+  const oabPrincipal = mapOab(
+    form.oabNumber,
+    form.oabUf,
+    form.oabIssueDate,
+    form.oabFrontKey,
+    form.oabBackKey,
+  );
   const supplementalOabs = mapSupplementalOabs(form.supplementalOabs);
   const fatherName = form.noFatherName ? '' : form.fatherName.trim();
 
@@ -134,7 +143,7 @@ export function mapLawyerSignupFormToRegisterRequest(
     nomeMae: form.motherName.trim(),
     pronomeTratamento: mapTreatmentPronounToApi(form.pronouns),
     telefone: onlyDigits(form.phone),
-    fotoUrl: MOCK_PHOTO_URL,
+    fotoUrl: form.profileImageKey.trim(),
     universidade: form.university.trim(),
     curso: form.course.trim(),
     anoFormacao: toYear(form.graduationYear),

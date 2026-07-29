@@ -76,6 +76,8 @@ export const defaultValues: LawyerSignupFormValues = {
   oabIssueDate: '',
   oabFrontUri: '',
   oabBackUri: '',
+  oabFrontKey: '',
+  oabBackKey: '',
   supplementalOabs: [],
   university: '',
   course: '',
@@ -88,5 +90,6 @@ export const defaultValues: LawyerSignupFormValues = {
   billingMethods: [],
   pronouns: '',
   profileImageUri: '',
+  profileImageKey: '',
   biography: '',
 };

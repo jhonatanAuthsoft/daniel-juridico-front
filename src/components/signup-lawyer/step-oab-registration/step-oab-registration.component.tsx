@@ -25,6 +25,8 @@ function createEmptySupplementalOab(): SupplementalOabEntry {
     issueDate: '',
     frontUri: '',
     backUri: '',
+    frontKey: '',
+    backKey: '',
   };
 }
 
@@ -122,13 +124,19 @@ export function StepOabRegistration() {
 
       <InputImageField
         name="oabFrontUri"
+        keyName="oabFrontKey"
+        uploadFinalidade="OAB"
         label="Foto da frente da carteira"
         emptyTitle="Anexe a foto da frente da carteira"
+        required
       />
       <InputImageField
         name="oabBackUri"
+        keyName="oabBackKey"
+        uploadFinalidade="OAB"
         label="Foto do verso da carteira"
         emptyTitle="Anexe a foto do verso da carteira"
+        required
       />
 
       {fields.map((field, index) => {
@@ -172,11 +180,15 @@ export function StepOabRegistration() {
               />
               <InputImageField
                 name={`supplementalOabs.${index}.frontUri`}
+                keyName={`supplementalOabs.${index}.frontKey`}
+                uploadFinalidade="OAB"
                 label="Foto da frente da carteira"
                 emptyTitle="Anexe a foto da frente da carteira"
               />
               <InputImageField
                 name={`supplementalOabs.${index}.backUri`}
+                keyName={`supplementalOabs.${index}.backKey`}
+                uploadFinalidade="OAB"
                 label="Foto do verso da carteira"
                 emptyTitle="Anexe a foto do verso da carteira"
               />

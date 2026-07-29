@@ -4,7 +4,6 @@ import {
   mapPracticeAreaToModalidade,
   mapSpecialtiesToApi,
   mapTreatmentPronounToApi,
-  MOCK_PHOTO_URL,
 } from './lawyer.mapper';
 import type { LawyerSignupFormValues } from '@/components/signup-lawyer/types';
 
@@ -32,6 +31,8 @@ const baseForm: LawyerSignupFormValues = {
   oabIssueDate: '15/03/2016',
   oabFrontUri: 'file://front.jpg',
   oabBackUri: 'file://back.jpg',
+  oabFrontKey: 'tmp/advogados/oab/front.jpg',
+  oabBackKey: 'tmp/advogados/oab/back.jpg',
   supplementalOabs: [
     {
       number: '654321',
@@ -39,6 +40,8 @@ const baseForm: LawyerSignupFormValues = {
       issueDate: '10/01/2018',
       frontUri: '',
       backUri: '',
+      frontKey: 'tmp/advogados/oab/front2.jpg',
+      backKey: 'tmp/advogados/oab/back2.jpg',
     },
   ],
   university: 'USP',
@@ -52,6 +55,7 @@ const baseForm: LawyerSignupFormValues = {
   billingMethods: ['contractual', 'to_be_agreed'],
   pronouns: 'DOUTOR',
   profileImageUri: 'file://profile.jpg',
+  profileImageKey: 'tmp/advogados/perfil/profile.jpg',
   biography: 'Atuo há 10 anos.',
 };
 
@@ -77,7 +81,7 @@ describe('lawyer.mapper', () => {
       atuacaoDesde: '2016-03-15',
       cidade: 'São Paulo',
       estado: 'SP',
-      fotoUrl: MOCK_PHOTO_URL,
+      fotoUrl: 'tmp/advogados/perfil/profile.jpg',
       modalidades: ['GENERALISTA'],
       formasCobranca: ['HONORARIOS_CONTRATUAIS', 'OUTROS_A_COMBINAR'],
     });
@@ -86,6 +90,8 @@ describe('lawyer.mapper', () => {
       numero: '123456',
       uf: 'SP',
       dataExpedicao: '2016-03-15',
+      fotoFrenteUrl: 'tmp/advogados/oab/front.jpg',
+      fotoVersoUrl: 'tmp/advogados/oab/back.jpg',
     });
     expect(payload.oabsSuplementares).toHaveLength(1);
     expect(payload.oabsSuplementares?.[0]).toMatchObject({

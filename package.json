@@ -11,6 +11,7 @@
     "expo-asset": "~57.0.3",
     "expo-blur": "~57.0.0",
     "expo-constants": "~57.0.3",
+    "expo-dev-client": "~57.0.0",
     "expo-device": "~57.0.0",
     "expo-font": "~57.0.0",
     "expo-glass-effect": "~57.0.0",
@@ -53,12 +54,20 @@
   },
   "scripts": {
     "start": "expo start",
+    "start:dev": "APP_ENV=development EXPO_PUBLIC_APP_ENV=development expo start",
+    "start:staging": "APP_ENV=staging EXPO_PUBLIC_APP_ENV=staging expo start",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "test": "jest --no-watchman"
+    "test": "jest --no-watchman",
+    "eas:build:dev": "eas build --profile development",
+    "eas:build:dev-device": "eas build --profile development-device",
+    "eas:build:staging": "eas build --profile staging",
+    "eas:build:production": "eas build --profile production",
+    "eas:submit:staging": "eas submit --profile staging",
+    "eas:submit:production": "eas submit --profile production"
   },
   "jest": {
     "preset": "jest-expo",
@@ -68,6 +77,5 @@
       "^@/(.*)$": "<rootDir>/src/$1"
     }
   },
-  "private": true,
-  "packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c"
+  "private": true
 }

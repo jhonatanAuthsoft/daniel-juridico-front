@@ -4,6 +4,8 @@ export type SupplementalOabEntry = {
   issueDate: string;
   frontUri: string;
   backUri: string;
+  frontKey: string;
+  backKey: string;
 };
 
 export type PostgraduateEntry = {
@@ -36,6 +38,8 @@ export type LawyerSignupFormValues = {
   oabIssueDate: string;
   oabFrontUri: string;
   oabBackUri: string;
+  oabFrontKey: string;
+  oabBackKey: string;
   supplementalOabs: SupplementalOabEntry[];
   university: string;
   course: string;
@@ -48,5 +52,7 @@ export type LawyerSignupFormValues = {
   billingMethods: string[];
   pronouns: string;
   profileImageUri: string;
+  /** S3 object key from POST /arquivos/url-upload (ADVOGADO_PERFIL). */
+  profileImageKey: string;
   biography: string;
 };

@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Image, Pressable, StyleSheet, View } from 'react-native';
 
 import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption, InputLabel } from '@/atomic/typography';
@@ -17,6 +17,8 @@ type ImageFieldBaseProps = {
   aspect?: [number, number];
   /** Max images when `multiple` is true. Defaults to unlimited. */
   maxCount?: number;
+  isUploading?: boolean;
+  errorMessage?: string;
 };
 
 export type ImageFieldSingleProps = ImageFieldBaseProps & {
@@ -47,12 +49,14 @@ export function ImageField(props: ImageFieldProps) {
     emptyCaption = 'Formato: .jpeg, .png',
     aspect = [1, 1],
     maxCount,
+    isUploading = false,
+    errorMessage,
   } = props;
 
   const uris = normalizeUris(props);
   const isMultiple = Boolean(props.multiple);
   const canAddMore =
-    isMultiple && (maxCount == null || uris.length < maxCount);
+    isMultiple && (maxCount == null || uris.length < maxCount) && !isUploading;
 
   const [previewIndex, setPreviewIndex] = useState(0);
   const [pendingUri, setPendingUri] = useState<string | null>(null);
@@ -72,6 +76,9 @@ export function ImageField(props: ImageFieldProps) {
   };
 
   const removeAt = (index: number) => {
+    if (isUploading) {
+      return;
+    }
     if (props.multiple) {
       const next = props.value.filter((_, i) => i !== index);
       props.onChange(next);
@@ -95,6 +102,9 @@ export function ImageField(props: ImageFieldProps) {
   };
 
   const startPick = async () => {
+    if (isUploading) {
+      return;
+    }
     const uri = await pickImageFromGallery();
 
     if (!uri) {
@@ -124,20 +134,33 @@ export function ImageField(props: ImageFieldProps) {
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={label}
+          disabled={isUploading}
           style={styles.placeholder}
           onPress={() => {
             void startPick();
           }}>
-          <SymbolView
-            name={{ ios: 'square.and.arrow.up', android: 'upload', web: 'upload' }}
-            size={28}
-            tintColor={BrandColors.neutral.xlight}
-          />
-          <Separator size="xxs" />
-          <Body1 color={BrandColors.neutral.white}>{emptyTitle}</Body1>
-          <Separator size="xxxs" />
-          <InputCaption color={BrandColors.neutral.light}>{emptyCaption}</InputCaption>
+          {isUploading ? (
+            <ActivityIndicator color={BrandColors.primary.light} />
+          ) : (
+            <>
+              <SymbolView
+                name={{ ios: 'square.and.arrow.up', android: 'upload', web: 'upload' }}
+                size={28}
+                tintColor={BrandColors.neutral.xlight}
+              />
+              <Separator size="xxs" />
+              <Body1 color={BrandColors.neutral.white}>{emptyTitle}</Body1>
+              <Separator size="xxxs" />
+              <InputCaption color={BrandColors.neutral.light}>{emptyCaption}</InputCaption>
+            </>
+          )}
         </Pressable>
+        {errorMessage ? (
+          <>
+            <Separator size="xxxs" />
+            <InputCaption color={BrandColors.feedback.error.light}>{errorMessage}</InputCaption>
+          </>
+        ) : null}
 
         <ImageEditModal
           visible={editVisible}
@@ -157,12 +180,20 @@ export function ImageField(props: ImageFieldProps) {
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`Pré-visualização de ${label}`}
+        disabled={isUploading}
         onPress={() => {
           if (!isMultiple) {
             void startPick();
           }
         }}>
-        <Image source={{ uri: previewUri }} style={styles.previewShell} resizeMode="cover" />
+        <View>
+          <Image source={{ uri: previewUri }} style={styles.previewShell} resizeMode="cover" />
+          {isUploading ? (
+            <View style={styles.uploadOverlay}>
+              <ActivityIndicator color={BrandColors.neutral.white} />
+            </View>
+          ) : null}
+        </View>
       </Pressable>
       <Separator size="xxs" />
       <View style={styles.previewActions}>
@@ -173,6 +204,7 @@ export function ImageField(props: ImageFieldProps) {
             accessibilityLabel={
               isMultiple ? `Remover imagem ${index + 1}` : 'Remover imagem'
             }
+            disabled={isUploading}
             onPress={() => removeAt(index)}
             style={[
               styles.thumbAction,
@@ -205,6 +237,12 @@ export function ImageField(props: ImageFieldProps) {
           </Pressable>
         ) : null}
       </View>
+      {errorMessage ? (
+        <>
+          <Separator size="xxxs" />
+          <InputCaption color={BrandColors.feedback.error.light}>{errorMessage}</InputCaption>
+        </>
+      ) : null}
 
       <ImageEditModal
         visible={editVisible}
@@ -239,6 +277,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
     backgroundColor: BrandColors.neutral.dark,
+  },
+  uploadOverlay: {
+    ...StyleSheet.absoluteFill,
+    borderRadius: Radius.large,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   previewActions: {
     flexDirection: 'row',

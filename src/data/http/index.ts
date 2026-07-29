@@ -1,4 +1,5 @@
 export { httpRequest, type HttpMethod, type HttpRequestConfig } from './http-client';
+export { putBinary } from './put-binary';
 export {
   authenticatedHttpRequest,
   type AuthenticatedHttpRequestConfig,

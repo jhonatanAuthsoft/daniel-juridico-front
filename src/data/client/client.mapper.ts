@@ -1,6 +1,6 @@
 import type { ClientSignupFormValues } from '@/components/signup-client';
 import { cityLabelFromValue } from '@/constants/select-options';
-import { MOCK_PHOTO_URL, toIsoDate } from '@/data/shared';
+import { toIsoDate } from '@/data/shared';
 
 import type {
   DocumentTypeApi,
@@ -9,8 +9,6 @@ import type {
   RegisterClientResult,
   RegisterClientWireResponse,
 } from './client.types';
-
-export { MOCK_PHOTO_URL };
 
 function onlyDigits(value: string) {
   return value.replace(/\D/g, '');
@@ -60,6 +58,7 @@ export function mapClientSignupFormToRegisterRequest(
 ): RegisterClientRequest {
   const documentType = mapPersonType(form.personType);
   const isCnpj = documentType === 'CNPJ';
+  const fotoUrl = form.profileImageKey.trim() || undefined;
 
   const base: RegisterClientRequest = {
     email: form.email.trim(),
@@ -75,7 +74,7 @@ export function mapClientSignupFormToRegisterRequest(
     bairro: form.neighborhood.trim(),
     cidade: cityLabelFromValue(form.state, form.city.trim()),
     estado: form.state.trim().toUpperCase(),
-    fotoUrl: MOCK_PHOTO_URL,
+    fotoUrl,
     faixaRenda: form.monthlyIncome.trim() || undefined,
     estadoCivil: form.maritalStatus.trim() || undefined,
   };

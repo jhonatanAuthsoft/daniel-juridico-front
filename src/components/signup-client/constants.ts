@@ -54,4 +54,5 @@ export const defaultValues: ClientSignupFormValues = {
   monthlyIncome: '',
   pronouns: '',
   profileImageUri: '',
+  profileImageKey: '',
 };

@@ -26,4 +26,6 @@ export type ClientSignupFormValues = {
   monthlyIncome: string;
   pronouns: string;
   profileImageUri: string;
+  /** S3 object key from POST /arquivos/url-upload (CLIENTE_PERFIL). */
+  profileImageKey: string;
 };

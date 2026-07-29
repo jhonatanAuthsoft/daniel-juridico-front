@@ -1,7 +1,7 @@
 import { SymbolView } from 'expo-symbols';
 import { useCallback } from 'react';
-import { Image, Platform, Pressable, StyleSheet, View } from 'react-native';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { ActivityIndicator, Image, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { GlassBackground } from '@/atomic/glass';
 import { InputSelectField, InputTextField } from '@/atomic/form';
@@ -10,7 +10,10 @@ import { Body1, InputCaption } from '@/atomic/typography';
 import { FieldValidators } from '@/constants/field-validators';
 import { TREATMENT_PRONOUN_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
-import { useImageEditFlow } from '@/hooks/use-image-edit-flow';
+import {
+  useImageEditFlow,
+  type ConfirmedSignupImage,
+} from '@/hooks/use-image-edit-flow';
 
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
@@ -23,16 +26,33 @@ export function StepAboutYou() {
   const profileImageUri = useWatch({ control, name: 'profileImageUri' }) ?? '';
 
   const handleConfirmProfileImage = useCallback(
-    (uri: string) => {
-      setValue('profileImageUri', uri, { shouldDirty: true, shouldTouch: true });
+    (result: string | ConfirmedSignupImage) => {
+      if (typeof result === 'string') {
+        setValue('profileImageUri', result, { shouldDirty: true, shouldTouch: true });
+        return;
+      }
+      setValue('profileImageUri', result.uri, { shouldDirty: true, shouldTouch: true });
+      setValue('profileImageKey', result.key, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
     },
     [setValue],
   );
 
-  const { pickEditedImage, editModal } = useImageEditFlow(handleConfirmProfileImage);
+  const { pickEditedImage, editModal, isUploading } = useImageEditFlow(
+    handleConfirmProfileImage,
+    { uploadFinalidade: 'ADVOGADO_PERFIL' },
+  );
 
   const handlePickProfileImage = () => {
     void pickEditedImage({ aspect: [1, 1] });
+  };
+
+  const clearProfileImage = () => {
+    setValue('profileImageUri', '', { shouldDirty: true, shouldTouch: true });
+    setValue('profileImageKey', '', { shouldDirty: true, shouldTouch: true });
   };
 
   return (
@@ -45,49 +65,89 @@ export function StepAboutYou() {
         required
       />
 
-      {profileImageUri ? (
-        <View style={styles.profileImageFilled}>
-          <Image source={{ uri: profileImageUri }} style={styles.profilePreview} resizeMode="cover" />
-          <View style={styles.profileActions}>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Remover imagem de perfil"
-              onPress={() =>
-                setValue('profileImageUri', '', { shouldDirty: true, shouldTouch: true })
-              }
-              style={styles.profileActionButton}>
-              <Body1 color={BrandColors.primary.light}>Remover</Body1>
-            </Pressable>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Trocar imagem de perfil"
-              onPress={handlePickProfileImage}
-              style={styles.profileActionButton}>
-              <Body1 color={BrandColors.primary.light}>Trocar</Body1>
-            </Pressable>
+      <Controller
+        control={control}
+        name="profileImageKey"
+        rules={{
+          validate: (value) =>
+            String(value ?? '').trim().length > 0
+              ? true
+              : 'Adicione e envie uma imagem de perfil',
+        }}
+        render={({ fieldState: { error } }) => (
+          <View>
+            {profileImageUri ? (
+              <View style={styles.profileImageFilled}>
+                <Image
+                  source={{ uri: profileImageUri }}
+                  style={styles.profilePreview}
+                  resizeMode="cover"
+                />
+                <View style={styles.profileActions}>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="Remover imagem de perfil"
+                    onPress={clearProfileImage}
+                    style={styles.profileActionButton}>
+                    <Body1 color={BrandColors.primary.light}>Remover</Body1>
+                  </Pressable>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="Trocar imagem de perfil"
+                    disabled={isUploading}
+                    onPress={handlePickProfileImage}
+                    style={styles.profileActionButton}>
+                    <Body1 color={BrandColors.primary.light}>Trocar</Body1>
+                  </Pressable>
+                </View>
+              </View>
+            ) : (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Adicionar imagem de perfil"
+                disabled={isUploading}
+                style={styles.profileImagePlaceholder}
+                onPress={handlePickProfileImage}>
+                <GlassBackground blurPx={25} />
+                <View style={styles.uploadContent}>
+                  {isUploading ? (
+                    <ActivityIndicator color={BrandColors.primary.light} />
+                  ) : (
+                    <>
+                      <SymbolView
+                        name={{
+                          ios: 'square.and.arrow.up',
+                          android: 'upload',
+                          web: 'upload',
+                        }}
+                        size={28}
+                        tintColor={BrandColors.neutral.xlight}
+                      />
+                      <Separator size="xxs" />
+                      <Body1 color={BrandColors.primary.light}>Adicione uma imagem</Body1>
+                      <Separator size="xxxs" />
+                      <InputCaption color={BrandColors.neutral.light}>
+                        Formato: .jpeg, .png
+                      </InputCaption>
+                      <InputCaption color={BrandColors.neutral.light}>
+                        Tamanho máximo: 25 MB
+                      </InputCaption>
+                    </>
+                  )}
+                </View>
+              </Pressable>
+            )}
+            {error?.message ? (
+              <>
+                <Separator size="xxxs" />
+                <InputCaption color={BrandColors.feedback.error.light}>
+                  {error.message}
+                </InputCaption>
+              </>
+            ) : null}
           </View>
-        </View>
-      ) : (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Adicionar imagem de perfil"
-          style={styles.profileImagePlaceholder}
-          onPress={handlePickProfileImage}>
-          <GlassBackground blurPx={25} />
-          <View style={styles.uploadContent}>
-            <SymbolView
-              name={{ ios: 'square.and.arrow.up', android: 'upload', web: 'upload' }}
-              size={28}
-              tintColor={BrandColors.neutral.xlight}
-            />
-            <Separator size="xxs" />
-            <Body1 color={BrandColors.primary.light}>Adicione uma imagem</Body1>
-            <Separator size="xxxs" />
-            <InputCaption color={BrandColors.neutral.light}>Formato: .jpeg, .png</InputCaption>
-            <InputCaption color={BrandColors.neutral.light}>Tamanho máximo: 25 MB</InputCaption>
-          </View>
-        </Pressable>
-      )}
+        )}
+      />
 
       <View>
         <InputTextField
