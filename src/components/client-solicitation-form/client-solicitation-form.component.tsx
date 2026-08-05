@@ -23,6 +23,7 @@ import {
   subspecialtyOptionsFromCategories,
   URGENCY_OPTIONS,
 } from './client-solicitation-form.options';
+import { PracticeHelpModal } from './practice-help-modal.component';
 
 const PROBLEM_MAX_LENGTH = 800;
 
@@ -62,6 +63,7 @@ export function ClientSolicitationForm({
   onSubmitted,
 }: ClientSolicitationFormProps) {
   const [advancedFiltersOpen, setAdvancedFiltersOpen] = useState(false);
+  const [practiceHelpVisible, setPracticeHelpVisible] = useState(false);
   const form = useForm<ClientSolicitationFormValues>({
     defaultValues,
     mode: 'onChange',
@@ -180,6 +182,7 @@ export function ClientSolicitationForm({
             label="Atuação"
             placeholder="Selecione a atuação"
             options={PRACTICE_OPTIONS}
+            onHelpPress={() => setPracticeHelpVisible(true)}
           />
           <InputSelectField
             name="specialty"
@@ -288,6 +291,10 @@ export function ClientSolicitationForm({
         style={styles.submitButton}>
         Enviar solicitação
       </Button>
+      <PracticeHelpModal
+        onClose={() => setPracticeHelpVisible(false)}
+        visible={practiceHelpVisible}
+      />
     </ClientFlowScreen>
   );
 }

@@ -1957,3 +1957,40 @@
 {"_e":"metro:client_log","_t":1785894235214,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
 {"_e":"metro:client_log","_t":1785894235218,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
 {"_e":"metro:client_log","_t":1785894235960,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1785894407804,"id":"p","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785894407807,"id":"p","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785894407964,"id":"p","total":1,"ms":158.036709}
+{"_e":"metro:client_log","_t":1785894408744,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785894408748,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785894409404,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1785894410553,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785894410565,"id":"q","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785894410566,"id":"q","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785894410676,"id":"q","total":1,"ms":110.918333}
+{"_e":"metro:client_log","_t":1785894411166,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785894411166,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785894411166,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785894411480,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785894411482,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785894412003,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1785894574539,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785894574579,"id":"r","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785894574580,"id":"r","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785894574717,"id":"r","total":1,"ms":137.574833}
+{"_e":"metro:client_log","_t":1785894575648,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785894575654,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785894576353,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1785894840370,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785894840403,"id":"s","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785894840403,"id":"s","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785894840411,"id":"s","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785894840512,"id":"s","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785894840603,"id":"s","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785894840752,"id":"s","total":1,"ms":348.980959}
+{"_e":"metro:client_log","_t":1785894841603,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785894841607,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785894842221,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1785894842301,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785894842301,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785894842301,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785894842301,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}

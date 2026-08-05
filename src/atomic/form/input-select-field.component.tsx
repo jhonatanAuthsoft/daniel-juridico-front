@@ -19,6 +19,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CheckboxEmptyIcon } from '@/assets/icon/checkbox-empty';
 import { CheckedCheckboxIcon } from '@/assets/icon/checked-checkbox';
+import { HelpIcon } from '@/assets/icon/help';
 import { SearchIcon } from '@/assets/icon/search';
 import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
@@ -50,6 +51,8 @@ export type InputSelectFieldProps<
   /** Shows a search field above the options. Defaults to true. */
   searchable?: boolean;
   searchPlaceholder?: string;
+  /** Shows a help icon next to the label that calls this handler. */
+  onHelpPress?: () => void;
 };
 
 export function InputSelectField<
@@ -63,6 +66,7 @@ export function InputSelectField<
   required = false,
   searchable = true,
   searchPlaceholder = 'Buscar...',
+  onHelpPress,
 }: InputSelectFieldProps<TFieldValues>) {
   const { control } = useFormContext<TFieldValues>();
   const [open, setOpen] = useState(false);
@@ -96,7 +100,24 @@ export function InputSelectField<
           <View style={styles.container}>
             {label ? (
               <>
-                <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
+                <View style={styles.labelRow}>
+                  <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
+                  {onHelpPress ? (
+                    <Pressable
+                      accessibilityLabel={`Ajuda sobre ${label}`}
+                      accessibilityRole="button"
+                      hitSlop={Spacing.xxs}
+                      onPress={onHelpPress}
+                      style={({ pressed }) => pressed && styles.pressed}>
+                      <HelpIcon
+                        testID="help-icon"
+                        color={BrandColors.neutral.xlight}
+                        width={16}
+                        height={16}
+                      />
+                    </Pressable>
+                  ) : null}
+                </View>
                 <Separator size="xxs" />
               </>
             ) : null}
@@ -350,6 +371,14 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     alignSelf: 'stretch',
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxxs,
+  },
+  pressed: {
+    opacity: 0.75,
   },
   fieldShell: {
     alignSelf: 'stretch',
