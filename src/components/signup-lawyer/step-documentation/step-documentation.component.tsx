@@ -33,7 +33,9 @@ export function StepDocumentation() {
         <InputTextField
           name="fatherName"
           label="Nome de pai"
-          placeholder="Digite o nome do seu pai"
+          placeholder={
+            noFatherName ? 'Não consta nome de pai' : 'Digite o nome do seu pai'
+          }
           autoCapitalize="words"
           editable={!noFatherName}
           validate={

@@ -91,13 +91,19 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
       }}
       render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => {
         const hasError = Boolean(error?.message);
+        const isDisabled = textInputProps.editable === false;
 
         return (
           <View style={styles.container}>
             {label ? (
               <>
                 <View style={styles.labelRow}>
-                  <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
+                  <InputLabel
+                    color={
+                      isDisabled ? BrandColors.neutral.medium : BrandColors.neutral.white
+                    }>
+                    {label}
+                  </InputLabel>
                   {tooltipText ? (
                     <View style={styles.tooltipAnchor}>
                       <Pressable
@@ -123,7 +129,12 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
               </>
             ) : null}
 
-            <View style={[styles.fieldShell, hasError && styles.fieldShellError]}>
+            <View
+              style={[
+                styles.fieldShell,
+                hasError && styles.fieldShellError,
+                isDisabled && styles.fieldShellDisabled,
+              ]}>
               <GlassBackground blurPx={25} />
               <View style={[styles.fieldContent, isMultiline && styles.fieldContentMultiline]}>
                 {iconLeft ? <View style={styles.iconLeft}>{iconLeft}</View> : null}
@@ -135,8 +146,15 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
                   }}
                   onBlur={onBlur}
                   placeholder={placeholder}
-                  placeholderTextColor={BrandColors.neutral.light}
-                  style={[styles.input, isMultiline && styles.inputMultiline, textInputProps.style]}
+                  placeholderTextColor={
+                    isDisabled ? BrandColors.neutral.medium : BrandColors.neutral.light
+                  }
+                  style={[
+                    styles.input,
+                    isMultiline && styles.inputMultiline,
+                    isDisabled && styles.inputDisabled,
+                    textInputProps.style,
+                  ]}
                 />
                 {iconRight ? <View style={styles.iconRight}>{iconRight}</View> : null}
               </View>
@@ -215,6 +233,10 @@ const styles = StyleSheet.create({
     borderWidth: 1.8,
     borderColor: BrandColors.feedback.error.medium,
   },
+  fieldShellDisabled: {
+    opacity: 0.5,
+    borderColor: BrandColors.neutral.medium,
+  },
   fieldContent: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -231,6 +253,9 @@ const styles = StyleSheet.create({
     color: BrandColors.neutral.white,
     fontSize: 16,
     backgroundColor: 'transparent',
+  },
+  inputDisabled: {
+    color: BrandColors.neutral.medium,
   },
   inputMultiline: {
     minHeight: 120,

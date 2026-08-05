@@ -8,10 +8,11 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useRootNavigationState, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import LottieView from 'lottie-react-native';
+import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 import { BrandColors } from '@/constants/theme';
 
@@ -19,9 +20,13 @@ const splashAnimation = require('@/assets/splash/splash-screen.json');
 
 /** Fallback if onAnimationFinish never fires (~3.4s animation + buffer). */
 const SPLASH_FALLBACK_MS = 8000;
-const FADE_OUT_MS = 280;
+/** Soft crossfade from brand-red splash onto the real first screen. */
+const FADE_OUT_MS = 520;
 /** Safety if the destination screen never signals ready. */
 const CONTENT_READY_FALLBACK_MS = 1200;
+
+/** Matches Lottie brand red (rgb ≈ 0.933, 0.18, 0.141). */
+const SPLASH_RED = BrandColors.accessory.red;
 
 type SplashGateContextValue = {
   markContentReady: () => void;
@@ -38,22 +43,22 @@ export type SplashGuardProps = {
 };
 
 /**
- * Morph exit: keep the destination route mounted underneath and fade only the
- * Lottie. Overlay background must stay transparent — an opaque fill would hide
- * the real UI and break the "last frame = print da tela" effect.
- *
- * Design requirement: export Lottie with transparent composition background and
- * a last frame that matches the login layout (logo position, dark bg).
+ * Solid brand-red cover with logo Lottie. Destination route stays mounted
+ * underneath; when ready we crossfade the whole overlay out.
  */
 export function SplashGuard({ children }: SplashGuardProps) {
   const [animationDone, setAnimationDone] = useState(false);
   const [contentReady, setContentReady] = useState(false);
   const [overlayMounted, setOverlayMounted] = useState(true);
-  const lottieOpacity = useRef(new Animated.Value(1)).current;
   const hasHiddenNativeSplash = useRef(false);
   const hasStartedDismiss = useRef(false);
   const navigationState = useRootNavigationState();
   const segments = useSegments();
+
+  const overlayOpacity = useSharedValue(1);
+  const overlayStyle = useAnimatedStyle(() => ({
+    opacity: overlayOpacity.value,
+  }));
 
   const navigationReady = Boolean(navigationState?.key);
   const rootSegment = segments[0] as string | undefined;
@@ -79,6 +84,10 @@ export function SplashGuard({ children }: SplashGuardProps) {
     void SplashScreen.hideAsync();
   }, []);
 
+  const unmountOverlay = useCallback(() => {
+    setOverlayMounted(false);
+  }, []);
+
   const startDismiss = useCallback(() => {
     if (hasStartedDismiss.current) {
       return;
@@ -87,17 +96,19 @@ export function SplashGuard({ children }: SplashGuardProps) {
     hasStartedDismiss.current = true;
     hideNativeSplash();
 
-    // Fade only the Lottie — login is already painted underneath.
-    Animated.timing(lottieOpacity, {
-      toValue: 0,
-      duration: FADE_OUT_MS,
-      useNativeDriver: true,
-    }).start(({ finished }) => {
-      if (finished) {
-        setOverlayMounted(false);
-      }
-    });
-  }, [hideNativeSplash, lottieOpacity]);
+    overlayOpacity.value = withTiming(
+      0,
+      {
+        duration: FADE_OUT_MS,
+        easing: Easing.out(Easing.cubic),
+      },
+      (finished) => {
+        if (finished) {
+          runOnJS(unmountOverlay)();
+        }
+      },
+    );
+  }, [hideNativeSplash, overlayOpacity, unmountOverlay]);
 
   const handleAnimationFinish = useCallback((isCancelled: boolean) => {
     if (isCancelled) {
@@ -131,34 +142,32 @@ export function SplashGuard({ children }: SplashGuardProps) {
       return;
     }
 
-    const timeoutId = setTimeout(startDismiss, 300);
+    const timeoutId = setTimeout(startDismiss, 180);
     return () => clearTimeout(timeoutId);
   }, [animationDone, contentReady, leftIndexRoute, navigationReady, startDismiss]);
 
   return (
     <SplashGateContext.Provider value={contextValue}>
-      <View style={styles.root}>
+      <View style={[styles.root, overlayMounted && styles.rootWhileSplash]}>
         <View style={styles.app}>{children}</View>
         {overlayMounted ? (
-          <View
+          <Animated.View
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"
+            onLayout={hideNativeSplash}
             pointerEvents="auto"
-            style={styles.overlay}>
-            <Animated.View style={[styles.lottieShell, { opacity: lottieOpacity }]}>
-              <LottieView
-                source={splashAnimation}
-                autoPlay
-                loop={false}
-                resizeMode="cover"
-                style={styles.lottie}
-                onLayout={hideNativeSplash}
-                onAnimationLoaded={hideNativeSplash}
-                onAnimationFinish={handleAnimationFinish}
-                onAnimationFailure={() => setAnimationDone(true)}
-              />
-            </Animated.View>
-          </View>
+            style={[styles.overlay, overlayStyle]}>
+            <LottieView
+              source={splashAnimation}
+              autoPlay
+              loop={false}
+              resizeMode="cover"
+              style={styles.lottie}
+              onAnimationLoaded={hideNativeSplash}
+              onAnimationFinish={handleAnimationFinish}
+              onAnimationFailure={() => setAnimationDone(true)}
+            />
+          </Animated.View>
         ) : null}
       </View>
     </SplashGateContext.Provider>
@@ -170,17 +179,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: BrandColors.neutral.xdark,
   },
+  rootWhileSplash: {
+    backgroundColor: SPLASH_RED,
+  },
   app: {
     flex: 1,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    // Transparent: last Lottie frame must dissolve onto the real route beneath.
-    backgroundColor: 'transparent',
+    backgroundColor: SPLASH_RED,
     zIndex: 1000,
-  },
-  lottieShell: {
-    ...StyleSheet.absoluteFillObject,
   },
   lottie: {
     width: '100%',

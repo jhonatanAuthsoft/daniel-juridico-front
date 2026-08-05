@@ -2,6 +2,14 @@ import { fireEvent, render } from '@testing-library/react-native';
 
 import { ClientSolicitationForm } from './client-solicitation-form.component';
 
+jest.mock('@/domain/catalog', () => ({
+  useSpecialtiesCatalog: () => ({ data: { categories: [] }, isFetching: false }),
+}));
+
+jest.mock('@/domain/address', () => ({
+  useCitiesByUf: () => ({ data: [], isFetching: false }),
+}));
+
 describe('ClientSolicitationForm', () => {
   it('expands and collapses the advanced filters', () => {
     const screen = render(

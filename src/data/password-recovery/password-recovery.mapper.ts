@@ -55,7 +55,7 @@ export function mapResetPasswordParamsToWire(
     email: params.email.trim().toLowerCase(),
     codigo: params.code.trim(),
     novaSenha: params.newPassword,
-    confirmarSenha: params.confirmPassword,
+    confirmarSenha: params.newPassword,
   };
 }
 

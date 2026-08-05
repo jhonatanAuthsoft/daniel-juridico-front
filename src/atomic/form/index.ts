@@ -7,6 +7,10 @@ export {
   InputSelectField,
   type InputSelectFieldProps,
 } from './input-select-field.component';
+export {
+  InputMultiSelectField,
+  type InputMultiSelectFieldProps,
+} from './input-multi-select-field.component';
 export { InputOTP, type InputOTPProps } from './input-otp.component';
 export { ImageField, type ImageFieldProps } from './image-field.component';
 export {

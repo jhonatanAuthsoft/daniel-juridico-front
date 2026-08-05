@@ -45,6 +45,23 @@ describe('ImageField', () => {
     expect(screen.getByLabelText('Remover imagem 1')).toBeTruthy();
   });
 
+  it('switches preview when an unselected thumbnail is pressed', () => {
+    const onChange = jest.fn();
+    const screen = render(
+      <ImageField
+        multiple
+        label="Anexos"
+        value={['file://one.jpg', 'file://two.jpg']}
+        onChange={onChange}
+      />,
+    );
+
+    fireEvent.press(screen.getByLabelText('Selecionar imagem 2'));
+    expect(onChange).not.toHaveBeenCalled();
+    expect(screen.getByLabelText('Remover imagem 2')).toBeTruthy();
+    expect(screen.getByLabelText('Selecionar imagem 1')).toBeTruthy();
+  });
+
   it('clears a single image when trash is pressed', () => {
     const onChange = jest.fn();
     const screen = render(

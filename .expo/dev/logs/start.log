@@ -1320,3 +1320,554 @@
 {"_e":"metro:server_log","_t":1785242046713,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
 {"_e":"metro:server_log","_t":1785247094378,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
 {"_e":"metro:server_log","_t":1785247222497,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","host.exp.Exponent","iPhone 16 Pro","60"]}
+{"_e":"root:init","_t":1785361253030,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"env:mode","_t":1785361253031,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1785361253034,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"http://localhost:8080"}}
+{"_e":"devserver:start","_t":1785361253624,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785361253995,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785361254183,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785361254805,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"root:init","_t":1785361324108,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"env:mode","_t":1785361324109,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1785361324112,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"http://localhost:8080"}}
+{"_e":"devserver:start","_t":1785361324618,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785361324888,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785361325048,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785361325692,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"root:init","_t":1785361958465,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"devserver:start","_t":1785361958488,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785361958852,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785361958993,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785361959451,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"root:init","_t":1785362023245,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"env:mode","_t":1785362023246,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1785362023248,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"https://3a18-38-10-152-169.ngrok-free.app"}}
+{"_e":"devserver:start","_t":1785362023774,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785362024124,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785362024327,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785362024772,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"root:init","_t":1785362192850,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"root:init","_t":1785362349305,"format":"v0-jsonl","version":"57.0.6"}
+{"_e":"devserver:start","_t":1785362349318,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785362349600,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785362349745,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785362350184,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"root:init","_t":1785363298478,"format":"v0-jsonl","version":"57.0.11"}
+{"_e":"root:init","_t":1785363365503,"format":"v0-jsonl","version":"57.0.11"}
+{"_e":"env:mode","_t":1785363365504,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1785363365506,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"https://3a18-38-10-152-169.ngrok-free.app"}}
+{"_e":"devserver:start","_t":1785363366004,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785363366265,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785363366411,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785363366924,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1785363377844,"id":"1","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785363377845,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785363377847,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785363378283,"id":"1","progress":0.010000000000000002,"total":1,"current":1}
+{"_e":"metro:bundling:progress","_t":1785363378383,"id":"1","progress":0.17361111111111113,"total":12,"current":5}
+{"_e":"metro:bundling:progress","_t":1785363378498,"id":"1","progress":0.25,"total":12,"current":6}
+{"_e":"metro:bundling:progress","_t":1785363378599,"id":"1","progress":0.25,"total":41,"current":6}
+{"_e":"metro:bundling:progress","_t":1785363378625,"id":"1","progress":0.25,"total":41,"current":7}
+{"_e":"metro:bundling:progress","_t":1785363378725,"id":"1","progress":0.25,"total":51,"current":8}
+{"_e":"metro:bundling:progress","_t":1785363378762,"id":"1","progress":0.25,"total":51,"current":9}
+{"_e":"metro:bundling:progress","_t":1785363378862,"id":"1","progress":0.25,"total":72,"current":14}
+{"_e":"metro:bundling:progress","_t":1785363378967,"id":"1","progress":0.25,"total":91,"current":19}
+{"_e":"metro:bundling:progress","_t":1785363379071,"id":"1","progress":0.25,"total":100,"current":25}
+{"_e":"metro:bundling:progress","_t":1785363379172,"id":"1","progress":0.25,"total":105,"current":30}
+{"_e":"metro:bundling:progress","_t":1785363379273,"id":"1","progress":0.25,"total":120,"current":36}
+{"_e":"metro:bundling:progress","_t":1785363379382,"id":"1","progress":0.25,"total":169,"current":56}
+{"_e":"metro:bundling:progress","_t":1785363379482,"id":"1","progress":0.25,"total":301,"current":84}
+{"_e":"metro:bundling:progress","_t":1785363379582,"id":"1","progress":0.25,"total":413,"current":136}
+{"_e":"metro:bundling:progress","_t":1785363379682,"id":"1","progress":0.25,"total":458,"current":167}
+{"_e":"metro:bundling:progress","_t":1785363379782,"id":"1","progress":0.25,"total":503,"current":187}
+{"_e":"metro:bundling:progress","_t":1785363379882,"id":"1","progress":0.25,"total":548,"current":220}
+{"_e":"metro:bundling:progress","_t":1785363379982,"id":"1","progress":0.25,"total":624,"current":281}
+{"_e":"metro:bundling:progress","_t":1785363380086,"id":"1","progress":0.25,"total":674,"current":319}
+{"_e":"metro:bundling:progress","_t":1785363380186,"id":"1","progress":0.25,"total":714,"current":340}
+{"_e":"metro:bundling:progress","_t":1785363380286,"id":"1","progress":0.25,"total":722,"current":344}
+{"_e":"metro:bundling:progress","_t":1785363380387,"id":"1","progress":0.25,"total":730,"current":364}
+{"_e":"metro:bundling:progress","_t":1785363380488,"id":"1","progress":0.26312840947795324,"total":733,"current":376}
+{"_e":"metro:bundling:progress","_t":1785363380588,"id":"1","progress":0.28027681660899656,"total":748,"current":396}
+{"_e":"metro:bundling:progress","_t":1785363380689,"id":"1","progress":0.303565452653486,"total":775,"current":427}
+{"_e":"metro:bundling:progress","_t":1785363380790,"id":"1","progress":0.303565452653486,"total":854,"current":470}
+{"_e":"metro:bundling:progress","_t":1785363380891,"id":"1","progress":0.34827180170769534,"total":893,"current":527}
+{"_e":"metro:bundling:progress","_t":1785363380991,"id":"1","progress":0.354779975881847,"total":962,"current":573}
+{"_e":"metro:bundling:progress","_t":1785363381092,"id":"1","progress":0.39386444708680146,"total":1015,"current":637}
+{"_e":"metro:bundling:progress","_t":1785363381192,"id":"1","progress":0.4049586776859504,"total":1056,"current":672}
+{"_e":"metro:bundling:progress","_t":1785363381293,"id":"1","progress":0.42207841847177696,"total":1079,"current":701}
+{"_e":"metro:bundling:progress","_t":1785363381392,"id":"1","progress":0.42207841847177696,"total":1158,"current":741}
+{"_e":"metro:bundling:progress","_t":1785363381492,"id":"1","progress":0.42207841847177696,"total":1211,"current":758}
+{"_e":"metro:bundling:progress","_t":1785363381592,"id":"1","progress":0.42207841847177696,"total":1257,"current":793}
+{"_e":"metro:bundling:progress","_t":1785363381693,"id":"1","progress":0.42207841847177696,"total":1317,"current":842}
+{"_e":"metro:bundling:progress","_t":1785363381793,"id":"1","progress":0.42207841847177696,"total":1327,"current":857}
+{"_e":"metro:bundling:progress","_t":1785363381893,"id":"1","progress":0.433263900016023,"total":1343,"current":884}
+{"_e":"metro:bundling:progress","_t":1785363381993,"id":"1","progress":0.4582861592057095,"total":1359,"current":920}
+{"_e":"metro:bundling:progress","_t":1785363382093,"id":"1","progress":0.4983893066291932,"total":1391,"current":982}
+{"_e":"metro:bundling:progress","_t":1785363382194,"id":"1","progress":0.4983893066291932,"total":1491,"current":1035}
+{"_e":"metro:bundling:progress","_t":1785363382294,"id":"1","progress":0.5341360256830777,"total":1501,"current":1097}
+{"_e":"metro:bundling:progress","_t":1785363382394,"id":"1","progress":0.5516725342232566,"total":1551,"current":1152}
+{"_e":"metro:bundling:progress","_t":1785363382494,"id":"1","progress":0.5516725342232566,"total":1609,"current":1183}
+{"_e":"metro:bundling:progress","_t":1785363382594,"id":"1","progress":0.5516725342232566,"total":1630,"current":1210}
+{"_e":"metro:bundling:progress","_t":1785363382694,"id":"1","progress":0.5647750229568411,"total":1650,"current":1240}
+{"_e":"metro:bundling:progress","_t":1785363382795,"id":"1","progress":0.5885795521512831,"total":1658,"current":1272}
+{"_e":"metro:bundling:progress","_t":1785363382895,"id":"1","progress":0.6226269545971759,"total":1683,"current":1328}
+{"_e":"metro:bundling:progress","_t":1785363382996,"id":"1","progress":0.6473019229381483,"total":1714,"current":1379}
+{"_e":"metro:bundling:progress","_t":1785363383098,"id":"1","progress":0.6835059491617091,"total":1720,"current":1422}
+{"_e":"metro:bundling:progress","_t":1785363383198,"id":"1","progress":0.7163508841161025,"total":1738,"current":1471}
+{"_e":"metro:bundling:progress","_t":1785363383298,"id":"1","progress":0.7489472355319254,"total":1761,"current":1524}
+{"_e":"metro:bundling:progress","_t":1785363383398,"id":"1","progress":0.7619385034688437,"total":1778,"current":1552}
+{"_e":"metro:bundling:progress","_t":1785363383499,"id":"1","progress":0.7619385034688437,"total":1812,"current":1572}
+{"_e":"metro:bundling:progress","_t":1785363383601,"id":"1","progress":0.7619385034688437,"total":1828,"current":1588}
+{"_e":"metro:bundling:progress","_t":1785363383704,"id":"1","progress":0.7619385034688437,"total":1848,"current":1600}
+{"_e":"metro:bundling:progress","_t":1785363383804,"id":"1","progress":0.7619385034688437,"total":1857,"current":1618}
+{"_e":"metro:bundling:progress","_t":1785363383904,"id":"1","progress":0.7619385034688437,"total":1909,"current":1660}
+{"_e":"metro:bundling:progress","_t":1785363384004,"id":"1","progress":0.7651702858303691,"total":1924,"current":1683}
+{"_e":"metro:bundling:progress","_t":1785363384128,"id":"1","progress":0.773857164570681,"total":1945,"current":1711}
+{"_e":"metro:bundling:progress","_t":1785363384228,"id":"1","progress":0.7924348599890051,"total":1967,"current":1751}
+{"_e":"metro:bundling:progress","_t":1785363384329,"id":"1","progress":0.8144182146100565,"total":1999,"current":1804}
+{"_e":"metro:bundling:progress","_t":1785363384433,"id":"1","progress":0.8225858270834879,"total":2010,"current":1823}
+{"_e":"metro:bundling:progress","_t":1785363384534,"id":"1","progress":0.8225858270834879,"total":2020,"current":1832}
+{"_e":"metro:bundling:progress","_t":1785363384634,"id":"1","progress":0.8297225762180179,"total":2020,"current":1840}
+{"_e":"metro:bundling:progress","_t":1785363384738,"id":"1","progress":0.8397486951090737,"total":2021,"current":1852}
+{"_e":"metro:bundling:progress","_t":1785363384837,"id":"1","progress":0.858253558908703,"total":2025,"current":1876}
+{"_e":"metro:bundling:progress","_t":1785363384937,"id":"1","progress":0.8876595540176855,"total":2040,"current":1922}
+{"_e":"metro:bundling:progress","_t":1785363385037,"id":"1","progress":0.9077803397839636,"total":2054,"current":1957}
+{"_e":"metro:bundling:progress","_t":1785363385138,"id":"1","progress":0.920033319450229,"total":2058,"current":1974}
+{"_e":"metro:bundling:progress","_t":1785363385238,"id":"1","progress":0.9401136778670564,"total":2072,"current":2009}
+{"_e":"metro:bundling:progress","_t":1785363385357,"id":"1","progress":0.9489929259861267,"total":2090,"current":2036}
+{"_e":"metro:bundling:progress","_t":1785363385457,"id":"1","progress":0.9489929259861267,"total":2137,"current":2080}
+{"_e":"metro:bundling:progress","_t":1785363385557,"id":"1","progress":0.9657065361401289,"total":2197,"current":2159}
+{"_e":"metro:bundling:progress","_t":1785363385658,"id":"1","progress":0.999,"total":2224,"current":2224}
+{"_e":"metro:bundling:done","_t":1785363385950,"id":"1","total":2224,"ms":8105.039459}
+{"_e":"metro:client_log","_t":1785363386666,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785363386669,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785363433589,"id":"8","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785363433590,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785363433707,"id":"8","total":1,"ms":117.671416}
+{"_e":"metro:client_log","_t":1785363434426,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785363434430,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785363436649,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785363436670,"id":"9","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785363436670,"id":"9","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785363436792,"id":"9","total":1,"ms":121.166583}
+{"_e":"metro:client_log","_t":1785363437356,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785363437357,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785363437357,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785363437683,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785363437684,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785363764070,"id":"b","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785363764071,"id":"b","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785363764318,"id":"b","total":1,"ms":247.666625}
+{"_e":"metro:client_log","_t":1785363765058,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785363765062,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785363775219,"id":"c","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785363775219,"id":"c","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785363775352,"id":"c","total":1,"ms":132.666292}
+{"_e":"metro:client_log","_t":1785363776125,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785363776131,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785364479232,"level":"warn","data":["Response.blob() is using React Native's Blob, which copies the response into the native blob store and reads it back through base64 encoding. This may be slow for large responses. Add the `expo-blob` package to your app to avoid the performance overhead."]}
+{"_e":"metro:server_log","_t":1785366455426,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785366603648,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785366751375,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785366864739,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785367778019,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785367969318,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785368110514,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785368245787,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785368373384,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785368503129,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785368634204,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785368907507,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785369102581,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785369230204,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785369360141,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785369483489,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785383673324,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785383897869,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785384214692,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785385162788,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785386109501,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785387057364,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785388005293,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785388953241,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785389976568,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785390624725,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785391572695,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785392519616,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785393467449,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785394285457,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785395235411,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785396183081,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785397133190,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785397945489,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785398892392,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785399840525,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785400888433,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785401605782,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785402577533,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785403501246,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785404448129,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785405265335,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785405455951,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785407284115,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"root:init","_t":1785443925444,"format":"v0-jsonl","version":"57.0.11"}
+{"_e":"env:mode","_t":1785443925445,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1785443925448,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"https://3a18-38-10-152-169.ngrok-free.app"}}
+{"_e":"devserver:start","_t":1785443926023,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785443926338,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785443926524,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785443927165,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1785443930819,"id":"1","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785443930819,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785443930822,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785443930922,"id":"1","progress":0.06877392885913844,"total":347,"current":91}
+{"_e":"metro:bundling:progress","_t":1785443931022,"id":"1","progress":0.28539762259070295,"total":672,"current":359}
+{"_e":"metro:bundling:progress","_t":1785443931122,"id":"1","progress":0.34589032273538467,"total":1061,"current":624}
+{"_e":"metro:bundling:progress","_t":1785443931222,"id":"1","progress":0.5018394925791541,"total":1142,"current":809}
+{"_e":"metro:bundling:progress","_t":1785443931327,"id":"1","progress":0.7393548896699973,"total":1263,"current":1086}
+{"_e":"metro:bundling:progress","_t":1785443931426,"id":"1","progress":0.7393548896699973,"total":1576,"current":1297}
+{"_e":"metro:bundling:progress","_t":1785443931526,"id":"1","progress":0.7904538104843472,"total":1794,"current":1595}
+{"_e":"metro:bundling:progress","_t":1785443931628,"id":"1","progress":0.849433954553401,"total":1991,"current":1835}
+{"_e":"metro:bundling:progress","_t":1785443931728,"id":"1","progress":0.9441614151000977,"total":2048,"current":1990}
+{"_e":"metro:bundling:progress","_t":1785443931828,"id":"1","progress":0.9881792354689891,"total":2193,"current":2180}
+{"_e":"metro:bundling:progress","_t":1785443931929,"id":"1","progress":0.9881846072282989,"total":2194,"current":2181}
+{"_e":"metro:bundling:progress","_t":1785443932046,"id":"1","progress":0.9890909906773174,"total":2194,"current":2182}
+{"_e":"metro:bundling:progress","_t":1785443932147,"id":"1","progress":0.9918937510589217,"total":2216,"current":2207}
+{"_e":"metro:bundling:progress","_t":1785443932260,"id":"1","progress":0.9972942515215889,"total":2216,"current":2213}
+{"_e":"metro:bundling:done","_t":1785443932398,"id":"1","total":2216,"ms":1579.414459}
+{"_e":"metro:client_log","_t":1785443933133,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785443933137,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785443938066,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785444994730,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785444994841,"id":"2","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785444994842,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785444995137,"id":"2","total":1,"ms":295.71275}
+{"_e":"metro:client_log","_t":1785444995932,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785444995932,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785445000716,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:server_log","_t":1785445083191,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:client_log","_t":1785445278781,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785445278872,"id":"3","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785445278873,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785445278980,"id":"3","total":1,"ms":107.290542}
+{"_e":"metro:client_log","_t":1785445279706,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785445279709,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785445707679,"id":"4","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785445707679,"id":"4","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785445707782,"id":"4","total":1,"ms":102.677625}
+{"_e":"metro:client_log","_t":1785445708419,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785445708424,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785445709655,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785445709667,"id":"5","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785445709667,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785445709752,"id":"5","total":1,"ms":84.552}
+{"_e":"metro:client_log","_t":1785445710390,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785445710394,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446193367,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785446193453,"id":"6","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785446193453,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446193469,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446193570,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446193693,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446193895,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446193999,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446194114,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446194280,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785446194356,"id":"6","total":1,"ms":902.924042}
+{"_e":"metro:client_log","_t":1785446195085,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446195089,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785446389428,"id":"7","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785446389434,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785446389642,"id":"7","total":1,"ms":208.138125}
+{"_e":"metro:client_log","_t":1785446390321,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446390326,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446391618,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785446391643,"id":"8","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785446391643,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785446391730,"id":"8","total":1,"ms":87.313791}
+{"_e":"metro:client_log","_t":1785446392434,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446392442,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446397363,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:bundling:started","_t":1785446606697,"id":"9","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785446606698,"id":"9","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446606705,"id":"9","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446606806,"id":"9","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446606830,"id":"9","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785446607008,"id":"9","total":1,"ms":310.297417}
+{"_e":"metro:client_log","_t":1785446607640,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446607644,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446735734,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785446735768,"id":"a","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785446735769,"id":"a","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785446735916,"id":"a","total":1,"ms":146.692333}
+{"_e":"metro:client_log","_t":1785446736544,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446736550,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785446939217,"id":"b","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785446939220,"id":"b","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446939237,"id":"b","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785446939487,"id":"b","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785446939583,"id":"b","total":1,"ms":363.2415}
+{"_e":"metro:client_log","_t":1785446940235,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446940240,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446940924,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785446940972,"id":"c","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785446940972,"id":"c","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785446941045,"id":"c","total":1,"ms":72.789834}
+{"_e":"metro:client_log","_t":1785446941681,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785446941685,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785447702352,"id":"d","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785447702353,"id":"d","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785447702373,"id":"d","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785447702474,"id":"d","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785447702575,"id":"d","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:failed","_t":1785447702583,"id":"d","message":"SyntaxError: /Users/samuelsantana/Documents/Projects/Laweact/app/src/atomic/form/input-multi-select-field.component.tsx: Expected corresponding JSX closing tag for <Pressable>. (204:14)\n\n  202 |                       </Body2>\n  203 |                       <XIcon color={BrandColors.neutral.white} width={14} height={14} />\n> 204 |               </>\n      |               ^\n  205 |             ) : null}\n  206 |\n  207 |             {hasError ? (","importStack":null,"filename":"src/atomic/form/input-multi-select-field.component.tsx","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:started","_t":1785447706467,"id":"e","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785447706467,"id":"e","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785447706468,"id":"e","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:failed","_t":1785447706480,"id":"e","message":"SyntaxError: /Users/samuelsantana/Documents/Projects/Laweact/app/src/atomic/form/input-multi-select-field.component.tsx: Expected corresponding JSX closing tag for <Pressable>. (204:14)\n\n  202 |                       </Body2>\n  203 |                       <XIcon color={BrandColors.neutral.white} width={14} height={14} />\n> 204 |               </>\n      |               ^\n  205 |             ) : null}\n  206 |\n  207 |             {hasError ? (","importStack":null,"filename":"src/atomic/form/input-multi-select-field.component.tsx","targetModuleName":null,"originModulePath":null}
+{"_e":"metro:bundling:started","_t":1785447739558,"id":"f","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785447739560,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785447739589,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785447739690,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785447739813,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785447740012,"id":"f","total":1,"ms":452.915917}
+{"_e":"metro:client_log","_t":1785447740693,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785447740697,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785447743325,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785447743340,"id":"g","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785447743340,"id":"g","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785447743444,"id":"g","total":1,"ms":103.594834}
+{"_e":"metro:client_log","_t":1785447743965,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785447743965,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785447743965,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785447744076,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785447744077,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785447856399,"id":"h","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785447856401,"id":"h","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785447856429,"id":"h","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785447856541,"id":"h","total":1,"ms":140.034667}
+{"_e":"metro:client_log","_t":1785447857328,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785447857332,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785448734879,"id":"i","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785448734881,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785448735041,"id":"i","total":1,"ms":161.086875}
+{"_e":"metro:client_log","_t":1785448735720,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785448735726,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:server_log","_t":1785451528714,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785451725631,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785451869985,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"root:init","_t":1785788501551,"format":"v0-jsonl","version":"57.0.11"}
+{"_e":"env:mode","_t":1785788501552,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1785788501554,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"https://8747-179-191-103-102.ngrok-free.app"}}
+{"_e":"devserver:start","_t":1785788502104,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1785788502788,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1785788502995,"plugins":[]}
+{"_e":"metro:instantiate","_t":1785788503533,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1785788515465,"id":"1","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785788515465,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785788515468,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785788515881,"id":"1","progress":0.010000000000000002,"total":1,"current":1}
+{"_e":"metro:bundling:progress","_t":1785788515982,"id":"1","progress":0.1322314049586777,"total":11,"current":4}
+{"_e":"metro:bundling:progress","_t":1785788516083,"id":"1","progress":0.17361111111111113,"total":12,"current":5}
+{"_e":"metro:bundling:progress","_t":1785788516183,"id":"1","progress":0.17361111111111113,"total":112,"current":11}
+{"_e":"metro:bundling:progress","_t":1785788516283,"id":"1","progress":0.17361111111111113,"total":133,"current":20}
+{"_e":"metro:bundling:progress","_t":1785788516383,"id":"1","progress":0.17361111111111113,"total":161,"current":35}
+{"_e":"metro:bundling:progress","_t":1785788516483,"id":"1","progress":0.17361111111111113,"total":184,"current":55}
+{"_e":"metro:bundling:progress","_t":1785788516583,"id":"1","progress":0.17361111111111113,"total":214,"current":89}
+{"_e":"metro:bundling:progress","_t":1785788516684,"id":"1","progress":0.26975542335196206,"total":258,"current":134}
+{"_e":"metro:bundling:progress","_t":1785788516784,"id":"1","progress":0.26975542335196206,"total":333,"current":170}
+{"_e":"metro:bundling:progress","_t":1785788516884,"id":"1","progress":0.3185845998512063,"total":388,"current":219}
+{"_e":"metro:bundling:progress","_t":1785788516984,"id":"1","progress":0.35157923875432523,"total":425,"current":252}
+{"_e":"metro:bundling:progress","_t":1785788517084,"id":"1","progress":0.3652940466127279,"total":455,"current":275}
+{"_e":"metro:bundling:progress","_t":1785788517184,"id":"1","progress":0.3652940466127279,"total":579,"current":329}
+{"_e":"metro:bundling:progress","_t":1785788517284,"id":"1","progress":0.4204543891927868,"total":603,"current":391}
+{"_e":"metro:bundling:progress","_t":1785788517387,"id":"1","progress":0.46792314351311687,"total":652,"current":446}
+{"_e":"metro:bundling:progress","_t":1785788517488,"id":"1","progress":0.4762943860345169,"total":710,"current":490}
+{"_e":"metro:bundling:progress","_t":1785788517593,"id":"1","progress":0.4762943860345169,"total":717,"current":494}
+{"_e":"metro:bundling:progress","_t":1785788517694,"id":"1","progress":0.47693904337474435,"total":724,"current":500}
+{"_e":"metro:bundling:progress","_t":1785788517795,"id":"1","progress":0.47693904337474435,"total":736,"current":506}
+{"_e":"metro:bundling:progress","_t":1785788517899,"id":"1","progress":0.47693904337474435,"total":742,"current":509}
+{"_e":"metro:bundling:progress","_t":1785788517999,"id":"1","progress":0.47693904337474435,"total":764,"current":527}
+{"_e":"metro:bundling:progress","_t":1785788518106,"id":"1","progress":0.5016652519351078,"total":833,"current":590}
+{"_e":"metro:bundling:progress","_t":1785788518208,"id":"1","progress":0.5198190236789265,"total":853,"current":615}
+{"_e":"metro:bundling:progress","_t":1785788518309,"id":"1","progress":0.5419049070555207,"total":902,"current":664}
+{"_e":"metro:bundling:progress","_t":1785788518409,"id":"1","progress":0.56534758178205,"total":923,"current":694}
+{"_e":"metro:bundling:progress","_t":1785788518509,"id":"1","progress":0.56534758178205,"total":1020,"current":738}
+{"_e":"metro:bundling:progress","_t":1785788518609,"id":"1","progress":0.56534758178205,"total":1098,"current":781}
+{"_e":"metro:bundling:progress","_t":1785788518709,"id":"1","progress":0.56534758178205,"total":1138,"current":825}
+{"_e":"metro:bundling:progress","_t":1785788518809,"id":"1","progress":0.56534758178205,"total":1181,"current":878}
+{"_e":"metro:bundling:progress","_t":1785788518909,"id":"1","progress":0.5699999172194568,"total":1204,"current":909}
+{"_e":"metro:bundling:progress","_t":1785788519009,"id":"1","progress":0.6082199638567892,"total":1213,"current":946}
+{"_e":"metro:bundling:progress","_t":1785788519111,"id":"1","progress":0.6185367402421342,"total":1227,"current":965}
+{"_e":"metro:bundling:progress","_t":1785788519212,"id":"1","progress":0.6185367402421342,"total":1231,"current":968}
+{"_e":"metro:bundling:progress","_t":1785788519317,"id":"1","progress":0.6283931878903112,"total":1235,"current":979}
+{"_e":"metro:bundling:progress","_t":1785788519422,"id":"1","progress":0.6333025214299068,"total":1239,"current":986}
+{"_e":"metro:bundling:progress","_t":1785788519522,"id":"1","progress":0.65415744,"total":1250,"current":1011}
+{"_e":"metro:bundling:progress","_t":1785788519625,"id":"1","progress":0.6618567959238741,"total":1255,"current":1021}
+{"_e":"metro:bundling:progress","_t":1785788519725,"id":"1","progress":0.6646922796056636,"total":1256,"current":1024}
+{"_e":"metro:bundling:progress","_t":1785788519873,"id":"1","progress":0.6659911406142236,"total":1256,"current":1025}
+{"_e":"metro:bundling:progress","_t":1785788519974,"id":"1","progress":0.6727104459194538,"total":1268,"current":1040}
+{"_e":"metro:bundling:progress","_t":1785788520074,"id":"1","progress":0.6733725823291902,"total":1282,"current":1052}
+{"_e":"metro:bundling:progress","_t":1785788520176,"id":"1","progress":0.720600710137682,"total":1297,"current":1101}
+{"_e":"metro:bundling:progress","_t":1785788520279,"id":"1","progress":0.7511111111111112,"total":1305,"current":1131}
+{"_e":"metro:bundling:progress","_t":1785788520379,"id":"1","progress":0.7753110745072964,"total":1314,"current":1157}
+{"_e":"metro:bundling:progress","_t":1785788520480,"id":"1","progress":0.794105593063598,"total":1341,"current":1195}
+{"_e":"metro:bundling:progress","_t":1785788520583,"id":"1","progress":0.794105593063598,"total":1403,"current":1243}
+{"_e":"metro:bundling:progress","_t":1785788520682,"id":"1","progress":0.794105593063598,"total":1461,"current":1275}
+{"_e":"metro:bundling:progress","_t":1785788520782,"id":"1","progress":0.794105593063598,"total":1497,"current":1286}
+{"_e":"metro:bundling:progress","_t":1785788520883,"id":"1","progress":0.794105593063598,"total":1497,"current":1290}
+{"_e":"metro:bundling:progress","_t":1785788520983,"id":"1","progress":0.794105593063598,"total":1503,"current":1326}
+{"_e":"metro:bundling:progress","_t":1785788521083,"id":"1","progress":0.8036864722514265,"total":1565,"current":1403}
+{"_e":"metro:bundling:progress","_t":1785788521183,"id":"1","progress":0.8036864722514265,"total":1694,"current":1453}
+{"_e":"metro:bundling:progress","_t":1785788521283,"id":"1","progress":0.8036864722514265,"total":1747,"current":1477}
+{"_e":"metro:bundling:progress","_t":1785788521400,"id":"1","progress":0.8036864722514265,"total":1761,"current":1493}
+{"_e":"metro:bundling:progress","_t":1785788521500,"id":"1","progress":0.8036864722514265,"total":1782,"current":1519}
+{"_e":"metro:bundling:progress","_t":1785788521602,"id":"1","progress":0.8036864722514265,"total":1805,"current":1553}
+{"_e":"metro:bundling:progress","_t":1785788521702,"id":"1","progress":0.8036864722514265,"total":1813,"current":1600}
+{"_e":"metro:bundling:progress","_t":1785788521802,"id":"1","progress":0.8292409922116877,"total":1835,"current":1671}
+{"_e":"metro:bundling:progress","_t":1785788521902,"id":"1","progress":0.8399485475810048,"total":1856,"current":1701}
+{"_e":"metro:bundling:progress","_t":1785788522002,"id":"1","progress":0.8399485475810048,"total":1901,"current":1738}
+{"_e":"metro:bundling:progress","_t":1785788522102,"id":"1","progress":0.8399485475810048,"total":1961,"current":1774}
+{"_e":"metro:bundling:progress","_t":1785788522204,"id":"1","progress":0.8399485475810048,"total":1970,"current":1792}
+{"_e":"metro:bundling:progress","_t":1785788522304,"id":"1","progress":0.8519995728900567,"total":1988,"current":1835}
+{"_e":"metro:bundling:progress","_t":1785788522407,"id":"1","progress":0.8635099919462221,"total":1993,"current":1852}
+{"_e":"metro:bundling:progress","_t":1785788522508,"id":"1","progress":0.8754612222560805,"total":2005,"current":1876}
+{"_e":"metro:bundling:progress","_t":1785788522608,"id":"1","progress":0.8790223960568954,"total":2018,"current":1892}
+{"_e":"metro:bundling:progress","_t":1785788522709,"id":"1","progress":0.8790223960568954,"total":2037,"current":1898}
+{"_e":"metro:bundling:progress","_t":1785788522812,"id":"1","progress":0.8790223960568954,"total":2038,"current":1903}
+{"_e":"metro:bundling:progress","_t":1785788522912,"id":"1","progress":0.8847811599241497,"total":2038,"current":1917}
+{"_e":"metro:bundling:progress","_t":1785788523012,"id":"1","progress":0.9235472263070499,"total":2052,"current":1972}
+{"_e":"metro:bundling:progress","_t":1785788523113,"id":"1","progress":0.9406549236382044,"total":2058,"current":1996}
+{"_e":"metro:bundling:progress","_t":1785788523213,"id":"1","progress":0.9514474669763391,"total":2075,"current":2024}
+{"_e":"metro:bundling:progress","_t":1785788523313,"id":"1","progress":0.9659599550553519,"total":2097,"current":2061}
+{"_e":"metro:bundling:progress","_t":1785788523413,"id":"1","progress":0.9659599550553519,"total":2161,"current":2116}
+{"_e":"metro:bundling:progress","_t":1785788523513,"id":"1","progress":0.9891795205504089,"total":2212,"current":2200}
+{"_e":"metro:bundling:progress","_t":1785788523613,"id":"1","progress":0.999,"total":2214,"current":2214}
+{"_e":"metro:bundling:done","_t":1785788523853,"id":"1","total":2214,"ms":8388.152125}
+{"_e":"metro:client_log","_t":1785788524594,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788524598,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:failed","_t":1785788643029,"id":null,"message":"Unable to resolve \"@/assets/splash/splash-screen.json\" from \"src/components/splash-guard/splash-guard.component.tsx\"\n  16 | import { BrandColors } from '@/constants/theme';\n  17 |\n> 18 | const splashAnimation = require('@/assets/splash/splash-screen.json');\n     |                                  ^\n  19 |\n  20 | /** Fallback if onAnimationFinish never fires (~3.4s animation + buffer). */\n  21 | const SPLASH_FALLBACK_MS = 8000;","importStack":"\u001b[1mImport stack:\u001b[22m\n\n\u001b[90m \u001b[39msrc/components/splash-guard/splash-guard.component.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/assets/splash/splash-screen.json\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/components/splash-guard/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./splash-guard.component\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/components/development-guard/development-guard.component.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/components/splash-guard\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/components/development-guard/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./development-guard.component\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app/client/_layout.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/components/development-guard\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app\u001b[2m (require.context)\u001b[22m\n","filename":null,"targetModuleName":"@/assets/splash/splash-screen.json","originModulePath":"src/components/splash-guard/splash-guard.component.tsx"}
+{"_e":"metro:bundling:started","_t":1785788662960,"id":"3","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785788662961,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785788662967,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:failed","_t":1785788662978,"id":"3","message":"Unable to resolve \"@/assets/splash/splash-screen.json\" from \"src/components/splash-guard/splash-guard.component.tsx\"\n  16 | import { BrandColors } from '@/constants/theme';\n  17 |\n> 18 | const splashAnimation = require('@/assets/splash/splash-screen.json');\n     |                                  ^\n  19 |\n  20 | /** Fallback if onAnimationFinish never fires (~3.4s animation + buffer). */\n  21 | const SPLASH_FALLBACK_MS = 8000;","importStack":"\u001b[1mImport stack:\u001b[22m\n\n\u001b[90m \u001b[39msrc/components/splash-guard/splash-guard.component.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/assets/splash/splash-screen.json\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/components/splash-guard/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./splash-guard.component\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/components/development-guard/development-guard.component.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/components/splash-guard\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/components/development-guard/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./development-guard.component\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app/client/_layout.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/components/development-guard\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app\u001b[2m (require.context)\u001b[22m\n","filename":null,"targetModuleName":"@/assets/splash/splash-screen.json","originModulePath":"src/components/splash-guard/splash-guard.component.tsx"}
+{"_e":"metro:bundling:started","_t":1785788681543,"id":"4","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785788681543,"id":"4","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785788681546,"id":"4","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785788681635,"id":"4","total":1,"ms":92.260792}
+{"_e":"metro:client_log","_t":1785788682256,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788682260,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785788753059,"id":"5","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785788753062,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785788753207,"id":"5","total":1,"ms":146.772375}
+{"_e":"metro:client_log","_t":1785788753760,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788753763,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785788760689,"id":"6","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785788760689,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785788760765,"id":"6","total":1,"ms":76.252208}
+{"_e":"metro:client_log","_t":1785788761842,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788761843,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788762321,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785788762321,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785788762321,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785788762756,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785788762765,"id":"7","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785788762765,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785788762841,"id":"7","total":1,"ms":76.007292}
+{"_e":"metro:client_log","_t":1785788763432,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788763436,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788767615,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:bundling:started","_t":1785788774046,"id":"8","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785788774047,"id":"8","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785788774249,"id":"8","total":1,"ms":202.854625}
+{"_e":"metro:client_log","_t":1785788774820,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788774824,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785788784851,"id":"9","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785788784852,"id":"9","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785788784964,"id":"9","total":1,"ms":112.358917}
+{"_e":"metro:client_log","_t":1785788785556,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788785560,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785788894233,"id":"a","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785788894234,"id":"a","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785788894245,"id":"a","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785788894345,"id":"a","total":1,"ms":111.387959}
+{"_e":"metro:client_log","_t":1785788894953,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788894962,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788896265,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785788896272,"id":"b","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785788896272,"id":"b","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785788896343,"id":"b","total":1,"ms":70.908584}
+{"_e":"metro:client_log","_t":1785788896822,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785788896823,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785788896823,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785788896930,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785788896931,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785789257420,"id":"c","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785789257420,"id":"c","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785789257430,"id":"c","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785789257543,"id":"c","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785789257770,"id":"c","total":1,"ms":349.642542}
+{"_e":"metro:client_log","_t":1785789258452,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789258456,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789259618,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785789259627,"id":"d","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785789259627,"id":"d","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785789259712,"id":"d","total":1,"ms":84.426625}
+{"_e":"metro:client_log","_t":1785789260271,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789260275,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785789290593,"id":"e","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785789290594,"id":"e","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785789290606,"id":"e","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785789290705,"id":"e","total":1,"ms":111.692334}
+{"_e":"metro:client_log","_t":1785789291281,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789291286,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789294133,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785789294146,"id":"f","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785789294146,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785789294241,"id":"f","total":1,"ms":94.715541}
+{"_e":"metro:client_log","_t":1785789294842,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789294846,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785789560882,"id":"g","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785789560883,"id":"g","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785789560894,"id":"g","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785789560995,"id":"g","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785789561029,"id":"g","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785789561111,"id":"g","total":1,"ms":228.422708}
+{"_e":"metro:client_log","_t":1785789561958,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789561963,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785789562509,"id":"h","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785789562509,"id":"h","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785789562593,"id":"h","total":1,"ms":84.395542}
+{"_e":"metro:client_log","_t":1785789562594,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:client_log","_t":1785789563554,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789563561,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789578880,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785789578929,"id":"i","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785789578935,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785789579081,"id":"i","total":1,"ms":147.974167}
+{"_e":"metro:client_log","_t":1785789579930,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789579935,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789584603,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:bundling:started","_t":1785789639693,"id":"j","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785789639693,"id":"j","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785789639702,"id":"j","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1785789639837,"id":"j","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785789639914,"id":"j","total":1,"ms":221.263541}
+{"_e":"metro:client_log","_t":1785789640751,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785789640756,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785790174346,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1785790174422,"id":"k","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785790174423,"id":"k","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785790174537,"id":"k","total":1,"ms":114.523084}
+{"_e":"metro:client_log","_t":1785790175062,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785790175062,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785790175062,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1785790175391,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785790175392,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1785791062751,"id":"l","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1785791062752,"id":"l","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1785791062877,"id":"l","total":1,"ms":125.699667}
+{"_e":"metro:client_log","_t":1785791063920,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1785791063926,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:server_log","_t":1785793193058,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1785793311817,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}

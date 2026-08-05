@@ -63,6 +63,12 @@ export function maskDigitsOnly(value: string, maxLength?: number): string {
   return maxLength !== undefined ? digits.slice(0, maxLength) : digits;
 }
 
+/** Letters and digits only (e.g. OAB numbers that may include letters). */
+export function maskAlphanumericOnly(value: string, maxLength?: number): string {
+  const cleaned = value.replace(/[^a-zA-Z0-9]/g, '');
+  return maxLength !== undefined ? cleaned.slice(0, maxLength) : cleaned;
+}
+
 /** Progressive RG mask (padrão comum): 00.000.000-0 — até 9 dígitos. */
 export function maskRg(value: string): string {
   const digits = onlyDigits(value).slice(0, 9);

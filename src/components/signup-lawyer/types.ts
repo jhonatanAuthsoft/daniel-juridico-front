@@ -14,6 +14,14 @@ export type PostgraduateEntry = {
   year: string;
 };
 
+/** Cities served within a single state; one entry per state. */
+export type ServiceAreaEntry = {
+  /** UF code, e.g. `SP`. */
+  state: string;
+  /** City names as listed by the cities catalog. */
+  cities: string[];
+};
+
 export type LawyerSignupFormValues = {
   fullName: string;
   email: string;
@@ -47,8 +55,11 @@ export type LawyerSignupFormValues = {
   postgraduates: PostgraduateEntry[];
   practiceAreas: string[];
   specialties: string[];
-  serviceState: string;
-  serviceCity: string;
+  serviceAreas: ServiceAreaEntry[];
+  /** Draft state of the "raio de atuação" editor; not submitted. */
+  serviceDraftState: string;
+  /** Draft cities of the "raio de atuação" editor; not submitted. */
+  serviceDraftCities: string[];
   billingMethods: string[];
   pronouns: string;
   profileImageUri: string;

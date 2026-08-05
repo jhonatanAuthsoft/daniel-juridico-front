@@ -1,5 +1,5 @@
 import { SymbolView } from 'expo-symbols';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import {
   ActivityIndicator,
@@ -119,7 +119,16 @@ export function StepSpecialties() {
   );
   const [query, setQuery] = useState('');
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
-  const defaultExpandedId = categories[0]?.id;
+  const didInitExpandRef = useRef(false);
+
+  useEffect(() => {
+    const firstId = categories[0]?.id;
+    if (!firstId || didInitExpandRef.current) {
+      return;
+    }
+    didInitExpandRef.current = true;
+    setExpandedIds([firstId]);
+  }, [categories]);
 
   const filteredCategories = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -227,15 +236,11 @@ export function StepSpecialties() {
           };
 
           const toggleExpand = (id: string) => {
-            setExpandedIds((current) => {
-              const baseline =
-                current.length === 0 && defaultExpandedId
-                  ? [defaultExpandedId]
-                  : current;
-              return baseline.includes(id)
-                ? baseline.filter((item) => item !== id)
-                : [...baseline, id];
-            });
+            setExpandedIds((current) =>
+              current.includes(id)
+                ? current.filter((item) => item !== id)
+                : [...current, id],
+            );
           };
 
           if (filteredCategories.length === 0) {
@@ -253,11 +258,7 @@ export function StepSpecialties() {
                   <CategoryPanel
                     key={category.id}
                     category={category}
-                    expanded={
-                      Boolean(query.trim()) ||
-                      expandedIds.includes(category.id) ||
-                      (expandedIds.length === 0 && category.id === defaultExpandedId)
-                    }
+                    expanded={Boolean(query.trim()) || expandedIds.includes(category.id)}
                     selected={selected}
                     onToggleExpand={() => toggleExpand(category.id)}
                     onToggleChild={toggleChild}

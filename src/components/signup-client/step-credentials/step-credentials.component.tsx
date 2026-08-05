@@ -51,8 +51,9 @@ export function StepCredentials({ showPasswordErrors }: StepCredentialsProps) {
           placeholder="Digite uma senha"
           secureTextEntry={!passwordVisible}
           autoCapitalize="none"
-          autoComplete="new-password"
-          textContentType="newPassword"
+          autoComplete="off"
+          textContentType="none"
+          importantForAutofill="no"
           validate={FieldValidators.passwordRequirements}
           iconRight={
             <Pressable

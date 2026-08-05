@@ -9,6 +9,7 @@ import {
 
 import type { SelectOption } from '@/constants/select-options';
 import { useCep, useCitiesByUf } from '@/domain/address';
+import { isValidCep } from '@/utils/br-input';
 
 type AddressFieldNames<T extends FieldValues> = {
   zipCode: Path<T>;
@@ -165,6 +166,7 @@ export function useAddressCepAutofill<T extends FieldValues>(
     cityOptions,
     isLoadingCities,
     isCitiesError,
+    hasCep: isValidCep(zipCode ?? ''),
     hasState: state.length === 2,
   };
 }

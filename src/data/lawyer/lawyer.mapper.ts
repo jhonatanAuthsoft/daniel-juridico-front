@@ -9,6 +9,7 @@ import { toIsoDate } from '@/data/shared';
 import type {
   OabWireRequest,
   PostgraduateWireRequest,
+  PracticeAreaWireRequest,
   RegisterLawyerRequest,
   RegisterLawyerResult,
   RegisterLawyerWireResponse,
@@ -103,6 +104,23 @@ function mapSupplementalOabs(entries: SupplementalOabEntry[]): OabWireRequest[] 
     );
 }
 
+/** Flattens the per-state city groups into one `{estado, cidade}` pair per city. */
+function mapServiceAreas(
+  entries: LawyerSignupFormValues['serviceAreas'],
+): PracticeAreaWireRequest[] {
+  return entries.flatMap((entry) => {
+    const estado = entry.state.trim().toUpperCase();
+    if (!estado) {
+      return [];
+    }
+
+    return (entry.cities ?? [])
+      .map((city) => cityLabelFromValue(estado, city))
+      .filter((cidade) => cidade.length > 0)
+      .map((cidade) => ({ estado, cidade }));
+  });
+}
+
 function mapPostgraduates(
   entries: LawyerSignupFormValues['postgraduates'],
 ): PostgraduateWireRequest[] {
@@ -159,12 +177,7 @@ export function mapLawyerSignupFormToRegisterRequest(
     estado: form.state.trim().toUpperCase(),
     oabPrincipal,
     oabsSuplementares: supplementalOabs.length > 0 ? supplementalOabs : undefined,
-    areasAtuacao: [
-      {
-        estado: form.serviceState.trim().toUpperCase(),
-        cidade: cityLabelFromValue(form.serviceState, form.serviceCity),
-      },
-    ],
+    areasAtuacao: mapServiceAreas(form.serviceAreas),
     modalidades: form.practiceAreas.map(mapPracticeAreaToModalidade),
     especialidades:
       form.specialties.length > 0 ? mapSpecialtiesToApi(form.specialties) : undefined,

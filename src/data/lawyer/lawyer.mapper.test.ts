@@ -46,8 +46,12 @@ const baseForm: LawyerSignupFormValues = {
   postgraduates: [{ university: 'FGV', course: 'LLM Direito Digital', year: '2020' }],
   practiceAreas: ['generalista'],
   specialties: ['CIVIL:CONTRATOS', 'IMOBILIARIO:DESPEJO'],
-  serviceState: 'SP',
-  serviceCity: 'São Paulo',
+  serviceAreas: [
+    { state: 'SP', cities: ['Adamantina', 'Avaré'] },
+    { state: 'RJ', cities: ['Niterói'] },
+  ],
+  serviceDraftState: '',
+  serviceDraftCities: [],
   billingMethods: ['contractual', 'to_be_agreed'],
   pronouns: 'DOUTOR',
   profileImageUri: 'file://profile.jpg',
@@ -94,7 +98,11 @@ describe('lawyer.mapper', () => {
       uf: 'RJ',
       dataExpedicao: '2018-01-10',
     });
-    expect(payload.areasAtuacao).toEqual([{ estado: 'SP', cidade: 'São Paulo' }]);
+    expect(payload.areasAtuacao).toEqual([
+      { estado: 'SP', cidade: 'Adamantina' },
+      { estado: 'SP', cidade: 'Avaré' },
+      { estado: 'RJ', cidade: 'Niterói' },
+    ]);
     expect(payload.especialidades).toEqual([
       { especialidadeCodigo: 'CIVIL', subespecialidadeCodigo: 'CONTRATOS' },
       { especialidadeCodigo: 'IMOBILIARIO', subespecialidadeCodigo: 'DESPEJO' },

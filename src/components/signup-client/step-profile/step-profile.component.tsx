@@ -62,7 +62,7 @@ export function StepProfile() {
 
       {profileImageUri ? (
         <View style={styles.profileImageFilled}>
-          <Image source={{ uri: profileImageUri }} style={styles.profilePreview} resizeMode="cover" />
+          <Image source={{ uri: profileImageUri }} style={styles.profilePreview} resizeMode="contain" />
           <View style={styles.profileActions}>
             <Pressable
               accessibilityRole="button"

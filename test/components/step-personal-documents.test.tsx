@@ -23,7 +23,7 @@ describe('StepPersonalDocuments', () => {
     expect(screen.getByText('Nome completo (nome social)')).toBeTruthy();
     expect(screen.getByText('RG')).toBeTruthy();
     expect(screen.getByText('Órgão Emissor e UF')).toBeTruthy();
-    expect(screen.getByPlaceholderText('78524414-15')).toBeTruthy();
+    expect(screen.getByPlaceholderText('00.000.000-0')).toBeTruthy();
     expect(screen.getByText('Data de Nascimento')).toBeTruthy();
     expect(screen.queryByText('Razão Social')).toBeNull();
     expect(screen.queryByPlaceholderText('00.000.000/0000-00')).toBeNull();
@@ -49,7 +49,7 @@ describe('StepPersonalDocuments', () => {
     fireEvent.press(screen.getByRole('button', { name: 'CPF' }));
 
     expect(screen.getByText('Nome completo (nome social)')).toBeTruthy();
-    expect(screen.getByPlaceholderText('78524414-15')).toBeTruthy();
+    expect(screen.getByPlaceholderText('00.000.000-0')).toBeTruthy();
     expect(screen.queryByText('Razão Social')).toBeNull();
   });
 });

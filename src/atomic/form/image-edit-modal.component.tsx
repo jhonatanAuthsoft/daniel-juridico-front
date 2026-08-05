@@ -393,7 +393,9 @@ export function ImageEditModal({
 
           <View style={styles.toolbar}>
             {isBusy ? (
-              <ActivityIndicator color={BrandColors.primary.light} />
+              <View style={styles.toolbarLoading}>
+                <ActivityIndicator color={BrandColors.primary.light} />
+              </View>
             ) : (
               <>
                 <Pressable
@@ -761,6 +763,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  toolbarLoading: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   toolbarSide: {
     minWidth: 88,

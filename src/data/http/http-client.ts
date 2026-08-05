@@ -25,6 +25,8 @@ export async function httpRequest<T>(
     signal,
     headers: {
       Accept: 'application/json',
+      // Free ngrok serves an HTML interstitial without this header.
+      'ngrok-skip-browser-warning': 'true',
       ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
       ...headers,
     },

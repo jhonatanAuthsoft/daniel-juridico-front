@@ -9,6 +9,7 @@ import { Separator } from '@/atomic/separator';
 import { Body1, Body2, Display } from '@/atomic/typography';
 import { useSplashGate } from '@/components/splash-guard';
 import { BrandColors, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
+import { useAuth } from '@/domain/auth';
 
 export type DevelopmentGuardProps = {
   children: ReactNode;
@@ -25,6 +26,7 @@ export function DevelopmentGuard({
   enabled = true,
 }: DevelopmentGuardProps) {
   const router = useRouter();
+  const { signOut, isAuthenticated } = useAuth();
   const splashGate = useSplashGate();
 
   useEffect(() => {
@@ -43,10 +45,9 @@ export function DevelopmentGuard({
     return children;
   }
 
-  const goBack = () => {
-    if (router.canGoBack()) {
-      router.back();
-      return;
+  const leave = async () => {
+    if (isAuthenticated) {
+      await signOut();
     }
     router.replace('/login');
   };
@@ -82,17 +83,18 @@ export function DevelopmentGuard({
           <Separator size="lg" />
 
           <Button
-            accessibilityLabel="Voltar"
-            onPress={goBack}
+            accessibilityLabel="Voltar ao login"
+            onPress={() => {
+              void leave();
+            }}
             variant="primary">
-            Voltar
+            Voltar ao login
           </Button>
         </View>
       </SafeAreaView>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   root: {

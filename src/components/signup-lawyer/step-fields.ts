@@ -39,7 +39,7 @@ export function getLawyerSignupStepFields(
         ? ['specialties']
         : [];
     case 8:
-      return ['serviceState', 'serviceCity'];
+      return ['serviceAreas'];
     case 9:
       return ['billingMethods'];
     case 10:

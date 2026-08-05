@@ -81,7 +81,7 @@ export function StepAboutYou() {
                 <Image
                   source={{ uri: profileImageUri }}
                   style={styles.profilePreview}
-                  resizeMode="cover"
+                  resizeMode="contain"
                 />
                 <View style={styles.profileActions}>
                   <Pressable

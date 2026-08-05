@@ -168,6 +168,17 @@ export const TREATMENT_PRONOUN_OPTIONS: SelectOption[] = [
   { value: 'NEUTRO', label: 'Neutro' },
 ];
 
+/** Resolves a UF code to its full state name, falling back to the raw value. */
+export function stateLabelFromValue(uf: string): string {
+  const normalized = uf.trim().toUpperCase();
+  if (!normalized) {
+    return '';
+  }
+  return (
+    STATE_OPTIONS.find((option) => option.value === normalized)?.label ?? normalized
+  );
+}
+
 /**
  * Resolves a city select value to its display label for API payloads.
  * Prefer storing the city name as the select value; falls back to static catalog or raw value.

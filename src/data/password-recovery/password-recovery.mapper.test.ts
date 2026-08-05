@@ -46,7 +46,6 @@ describe('password-recovery.mapper', () => {
         email: 'a@b.com',
         code: '1234',
         newPassword: 'Secret12',
-        confirmPassword: 'Secret12',
       }),
     ).toEqual({
       email: 'a@b.com',

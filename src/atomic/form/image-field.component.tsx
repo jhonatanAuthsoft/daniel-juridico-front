@@ -57,6 +57,7 @@ export function ImageField(props: ImageFieldProps) {
   const isMultiple = Boolean(props.multiple);
   const canAddMore =
     isMultiple && (maxCount == null || uris.length < maxCount) && !isUploading;
+  const aspectRatio = aspect[0] / aspect[1];
 
   const [previewIndex, setPreviewIndex] = useState(0);
   const [pendingUri, setPendingUri] = useState<string | null>(null);
@@ -135,7 +136,7 @@ export function ImageField(props: ImageFieldProps) {
           accessibilityRole="button"
           accessibilityLabel={label}
           disabled={isUploading}
-          style={styles.placeholder}
+          style={[styles.placeholder, { aspectRatio }]}
           onPress={() => {
             void startPick();
           }}>
@@ -177,66 +178,87 @@ export function ImageField(props: ImageFieldProps) {
     <View style={styles.block}>
       <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
       <Separator size="xxs" />
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`Pré-visualização de ${label}`}
-        disabled={isUploading}
-        onPress={() => {
-          if (!isMultiple) {
-            void startPick();
-          }
-        }}>
-        <View>
-          <Image source={{ uri: previewUri }} style={styles.previewShell} resizeMode="cover" />
-          {isUploading ? (
-            <View style={styles.uploadOverlay}>
-              <ActivityIndicator color={BrandColors.neutral.white} />
-            </View>
+
+      <View style={styles.filledShell}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Pré-visualização de ${label}`}
+          disabled={isUploading}
+          onPress={() => {
+            if (!isMultiple) {
+              void startPick();
+            }
+          }}>
+          <View style={[styles.previewArea, { aspectRatio }]}>
+            <Image
+              source={{ uri: previewUri }}
+              style={styles.previewImage}
+              resizeMode="contain"
+            />
+            {isUploading ? (
+              <View style={styles.uploadOverlay}>
+                <ActivityIndicator color={BrandColors.neutral.white} />
+              </View>
+            ) : null}
+          </View>
+        </Pressable>
+
+        <View style={styles.selectorRow}>
+          {uris.map((uri, index) => {
+            const isSelected = index === safePreviewIndex;
+            return (
+              <Pressable
+                key={`${uri}-${index}`}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  isMultiple
+                    ? isSelected
+                      ? `Remover imagem ${index + 1}`
+                      : `Selecionar imagem ${index + 1}`
+                    : 'Remover imagem'
+                }
+                accessibilityState={{ selected: isSelected }}
+                disabled={isUploading}
+                onPress={() => {
+                  if (isMultiple && !isSelected) {
+                    setPreviewIndex(index);
+                    return;
+                  }
+                  removeAt(index);
+                }}
+                style={[styles.thumbAction, isSelected && styles.thumbSelected]}>
+                <Image source={{ uri }} style={styles.thumbImage} resizeMode="contain" />
+                {isSelected ? (
+                  <View style={styles.thumbOverlay}>
+                    <SymbolView
+                      name={{ ios: 'trash', android: 'delete', web: 'delete' }}
+                      size={16}
+                      tintColor={BrandColors.neutral.white}
+                    />
+                  </View>
+                ) : null}
+              </Pressable>
+            );
+          })}
+
+          {canAddMore ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Adicionar imagem"
+              onPress={() => {
+                void startPick();
+              }}
+              style={styles.addThumb}>
+              <SymbolView
+                name={{ ios: 'plus', android: 'add', web: 'add' }}
+                size={20}
+                tintColor={BrandColors.neutral.light}
+              />
+            </Pressable>
           ) : null}
         </View>
-      </Pressable>
-      <Separator size="xxs" />
-      <View style={styles.previewActions}>
-        {uris.map((uri, index) => (
-          <Pressable
-            key={uri}
-            accessibilityRole="button"
-            accessibilityLabel={
-              isMultiple ? `Remover imagem ${index + 1}` : 'Remover imagem'
-            }
-            disabled={isUploading}
-            onPress={() => removeAt(index)}
-            style={[
-              styles.thumbAction,
-              isMultiple && index === safePreviewIndex && styles.thumbSelected,
-            ]}>
-            <Image source={{ uri }} style={styles.thumbImage} resizeMode="cover" />
-            <View style={styles.thumbOverlay}>
-              <SymbolView
-                name={{ ios: 'trash', android: 'delete', web: 'delete' }}
-                size={16}
-                tintColor={BrandColors.neutral.white}
-              />
-            </View>
-          </Pressable>
-        ))}
-
-        {canAddMore ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Adicionar imagem"
-            onPress={() => {
-              void startPick();
-            }}
-            style={styles.addThumb}>
-            <SymbolView
-              name={{ ios: 'plus', android: 'add', web: 'add' }}
-              size={20}
-              tintColor={BrandColors.neutral.light}
-            />
-          </Pressable>
-        ) : null}
       </View>
+
       {errorMessage ? (
         <>
           <Separator size="xxxs" />
@@ -260,7 +282,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   placeholder: {
-    minHeight: 140,
+    width: '100%',
     borderRadius: Radius.large,
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
@@ -269,33 +291,44 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.sm,
   },
-  previewShell: {
-    height: 160,
+  filledShell: {
     width: '100%',
     borderRadius: Radius.large,
-    overflow: 'hidden',
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
-    backgroundColor: BrandColors.neutral.dark,
+    backgroundColor: BrandColors.neutral.black,
+    overflow: 'hidden',
+    padding: Spacing.sm,
+    gap: Spacing.sm,
+  },
+  previewArea: {
+    width: '100%',
+    borderRadius: Radius.medium,
+    overflow: 'hidden',
+    backgroundColor: BrandColors.neutral.black,
+  },
+  previewImage: {
+    width: '100%',
+    height: '100%',
   },
   uploadOverlay: {
     ...StyleSheet.absoluteFill,
-    borderRadius: Radius.large,
     backgroundColor: 'rgba(0,0,0,0.45)',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  previewActions: {
+  selectorRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: Spacing.xxs,
+    alignItems: 'center',
   },
   thumbAction: {
     width: 56,
     height: 56,
     borderRadius: Radius.medium,
     overflow: 'hidden',
-    backgroundColor: BrandColors.neutral.dark,
+    backgroundColor: BrandColors.neutral.xdark,
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
   },
@@ -306,10 +339,11 @@ const styles = StyleSheet.create({
   },
   thumbSelected: {
     borderColor: BrandColors.primary.light,
+    borderWidth: 2,
   },
   thumbOverlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: 'rgba(0,0,0,0.45)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -321,5 +355,6 @@ const styles = StyleSheet.create({
     borderColor: BrandColors.neutral.white,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: BrandColors.neutral.xdark,
   },
 });

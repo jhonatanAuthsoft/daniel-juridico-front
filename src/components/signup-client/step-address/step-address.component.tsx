@@ -18,6 +18,7 @@ export function StepAddress() {
     cepErrorMessage,
     cityOptions,
     isLoadingCities,
+    hasCep,
     hasState,
   } = useAddressCepAutofill<ClientSignupFormValues>();
 
@@ -54,6 +55,7 @@ export function StepAddress() {
         label="Estado"
         placeholder="Selecione o estado"
         options={STATE_OPTIONS}
+        disabled={!hasCep}
         required
       />
       <InputSelectField

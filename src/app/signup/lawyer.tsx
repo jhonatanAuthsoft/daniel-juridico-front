@@ -73,11 +73,9 @@ export default function LawyerSignupScreen() {
     }
 
     const fields = getLawyerSignupStepFields(step, values);
-    if (fields.length > 0) {
-      const valid = await form.trigger(fields);
-      if (!valid) {
-        return;
-      }
+    const valid = await form.trigger(fields);
+    if (!valid) {
+      return;
     }
 
     const practiceAreas = values.practiceAreas;
@@ -129,7 +127,9 @@ export default function LawyerSignupScreen() {
         variant="cta"
         disabled={isSubmitting}
         isLoading={isSubmitting}
-        onPress={() => void goNext()}>
+        onPress={() => {
+          void goNext();
+        }}>
         {step === TOTAL_STEPS ? 'Começar' : 'Continuar'}
       </Button>
 

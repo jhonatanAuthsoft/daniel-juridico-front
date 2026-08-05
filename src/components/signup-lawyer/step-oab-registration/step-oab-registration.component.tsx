@@ -18,6 +18,8 @@ import type { LawyerSignupFormValues, SupplementalOabEntry } from '../types';
 
 const MAX_SUPPLEMENTAL_OABS = 5;
 const OAB_PHOTO_MAX = 2;
+/** Proporção aproximada de carteira OAB (paisagem). */
+const OAB_PHOTO_ASPECT: [number, number] = [3, 2];
 
 function createEmptySupplementalOab(): SupplementalOabEntry {
   return {
@@ -99,9 +101,9 @@ export function StepOabRegistration() {
         name="oabNumber"
         label="OAB"
         placeholder="Digite o número da OAB"
-        keyboardType="number-pad"
-        format={InputMasks.digitsMax(10)}
-        validate={FieldValidators.digitsMin(3, 'Número da OAB inválido')}
+        autoCapitalize="characters"
+        format={InputMasks.alphanumericMax(10)}
+        validate={FieldValidators.alphanumericMin(3, 'Número da OAB inválido')}
         maxLength={10}
       />
       <InputSelectField
@@ -126,9 +128,10 @@ export function StepOabRegistration() {
         name="oabPhotoUris"
         keyName="oabPhotoKeys"
         uploadFinalidade="OAB"
-        label="Foto da frente e verso da carteira"
+        label="Foto da Carteira"
         emptyTitle="Anexe as fotos de frente e verso"
         emptyCaption="Formato: .jpeg, .png"
+        aspect={OAB_PHOTO_ASPECT}
         maxCount={OAB_PHOTO_MAX}
         minCount={2}
         required
@@ -155,8 +158,9 @@ export function StepOabRegistration() {
                 name={`supplementalOabs.${index}.number`}
                 label="Número da OAB"
                 placeholder="Digite o número da OAB"
-                keyboardType="number-pad"
-                format={InputMasks.digitsMax(10)}
+                autoCapitalize="characters"
+                format={InputMasks.alphanumericMax(10)}
+                validate={FieldValidators.alphanumericMin(3, 'Número da OAB inválido')}
                 maxLength={10}
               />
               <InputSelectField
@@ -178,9 +182,10 @@ export function StepOabRegistration() {
                 name={`supplementalOabs.${index}.photoUris`}
                 keyName={`supplementalOabs.${index}.photoKeys`}
                 uploadFinalidade="OAB"
-                label="Foto da frente e verso da carteira"
+                label="Foto da Carteira"
                 emptyTitle="Anexe as fotos de frente e verso"
                 emptyCaption="Formato: .jpeg, .png"
+                aspect={OAB_PHOTO_ASPECT}
                 maxCount={OAB_PHOTO_MAX}
               />
 
@@ -271,7 +276,7 @@ function WalletPhotoPreview({ uri, label }: WalletPhotoPreviewProps) {
   return (
     <View accessibilityLabel={`Foto ${label} da carteira`} style={styles.photoPreview}>
       {uri ? (
-        <Image source={{ uri }} style={styles.photoImage} resizeMode="cover" />
+        <Image source={{ uri }} style={styles.photoImage} resizeMode="contain" />
       ) : (
         <Body2 color={BrandColors.neutral.medium}>Sem foto</Body2>
       )}
@@ -323,7 +328,7 @@ const styles = StyleSheet.create({
   },
   photoPreview: {
     flex: 1,
-    aspectRatio: 1,
+    aspectRatio: 3 / 2,
     borderRadius: Radius.medium,
     backgroundColor: BrandColors.accessory.darkBlue,
     overflow: 'hidden',

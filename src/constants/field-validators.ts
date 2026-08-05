@@ -90,6 +90,19 @@ export const FieldValidators = {
     };
   },
 
+  alphanumericMin: (min: number, message = 'Valor inválido'): FieldValidateFn => {
+    return (value) => {
+      const trimmed = value.trim();
+      if (!trimmed) {
+        return 'Campo obrigatório';
+      }
+      if (!/^[a-zA-Z0-9]+$/.test(trimmed)) {
+        return message;
+      }
+      return trimmed.length >= min ? true : message;
+    };
+  },
+
   passwordRequirements: (value: string) => {
     if (!value) {
       return 'Campo obrigatório';

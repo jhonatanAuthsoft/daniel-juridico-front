@@ -25,7 +25,6 @@ import { useResetPassword } from '@/domain/password-recovery';
 
 type NewPasswordFormValues = {
   password: string;
-  confirmPassword: string;
 };
 
 function resolveParam(value: string | string[] | undefined): string {
@@ -45,8 +44,9 @@ function NewPasswordField({ showErrors }: { showErrors: boolean }) {
         placeholder="Digite sua senha"
         secureTextEntry={!passwordVisible}
         autoCapitalize="none"
-        autoComplete="new-password"
-        textContentType="newPassword"
+        autoComplete="off"
+        textContentType="none"
+        importantForAutofill="no"
         validate={FieldValidators.passwordRequirements}
         iconRight={
           <Pressable
@@ -68,36 +68,6 @@ function NewPasswordField({ showErrors }: { showErrors: boolean }) {
   );
 }
 
-function ConfirmPasswordField() {
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const password = useWatch<NewPasswordFormValues, 'password'>({ name: 'password' }) ?? '';
-
-  return (
-    <InputTextField
-      name="confirmPassword"
-      label="Confirmar nova senha"
-      placeholder="Digite a senha novamente"
-      secureTextEntry={!passwordVisible}
-      autoCapitalize="none"
-      autoComplete="new-password"
-      textContentType="newPassword"
-      validate={[
-        FieldValidators.required('Confirme a senha'),
-        FieldValidators.matches(password, 'A confirmação de senha não confere'),
-      ]}
-      iconRight={
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={passwordVisible ? 'Ocultar senha' : 'Mostrar senha'}
-          hitSlop={Spacing.xxs}
-          onPress={() => setPasswordVisible((visible) => !visible)}>
-          <EyeIcon color={BrandColors.neutral.xlight} />
-        </Pressable>
-      }
-    />
-  );
-}
-
 export default function NewPasswordScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ email?: string; code?: string }>();
@@ -108,7 +78,6 @@ export default function NewPasswordScreen() {
   const form = useForm<NewPasswordFormValues>({
     defaultValues: {
       password: '',
-      confirmPassword: '',
     },
     mode: 'onChange',
   });
@@ -130,17 +99,11 @@ export default function NewPasswordScreen() {
       return;
     }
 
-    if (values.password !== values.confirmPassword) {
-      Alert.alert('Nova senha', 'A confirmação de senha não confere.');
-      return;
-    }
-
     try {
       const result = await resetPassword.mutateAsync({
         email,
         code,
         newPassword: values.password,
-        confirmPassword: values.confirmPassword,
       });
 
       Alert.alert(
@@ -185,8 +148,6 @@ export default function NewPasswordScreen() {
 
             <Form {...form}>
               <NewPasswordField showErrors={showErrors} />
-              <Separator size="sm" />
-              <ConfirmPasswordField />
             </Form>
 
             <Separator size="xxl" />

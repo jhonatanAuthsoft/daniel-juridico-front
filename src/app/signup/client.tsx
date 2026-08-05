@@ -94,7 +94,13 @@ export default function ClientSignupScreen() {
 
       <Separator size="xl" />
 
-      <Button variant="cta" disabled={isSubmitting} isLoading={isSubmitting} onPress={() => void goNext()}>
+      <Button
+        variant="cta"
+        disabled={isSubmitting}
+        isLoading={isSubmitting}
+        onPress={() => {
+          void goNext();
+        }}>
         {isLastStep ? 'Começar' : 'Continuar'}
       </Button>
 
