@@ -2,6 +2,7 @@ import {
   MOCK_CLIENT_SOLICITATIONS,
   SOLICITATION_STATUS_META,
   type SolicitationStatus,
+  type SolicitationWorkflowStatus,
 } from '@/components/client-solicitation-card';
 import type { ClientConnectionStatusValue } from '@/components/client-connection-status';
 
@@ -33,6 +34,8 @@ export type ClientSolicitationDetails = {
   id: string;
   title: string;
   status: SolicitationStatus;
+  /** API workflow status (`ABERTA`, `CANCELADA`, …). */
+  workflowStatus: SolicitationWorkflowStatus;
   practice: string;
   specialties: string[];
   subspecialties: string[];
@@ -41,6 +44,7 @@ export type ClientSolicitationDetails = {
   billingMethod: string;
   description: string;
   compatibleLawyers: CompatibleLawyer[];
+  canCancel: boolean;
 };
 
 export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
@@ -155,6 +159,7 @@ export const MOCK_CLIENT_SOLICITATION_DETAILS: ClientSolicitationDetails[] =
     id: solicitation.id,
     title: solicitation.title,
     status: solicitation.status,
+    workflowStatus: 'ABERTA',
     practice: 'Pautista',
     specialties: ['Direito Civil', 'Direito Penal', 'Direito da Família'],
     subspecialties: ['Contratos', 'Responsabilidade Civil', 'Cobrança e Execução'],
@@ -163,6 +168,7 @@ export const MOCK_CLIENT_SOLICITATION_DETAILS: ClientSolicitationDetails[] =
     billingMethod: 'A combinar',
     description: solicitation.description,
     compatibleLawyers: MOCK_COMPATIBLE_LAWYERS.slice(0, solicitation.lawyerCount),
+    canCancel: true,
   }));
 
 export function getSolicitationStatusLabel(status: SolicitationStatus): string {

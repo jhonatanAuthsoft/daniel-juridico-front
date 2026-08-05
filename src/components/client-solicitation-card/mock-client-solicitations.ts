@@ -4,6 +4,7 @@ export const MOCK_CLIENT_SOLICITATIONS: ClientSolicitationCardData[] = [
   {
     id: 'sol-1',
     status: 'emergencia',
+    workflowStatus: 'MATCH_REALIZADO',
     title: 'Pensão Alimentícia',
     description: 'Meu ex não paga a pensão do meu filho há meses e preciso de ajuda urgente.',
     date: '25/06/2026',
@@ -13,6 +14,7 @@ export const MOCK_CLIENT_SOLICITATIONS: ClientSolicitationCardData[] = [
   {
     id: 'sol-2',
     status: 'urgente',
+    workflowStatus: 'ABERTA',
     title: 'Pensão Alimentícia',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do.',
     date: '25/06/2026',
@@ -22,6 +24,7 @@ export const MOCK_CLIENT_SOLICITATIONS: ClientSolicitationCardData[] = [
   {
     id: 'sol-3',
     status: 'medio',
+    workflowStatus: 'ABERTA',
     title: 'Divórcio Consensual',
     description: 'Preciso de orientação para iniciar um processo de divórcio amigável.',
     date: '18/06/2026',
@@ -31,6 +34,7 @@ export const MOCK_CLIENT_SOLICITATIONS: ClientSolicitationCardData[] = [
   {
     id: 'sol-4',
     status: 'urgente',
+    workflowStatus: 'MATCH_REALIZADO',
     title: 'Inventário',
     description: 'Família em disputa sobre partilha de bens após falecimento.',
     date: '10/06/2026',
@@ -40,6 +44,7 @@ export const MOCK_CLIENT_SOLICITATIONS: ClientSolicitationCardData[] = [
   {
     id: 'sol-5',
     status: 'emergencia',
+    workflowStatus: 'ABERTA',
     title: 'Medida Protetiva',
     description: 'Situação de risco e necessidade de orientação jurídica imediata.',
     date: '02/06/2026',
@@ -49,6 +54,7 @@ export const MOCK_CLIENT_SOLICITATIONS: ClientSolicitationCardData[] = [
   {
     id: 'sol-6',
     status: 'tenho_tempo',
+    workflowStatus: 'ABERTA',
     title: 'Consultoria Contratual',
     description: 'Quero revisar um contrato de prestação de serviços sem urgência.',
     date: '28/05/2026',

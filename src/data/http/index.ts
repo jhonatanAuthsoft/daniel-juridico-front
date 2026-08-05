@@ -9,6 +9,7 @@ export { apiUrl, getApiBaseUrl } from './api-config';
 export {
   resolveApiErrorMessage,
   type ApiErrorItem,
+  type ApiPagination,
   type ApiResponse,
 } from './api-response';
 export { assertApiSuccess, getErrorMessage } from './assert-api-success';

@@ -2,22 +2,17 @@ import { Image } from 'expo-image';
 import { SymbolView } from 'expo-symbols';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { type ReactNode, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Body1, Body2, Display, Heading1, Link } from '@/atomic/typography';
 import { ClientConnectionStatus } from '@/components/client-connection-status';
+import { ClientFlowScreen } from '@/components/client-flow-screen';
 import {
   ClientLawyerReviews,
   type ClientLawyerReview,
 } from '@/components/client-lawyer-reviews';
 import { MOCK_COMPATIBLE_LAWYERS } from '@/components/client-solicitation-details';
-import {
-  BrandColors,
-  MaxContentWidth,
-  Radius,
-  Spacing,
-} from '@/constants/theme';
+import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
 const MOCK_LAWYER_REVIEWS: ClientLawyerReview[] = [
   {
@@ -90,7 +85,7 @@ export default function ClientLawyerProfileScreen() {
 
   if (!lawyer) {
     return (
-      <SafeAreaView style={styles.safeArea}>
+      <ClientFlowScreen title="Visualizar perfil" onBack={() => router.back()}>
         <View style={styles.notFound}>
           <Display color={BrandColors.neutral.white}>
             Profissional não encontrado
@@ -102,42 +97,17 @@ export default function ClientLawyerProfileScreen() {
             <Link color={BrandColors.primary.light}>Voltar</Link>
           </Pressable>
         </View>
-      </SafeAreaView>
+      </ClientFlowScreen>
     );
   }
 
   const iconColor = BrandColors.neutral.white;
 
   return (
-    <SafeAreaView
-      edges={['top', 'bottom', 'left', 'right']}
-      style={styles.safeArea}>
-      <ScrollView
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <Pressable
-            accessibilityLabel="Voltar"
-            accessibilityRole="button"
-            hitSlop={Spacing.xxs}
-            onPress={() => router.back()}
-            style={({ pressed }) => pressed && styles.pressed}>
-            <SymbolView
-              name={{
-                ios: 'chevron.left',
-                android: 'chevron_left',
-                web: 'chevron_left',
-              }}
-              size={24}
-              tintColor={BrandColors.neutral.white}
-            />
-          </Pressable>
-          <Body1 color={BrandColors.neutral.white} style={styles.headerTitle}>
-            Visualizar perfil
-          </Body1>
-          <View style={styles.headerSpacer} />
-        </View>
-
+    <ClientFlowScreen
+      title="Visualizar perfil"
+      onBack={() => router.back()}
+      contentContainerStyle={styles.content}>
         <Image
           testID="lawyer-profile-image"
           source={require('@/assets/images/professional-image-placeholder.png')}
@@ -305,37 +275,13 @@ export default function ClientLawyerProfileScreen() {
           }
           total={150}
         />
-      </ScrollView>
-    </SafeAreaView>
+    </ClientFlowScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: BrandColors.neutral.xdark,
-  },
   content: {
-    width: '100%',
-    maxWidth: MaxContentWidth,
-    alignSelf: 'center',
-    gap: Spacing.sm,
-    paddingHorizontal: Spacing.sm,
-    paddingTop: Spacing.xxs,
     paddingBottom: Spacing.lg,
-  },
-  header: {
-    minHeight: 48,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xs,
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  headerSpacer: {
-    width: 24,
   },
   profileImage: {
     width: '100%',
@@ -371,9 +317,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: Spacing.sm,
-    padding: Spacing.sm,
-  },
-  pressed: {
-    opacity: 0.75,
+    paddingVertical: Spacing.xl,
   },
 });

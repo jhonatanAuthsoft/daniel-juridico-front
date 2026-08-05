@@ -4,9 +4,18 @@ export type SolicitationStatus = 'emergencia' | 'urgente' | 'medio' | 'tenho_tem
 
 export type SolicitationFooterVariant = 'accepted' | 'compatible';
 
+/** Workflow status from `GET /solicitacoes` (`StatusSolicitacaoEnum`). */
+export type SolicitationWorkflowStatus =
+  | 'ABERTA'
+  | 'AGUARDANDO_MATCHING'
+  | 'MATCH_REALIZADO'
+  | 'CANCELADA'
+  | 'ENCERRADA';
+
 export type ClientSolicitationCardData = {
   id: string;
   status: SolicitationStatus;
+  workflowStatus: SolicitationWorkflowStatus;
   title: string;
   description: string;
   date: string;

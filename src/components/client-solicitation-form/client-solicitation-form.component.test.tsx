@@ -10,6 +10,13 @@ jest.mock('@/domain/address', () => ({
   useCitiesByUf: () => ({ data: [], isFetching: false }),
 }));
 
+jest.mock('@/domain/solicitation', () => ({
+  useCreateSolicitation: () => ({
+    mutateAsync: jest.fn(),
+    isPending: false,
+  }),
+}));
+
 describe('ClientSolicitationForm', () => {
   it('expands and collapses the advanced filters', () => {
     const screen = render(

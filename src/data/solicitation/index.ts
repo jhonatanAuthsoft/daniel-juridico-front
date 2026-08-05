@@ -1,0 +1,47 @@
+export type {
+  CreateSolicitationParams,
+  CreateSolicitationResult,
+  CreateSolicitationWireRequest,
+  CreateSolicitationWireResponse,
+  FormaCobrancaSolicitacaoApi,
+  ListSolicitationsParams,
+  ListSolicitationsResult,
+  ModalidadeSolicitacaoApi,
+  NivelLocalidadeApi,
+  SolicitationDetailResult,
+  SolicitationMatchResult,
+  SolicitationStatusCounts,
+  SolicitacaoDetalheWire,
+  SolicitacaoListagemItemWire,
+  SolicitacaoListagemWire,
+  SolicitacaoMatchWire,
+  StatusSolicitacaoApi,
+  UrgenciaSolicitacaoApi,
+} from './solicitation.types';
+
+export {
+  canCancelSolicitationStatus,
+  emptySolicitationStatusCounts,
+  formatSolicitationDate,
+  mapContagemPorStatus,
+  mapCreateSolicitationParamsToWire,
+  mapCreateSolicitationWireToResult,
+  mapDetalheWireToResult,
+  mapFormaCobrancaLabel,
+  mapListagemWireToResult,
+  mapListItemWireToCard,
+  mapLocalidadeLabel,
+  mapMatchResultToCompatibleLawyer,
+  mapMatchWireToResult,
+  mapModalidadeLabel,
+  mapUrgenciaToStatus,
+  normalizeListagemPayload,
+} from './solicitation.mapper';
+
+export {
+  cancelClientSolicitation,
+  createSolicitation,
+  getClientSolicitation,
+  listClientSolicitations,
+  listSolicitationMatches,
+} from './solicitation.api';

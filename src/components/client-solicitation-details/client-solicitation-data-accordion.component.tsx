@@ -58,28 +58,40 @@ export function ClientSolicitationDataAccordion({
         <DetailItem label="Atuação" value={solicitation.practice} />
         <DetailItem
           label="Especialidade"
-          value={solicitation.specialties.join(', ')}
+          value={
+            solicitation.specialties.length > 0
+              ? solicitation.specialties.join(', ')
+              : 'Não informado'
+          }
         />
 
         <View style={styles.detailItem}>
           <Heading2 color={BrandColors.neutral.white}>Subespecialidade</Heading2>
-          <View style={styles.tags}>
-            {solicitation.subspecialties.map((subspecialty) => (
-              <View key={subspecialty} style={styles.tag}>
-                <Body2 color={BrandColors.neutral.white}>{subspecialty}</Body2>
-              </View>
-            ))}
-          </View>
+          {solicitation.subspecialties.length > 0 ? (
+            <View style={styles.tags}>
+              {solicitation.subspecialties.map((subspecialty) => (
+                <View key={subspecialty} style={styles.tag}>
+                  <Body2 color={BrandColors.neutral.white}>{subspecialty}</Body2>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Body1 color={BrandColors.primary.light}>Não informado</Body1>
+          )}
         </View>
 
         <DetailItem
           label="Tempo de experiência"
-          value={`${solicitation.minimumExperienceMonths} meses`}
+          value={
+            solicitation.minimumExperienceMonths > 0
+              ? `${solicitation.minimumExperienceMonths} meses`
+              : 'Não informado'
+          }
         />
         <DetailItem label="Localização" value={solicitation.location} />
         <DetailItem
           label="Formas de Cobrança"
-          value={solicitation.billingMethod}
+          value={solicitation.billingMethod || 'Não informado'}
         />
       </View>
     </ClientDetailAccordionShell>

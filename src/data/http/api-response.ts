@@ -4,11 +4,19 @@ export type ApiErrorItem = {
   detail?: string;
 };
 
+export type ApiPagination = {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+};
+
 export type ApiResponse<T> = {
   success: boolean;
   timestamp?: string;
   message?: string;
   data: T;
+  pagination?: ApiPagination;
   errors?: ApiErrorItem[];
 };
 

@@ -5,5 +5,6 @@ export {
   type ClientSolicitationCardData,
   type SolicitationFooterVariant,
   type SolicitationStatus,
+  type SolicitationWorkflowStatus,
 } from './client-solicitation-card.types';
 export { MOCK_CLIENT_SOLICITATIONS } from './mock-client-solicitations';

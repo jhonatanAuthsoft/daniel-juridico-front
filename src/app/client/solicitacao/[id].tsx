@@ -1,74 +1,107 @@
 import { SymbolView } from 'expo-symbols';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { Body1, Display, Link } from '@/atomic/typography';
+import { Body2, Display, Link } from '@/atomic/typography';
+import { ClientFlowScreen } from '@/components/client-flow-screen';
 import {
   CancelClientSolicitationModal,
   ClientCompatibleLawyersList,
   ClientSolicitationDataAccordion,
   ClientSolicitationDescriptionAccordion,
-  MOCK_CLIENT_SOLICITATION_DETAILS,
 } from '@/components/client-solicitation-details';
+import { BrandColors, Spacing } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
 import {
-  BrandColors,
-  MaxContentWidth,
-  Spacing,
-} from '@/constants/theme';
+  useCancelClientSolicitation,
+  useClientSolicitationDetails,
+} from '@/domain/solicitation';
 
 export default function ClientSolicitationDetailsScreen() {
   const router = useRouter();
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
   const { id } = useLocalSearchParams<{ id: string }>();
   const solicitationId = Array.isArray(id) ? id[0] : id;
-  const solicitation = MOCK_CLIENT_SOLICITATION_DETAILS.find(
-    (item) => item.id === solicitationId,
-  );
 
-  if (!solicitation) {
+  const {
+    solicitation,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useClientSolicitationDetails(solicitationId);
+
+  const cancelSolicitation = useCancelClientSolicitation();
+
+  const handleConfirmCancel = async () => {
+    if (!solicitationId) {
+      return;
+    }
+
+    try {
+      await cancelSolicitation.mutateAsync(solicitationId);
+      setCancelModalVisible(false);
+      router.back();
+    } catch (cancelError) {
+      Alert.alert(
+        'Cancelar solicitação',
+        getErrorMessage(
+          cancelError,
+          'Não foi possível cancelar a solicitação.',
+        ),
+      );
+    }
+  };
+
+  if (isLoading) {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.notFound}>
-          <Display color={BrandColors.neutral.white}>
-            Solicitação não encontrada
-          </Display>
-          <Pressable
-            accessibilityLabel="Voltar"
-            accessibilityRole="button"
-            onPress={() => router.back()}>
-            <Link color={BrandColors.primary.light}>Voltar</Link>
-          </Pressable>
+          <ActivityIndicator color={BrandColors.primary.light} size="large" />
         </View>
       </SafeAreaView>
     );
   }
 
-  return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
-      <ScrollView
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
+  if (isError || !solicitation) {
+    return (
+      <ClientFlowScreen title="Visualizar Solicitação" onBack={() => router.back()}>
+        <View style={styles.notFound}>
+          <Display color={BrandColors.neutral.white}>
+            Solicitação não encontrada
+          </Display>
+          {error ? (
+            <Body2 color={BrandColors.neutral.light} style={styles.errorMessage}>
+              {getErrorMessage(error, 'Não foi possível carregar a solicitação.')}
+            </Body2>
+          ) : null}
           <Pressable
-            accessibilityLabel="Voltar"
+            accessibilityLabel="Tentar novamente"
             accessibilityRole="button"
-            hitSlop={Spacing.xxs}
-            onPress={() => router.back()}
-            style={({ pressed }) => pressed && styles.pressed}>
-            <SymbolView
-              name={{ ios: 'chevron.left', android: 'chevron_left', web: 'chevron_left' }}
-              size={24}
-              tintColor={BrandColors.neutral.white}
-            />
+            onPress={() => {
+              void refetch();
+            }}>
+            <Link color={BrandColors.primary.light}>Tentar novamente</Link>
           </Pressable>
-          <Body1 color={BrandColors.neutral.white} style={styles.headerTitle}>
-            Visualizar Solicitação
-          </Body1>
-          <View style={styles.headerSpacer} />
         </View>
+      </ClientFlowScreen>
+    );
+  }
 
+  return (
+    <>
+      <ClientFlowScreen
+        title="Visualizar Solicitação"
+        onBack={() => router.back()}
+        contentContainerStyle={styles.content}>
         <ClientSolicitationDataAccordion solicitation={solicitation} />
         <ClientSolicitationDescriptionAccordion
           description={solicitation.description}
@@ -80,33 +113,46 @@ export default function ClientSolicitationDetailsScreen() {
           }
         />
 
-        <Pressable
-          accessibilityLabel="Cancelar solicitação"
-          accessibilityRole="button"
-          onPress={() => setCancelModalVisible(true)}
-          style={({ pressed }) => [
-            styles.cancelButton,
-            pressed && styles.pressed,
-          ]}>
-          <SymbolView
-            name={{ ios: 'trash', android: 'delete', web: 'delete' }}
-            size={18}
-            tintColor={BrandColors.feedback.error.medium}
-          />
-          <Link color={BrandColors.feedback.error.medium}>
-            Cancelar solicitação
-          </Link>
-        </Pressable>
-      </ScrollView>
+        {solicitation.canCancel ? (
+          <Pressable
+            accessibilityLabel="Cancelar solicitação"
+            accessibilityRole="button"
+            disabled={cancelSolicitation.isPending}
+            onPress={() => setCancelModalVisible(true)}
+            style={({ pressed }) => [
+              styles.cancelButton,
+              pressed && styles.pressed,
+              cancelSolicitation.isPending && styles.cancelDisabled,
+            ]}>
+            {cancelSolicitation.isPending ? (
+              <ActivityIndicator color={BrandColors.feedback.error.medium} />
+            ) : (
+              <>
+                <SymbolView
+                  name={{ ios: 'trash', android: 'delete', web: 'delete' }}
+                  size={18}
+                  tintColor={BrandColors.feedback.error.medium}
+                />
+                <Link color={BrandColors.feedback.error.medium}>
+                  Cancelar solicitação
+                </Link>
+              </>
+            )}
+          </Pressable>
+        ) : null}
+      </ClientFlowScreen>
       <CancelClientSolicitationModal
-        onClose={() => setCancelModalVisible(false)}
+        onClose={() => {
+          if (!cancelSolicitation.isPending) {
+            setCancelModalVisible(false);
+          }
+        }}
         onConfirm={() => {
-          setCancelModalVisible(false);
-          router.back();
+          void handleConfirmCancel();
         }}
         visible={cancelModalVisible}
       />
-    </SafeAreaView>
+    </>
   );
 }
 
@@ -116,26 +162,7 @@ const styles = StyleSheet.create({
     backgroundColor: BrandColors.neutral.xdark,
   },
   content: {
-    width: '100%',
-    maxWidth: MaxContentWidth,
-    alignSelf: 'center',
-    gap: Spacing.sm,
-    paddingHorizontal: Spacing.sm,
-    paddingTop: Spacing.sm,
     paddingBottom: Spacing.lg,
-  },
-  header: {
-    minHeight: 48,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xs,
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  headerSpacer: {
-    width: 24,
   },
   cancelButton: {
     minHeight: 48,
@@ -145,12 +172,18 @@ const styles = StyleSheet.create({
     gap: Spacing.xxs,
     marginTop: Spacing.sm,
   },
+  cancelDisabled: {
+    opacity: 0.6,
+  },
   notFound: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     gap: Spacing.sm,
-    padding: Spacing.sm,
+    paddingVertical: Spacing.xl,
+  },
+  errorMessage: {
+    textAlign: 'center',
   },
   pressed: {
     opacity: 0.75,

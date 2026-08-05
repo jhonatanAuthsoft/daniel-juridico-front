@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Platform,
   Pressable,
@@ -11,17 +12,14 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { InboxEmptyIcon } from '@/assets/icon/inbox-empty';
 import { SearchIcon } from '@/assets/icon/search';
-import { SearchListIcon } from '@/assets/icon/search-list';
 import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
 import { Separator } from '@/atomic/separator';
 import { Body2, Display, Heading1, Link } from '@/atomic/typography';
+import { ClientEmptyState } from '@/components/client-empty-state';
 import {
   ClientSolicitationCard,
-  MOCK_CLIENT_SOLICITATIONS,
-  type ClientSolicitationCardData,
 } from '@/components/client-solicitation-card';
 import {
   BrandColors,
@@ -32,6 +30,12 @@ import {
   Radius,
   Spacing,
 } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
+import {
+  emptySolicitationStatusCounts,
+  type StatusSolicitacaoApi,
+} from '@/data/solicitation';
+import { useClientSolicitations } from '@/domain/solicitation';
 
 /** Tab bar content height above the home indicator (icons + labels + padding). */
 const TAB_BAR_CONTENT_HEIGHT = 62;
@@ -49,63 +53,112 @@ type FilterChip = {
   count?: number;
 };
 
-const FILTER_CHIPS: FilterChip[] = [
-  { id: 'all', label: 'Todas' },
-  { id: 'pending', label: 'Pendentes', count: 8 },
-  { id: 'accepted', label: 'Aceitas', count: 8 },
-  { id: 'canceled', label: 'Canceladas', count: 2 },
-];
-
-function matchesFilter(item: ClientSolicitationCardData, filter: FilterId): boolean {
-  if (filter === 'all') {
-    return true;
-  }
-  if (filter === 'accepted') {
-    return item.footerVariant === 'accepted';
-  }
-  if (filter === 'pending') {
-    return item.footerVariant === 'compatible';
-  }
-  return false;
-}
-
-type ClientHomeScreenProps = {
-  solicitations?: ClientSolicitationCardData[];
+const FILTER_TO_API_STATUS: Record<Exclude<FilterId, 'all'>, StatusSolicitacaoApi> = {
+  pending: 'ABERTA',
+  accepted: 'MATCH_REALIZADO',
+  canceled: 'CANCELADA',
 };
 
-export default function ClientHomeScreen({
-  solicitations = MOCK_CLIENT_SOLICITATIONS,
-}: ClientHomeScreenProps) {
+function apiStatusForFilter(filter: FilterId): StatusSolicitacaoApi | undefined {
+  if (filter === 'all') {
+    return undefined;
+  }
+  return FILTER_TO_API_STATUS[filter];
+}
+
+export default function ClientHomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [activeFilter, setActiveFilter] = useState<FilterId>('all');
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isPullRefreshing, setIsPullRefreshing] = useState(false);
+
+  const listParams = useMemo(
+    () => ({
+      limit: 50,
+      offset: 0,
+      status: apiStatusForFilter(activeFilter),
+    }),
+    [activeFilter],
+  );
+
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    isFetched,
+  } = useClientSolicitations(listParams);
+
+  const handlePullRefresh = async () => {
+    setIsPullRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setIsPullRefreshing(false);
+    }
+  };
+
+  const solicitations = data?.items ?? [];
+  const countsByStatus = data?.countsByStatus ?? emptySolicitationStatusCounts();
+  const totalByStatus = Object.values(countsByStatus).reduce(
+    (sum, count) => sum + count,
+    0,
+  );
+  /** True only after a successful fetch with zero solicitations overall. */
+  const hasNoSolicitationsAtAll =
+    isFetched &&
+    !isLoading &&
+    !isError &&
+    solicitations.length === 0 &&
+    totalByStatus === 0 &&
+    activeFilter === 'all' &&
+    !searchQuery.trim();
+
+  const filterChips = useMemo((): FilterChip[] => {
+    return [
+      { id: 'all', label: 'Todas' },
+      {
+        id: 'pending',
+        label: 'Pendentes',
+        count: countsByStatus.ABERTA,
+      },
+      {
+        id: 'accepted',
+        label: 'Aceitas',
+        count: countsByStatus.MATCH_REALIZADO,
+      },
+      {
+        id: 'canceled',
+        label: 'Canceladas',
+        count: countsByStatus.CANCELADA,
+      },
+    ];
+  }, [countsByStatus]);
 
   const tabBarTotalHeight = TAB_BAR_CONTENT_HEIGHT + insets.bottom;
   const fabBottom = tabBarTotalHeight + FAB_GAP_ABOVE_TAB;
 
   const filteredData = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
+    if (!query) {
+      return solicitations;
+    }
 
-    return solicitations.filter((item) => {
-      if (!matchesFilter(item, activeFilter)) {
-        return false;
-      }
-      if (!query) {
-        return true;
-      }
-      return (
+    return solicitations.filter(
+      (item) =>
         item.title.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query)
-      );
-    });
-  }, [activeFilter, searchQuery, solicitations]);
-  const hasSolicitations = solicitations.length > 0;
+        item.description.toLowerCase().includes(query),
+    );
+  }, [searchQuery, solicitations]);
+  const hasListItems = filteredData.length > 0;
   const hasSearchQuery = searchQuery.trim().length > 0;
-  const listPaddingBottom = hasSolicitations
-    ? fabBottom + FAB_HEIGHT + LIST_GAP_ABOVE_FAB
-    : tabBarTotalHeight + Spacing.sm;
+  const listPaddingBottom =
+    hasListItems || !hasNoSolicitationsAtAll
+      ? fabBottom + FAB_HEIGHT + LIST_GAP_ABOVE_FAB
+      : tabBarTotalHeight + Spacing.sm;
 
   return (
     <View style={styles.root}>
@@ -167,7 +220,7 @@ export default function ClientHomeScreen({
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.filtersRow}>
-                {FILTER_CHIPS.map((chip) => {
+                {filterChips.map((chip) => {
                   const selected = activeFilter === chip.id;
                   return (
                     <Pressable
@@ -208,71 +261,70 @@ export default function ClientHomeScreen({
           )}
         </View>
 
-        <FlatList
-          data={filteredData}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={[styles.listContent, { paddingBottom: listPaddingBottom }]}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <Separator size="sm" />}
-          ListEmptyComponent={
-            hasSolicitations ? (
-              <View style={styles.emptyState}>
-                <View style={[styles.emptyIcon, styles.noResultsIcon]}>
-                  <SearchListIcon
-                    testID="search-list-icon"
-                    color={BrandColors.neutral.xdark}
-                    width={36}
-                    height={36}
-                  />
-                </View>
-                <Heading1 color={BrandColors.neutral.white} style={styles.emptyTitle}>
-                  Sem resultados compatíveis
-                </Heading1>
-                <Body2 color={BrandColors.neutral.white} style={styles.emptyDescription}>
-                  {hasSearchQuery
-                    ? 'Não encontramos solicitações que correspondam à sua busca.'
-                    : 'Não encontramos solicitações que correspondam aos filtros selecionados.'}
-                </Body2>
-              </View>
-            ) : (
-              <View style={styles.emptyState}>
-                <View style={styles.emptyIcon}>
-                  <InboxEmptyIcon
-                    testID="inbox-empty-icon"
-                    color={BrandColors.neutral.xdark}
-                    width={36}
-                    height={36}
-                  />
-                </View>
-                <Heading1 color={BrandColors.neutral.white} style={styles.emptyTitle}>
-                  Nenhuma solicitação encontrada
-                </Heading1>
-                <Body2 color={BrandColors.neutral.white} style={styles.emptyDescription}>
-                  Quando houver novas solicitações, elas aparecerão aqui para você acompanhar.
-                </Body2>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel="Nova solicitação"
-                  onPress={() => router.push('/client/nova-solicitacao')}
-                  style={({ pressed }) => [
-                    styles.emptyCta,
-                    pressed && styles.fabPressed,
-                  ]}>
-                  <Link color={BrandColors.neutral.xdark}>+ Nova solicitação</Link>
-                </Pressable>
-              </View>
-            )
-          }
-          renderItem={({ item }) => (
-            <ClientSolicitationCard
-              {...item}
-              onPress={() => router.push(`/client/solicitacao/${item.id}`)}
-            />
-          )}
-        />
+        {isLoading && !hasListItems ? (
+          <View style={styles.centeredState}>
+            <ActivityIndicator color={BrandColors.primary.light} size="large" />
+          </View>
+        ) : isError && !hasListItems ? (
+          <View style={styles.centeredState}>
+            <Heading1 color={BrandColors.neutral.white} style={styles.emptyTitle}>
+              Não foi possível carregar
+            </Heading1>
+            <Body2 color={BrandColors.neutral.white} style={styles.emptyDescription}>
+              {getErrorMessage(error, 'Tente novamente em instantes.')}
+            </Body2>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Tentar novamente"
+              onPress={() => {
+                void refetch();
+              }}
+              style={({ pressed }) => [
+                styles.emptyCta,
+                pressed && styles.fabPressed,
+              ]}>
+              <Link color={BrandColors.neutral.xdark}>Tentar novamente</Link>
+            </Pressable>
+          </View>
+        ) : (
+          <FlatList
+            data={filteredData}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={[styles.listContent, { paddingBottom: listPaddingBottom }]}
+            showsVerticalScrollIndicator={false}
+            refreshing={isPullRefreshing}
+            onRefresh={() => {
+              void handlePullRefresh();
+            }}
+            ItemSeparatorComponent={() => <Separator size="sm" />}
+            ListEmptyComponent={
+              hasNoSolicitationsAtAll ? (
+                <ClientEmptyState
+                  variant="no-data"
+                  onCreatePress={() => router.push('/client/nova-solicitacao')}
+                />
+              ) : (
+                <ClientEmptyState
+                  variant="no-results"
+                  description={
+                    hasSearchQuery
+                      ? 'Não encontramos solicitações que correspondam à sua busca.'
+                      : 'Não encontramos solicitações que correspondam aos filtros selecionados.'
+                  }
+                />
+              )
+            }
+            renderItem={({ item }) => (
+              <ClientSolicitationCard
+                {...item}
+                onPress={() => router.push(`/client/solicitacao/${item.id}`)}
+              />
+            )}
+          />
+        )}
       </View>
 
-      {hasSolicitations ? (
+      {!hasNoSolicitationsAtAll ? (
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Nova solicitação"
@@ -388,23 +440,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexGrow: 1,
   },
-  emptyState: {
+  centeredState: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: Spacing.xl,
-  },
-  emptyIcon: {
-    width: 78,
-    height: 78,
-    borderRadius: Radius.large,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: BrandColors.neutral.xlight,
-    marginBottom: Spacing.sm,
-  },
-  noResultsIcon: {
-    backgroundColor: BrandColors.primary.light,
+    paddingHorizontal: Spacing.sm,
+    gap: Spacing.sm,
   },
   emptyTitle: {
     textAlign: 'center',
