@@ -88,11 +88,14 @@ function mapOab(
     .map((key) => key.trim())
     .filter((key) => key.length > 0);
 
+  // OAB wallet photos are a pair (frente + verso): send both or omit.
+  const completePair = fotosUrls.length >= 2 ? fotosUrls.slice(0, 2) : undefined;
+
   return {
     numero: numero.trim(),
     uf: uf.trim().toUpperCase(),
     dataExpedicao: toIsoDate(issueDate) ?? '',
-    fotosUrls: fotosUrls.length > 0 ? fotosUrls : undefined,
+    fotosUrls: completePair,
   };
 }
 

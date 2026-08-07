@@ -28,6 +28,9 @@ export type {
 } from './login.types';
 export { mapLoginParamsToWire, mapLoginWireToResult } from './login.mapper';
 export { login } from './login.api';
+export type { MeResult, MeWireResponse } from './me.types';
+export { mapMeWireToResult } from './me.mapper';
+export { getMe } from './me.api';
 export type {
   RefreshTokensParams,
   RefreshTokensResult,

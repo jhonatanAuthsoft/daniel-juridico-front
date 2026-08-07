@@ -32,7 +32,7 @@ function createEmptySupplementalOab(): SupplementalOabEntry {
 }
 
 export function StepOabRegistration() {
-  const { control } = useFormContext<LawyerSignupFormValues>();
+  const { control, trigger } = useFormContext<LawyerSignupFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'supplementalOabs',
@@ -75,7 +75,21 @@ export function StepOabRegistration() {
     setEditingIndex(null);
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
+    if (editingIndex == null) {
+      return;
+    }
+
+    const valid = await trigger([
+      `supplementalOabs.${editingIndex}.number`,
+      `supplementalOabs.${editingIndex}.uf`,
+      `supplementalOabs.${editingIndex}.issueDate`,
+      `supplementalOabs.${editingIndex}.photoUris`,
+    ]);
+    if (!valid) {
+      return;
+    }
+
     setIsCreating(false);
     setEditingIndex(null);
   };
@@ -184,12 +198,13 @@ export function StepOabRegistration() {
                 uploadFinalidade="OAB"
                 label="Foto da Carteira"
                 emptyTitle="Anexe as fotos de frente e verso"
-                emptyCaption="Formato: .jpeg, .png"
+                emptyCaption="Opcional: envie frente e verso, ou nenhuma"
                 aspect={OAB_PHOTO_ASPECT}
                 maxCount={OAB_PHOTO_MAX}
+                minCount={2}
               />
 
-              <Button variant="primary" onPress={saveEdit}>
+              <Button variant="primary" onPress={() => void saveEdit()}>
                 Salvar
               </Button>
             </View>

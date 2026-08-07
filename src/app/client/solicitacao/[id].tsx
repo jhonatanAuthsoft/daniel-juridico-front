@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -19,7 +19,9 @@ import {
   ClientSolicitationDescriptionAccordion,
 } from '@/components/client-solicitation-details';
 import { BrandColors, Spacing } from '@/constants/theme';
+import type { ConnectionResult } from '@/data/connection';
 import { getErrorMessage } from '@/data/http';
+import { useSolicitationConnections } from '@/domain/connection';
 import {
   useCancelClientSolicitation,
   useClientSolicitationDetails,
@@ -39,7 +41,16 @@ export default function ClientSolicitationDetailsScreen() {
     refetch,
   } = useClientSolicitationDetails(solicitationId);
 
+  const { data: connections = [] } = useSolicitationConnections(solicitationId);
   const cancelSolicitation = useCancelClientSolicitation();
+
+  const connectionsByLawyerId = useMemo(() => {
+    const map: Record<string, ConnectionResult> = {};
+    for (const connection of connections) {
+      map[connection.advogadoId] = connection;
+    }
+    return map;
+  }, [connections]);
 
   const handleConfirmCancel = async () => {
     if (!solicitationId) {
@@ -107,10 +118,14 @@ export default function ClientSolicitationDetailsScreen() {
           description={solicitation.description}
         />
         <ClientCompatibleLawyersList
+          connectionsByLawyerId={connectionsByLawyerId}
           lawyers={solicitation.compatibleLawyers}
           onLawyerPress={(lawyerId) =>
-            router.push(`/client/advogado/${lawyerId}`)
+            router.push(
+              `/client/advogado/${lawyerId}?solicitacaoId=${encodeURIComponent(solicitation.id)}`,
+            )
           }
+          solicitacaoId={solicitation.id}
         />
 
         {solicitation.canCancel ? (

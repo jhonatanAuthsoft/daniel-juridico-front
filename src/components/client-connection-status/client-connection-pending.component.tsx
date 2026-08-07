@@ -10,10 +10,12 @@ import { ClientConnectionStatusCard } from './client-connection-status-card.comp
 
 type ClientConnectionPendingProps = {
   onCancel: () => void;
+  isCancelling?: boolean;
 };
 
 export function ClientConnectionPending({
   onCancel,
+  isCancelling = false,
 }: ClientConnectionPendingProps) {
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
 
@@ -41,19 +43,25 @@ export function ClientConnectionPending({
         <Pressable
           accessibilityLabel="Cancelar conexão"
           accessibilityRole="button"
+          disabled={isCancelling}
           onPress={() => setCancelModalVisible(true)}
           style={({ pressed }) => [
             styles.cancelButton,
-            pressed && styles.pressed,
+            pressed && !isCancelling && styles.pressed,
+            isCancelling && styles.disabled,
           ]}>
           <Link color={BrandColors.feedback.error.medium}>
-            Cancelar conexão
+            {isCancelling ? 'Cancelando…' : 'Cancelar conexão'}
           </Link>
         </Pressable>
       </ClientConnectionStatusCard>
 
       <CancelConnectionModal
-        onClose={() => setCancelModalVisible(false)}
+        onClose={() => {
+          if (!isCancelling) {
+            setCancelModalVisible(false);
+          }
+        }}
         onConfirm={confirmCancellation}
         visible={cancelModalVisible}
       />
@@ -74,5 +82,8 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.75,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });

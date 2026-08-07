@@ -9,8 +9,21 @@ import type { ClientLawyerReview } from './client-lawyer-reviews.component';
 
 type ClientOwnReviewCardProps = {
   review: ClientLawyerReview;
-  onDelete: () => void;
+  onDelete?: () => void;
 };
+
+function formatRatingLabel(rating: number): string {
+  const formatted = Number.isInteger(rating)
+    ? String(rating)
+    : rating.toFixed(1).replace('.', ',');
+  return `${formatted} ${rating === 1 ? 'estrela' : 'estrelas'}`;
+}
+
+function formatStars(rating: number): string {
+  const full = Math.max(0, Math.min(5, Math.floor(rating)));
+  const hasHalf = rating - full >= 0.5 && full < 5;
+  return `${'★'.repeat(full)}${hasHalf ? '½' : ''}`;
+}
 
 export function ClientOwnReviewCard({
   review,
@@ -28,12 +41,12 @@ export function ClientOwnReviewCard({
           <Body1 color={BrandColors.neutral.white}>Você</Body1>
           <View style={styles.ratingRow}>
             <Text
-              accessibilityLabel={`${review.rating} de 5 estrelas`}
+              accessibilityLabel={`${formatRatingLabel(review.rating)}`}
               style={styles.stars}>
-              {'★'.repeat(review.rating)}
+              {formatStars(review.rating)}
             </Text>
             <Body2 color={BrandColors.neutral.white}>
-              {review.rating} estrelas
+              {formatRatingLabel(review.rating)}
             </Body2>
           </View>
         </View>
@@ -41,23 +54,25 @@ export function ClientOwnReviewCard({
 
       <Body1 color={BrandColors.neutral.white}>{review.comment}</Body1>
 
-      <Pressable
-        accessibilityLabel="Excluir avaliação"
-        accessibilityRole="button"
-        onPress={onDelete}
-        style={({ pressed }) => [
-          styles.deleteButton,
-          pressed && styles.pressed,
-        ]}>
-        <SymbolView
-          name={{ ios: 'trash', android: 'delete', web: 'delete' }}
-          size={20}
-          tintColor={BrandColors.feedback.error.medium}
-        />
-        <Link color={BrandColors.feedback.error.medium}>
-          Excluir avaliação
-        </Link>
-      </Pressable>
+      {onDelete ? (
+        <Pressable
+          accessibilityLabel="Excluir avaliação"
+          accessibilityRole="button"
+          onPress={onDelete}
+          style={({ pressed }) => [
+            styles.deleteButton,
+            pressed && styles.pressed,
+          ]}>
+          <SymbolView
+            name={{ ios: 'trash', android: 'delete', web: 'delete' }}
+            size={20}
+            tintColor={BrandColors.feedback.error.medium}
+          />
+          <Link color={BrandColors.feedback.error.medium}>
+            Excluir avaliação
+          </Link>
+        </Pressable>
+      ) : null}
     </View>
   );
 }

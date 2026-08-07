@@ -15,6 +15,8 @@ type ClientConnectionStatusProps = {
   email: string;
   onRequest: () => void;
   onCancel: () => void;
+  isRequesting?: boolean;
+  isCancelling?: boolean;
 };
 
 export function ClientConnectionStatus({
@@ -23,12 +25,21 @@ export function ClientConnectionStatus({
   email,
   onRequest,
   onCancel,
+  isRequesting = false,
+  isCancelling = false,
 }: ClientConnectionStatusProps) {
   switch (status) {
     case 'idle':
-      return <ClientConnectionIdle onRequest={onRequest} />;
+      return (
+        <ClientConnectionIdle isLoading={isRequesting} onRequest={onRequest} />
+      );
     case 'pending':
-      return <ClientConnectionPending onCancel={onCancel} />;
+      return (
+        <ClientConnectionPending
+          isCancelling={isCancelling}
+          onCancel={onCancel}
+        />
+      );
     case 'accepted':
       return <ClientConnectionAccepted email={email} phone={phone} />;
     case 'rejected':

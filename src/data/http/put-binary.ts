@@ -2,6 +2,8 @@ import { HttpError } from '@/data/http';
 
 /**
  * PUT binary body to a URL (e.g. S3 presigned). Does not JSON-encode the body.
+ * Prefer ArrayBuffer over Blob so RN fetch won't inject blob.type as Content-Type
+ * (that breaks S3 SignatureDoesNotMatch / 403).
  */
 export async function putBinary(
   url: string,

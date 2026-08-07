@@ -1,60 +1,42 @@
 import { Image } from 'expo-image';
 import { SymbolView } from 'expo-symbols';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { type ReactNode, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { type ReactNode } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { Body1, Body2, Display, Heading1, Link } from '@/atomic/typography';
 import { ClientConnectionStatus } from '@/components/client-connection-status';
 import { ClientFlowScreen } from '@/components/client-flow-screen';
-import {
-  ClientLawyerReviews,
-  type ClientLawyerReview,
-} from '@/components/client-lawyer-reviews';
-import { MOCK_COMPATIBLE_LAWYERS } from '@/components/client-solicitation-details';
+import { ClientLawyerReviews } from '@/components/client-lawyer-reviews';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
+import {
+  formatPublicLawyerEducation,
+  formatPublicLawyerModalities,
+  formatPublicLawyerOabLabel,
+  formatPublicLawyerRegistration,
+  mapLawyerReviewsToClientReviews,
+  type PublicLawyerProfile,
+} from '@/data/lawyer';
+import { useObjectReadUrl } from '@/domain/arquivo';
+import {
+  useCancelConnection,
+  useCreateConnection,
+  useLawyerConnectionStatus,
+} from '@/domain/connection';
+import {
+  useDeleteLawyerReview,
+  useLawyerReviews,
+  usePublicLawyerProfile,
+} from '@/domain/lawyer';
 
-const MOCK_LAWYER_REVIEWS: ClientLawyerReview[] = [
-  {
-    id: 'review-1',
-    reviewerName: 'Joana Ribeiro',
-    rating: 4,
-    comment: 'Profissional excepcional, muito feliz em ser atendida por ela',
-  },
-  {
-    id: 'review-2',
-    reviewerName: 'Carla Andrade',
-    rating: 5,
-    comment: 'Atendimento claro, cuidadoso e muito profissional.',
-  },
-  {
-    id: 'review-3',
-    reviewerName: 'Fernanda Lima',
-    rating: 4,
-    comment: 'Recebi todo o suporte necessário durante o meu caso.',
-  },
-  {
-    id: 'review-4',
-    reviewerName: 'Ana Souza',
-    rating: 5,
-    comment: 'Excelente profissional, recomendo pela atenção e agilidade.',
-  },
-  {
-    id: 'review-5',
-    reviewerName: 'Beatriz Alves',
-    rating: 5,
-    comment: 'Explicou cada etapa com transparência e muita segurança.',
-  },
-];
-
-const MOCK_OWN_LAWYER_REVIEW: ClientLawyerReview = {
-  id: 'review-own',
-  reviewerName: 'Você',
-  rating: 4,
-  comment:
-    'Excelente atendimento. Recebi orientações claras e todo o suporte necessário durante a conexão.',
-  isOwn: true,
-};
+const PLACEHOLDER_IMAGE = require('@/assets/images/professional-image-placeholder.png');
 
 type ProfileFieldProps = {
   icon: ReactNode;
@@ -74,22 +56,95 @@ function ProfileField({ icon, label, children }: ProfileFieldProps) {
   );
 }
 
+function formatIdentitySubtitle(profile: PublicLawyerProfile): string {
+  const modality = formatPublicLawyerModalities(profile);
+  const registration = formatPublicLawyerRegistration(profile);
+  return [modality, registration].filter(Boolean).join(' - ');
+}
+
+function formatSupplementalOabs(profile: PublicLawyerProfile): string {
+  if (profile.supplementalOabs.length === 0) {
+    return '—';
+  }
+  return profile.supplementalOabs
+    .map((oab) => formatPublicLawyerOabLabel(oab))
+    .filter(Boolean)
+    .join(', ');
+}
+
+function LawyerProfilePhoto({ photoKey }: { photoKey: string | null }) {
+  const { data: read } = useObjectReadUrl(photoKey);
+  const uri = read?.readUrl?.trim();
+
+  return (
+    <Image
+      testID="lawyer-profile-image"
+      source={uri ? { uri } : PLACEHOLDER_IMAGE}
+      contentFit="cover"
+      style={styles.profileImage}
+    />
+  );
+}
+
 export default function ClientLawyerProfileScreen() {
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, solicitacaoId: solicitacaoIdParam } = useLocalSearchParams<{
+    id: string;
+    solicitacaoId?: string;
+  }>();
   const lawyerId = Array.isArray(id) ? id[0] : id;
-  const lawyer = MOCK_COMPATIBLE_LAWYERS.find((item) => item.id === lawyerId);
-  const [connectionStatus, setConnectionStatus] = useState(
-    lawyer?.connectionStatus ?? 'idle',
-  );
+  const solicitacaoId = Array.isArray(solicitacaoIdParam)
+    ? solicitacaoIdParam[0]
+    : solicitacaoIdParam;
 
-  if (!lawyer) {
+  const {
+    data: profile,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = usePublicLawyerProfile(lawyerId);
+
+  const { data: reviewsData } = useLawyerReviews(lawyerId);
+  const deleteReview = useDeleteLawyerReview();
+
+  const { data: connection } = useLawyerConnectionStatus(
+    lawyerId,
+    solicitacaoId,
+  );
+  const createConnection = useCreateConnection();
+  const cancelConnection = useCancelConnection();
+
+  if (isLoading) {
+    return (
+      <ClientFlowScreen title="Visualizar perfil" onBack={() => router.back()}>
+        <View style={styles.notFound}>
+          <ActivityIndicator color={BrandColors.primary.light} size="large" />
+        </View>
+      </ClientFlowScreen>
+    );
+  }
+
+  if (isError || !profile) {
     return (
       <ClientFlowScreen title="Visualizar perfil" onBack={() => router.back()}>
         <View style={styles.notFound}>
           <Display color={BrandColors.neutral.white}>
             Profissional não encontrado
           </Display>
+          {error ? (
+            <Body2 color={BrandColors.neutral.light} style={styles.errorMessage}>
+              {getErrorMessage(error, 'Não foi possível carregar o perfil.')}
+            </Body2>
+          ) : null}
+          <Pressable
+            accessibilityLabel="Tentar novamente"
+            accessibilityRole="button"
+            onPress={() => {
+              void refetch();
+            }}>
+            <Link color={BrandColors.primary.light}>Tentar novamente</Link>
+          </Pressable>
           <Pressable
             accessibilityLabel="Voltar"
             accessibilityRole="button"
@@ -102,28 +157,40 @@ export default function ClientLawyerProfileScreen() {
   }
 
   const iconColor = BrandColors.neutral.white;
+  const honorificSuffix = profile.honorific ? ` (${profile.honorific})` : '';
+  const education = formatPublicLawyerEducation(profile) || '—';
+  const specialties =
+    profile.specialties.map((item) => item.name || item.code).filter(Boolean)
+      .join(', ') || '—';
+  const billingMethods =
+    profile.billingMethods.map((item) => item.name || item.code).filter(Boolean)
+      .join(', ') || '—';
+  const subtitle = formatIdentitySubtitle(profile);
 
   return (
     <ClientFlowScreen
       title="Visualizar perfil"
       onBack={() => router.back()}
       contentContainerStyle={styles.content}>
-        <Image
-          testID="lawyer-profile-image"
-          source={require('@/assets/images/professional-image-placeholder.png')}
-          contentFit="cover"
-          style={styles.profileImage}
-        />
+      <LawyerProfilePhoto photoKey={profile.photoKey} />
 
-        <View style={styles.identity}>
-          <Heading1 color={BrandColors.neutral.white}>
-            {lawyer.name} ({lawyer.honorific})
-          </Heading1>
-          <Body2 color={BrandColors.neutral.white}>
-            {lawyer.role} - {lawyer.registration}
+      <View style={styles.identity}>
+        <Heading1 color={BrandColors.neutral.white}>
+          {profile.name}
+          {honorificSuffix}
+        </Heading1>
+        {subtitle ? (
+          <Body2 color={BrandColors.neutral.white}>{subtitle}</Body2>
+        ) : null}
+        {profile.averageRating != null ? (
+          <Body2 color={BrandColors.neutral.light}>
+            ★ {profile.averageRating.toFixed(1).replace('.', ',')}
+            {profile.totalReviews > 0 ? ` (${profile.totalReviews})` : ''}
           </Body2>
-        </View>
+        ) : null}
+      </View>
 
+      {profile.biography ? (
         <ProfileField
           icon={
             <SymbolView
@@ -133,9 +200,11 @@ export default function ClientLawyerProfileScreen() {
             />
           }
           label="Biografia">
-          <Body2 color={BrandColors.neutral.white}>{lawyer.biography}</Body2>
+          <Body2 color={BrandColors.neutral.white}>{profile.biography}</Body2>
         </ProfileField>
+      ) : null}
 
+      {profile.addressLabel ? (
         <ProfileField
           icon={
             <SymbolView
@@ -145,79 +214,79 @@ export default function ClientLawyerProfileScreen() {
             />
           }
           label="Endereço">
-          <Body2 color={BrandColors.primary.light}>{lawyer.address}</Body2>
+          <Body2 color={BrandColors.primary.light}>{profile.addressLabel}</Body2>
         </ProfileField>
+      ) : null}
 
-        <ProfileField
-          icon={
-            <SymbolView
-              name={{
-                ios: 'doc.text',
-                android: 'description',
-                web: 'description',
-              }}
-              size={18}
-              tintColor={iconColor}
-            />
-          }
-          label="OAB Suplementar">
-          <Body2 color={BrandColors.primary.light}>
-            {lawyer.supplementalRegistration}
-          </Body2>
-        </ProfileField>
+      <ProfileField
+        icon={
+          <SymbolView
+            name={{
+              ios: 'doc.text',
+              android: 'description',
+              web: 'description',
+            }}
+            size={18}
+            tintColor={iconColor}
+          />
+        }
+        label="OAB Suplementar">
+        <Body2 color={BrandColors.primary.light}>
+          {formatSupplementalOabs(profile)}
+        </Body2>
+      </ProfileField>
 
-        <ProfileField
-          icon={
-            <SymbolView
-              name={{
-                ios: 'graduationcap',
-                android: 'school',
-                web: 'school',
-              }}
-              size={18}
-              tintColor={iconColor}
-            />
-          }
-          label="Escolaridade">
-          <Body2 color={BrandColors.primary.light}>{lawyer.education}</Body2>
-        </ProfileField>
+      <ProfileField
+        icon={
+          <SymbolView
+            name={{
+              ios: 'graduationcap',
+              android: 'school',
+              web: 'school',
+            }}
+            size={18}
+            tintColor={iconColor}
+          />
+        }
+        label="Escolaridade">
+        <Body2 color={BrandColors.primary.light}>{education}</Body2>
+      </ProfileField>
 
-        <ProfileField
-          icon={
-            <SymbolView
-              name={{
-                ios: 'calendar.badge.clock',
-                android: 'calendar_month',
-                web: 'calendar_month',
-              }}
-              size={18}
-              tintColor={iconColor}
-            />
-          }
-          label="Tempo de formado">
-          <Body2 color={BrandColors.primary.light}>
-            {lawyer.yearsOfExperience} anos
-          </Body2>
-        </ProfileField>
+      <ProfileField
+        icon={
+          <SymbolView
+            name={{
+              ios: 'calendar.badge.clock',
+              android: 'calendar_month',
+              web: 'calendar_month',
+            }}
+            size={18}
+            tintColor={iconColor}
+          />
+        }
+        label="Tempo de formado">
+        <Body2 color={BrandColors.primary.light}>
+          {profile.yearsOfExperience} anos
+        </Body2>
+      </ProfileField>
 
-        <ProfileField
-          icon={
-            <SymbolView
-              name={{
-                ios: 'briefcase',
-                android: 'business_center',
-                web: 'business_center',
-              }}
-              size={18}
-              tintColor={iconColor}
-            />
-          }
-          label="Especialidade">
-          <Body2 color={BrandColors.primary.light}>
-            {lawyer.specialties.join(', ')}
-          </Body2>
-        </ProfileField>
+      <ProfileField
+        icon={
+          <SymbolView
+            name={{
+              ios: 'briefcase',
+              android: 'business_center',
+              web: 'business_center',
+            }}
+            size={18}
+            tintColor={iconColor}
+          />
+        }
+        label="Especialidade">
+        <Body2 color={BrandColors.primary.light}>{specialties}</Body2>
+      </ProfileField>
 
+      {profile.subspecialties.length > 0 ? (
         <ProfileField
           icon={
             <SymbolView
@@ -232,49 +301,105 @@ export default function ClientLawyerProfileScreen() {
           }
           label="Subespecialidades">
           <View style={styles.tags}>
-            {lawyer.subspecialties.map((subspecialty) => (
-              <View key={subspecialty} style={styles.tag}>
-                <Body2 color={BrandColors.neutral.white}>{subspecialty}</Body2>
+            {profile.subspecialties.map((item) => (
+              <View key={item.code || item.name} style={styles.tag}>
+                <Body2 color={BrandColors.neutral.white}>
+                  {item.name || item.code}
+                </Body2>
               </View>
             ))}
           </View>
         </ProfileField>
+      ) : null}
 
-        <ProfileField
-          icon={
-            <SymbolView
-              name={{
-                ios: 'banknote',
-                android: 'payments',
-                web: 'payments',
-              }}
-              size={18}
-              tintColor={iconColor}
-            />
-          }
-          label="Métodos de cobrança">
-          <Body2 color={BrandColors.primary.light}>
-            {lawyer.billingMethods.join(', ')}
-          </Body2>
-        </ProfileField>
+      <ProfileField
+        icon={
+          <SymbolView
+            name={{
+              ios: 'banknote',
+              android: 'payments',
+              web: 'payments',
+            }}
+            size={18}
+            tintColor={iconColor}
+          />
+        }
+        label="Métodos de cobrança">
+        <Body2 color={BrandColors.primary.light}>{billingMethods}</Body2>
+      </ProfileField>
 
+      {solicitacaoId ? (
         <ClientConnectionStatus
-          email={lawyer.email}
-          onCancel={() => setConnectionStatus('idle')}
-          onRequest={() => setConnectionStatus('pending')}
-          phone={lawyer.phone}
-          status={connectionStatus}
+          email={connection?.email ?? ''}
+          isCancelling={cancelConnection.isPending}
+          isRequesting={createConnection.isPending}
+          onCancel={() => {
+            if (!connection?.id) {
+              return;
+            }
+            void (async () => {
+              try {
+                await cancelConnection.mutateAsync(connection.id);
+              } catch (cancelError) {
+                Alert.alert(
+                  'Conexão',
+                  getErrorMessage(
+                    cancelError,
+                    'Não foi possível cancelar a conexão.',
+                  ),
+                );
+              }
+            })();
+          }}
+          onRequest={() => {
+            if (!lawyerId || !solicitacaoId) {
+              return;
+            }
+            void (async () => {
+              try {
+                await createConnection.mutateAsync({
+                  solicitacaoId,
+                  advogadoId: lawyerId,
+                });
+              } catch (requestError) {
+                Alert.alert(
+                  'Conexão',
+                  getErrorMessage(
+                    requestError,
+                    'Não foi possível solicitar a conexão.',
+                  ),
+                );
+              }
+            })();
+          }}
+          phone={connection?.telefone ?? ''}
+          status={connection?.uiStatus ?? 'idle'}
         />
+      ) : null}
 
-        <ClientLawyerReviews
-          canReview={connectionStatus === 'accepted'}
-          reviews={
-            connectionStatus === 'accepted'
-              ? [MOCK_OWN_LAWYER_REVIEW, ...MOCK_LAWYER_REVIEWS]
-              : MOCK_LAWYER_REVIEWS
+      <ClientLawyerReviews
+        isDeletingOwn={deleteReview.isPending}
+        onDeleteOwnReview={async (reviewId) => {
+          try {
+            await deleteReview.mutateAsync({
+              lawyerUserId: profile.id,
+              reviewId,
+            });
+          } catch (error) {
+            Alert.alert(
+              'Avaliação',
+              getErrorMessage(error, 'Não foi possível excluir a avaliação.'),
+            );
+            throw error;
           }
-          total={150}
-        />
+        }}
+        reviews={
+          reviewsData
+            ? mapLawyerReviewsToClientReviews(reviewsData.items)
+            : []
+        }
+        total={reviewsData?.total ?? profile.totalReviews}
+      />
     </ClientFlowScreen>
   );
 }
@@ -318,5 +443,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.sm,
     paddingVertical: Spacing.xl,
+  },
+  errorMessage: {
+    textAlign: 'center',
   },
 });

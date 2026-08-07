@@ -1,30 +1,60 @@
 import { Image } from 'expo-image';
-import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { BagIcon } from '@/assets/icon/bag';
 import { MapPinIcon } from '@/assets/icon/map-pin';
 import { Button } from '@/atomic/button';
 import { Body2, Heading1 } from '@/atomic/typography';
+import type { ClientConnectionStatusValue } from '@/components/client-connection-status';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
+import type { ConnectionResult } from '@/data/connection';
+import { useCreateConnection } from '@/domain/connection';
 
 import type { CompatibleLawyer } from './mock-client-solicitation-details';
 
 type ClientCompatibleLawyersListProps = {
   lawyers: CompatibleLawyer[];
+  solicitacaoId: string;
+  connectionsByLawyerId: Record<string, ConnectionResult>;
   onLawyerPress: (lawyerId: string) => void;
 };
 
+function connectionButtonLabel(
+  uiStatus: ClientConnectionStatusValue,
+): string {
+  switch (uiStatus) {
+    case 'pending':
+      return 'Conexão solicitada';
+    case 'accepted':
+      return 'Conexão aceita';
+    case 'rejected':
+      return 'Conexão recusada';
+    default:
+      return 'Solicitar conexão';
+  }
+}
+
 export function ClientCompatibleLawyersList({
   lawyers,
+  solicitacaoId,
+  connectionsByLawyerId,
   onLawyerPress,
 }: ClientCompatibleLawyersListProps) {
-  const [requestedLawyerIds, setRequestedLawyerIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const createConnection = useCreateConnection();
 
-  const requestConnection = (lawyerId: string) => {
-    setRequestedLawyerIds((current) => new Set(current).add(lawyerId));
+  const requestConnection = async (lawyerId: string) => {
+    try {
+      await createConnection.mutateAsync({
+        solicitacaoId,
+        advogadoId: lawyerId,
+      });
+    } catch (error) {
+      Alert.alert(
+        'Conexão',
+        getErrorMessage(error, 'Não foi possível solicitar a conexão.'),
+      );
+    }
   };
 
   return (
@@ -37,7 +67,12 @@ export function ClientCompatibleLawyersList({
       </View>
 
       {lawyers.map((lawyer, index) => {
-        const connectionRequested = requestedLawyerIds.has(lawyer.id);
+        const connection = connectionsByLawyerId[lawyer.id];
+        const uiStatus = connection?.uiStatus ?? 'idle';
+        const canRequest = uiStatus === 'idle';
+        const isRequestingThis =
+          createConnection.isPending &&
+          createConnection.variables?.advogadoId === lawyer.id;
 
         return (
           <View key={lawyer.id}>
@@ -107,17 +142,14 @@ export function ClientCompatibleLawyersList({
               </Pressable>
 
               <Button
-                accessibilityLabel={
-                  connectionRequested
-                    ? 'Conexão solicitada'
-                    : 'Solicitar conexão'
-                }
-                disabled={connectionRequested}
-                onPress={() => requestConnection(lawyer.id)}
+                accessibilityLabel={connectionButtonLabel(uiStatus)}
+                disabled={!canRequest}
+                isLoading={isRequestingThis}
+                onPress={() => {
+                  void requestConnection(lawyer.id);
+                }}
                 variant="secondary">
-                {connectionRequested
-                  ? 'Conexão solicitada'
-                  : 'Solicitar conexão'}
+                {connectionButtonLabel(uiStatus)}
               </Button>
             </View>
           </View>

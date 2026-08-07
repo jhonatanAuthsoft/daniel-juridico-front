@@ -1,4 +1,5 @@
 export * from './address';
+export * from './arquivo';
 export * from './auth';
 export * from './client';
 export * from './lawyer';

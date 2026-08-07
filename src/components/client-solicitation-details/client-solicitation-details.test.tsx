@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 
 import {
   ClientCompatibleLawyersList,
@@ -11,7 +11,25 @@ import {
 
 const details = MOCK_CLIENT_SOLICITATION_DETAILS[0];
 
+const mockMutateAsync = jest.fn().mockResolvedValue({
+  id: 'cx-1',
+  advogadoId: details.compatibleLawyers[0].id,
+  uiStatus: 'pending',
+});
+
+jest.mock('@/domain/connection', () => ({
+  useCreateConnection: () => ({
+    mutateAsync: mockMutateAsync,
+    isPending: false,
+    variables: undefined,
+  }),
+}));
+
 describe('client solicitation detail components', () => {
+  beforeEach(() => {
+    mockMutateAsync.mockClear();
+  });
+
   it('shows solicitation data initially and allows collapsing it', () => {
     const screen = render(
       <ClientSolicitationDataAccordion solicitation={details} />,
@@ -43,12 +61,14 @@ describe('client solicitation detail components', () => {
     expect(screen.getByText(details.description)).toBeTruthy();
   });
 
-  it('lists compatible lawyers and updates a requested connection', () => {
+  it('lists compatible lawyers and requests a connection', async () => {
     const onLawyerPress = jest.fn();
     const screen = render(
       <ClientCompatibleLawyersList
+        connectionsByLawyerId={{}}
         lawyers={details.compatibleLawyers}
         onLawyerPress={onLawyerPress}
+        solicitacaoId={details.id}
       />,
     );
 
@@ -69,7 +89,12 @@ describe('client solicitation detail components', () => {
       screen.getAllByRole('button', { name: 'Solicitar conexão' })[0],
     );
 
-    expect(screen.getByText('Conexão solicitada')).toBeTruthy();
+    await waitFor(() => {
+      expect(mockMutateAsync).toHaveBeenCalledWith({
+        solicitacaoId: details.id,
+        advogadoId: details.compatibleLawyers[0].id,
+      });
+    });
     expect(onLawyerPress).not.toHaveBeenCalled();
   });
 });

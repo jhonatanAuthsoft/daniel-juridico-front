@@ -43,20 +43,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: 'laweact',
   version: '1.0.0',
   orientation: 'portrait',
-  icon: './assets/images/icon.png',
+  icon: './assets/images/ios-app-icon.png',
   scheme: current.scheme,
   userInterfaceStyle: 'automatic',
   ios: {
-    icon: './assets/expo.icon',
+    icon: './assets/images/ios-app-icon.png',
     bundleIdentifier: current.bundleIdentifier,
     supportsTablet: true,
   },
   android: {
     adaptiveIcon: {
-      backgroundColor: '#E6F4FE',
-      foregroundImage: './assets/images/android-icon-foreground.png',
-      backgroundImage: './assets/images/android-icon-background.png',
-      monochromeImage: './assets/images/android-icon-monochrome.png',
+      backgroundColor: '#EE2E24',
+      foregroundImage: './assets/images/android-app-icon.png',
     },
     predictiveBackGestureEnabled: false,
     package: current.androidPackage,
@@ -72,7 +70,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-splash-screen',
       {
-        backgroundColor: '#EE2E24',
+        backgroundColor: '#2C2C2C',
         image: './assets/images/splash-icon.png',
         imageWidth: 76,
       },

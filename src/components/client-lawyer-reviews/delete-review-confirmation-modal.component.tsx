@@ -8,12 +8,14 @@ type DeleteReviewConfirmationModalProps = {
   visible: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isDeleting?: boolean;
 };
 
 export function DeleteReviewConfirmationModal({
   visible,
   onClose,
   onConfirm,
+  isDeleting = false,
 }: DeleteReviewConfirmationModalProps) {
   return (
     <Modal
@@ -48,23 +50,27 @@ export function DeleteReviewConfirmationModal({
             <Pressable
               accessibilityLabel="Fechar"
               accessibilityRole="button"
+              disabled={isDeleting}
               onPress={onClose}
               style={({ pressed }) => [
                 styles.action,
-                pressed && styles.pressed,
+                pressed && !isDeleting && styles.pressed,
+                isDeleting && styles.disabled,
               ]}>
               <Link color={BrandColors.primary.light}>Fechar</Link>
             </Pressable>
             <Pressable
               accessibilityLabel="Confirmar exclusão da avaliação"
               accessibilityRole="button"
+              disabled={isDeleting}
               onPress={onConfirm}
               style={({ pressed }) => [
                 styles.action,
-                pressed && styles.pressed,
+                pressed && !isDeleting && styles.pressed,
+                isDeleting && styles.disabled,
               ]}>
               <Link color={BrandColors.feedback.error.medium}>
-                Excluir avaliação
+                {isDeleting ? 'Excluindo…' : 'Excluir avaliação'}
               </Link>
             </Pressable>
           </View>
@@ -113,5 +119,8 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.75,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });

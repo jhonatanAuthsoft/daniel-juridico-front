@@ -1,37 +1,101 @@
 import { SymbolView } from 'expo-symbols';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useMemo } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/atomic/button';
-import { Body1, Display, Link } from '@/atomic/typography';
+import { Body1, Display, Heading1, Link } from '@/atomic/typography';
+import { LawyerSolicitationDecisionCard } from '@/components/lawyer-solicitation-details';
+import { BrandColors, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
 import {
-  LawyerClientContactsCard,
-  LawyerClientProfileAccordion,
-  LawyerSolicitationDataAccordion,
-  LawyerSolicitationDecisionCard,
-  LawyerSolicitationDescriptionAccordion,
-  MOCK_LAWYER_SOLICITATION_DETAILS,
-} from '@/components/lawyer-solicitation-details';
-import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
+  useAcceptConnection,
+  useConnections,
+  useRejectConnection,
+} from '@/domain/connection';
 
 export default function LawyerSolicitationDetailsScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const solicitationId = Array.isArray(id) ? id[0] : id;
-  const solicitation = MOCK_LAWYER_SOLICITATION_DETAILS.find(
-    (item) => item.id === solicitationId,
-  );
-  const [accepted, setAccepted] = useState(false);
+  const connectionId = Array.isArray(id) ? id[0] : id;
 
-  if (!solicitation) {
+  const {
+    data: connections = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useConnections();
+
+  const acceptConnection = useAcceptConnection();
+  const rejectConnection = useRejectConnection();
+
+  const connection = useMemo(
+    () => connections.find((item) => item.id === connectionId),
+    [connectionId, connections],
+  );
+
+  const handleAccept = async () => {
+    if (!connectionId) {
+      return;
+    }
+    try {
+      await acceptConnection.mutateAsync(connectionId);
+    } catch (error) {
+      Alert.alert(
+        'Conexão',
+        getErrorMessage(error, 'Não foi possível aceitar a conexão.'),
+      );
+    }
+  };
+
+  const handleReject = async () => {
+    if (!connectionId) {
+      return;
+    }
+    try {
+      await rejectConnection.mutateAsync(connectionId);
+      router.back();
+    } catch (error) {
+      Alert.alert(
+        'Conexão',
+        getErrorMessage(error, 'Não foi possível recusar a conexão.'),
+      );
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.notFound}>
+          <ActivityIndicator color={BrandColors.primary.light} size="large" />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (isError || !connection) {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.notFound}>
           <Display color={BrandColors.neutral.white}>
-            Solicitação não encontrada
+            Pedido não encontrado
           </Display>
+          <Pressable
+            accessibilityLabel="Tentar novamente"
+            accessibilityRole="button"
+            onPress={() => {
+              void refetch();
+            }}>
+            <Link color={BrandColors.primary.light}>Tentar novamente</Link>
+          </Pressable>
           <Pressable
             accessibilityLabel="Voltar"
             accessibilityRole="button"
@@ -43,10 +107,15 @@ export default function LawyerSolicitationDetailsScreen() {
     );
   }
 
-  const isHistoryDecision = solicitation.decision != null;
-  const showContacts =
-    solicitation.decision === 'accepted' || (!isHistoryDecision && accepted);
-  const showPendingActions = !isHistoryDecision && !accepted;
+  const isPending = connection.status === 'PENDENTE';
+  const decision =
+    connection.status === 'ACEITA'
+      ? 'accepted'
+      : connection.status === 'RECUSADA'
+        ? 'rejected'
+        : null;
+  const isMutating =
+    acceptConnection.isPending || rejectConnection.isPending;
 
   return (
     <SafeAreaView
@@ -73,44 +142,57 @@ export default function LawyerSolicitationDetailsScreen() {
             />
           </Pressable>
           <Body1 color={BrandColors.neutral.white} style={styles.headerTitle}>
-            Visualizar solicitação
+            Pedido de conexão
           </Body1>
           <View style={styles.headerSpacer} />
         </View>
 
-        <LawyerClientProfileAccordion client={solicitation.client} />
+        <View style={styles.card}>
+          <Heading1 color={BrandColors.neutral.white}>
+            {connection.nomeCliente?.trim() || 'Cliente'}
+          </Heading1>
+          <Body1 color={BrandColors.neutral.light}>
+            {connection.tituloSolicitacao?.trim() || 'Solicitação'}
+          </Body1>
+          {connection.status === 'ACEITA' ? (
+            <Body1 color={BrandColors.neutral.white}>
+              Conexão aceita. O cliente pode ver seu telefone e e-mail no
+              perfil.
+            </Body1>
+          ) : null}
+        </View>
 
-        {showContacts ? (
-          <LawyerClientContactsCard client={solicitation.client} />
-        ) : !isHistoryDecision ? (
-          <LawyerSolicitationDataAccordion solicitation={solicitation} />
+        {decision ? (
+          <LawyerSolicitationDecisionCard decision={decision} />
         ) : null}
 
-        <LawyerSolicitationDescriptionAccordion
-          description={solicitation.description}
-        />
-
-        {solicitation.decision ? (
-          <LawyerSolicitationDecisionCard decision={solicitation.decision} />
-        ) : null}
-
-        {showPendingActions ? (
+        {isPending ? (
           <View style={styles.actions}>
             <Button
-              accessibilityLabel="Aceitar solicitação"
-              onPress={() => setAccepted(true)}
+              accessibilityLabel="Aceitar conexão"
+              disabled={isMutating}
+              isLoading={acceptConnection.isPending}
+              onPress={() => {
+                void handleAccept();
+              }}
               variant="primary">
-              Aceitar solicitação
+              Aceitar conexão
             </Button>
             <Pressable
               accessibilityLabel="Recusar"
               accessibilityRole="button"
-              onPress={() => router.back()}
+              disabled={isMutating}
+              onPress={() => {
+                void handleReject();
+              }}
               style={({ pressed }) => [
                 styles.refuseButton,
-                pressed && styles.pressed,
+                pressed && !isMutating && styles.pressed,
+                isMutating && styles.disabled,
               ]}>
-              <Link color={BrandColors.primary.light}>Recusar</Link>
+              <Link color={BrandColors.primary.light}>
+                {rejectConnection.isPending ? 'Recusando…' : 'Recusar'}
+              </Link>
             </Pressable>
           </View>
         ) : null}
@@ -146,6 +228,12 @@ const styles = StyleSheet.create({
   headerSpacer: {
     width: 24,
   },
+  card: {
+    gap: Spacing.xs,
+    padding: Spacing.sm,
+    borderRadius: Radius.large,
+    backgroundColor: BrandColors.accessory.darkGray,
+  },
   actions: {
     gap: Spacing.xs,
     marginTop: Spacing.xxs,
@@ -164,5 +252,8 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.75,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });

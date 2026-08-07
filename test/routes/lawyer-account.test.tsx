@@ -17,7 +17,19 @@ jest.mock('@/domain/auth', () => ({
       email: 'luizabitt@gmail.com',
       role: 'LAWYER',
     },
+    isAuthenticated: true,
     signOut: mockSignOut,
+  }),
+  useMe: () => ({
+    data: { photoKey: null },
+    isLoading: false,
+  }),
+}));
+
+jest.mock('@/domain/arquivo', () => ({
+  useObjectReadUrl: () => ({
+    data: undefined,
+    isLoading: false,
   }),
 }));
 

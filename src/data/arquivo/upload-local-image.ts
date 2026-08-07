@@ -3,8 +3,8 @@ import { putBinary } from '@/data/http/put-binary';
 import { requestUploadUrl } from './arquivo.api';
 import type { ArquivoContentType, ArquivoFinalidade } from './arquivo.types';
 
-function resolveContentType(uri: string, blobType?: string): ArquivoContentType {
-  const normalized = (blobType ?? '').toLowerCase();
+function resolveContentType(uri: string, hint?: string | null): ArquivoContentType {
+  const normalized = (hint ?? '').toLowerCase();
   if (normalized.includes('png') || uri.toLowerCase().endsWith('.png')) {
     return 'image/png';
   }
@@ -12,7 +12,59 @@ function resolveContentType(uri: string, blobType?: string): ArquivoContentType 
 }
 
 /**
+ * RN Blobs often lack `arrayBuffer()`. Prefer Response.arrayBuffer, then FileReader.
+ */
+async function readLocalImageBytes(uri: string): Promise<{
+  body: ArrayBuffer;
+  contentType: ArquivoContentType;
+}> {
+  const fileResponse = await fetch(uri);
+  if (!fileResponse.ok) {
+    throw new Error('Não foi possível ler a imagem selecionada.');
+  }
+
+  const headerType = fileResponse.headers.get('content-type');
+  const contentType = resolveContentType(uri, headerType);
+
+  if (typeof fileResponse.arrayBuffer === 'function') {
+    const body = await fileResponse.arrayBuffer();
+    return { body, contentType };
+  }
+
+  const blob = await fileResponse.blob();
+  const body = await readBlobAsArrayBuffer(blob);
+  return {
+    body,
+    contentType: resolveContentType(uri, blob.type || headerType),
+  };
+}
+
+function readBlobAsArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
+  if (typeof blob.arrayBuffer === 'function') {
+    return blob.arrayBuffer();
+  }
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (reader.result instanceof ArrayBuffer) {
+        resolve(reader.result);
+        return;
+      }
+      reject(new Error('Não foi possível ler a imagem selecionada.'));
+    };
+    reader.onerror = () => {
+      reject(new Error('Não foi possível ler a imagem selecionada.'));
+    };
+    reader.readAsArrayBuffer(blob);
+  });
+}
+
+/**
  * Reads a local image URI, requests a presigned URL, PUTs to S3, returns the object key.
+ *
+ * Sends ArrayBuffer with an explicit Content-Type so RN does not inject blob.type
+ * (mismatch → S3 SignatureDoesNotMatch / 403).
  */
 export async function uploadLocalImage(params: {
   uri: string;
@@ -21,14 +73,8 @@ export async function uploadLocalImage(params: {
 }): Promise<string> {
   const { uri, finalidade, signal } = params;
 
-  const fileResponse = await fetch(uri);
-  if (!fileResponse.ok) {
-    throw new Error('Não foi possível ler a imagem selecionada.');
-  }
-
-  const blob = await fileResponse.blob();
-  const contentType = resolveContentType(uri, blob.type);
-  const contentLength = blob.size > 0 ? blob.size : undefined;
+  const { body, contentType } = await readLocalImageBytes(uri);
+  const contentLength = body.byteLength > 0 ? body.byteLength : undefined;
 
   const upload = await requestUploadUrl(
     {
@@ -39,13 +85,19 @@ export async function uploadLocalImage(params: {
     signal,
   );
 
-  const headers: Record<string, string> = {
-    ...(upload.requiredHeaders ?? {}),
-  };
-  if (!headers['Content-Type'] && !headers['content-type']) {
-    headers['Content-Type'] = contentType;
-  }
+  const signedContentType =
+    upload.requiredHeaders?.['Content-Type'] ??
+    upload.requiredHeaders?.['content-type'] ??
+    contentType;
 
-  await putBinary(upload.uploadUrl, blob, headers, signal);
+  await putBinary(
+    upload.uploadUrl,
+    body,
+    {
+      'Content-Type': signedContentType,
+    },
+    signal,
+  );
+
   return upload.key;
 }

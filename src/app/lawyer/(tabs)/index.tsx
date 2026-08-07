@@ -1,10 +1,10 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   TextInput,
   View,
@@ -16,11 +16,9 @@ import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
 import { Separator } from '@/atomic/separator';
 import { Body2, Display, Heading1 } from '@/atomic/typography';
-import type { SolicitationStatus } from '@/components/client-solicitation-card';
 import { LawyerEmptyState } from '@/components/lawyer-empty-state';
 import {
   LawyerSolicitationCard,
-  MOCK_LAWYER_SOLICITATIONS,
   type LawyerSolicitationCardData,
 } from '@/components/lawyer-solicitation-card';
 import {
@@ -32,65 +30,50 @@ import {
   Radius,
   Spacing,
 } from '@/constants/theme';
+import {
+  mapConnectionToLawyerCard,
+  useConnections,
+} from '@/domain/connection';
 
 const TAB_BAR_CONTENT_HEIGHT = 62;
 const LIST_GAP_ABOVE_TAB = 16;
 
-type FilterId = 'all' | SolicitationStatus;
-
-type FilterChip = {
-  id: FilterId;
-  label: string;
-  count?: number;
-};
-
-const FILTER_CHIPS: FilterChip[] = [
-  { id: 'all', label: 'Todas' },
-  { id: 'emergencia', label: 'Emergência', count: 8 },
-  { id: 'urgente', label: 'Urgência', count: 6 },
-  { id: 'medio', label: 'Médio', count: 4 },
-  { id: 'tenho_tempo', label: 'Tenho tempo', count: 2 },
-];
-
-function matchesFilter(item: LawyerSolicitationCardData, filter: FilterId): boolean {
-  if (filter === 'all') {
-    return true;
-  }
-  return item.status === filter;
-}
-
-type LawyerHomeScreenProps = {
-  solicitations?: LawyerSolicitationCardData[];
-};
-
-export default function LawyerHomeScreen({
-  solicitations = MOCK_LAWYER_SOLICITATIONS,
-}: LawyerHomeScreenProps) {
+export default function LawyerHomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const [activeFilter, setActiveFilter] = useState<FilterId>('all');
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const listPaddingBottom = TAB_BAR_CONTENT_HEIGHT + insets.bottom + LIST_GAP_ABOVE_TAB;
+  const {
+    data: connections = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useConnections({ status: 'PENDENTE' });
+
+  const solicitations = useMemo(
+    () => connections.map(mapConnectionToLawyerCard),
+    [connections],
+  );
+
+  const listPaddingBottom =
+    TAB_BAR_CONTENT_HEIGHT + insets.bottom + LIST_GAP_ABOVE_TAB;
 
   const filteredData = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
+    if (!query) {
+      return solicitations;
+    }
 
-    return solicitations.filter((item) => {
-      if (!matchesFilter(item, activeFilter)) {
-        return false;
-      }
-      if (!query) {
-        return true;
-      }
+    return solicitations.filter((item: LawyerSolicitationCardData) => {
       return (
         item.clientName.toLowerCase().includes(query) ||
         item.description.toLowerCase().includes(query) ||
         item.location.toLowerCase().includes(query)
       );
     });
-  }, [activeFilter, searchQuery, solicitations]);
+  }, [searchQuery, solicitations]);
+
   const hasSolicitations = solicitations.length > 0;
   const hasSearchQuery = searchQuery.trim().length > 0;
 
@@ -106,7 +89,7 @@ export default function LawyerHomeScreen({
                 <TextInput
                   value={searchQuery}
                   onChangeText={setSearchQuery}
-                  placeholder="Buscar solicitação"
+                  placeholder="Buscar pedido"
                   placeholderTextColor={BrandColors.neutral.medium}
                   autoFocus
                   style={styles.searchInput}
@@ -127,7 +110,7 @@ export default function LawyerHomeScreen({
           ) : (
             <View style={styles.titleRow}>
               <Display color={BrandColors.neutral.white} style={styles.title}>
-                Solicitações de Clientes
+                Pedidos de conexão
               </Display>
               <Pressable
                 accessibilityRole="button"
@@ -140,79 +123,57 @@ export default function LawyerHomeScreen({
             </View>
           )}
 
-          {searchOpen ? (
-            hasSearchQuery ? (
-              <>
-                <Separator size="sm" />
-                <Heading1 color={BrandColors.neutral.white}>Seus resultados</Heading1>
-              </>
-            ) : null
-          ) : (
+          {searchOpen && hasSearchQuery ? (
             <>
               <Separator size="sm" />
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.filtersRow}>
-                {FILTER_CHIPS.map((chip) => {
-                  const selected = activeFilter === chip.id;
-                  return (
-                    <Pressable
-                      key={chip.id}
-                      accessibilityRole="button"
-                      accessibilityState={{ selected }}
-                      onPress={() => setActiveFilter(chip.id)}
-                      style={({ pressed }) => [
-                        styles.filterChip,
-                        pressed && styles.pressed,
-                      ]}>
-                      {selected ? (
-                        <GlassBackground
-                          blurPx={25}
-                          gradient={{
-                            colors: [
-                              'rgba(255, 255, 255, 0.20)',
-                              'rgba(255, 255, 255, 0.20)',
-                            ],
-                            angleDeg: 182,
-                            locationsPercent: [0, 100],
-                          }}
-                        />
-                      ) : (
-                        <GlassBackground blurPx={25} gradient={BrandGradients.gradient} />
-                      )}
-                      <View style={styles.filterChipContent}>
-                        <Body2 color={BrandColors.neutral.white}>{chip.label}</Body2>
-                        {chip.count != null ? (
-                          <Body2 color={BrandColors.primary.light}>{String(chip.count)}</Body2>
-                        ) : null}
-                      </View>
-                    </Pressable>
-                  );
-                })}
-              </ScrollView>
+              <Heading1 color={BrandColors.neutral.white}>Seus resultados</Heading1>
             </>
-          )}
+          ) : null}
+
+          {isError ? (
+            <>
+              <Separator size="sm" />
+              <Pressable
+                accessibilityLabel="Tentar novamente"
+                accessibilityRole="button"
+                onPress={() => {
+                  void refetch();
+                }}>
+                <Body2 color={BrandColors.primary.light}>
+                  Não foi possível carregar. Toque para tentar novamente.
+                </Body2>
+              </Pressable>
+            </>
+          ) : null}
         </View>
 
-        <FlatList
-          data={filteredData}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={[styles.listContent, { paddingBottom: listPaddingBottom }]}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={() => <Separator size="sm" />}
-          ListEmptyComponent={
-            <LawyerEmptyState
-              variant={hasSolicitations ? 'no-results' : 'no-data'}
-            />
-          }
-          renderItem={({ item }) => (
-            <LawyerSolicitationCard
-              {...item}
-              onPress={() => router.push(`/lawyer/solicitacao/${item.id}`)}
-            />
-          )}
-        />
+        {isLoading ? (
+          <View style={styles.loading}>
+            <ActivityIndicator color={BrandColors.primary.light} size="large" />
+          </View>
+        ) : (
+          <FlatList
+            data={filteredData}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={[
+              styles.listContent,
+              { paddingBottom: listPaddingBottom },
+            ]}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={() => <Separator size="sm" />}
+            ListEmptyComponent={
+              <LawyerEmptyState
+                variant={hasSolicitations ? 'no-results' : 'no-data'}
+              />
+            }
+            renderItem={({ item }) => (
+              <LawyerSolicitationCard
+                {...item}
+                onPress={() => router.push(`/lawyer/solicitacao/${item.id}`)}
+              />
+            )}
+          />
+        )}
       </View>
     </View>
   );
@@ -288,34 +249,18 @@ const styles = StyleSheet.create({
     fontFamily: InterFontFamily[500],
     fontSize: FontSize.xSmall,
   },
-  filtersRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xxs,
-    paddingRight: Spacing.sm,
-  },
-  filterChip: {
-    overflow: 'hidden',
-    borderRadius: Radius.large,
-    borderWidth: 1,
-    borderColor: BrandColors.neutral.white,
-    backgroundColor: 'transparent',
-    ...glassShadow,
-  },
-  filterChipContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xxxs,
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: Spacing.xxs,
-    zIndex: 1,
-  },
   listContent: {
     paddingHorizontal: Spacing.sm,
     maxWidth: MaxContentWidth,
     width: '100%',
     alignSelf: 'center',
     flexGrow: 1,
+  },
+  loading: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: Spacing.lg,
   },
   pressed: {
     opacity: 0.75,

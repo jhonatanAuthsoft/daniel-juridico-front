@@ -20,13 +20,10 @@ const splashAnimation = require('@/assets/splash/splash-screen.json');
 
 /** Fallback if onAnimationFinish never fires (~3.4s animation + buffer). */
 const SPLASH_FALLBACK_MS = 8000;
-/** Soft crossfade from brand-red splash onto the real first screen. */
+/** Soft crossfade after the Lottie iris finishes. */
 const FADE_OUT_MS = 520;
 /** Safety if the destination screen never signals ready. */
 const CONTENT_READY_FALLBACK_MS = 1200;
-
-/** Matches Lottie brand red (rgb ≈ 0.933, 0.18, 0.141). */
-const SPLASH_RED = BrandColors.accessory.red;
 
 type SplashGateContextValue = {
   markContentReady: () => void;
@@ -43,8 +40,8 @@ export type SplashGuardProps = {
 };
 
 /**
- * Solid brand-red cover with logo Lottie. Destination route stays mounted
- * underneath; when ready we crossfade the whole overlay out.
+ * Lottie splash overlay. Background stays transparent so the red circle
+ * iris can reveal the destination screen underneath (not a solid red fill).
  */
 export function SplashGuard({ children }: SplashGuardProps) {
   const [animationDone, setAnimationDone] = useState(false);
@@ -179,15 +176,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: BrandColors.neutral.xdark,
   },
-  rootWhileSplash: {
-    backgroundColor: SPLASH_RED,
-  },
+  rootWhileSplash: {},
   app: {
     flex: 1,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: SPLASH_RED,
+    // Must stay transparent: a solid fill kills the Lottie iris
+    // (outside the red circle would match the fill instead of showing through).
+    backgroundColor: 'transparent',
     zIndex: 1000,
   },
   lottie: {

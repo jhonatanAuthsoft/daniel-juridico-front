@@ -97,6 +97,7 @@ describe('lawyer.mapper', () => {
       numero: '654321',
       uf: 'RJ',
       dataExpedicao: '2018-01-10',
+      fotosUrls: ['tmp/advogados/oab/front2.jpg', 'tmp/advogados/oab/back2.jpg'],
     });
     expect(payload.areasAtuacao).toEqual([
       { estado: 'SP', cidade: 'Adamantina' },
@@ -119,6 +120,25 @@ describe('lawyer.mapper', () => {
     });
 
     expect(payload.nomePai).toBeUndefined();
+  });
+
+  it('omits incomplete OAB photo pairs (frente without verso)', () => {
+    const payload = mapLawyerSignupFormToRegisterRequest({
+      ...baseForm,
+      oabPhotoKeys: ['tmp/advogados/oab/front-only.jpg'],
+      supplementalOabs: [
+        {
+          number: '654321',
+          uf: 'rj',
+          issueDate: '10/01/2018',
+          photoUris: ['file://one.jpg'],
+          photoKeys: ['tmp/advogados/oab/one.jpg'],
+        },
+      ],
+    });
+
+    expect(payload.oabPrincipal.fotosUrls).toBeUndefined();
+    expect(payload.oabsSuplementares?.[0]?.fotosUrls).toBeUndefined();
   });
 
   it('maps catalog codes', () => {

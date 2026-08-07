@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from '@/atomic/button';
@@ -25,12 +25,30 @@ type ClientLawyerReviewsProps = {
   reviews: ClientLawyerReview[];
   total: number;
   canReview?: boolean;
+  /** When set, own reviews show delete and call this on confirm. */
+  onDeleteOwnReview?: (reviewId: string) => Promise<void>;
+  isDeletingOwn?: boolean;
 };
+
+function formatRatingLabel(rating: number): string {
+  const formatted = Number.isInteger(rating)
+    ? String(rating)
+    : rating.toFixed(1).replace('.', ',');
+  return `${formatted} ${rating === 1 ? 'estrela' : 'estrelas'}`;
+}
+
+function formatStars(rating: number): string {
+  const full = Math.max(0, Math.min(5, Math.floor(rating)));
+  const hasHalf = rating - full >= 0.5 && full < 5;
+  return `${'★'.repeat(full)}${hasHalf ? '½' : ''}`;
+}
 
 export function ClientLawyerReviews({
   reviews,
   total,
   canReview = false,
+  onDeleteOwnReview,
+  isDeletingOwn = false,
 }: ClientLawyerReviewsProps) {
   const [expanded, setExpanded] = useState(false);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
@@ -38,22 +56,26 @@ export function ClientLawyerReviews({
   const [currentReviews, setCurrentReviews] = useState(() => reviews);
   const [currentTotal, setCurrentTotal] = useState(total);
   const [reviewToDeleteId, setReviewToDeleteId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCurrentReviews(reviews);
+    setCurrentTotal(total);
+  }, [reviews, total]);
+
   const visibleReviews = expanded
     ? currentReviews
     : currentReviews.slice(0, INITIAL_VISIBLE_REVIEWS);
   const canExpand = currentReviews.length > INITIAL_VISIBLE_REVIEWS;
   const hasOwnReview = currentReviews.some((review) => review.isOwn);
   const canCreateReview = canReview && !hasOwnReview;
+  const canDeleteOwn = typeof onDeleteOwnReview === 'function';
 
-  const deleteOwnReview = () => {
-    if (!reviewToDeleteId) {
+  const deleteOwnReview = async () => {
+    if (!reviewToDeleteId || !onDeleteOwnReview || isDeletingOwn) {
       return;
     }
 
-    setCurrentReviews((current) =>
-      current.filter((review) => review.id !== reviewToDeleteId),
-    );
-    setCurrentTotal((current) => Math.max(0, current - 1));
+    await onDeleteOwnReview(reviewToDeleteId);
     setReviewToDeleteId(null);
   };
 
@@ -84,7 +106,11 @@ export function ClientLawyerReviews({
             return (
               <ClientOwnReviewCard
                 key={review.id}
-                onDelete={() => setReviewToDeleteId(review.id)}
+                onDelete={
+                  canDeleteOwn
+                    ? () => setReviewToDeleteId(review.id)
+                    : undefined
+                }
                 review={review}
               />
             );
@@ -107,12 +133,12 @@ export function ClientLawyerReviews({
                   </Body1>
                   <View style={styles.ratingRow}>
                     <Text
-                      accessibilityLabel={`${review.rating} de 5 estrelas`}
+                      accessibilityLabel={formatRatingLabel(review.rating)}
                       style={styles.stars}>
-                      {'★'.repeat(review.rating)}
+                      {formatStars(review.rating)}
                     </Text>
                     <Body2 color={BrandColors.neutral.white}>
-                      {review.rating} estrelas
+                      {formatRatingLabel(review.rating)}
                     </Body2>
                   </View>
                 </View>
@@ -159,8 +185,15 @@ export function ClientLawyerReviews({
         visible={reviewModalVisible}
       />
       <DeleteReviewConfirmationModal
-        onClose={() => setReviewToDeleteId(null)}
-        onConfirm={deleteOwnReview}
+        isDeleting={isDeletingOwn}
+        onClose={() => {
+          if (!isDeletingOwn) {
+            setReviewToDeleteId(null);
+          }
+        }}
+        onConfirm={() => {
+          void deleteOwnReview();
+        }}
         visible={reviewToDeleteId !== null}
       />
     </View>

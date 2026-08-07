@@ -17,6 +17,7 @@ import {
   type ImageFieldMultiProps,
   type ImageFieldSingleProps,
 } from './image-field.component';
+import { validateImageUriList } from './validate-image-uri-list';
 
 type InputImageFieldBaseProps<TFieldValues extends FieldValues> = {
   name: FieldPath<TFieldValues>;
@@ -30,7 +31,11 @@ type InputImageFieldBaseProps<TFieldValues extends FieldValues> = {
   keyName?: FieldPath<TFieldValues>;
   /** When true, empty value fails validation. */
   required?: boolean;
-  /** Minimum images when `multiple` (defaults to 1 if required). */
+  /**
+   * Minimum images when `multiple`.
+   * - With `required`: must reach this count.
+   * - Without `required`: 0 images OR at least this count (e.g. OAB frente+verso).
+   */
   minCount?: number;
 };
 
@@ -152,18 +157,18 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
       name={name}
       rules={{
         validate: (value) => {
-          if (!required && !minCount) {
-            return true;
+          const base = validateImageUriList(value, {
+            required,
+            minCount,
+            multiple: Boolean(multiple),
+          });
+          if (base !== true) {
+            return base;
           }
+
           if (multiple) {
             const uris = Array.isArray(value) ? value.filter(Boolean) : [];
-            const minimum = minCount ?? (required ? 1 : 0);
-            if (uris.length < minimum) {
-              return minimum >= 2
-                ? 'Anexe as fotos de frente e verso'
-                : 'Campo obrigatório';
-            }
-            if (keyName) {
+            if (uris.length > 0 && keyName) {
               const keys = (getValues(keyName) as string[] | undefined) ?? [];
               if (keys.filter(Boolean).length < uris.length) {
                 return 'Aguarde o envio da imagem ou tente novamente';
@@ -172,11 +177,7 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
             return true;
           }
 
-          const uri = typeof value === 'string' ? value.trim() : '';
-          if (!uri) {
-            return 'Campo obrigatório';
-          }
-          if (keyName) {
+          if (required && keyName) {
             const key = String(getValues(keyName) ?? '').trim();
             if (!key) {
               return 'Aguarde o envio da imagem ou tente novamente';

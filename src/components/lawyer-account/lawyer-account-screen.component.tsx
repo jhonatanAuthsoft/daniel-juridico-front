@@ -1,4 +1,3 @@
-import { Image } from 'expo-image';
 import { SymbolView } from 'expo-symbols';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -13,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ChevronRightIcon } from '@/assets/icon/chevron-right';
 import { Body1, Body2, Display, Link } from '@/atomic/typography';
+import { ProfileAvatar } from '@/components/profile-avatar';
 import { useAuth } from '@/domain/auth';
 import {
   BrandColors,
@@ -95,12 +95,7 @@ export function LawyerAccountScreen() {
 
         <View style={styles.identity}>
           <View style={styles.avatarWrap}>
-            <Image
-              testID="profile-image"
-              source={require('@/assets/images/profile.png')}
-              contentFit="cover"
-              style={styles.avatar}
-            />
+            <ProfileAvatar style={styles.avatar} />
             <Pressable
               accessibilityLabel="Editar foto de perfil"
               accessibilityRole="button"

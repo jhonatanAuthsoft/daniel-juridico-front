@@ -47,8 +47,8 @@ type FilterChip = {
 
 const FILTER_CHIPS: FilterChip[] = [
   { id: 'all', label: 'Todas' },
-  { id: 'accepted', label: 'Aceitas', count: 8 },
-  { id: 'rejected', label: 'Recusadas', count: 6 },
+  { id: 'accepted', label: 'Aceitas' },
+  { id: 'rejected', label: 'Recusadas' },
 ];
 
 function matchesFilter(item: LawyerHistoryItem, filter: FilterId): boolean {
@@ -90,6 +90,20 @@ export function LawyerHistoryScreen({
       );
     });
   }, [activeFilter, items, searchQuery]);
+
+  const filterChips = useMemo(
+    () =>
+      FILTER_CHIPS.map((chip) => {
+        if (chip.id === 'all') {
+          return { ...chip, count: items.length };
+        }
+        return {
+          ...chip,
+          count: items.filter((item) => item.decision === chip.id).length,
+        };
+      }),
+    [items],
+  );
 
   const hasItems = items.length > 0;
   const hasSearchQuery = searchQuery.trim().length > 0;
@@ -154,7 +168,7 @@ export function LawyerHistoryScreen({
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.filtersRow}>
-                {FILTER_CHIPS.map((chip) => {
+                {filterChips.map((chip) => {
                   const selected = activeFilter === chip.id;
                   return (
                     <Pressable
