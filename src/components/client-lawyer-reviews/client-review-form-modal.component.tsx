@@ -31,7 +31,8 @@ type StarFill = 'empty' | 'half' | 'full';
 type ClientReviewFormModalProps = {
   visible: boolean;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: (payload: { rating: number; comment: string }) => void;
+  isSubmitting?: boolean;
 };
 
 function formatRatingLabel(value: number): string {
@@ -197,6 +198,7 @@ export function ClientReviewFormModal({
   visible,
   onClose,
   onSubmit,
+  isSubmitting = false,
 }: ClientReviewFormModalProps) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -214,6 +216,10 @@ export function ClientReviewFormModal({
   };
 
   const submitReview = () => {
+    if (isSubmitting) {
+      return;
+    }
+
     const hasRatingError = rating === 0;
     const hasCommentError = comment.trim().length === 0;
 
@@ -224,7 +230,7 @@ export function ClientReviewFormModal({
       return;
     }
 
-    onSubmit();
+    onSubmit({ rating, comment: comment.trim() });
   };
 
   return (
@@ -304,6 +310,8 @@ export function ClientReviewFormModal({
 
           <Button
             accessibilityLabel="Avaliar"
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
             onPress={submitReview}
             variant="primary">
             Avaliar

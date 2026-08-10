@@ -81,22 +81,15 @@ const LOCALITY_LABEL: Record<NivelLocalidadeApi, string> = {
 };
 
 const EMPTY_STATUS_COUNTS: SolicitationStatusCounts = {
-  ABERTA: 0,
   AGUARDANDO_MATCHING: 0,
   MATCH_REALIZADO: 0,
   CANCELADA: 0,
-  ENCERRADA: 0,
 };
-
-const NON_CANCELLABLE_STATUSES = new Set<StatusSolicitacaoApi>([
-  'CANCELADA',
-  'ENCERRADA',
-]);
 
 function mapFooterVariant(
   status: StatusSolicitacaoApi,
 ): ClientSolicitationCardData['footerVariant'] {
-  if (status === 'MATCH_REALIZADO' || status === 'ENCERRADA') {
+  if (status === 'MATCH_REALIZADO') {
     return 'accepted';
   }
   return 'compatible';
@@ -106,21 +99,17 @@ export function mapContagemPorStatus(
   contagem: Partial<Record<StatusSolicitacaoApi, number>> | null | undefined,
 ): SolicitationStatusCounts {
   return {
-    ABERTA: Number(contagem?.ABERTA ?? 0),
     AGUARDANDO_MATCHING: Number(contagem?.AGUARDANDO_MATCHING ?? 0),
     MATCH_REALIZADO: Number(contagem?.MATCH_REALIZADO ?? 0),
     CANCELADA: Number(contagem?.CANCELADA ?? 0),
-    ENCERRADA: Number(contagem?.ENCERRADA ?? 0),
   };
 }
 
+/** Cancel is allowed only while waiting for a lawyer accept (`AGUARDANDO_MATCHING`). */
 export function canCancelSolicitationStatus(
   status: StatusSolicitacaoApi | string | undefined,
 ): boolean {
-  if (!status) {
-    return false;
-  }
-  return !NON_CANCELLABLE_STATUSES.has(status as StatusSolicitacaoApi);
+  return status === 'AGUARDANDO_MATCHING';
 }
 
 export function emptySolicitationStatusCounts(): SolicitationStatusCounts {
@@ -290,7 +279,13 @@ export function mapCreateSolicitationWireToResult(
 export function mapListItemWireToCard(
   item: SolicitacaoListagemItemWire,
 ): ClientSolicitationCardData {
-  const workflowStatus = (item.status ?? 'ABERTA') as SolicitationWorkflowStatus;
+  const workflowStatus = (item.status ?? 'AGUARDANDO_MATCHING') as SolicitationWorkflowStatus;
+  const footerVariant = mapFooterVariant(workflowStatus);
+  const lawyerCount =
+    footerVariant === 'accepted'
+      ? Number(item.totalConexoesAceitas ?? 0)
+      : Number(item.totalMatches ?? 0);
+
   return {
     id: String(item.id),
     status: mapUrgenciaToStatus(item.urgencia),
@@ -298,8 +293,8 @@ export function mapListItemWireToCard(
     title: item.titulo,
     description: item.descricao,
     date: formatSolicitationDate(item.dataAbertura),
-    lawyerCount: item.totalMatches ?? 0,
-    footerVariant: mapFooterVariant(workflowStatus),
+    lawyerCount,
+    footerVariant,
   };
 }
 
@@ -330,7 +325,7 @@ export function normalizeListagemPayload(
     const items = data;
     const contagemPorStatus = emptySolicitationStatusCounts();
     for (const item of items) {
-      const status = (item.status ?? 'ABERTA') as StatusSolicitacaoApi;
+      const status = (item.status ?? 'AGUARDANDO_MATCHING') as StatusSolicitacaoApi;
       contagemPorStatus[status] = (contagemPorStatus[status] ?? 0) + 1;
     }
     return { items, contagemPorStatus };
@@ -394,7 +389,8 @@ export function mapMatchResultToCompatibleLawyer(
     rating: formatRating(match.averageRating),
     availability: 'Disponível',
     location: mapLocalidadeLabel(match.localityLevel),
-    role: `${match.compatibility}% compatível`,
+    role: 'Advogado',
+    compatibility: match.compatibility,
     avatarColor: AVATAR_COLORS[index % AVATAR_COLORS.length],
     registration: '',
     biography: '',

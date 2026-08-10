@@ -2455,3 +2455,248 @@
 {"_e":"metro:server_log","_t":1786062496095,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
 {"_e":"metro:bundling:failed","_t":1786067611007,"id":null,"message":"Unable to resolve \"./connection-ui.mapper\" from \"src/data/connection/index.ts\"\n  16 |   mapConnectionToLawyerCard,\n  17 |   mapConnectionToLawyerHistoryItem,\n> 18 | } from './connection-ui.mapper';\n     |         ^\n  19 |\n  20 | export {\n  21 |   acceptConnection,","importStack":"\u001b[1mImport stack:\u001b[22m\n\n\u001b[90m \u001b[39msrc/data/connection/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./connection-ui.mapper\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app/lawyer/(tabs)/index.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/data/connection\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app\u001b[2m (require.context)\u001b[22m\n","filename":null,"targetModuleName":"./connection-ui.mapper","originModulePath":"src/data/connection/index.ts"}
 {"_e":"metro:bundling:failed","_t":1786067613274,"id":null,"message":"Unable to resolve \"./connection-ui.mapper\" from \"src/data/connection/index.ts\"\n  16 |   mapConnectionToLawyerCard,\n  17 |   mapConnectionToLawyerHistoryItem,\n> 18 | } from './connection-ui.mapper';\n     |         ^\n  19 |\n  20 | export {\n  21 |   acceptConnection,","importStack":"\u001b[1mImport stack:\u001b[22m\n\n\u001b[90m \u001b[39msrc/data/connection/index.ts\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./connection-ui.mapper\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app/lawyer/(tabs)/index.tsx\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"@/data/connection\"\u001b[39m\n\n\u001b[90m \u001b[39msrc/app\u001b[2m (require.context)\u001b[22m\n","filename":null,"targetModuleName":"./connection-ui.mapper","originModulePath":"src/data/connection/index.ts"}
+{"_e":"metro:server_log","_t":1786068451343,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786068574747,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786068864721,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786069027992,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786069140887,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786069248724,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786069394326,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786069504707,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786069612230,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786069724560,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786069873283,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786070546885,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786070690390,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786070914196,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786071192050,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786071459890,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786071679137,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786071788332,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786072013976,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786072217254,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786072337537,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786072543431,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786072766117,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786072957033,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786073088008,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786073328517,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786073558280,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786073781542,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786073998544,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786074224546,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786074719110,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786074904129,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786075072140,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786075196073,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786075391758,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786075603688,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786076185872,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786077210476,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786078238212,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786079250429,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786080996086,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786081406288,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786082430866,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786082627529,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786083665200,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786084689774,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786085639723,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786086662968,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786087045171,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786087504949,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786088598309,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786089624481,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786089887392,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786090834574,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786091184649,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786092321239,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786092717606,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786092997741,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786093107559,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786093323709,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786093689587,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786093878732,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786094052154,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786094366913,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786095404800,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786095818523,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786096035065,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786096489863,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786096853417,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786097877424,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786098306564,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786098526310,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786098762574,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786099047972,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786099181570,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786099441385,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786099575165,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786099682329,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786099881135,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786100226435,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786100443341,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786100645058,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786101628090,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786101845377,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786101988765,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786102130702,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786102279155,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786102399932,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"root:init","_t":1786400419361,"format":"v0-jsonl","version":"57.0.11"}
+{"_e":"env:mode","_t":1786400419361,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1786400419364,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"https://8747-179-191-103-102.ngrok-free.app"}}
+{"_e":"devserver:start","_t":1786400419947,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1786400420242,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1786400420413,"plugins":[]}
+{"_e":"metro:instantiate","_t":1786400420920,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1786400429759,"id":"1","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786400429759,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786400429764,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786400430365,"id":"1","progress":0.010000000000000002,"total":1,"current":1}
+{"_e":"metro:bundling:progress","_t":1786400430465,"id":"1","progress":0.1111111111111111,"total":12,"current":4}
+{"_e":"metro:bundling:progress","_t":1786400430586,"id":"1","progress":0.1111111111111111,"total":21,"current":7}
+{"_e":"metro:bundling:progress","_t":1786400430687,"id":"1","progress":0.2743764172335601,"total":21,"current":11}
+{"_e":"metro:bundling:progress","_t":1786400430788,"id":"1","progress":0.37051039697542537,"total":23,"current":14}
+{"_e":"metro:bundling:progress","_t":1786400430891,"id":"1","progress":0.37051039697542537,"total":39,"current":21}
+{"_e":"metro:bundling:progress","_t":1786400430992,"id":"1","progress":0.37051039697542537,"total":48,"current":28}
+{"_e":"metro:bundling:progress","_t":1786400431094,"id":"1","progress":0.39707262150497274,"total":73,"current":46}
+{"_e":"metro:bundling:progress","_t":1786400431200,"id":"1","progress":0.39707262150497274,"total":179,"current":59}
+{"_e":"metro:bundling:progress","_t":1786400431301,"id":"1","progress":0.39707262150497274,"total":232,"current":68}
+{"_e":"metro:bundling:progress","_t":1786400431402,"id":"1","progress":0.39707262150497274,"total":280,"current":89}
+{"_e":"metro:bundling:progress","_t":1786400431502,"id":"1","progress":0.39707262150497274,"total":299,"current":104}
+{"_e":"metro:bundling:progress","_t":1786400431602,"id":"1","progress":0.39707262150497274,"total":331,"current":129}
+{"_e":"metro:bundling:progress","_t":1786400431702,"id":"1","progress":0.39707262150497274,"total":403,"current":189}
+{"_e":"metro:bundling:progress","_t":1786400431802,"id":"1","progress":0.39707262150497274,"total":446,"current":203}
+{"_e":"metro:bundling:progress","_t":1786400431902,"id":"1","progress":0.39707262150497274,"total":453,"current":207}
+{"_e":"metro:bundling:progress","_t":1786400432014,"id":"1","progress":0.39707262150497274,"total":460,"current":213}
+{"_e":"metro:bundling:progress","_t":1786400432114,"id":"1","progress":0.39707262150497274,"total":483,"current":221}
+{"_e":"metro:bundling:progress","_t":1786400432395,"id":"1","progress":0.39707262150497274,"total":483,"current":222}
+{"_e":"metro:bundling:progress","_t":1786400432495,"id":"1","progress":0.39707262150497274,"total":490,"current":224}
+{"_e":"metro:bundling:progress","_t":1786400432596,"id":"1","progress":0.39707262150497274,"total":534,"current":268}
+{"_e":"metro:bundling:progress","_t":1786400432696,"id":"1","progress":0.39707262150497274,"total":589,"current":319}
+{"_e":"metro:bundling:progress","_t":1786400432796,"id":"1","progress":0.39707262150497274,"total":671,"current":371}
+{"_e":"metro:bundling:progress","_t":1786400432896,"id":"1","progress":0.39707262150497274,"total":759,"current":427}
+{"_e":"metro:bundling:progress","_t":1786400432996,"id":"1","progress":0.39707262150497274,"total":853,"current":464}
+{"_e":"metro:bundling:progress","_t":1786400433096,"id":"1","progress":0.39707262150497274,"total":964,"current":501}
+{"_e":"metro:bundling:progress","_t":1786400433200,"id":"1","progress":0.39707262150497274,"total":1005,"current":546}
+{"_e":"metro:bundling:progress","_t":1786400433301,"id":"1","progress":0.39707262150497274,"total":1024,"current":587}
+{"_e":"metro:bundling:progress","_t":1786400433401,"id":"1","progress":0.39707262150497274,"total":1047,"current":633}
+{"_e":"metro:bundling:progress","_t":1786400433502,"id":"1","progress":0.3999578936521571,"total":1061,"current":671}
+{"_e":"metro:bundling:progress","_t":1786400433602,"id":"1","progress":0.4383100191066674,"total":1083,"current":717}
+{"_e":"metro:bundling:progress","_t":1786400433703,"id":"1","progress":0.4531939238571154,"total":1123,"current":756}
+{"_e":"metro:bundling:progress","_t":1786400433804,"id":"1","progress":0.4531939238571154,"total":1132,"current":762}
+{"_e":"metro:bundling:progress","_t":1786400433904,"id":"1","progress":0.4531939238571154,"total":1162,"current":782}
+{"_e":"metro:bundling:progress","_t":1786400434005,"id":"1","progress":0.4531939238571154,"total":1192,"current":796}
+{"_e":"metro:bundling:progress","_t":1786400434105,"id":"1","progress":0.4636309689149264,"total":1194,"current":813}
+{"_e":"metro:bundling:progress","_t":1786400434220,"id":"1","progress":0.47244302963505724,"total":1209,"current":831}
+{"_e":"metro:bundling:progress","_t":1786400434320,"id":"1","progress":0.4982016610750603,"total":1217,"current":859}
+{"_e":"metro:bundling:progress","_t":1786400434420,"id":"1","progress":0.5110380889828698,"total":1224,"current":875}
+{"_e":"metro:bundling:progress","_t":1786400434526,"id":"1","progress":0.5210814356692542,"total":1226,"current":885}
+{"_e":"metro:bundling:progress","_t":1786400434626,"id":"1","progress":0.5291408270829513,"total":1229,"current":894}
+{"_e":"metro:bundling:progress","_t":1786400434729,"id":"1","progress":0.5330187057968141,"total":1230,"current":898}
+{"_e":"metro:bundling:progress","_t":1786400434829,"id":"1","progress":0.5363513121518343,"total":1233,"current":903}
+{"_e":"metro:bundling:progress","_t":1786400434929,"id":"1","progress":0.5436240041919872,"total":1241,"current":915}
+{"_e":"metro:bundling:progress","_t":1786400435030,"id":"1","progress":0.5559402893197907,"total":1254,"current":935}
+{"_e":"metro:bundling:progress","_t":1786400435131,"id":"1","progress":0.578608971047371,"total":1266,"current":963}
+{"_e":"metro:bundling:progress","_t":1786400435231,"id":"1","progress":0.610199459438476,"total":1284,"current":1003}
+{"_e":"metro:bundling:progress","_t":1786400435333,"id":"1","progress":0.6422190101819307,"total":1299,"current":1041}
+{"_e":"metro:bundling:progress","_t":1786400435433,"id":"1","progress":0.6575467876343779,"total":1322,"current":1072}
+{"_e":"metro:bundling:progress","_t":1786400435533,"id":"1","progress":0.676599016337837,"total":1330,"current":1094}
+{"_e":"metro:bundling:progress","_t":1786400435633,"id":"1","progress":0.7231994960753964,"total":1337,"current":1137}
+{"_e":"metro:bundling:progress","_t":1786400435734,"id":"1","progress":0.7348704548207191,"total":1387,"current":1189}
+{"_e":"metro:bundling:progress","_t":1786400435833,"id":"1","progress":0.7348704548207191,"total":1461,"current":1226}
+{"_e":"metro:bundling:progress","_t":1786400435933,"id":"1","progress":0.7348704548207191,"total":1472,"current":1245}
+{"_e":"metro:bundling:progress","_t":1786400436035,"id":"1","progress":0.7348704548207191,"total":1511,"current":1266}
+{"_e":"metro:bundling:progress","_t":1786400436136,"id":"1","progress":0.7348704548207191,"total":1512,"current":1268}
+{"_e":"metro:bundling:progress","_t":1786400436472,"id":"1","progress":0.7348704548207191,"total":1512,"current":1269}
+{"_e":"metro:bundling:progress","_t":1786400436573,"id":"1","progress":0.7348704548207191,"total":1512,"current":1272}
+{"_e":"metro:bundling:progress","_t":1786400436700,"id":"1","progress":0.7348704548207191,"total":1512,"current":1274}
+{"_e":"metro:bundling:progress","_t":1786400436810,"id":"1","progress":0.7348704548207191,"total":1512,"current":1281}
+{"_e":"metro:bundling:progress","_t":1786400436914,"id":"1","progress":0.7348704548207191,"total":1523,"current":1295}
+{"_e":"metro:bundling:progress","_t":1786400437015,"id":"1","progress":0.7366146450388893,"total":1531,"current":1314}
+{"_e":"metro:bundling:progress","_t":1786400437116,"id":"1","progress":0.754867599932535,"total":1540,"current":1338}
+{"_e":"metro:bundling:progress","_t":1786400437234,"id":"1","progress":0.754867599932535,"total":1599,"current":1367}
+{"_e":"metro:bundling:progress","_t":1786400437334,"id":"1","progress":0.754867599932535,"total":1617,"current":1396}
+{"_e":"metro:bundling:progress","_t":1786400437434,"id":"1","progress":0.754867599932535,"total":1667,"current":1411}
+{"_e":"metro:bundling:progress","_t":1786400437535,"id":"1","progress":0.754867599932535,"total":1676,"current":1420}
+{"_e":"metro:bundling:progress","_t":1786400437638,"id":"1","progress":0.754867599932535,"total":1754,"current":1429}
+{"_e":"metro:bundling:progress","_t":1786400437736,"id":"1","progress":0.754867599932535,"total":1763,"current":1456}
+{"_e":"metro:bundling:progress","_t":1786400437837,"id":"1","progress":0.754867599932535,"total":1803,"current":1495}
+{"_e":"metro:bundling:progress","_t":1786400437938,"id":"1","progress":0.754867599932535,"total":1813,"current":1523}
+{"_e":"metro:bundling:progress","_t":1786400438039,"id":"1","progress":0.754867599932535,"total":1852,"current":1569}
+{"_e":"metro:bundling:progress","_t":1786400438139,"id":"1","progress":0.754867599932535,"total":1863,"current":1612}
+{"_e":"metro:bundling:progress","_t":1786400438239,"id":"1","progress":0.754867599932535,"total":1883,"current":1619}
+{"_e":"metro:bundling:progress","_t":1786400438530,"id":"1","progress":0.754867599932535,"total":1883,"current":1620}
+{"_e":"metro:bundling:progress","_t":1786400438629,"id":"1","progress":0.754867599932535,"total":1892,"current":1624}
+{"_e":"metro:bundling:progress","_t":1786400438746,"id":"1","progress":0.754867599932535,"total":1901,"current":1627}
+{"_e":"metro:bundling:progress","_t":1786400438877,"id":"1","progress":0.754867599932535,"total":1901,"current":1628}
+{"_e":"metro:bundling:progress","_t":1786400438978,"id":"1","progress":0.754867599932535,"total":1908,"current":1637}
+{"_e":"metro:bundling:progress","_t":1786400439078,"id":"1","progress":0.754867599932535,"total":1924,"current":1659}
+{"_e":"metro:bundling:progress","_t":1786400439178,"id":"1","progress":0.754867599932535,"total":1937,"current":1669}
+{"_e":"metro:bundling:progress","_t":1786400439278,"id":"1","progress":0.754867599932535,"total":1951,"current":1693}
+{"_e":"metro:bundling:progress","_t":1786400439379,"id":"1","progress":0.7768493775118035,"total":1956,"current":1724}
+{"_e":"metro:bundling:progress","_t":1786400439478,"id":"1","progress":0.7943640964426173,"total":1959,"current":1746}
+{"_e":"metro:bundling:progress","_t":1786400439578,"id":"1","progress":0.8226920819182517,"total":1979,"current":1795}
+{"_e":"metro:bundling:progress","_t":1786400439678,"id":"1","progress":0.8508552176588899,"total":1985,"current":1831}
+{"_e":"metro:bundling:progress","_t":1786400439778,"id":"1","progress":0.85754175273975,"total":2028,"current":1878}
+{"_e":"metro:bundling:progress","_t":1786400439894,"id":"1","progress":0.85754175273975,"total":2070,"current":1901}
+{"_e":"metro:bundling:progress","_t":1786400439995,"id":"1","progress":0.85754175273975,"total":2088,"current":1922}
+{"_e":"metro:bundling:progress","_t":1786400440095,"id":"1","progress":0.85754175273975,"total":2088,"current":1927}
+{"_e":"metro:bundling:progress","_t":1786400440197,"id":"1","progress":0.85754175273975,"total":2088,"current":1933}
+{"_e":"metro:bundling:progress","_t":1786400440297,"id":"1","progress":0.8708736378998893,"total":2096,"current":1956}
+{"_e":"metro:bundling:progress","_t":1786400440398,"id":"1","progress":0.9054358754464261,"total":2105,"current":2003}
+{"_e":"metro:bundling:progress","_t":1786400440499,"id":"1","progress":0.9303678249434502,"total":2116,"current":2041}
+{"_e":"metro:bundling:progress","_t":1786400440598,"id":"1","progress":0.9497288181030672,"total":2121,"current":2067}
+{"_e":"metro:bundling:progress","_t":1786400440698,"id":"1","progress":0.9556227858110939,"total":2139,"current":2091}
+{"_e":"metro:bundling:progress","_t":1786400440798,"id":"1","progress":0.9565859615648774,"total":2187,"current":2139}
+{"_e":"metro:bundling:progress","_t":1786400440898,"id":"1","progress":0.9629825166854524,"total":2248,"current":2206}
+{"_e":"metro:bundling:progress","_t":1786400440999,"id":"1","progress":0.999,"total":2274,"current":2273}
+{"_e":"metro:bundling:progress","_t":1786400441099,"id":"1","progress":0.999,"total":2274,"current":2274}
+{"_e":"metro:bundling:done","_t":1786400441405,"id":"1","total":2274,"ms":11646.023541}
+{"_e":"metro:client_log","_t":1786400442454,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786400442459,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786400443364,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1786400457800,"level":"warn","data":["bundle scheme is file - unable to connect to sharedPackageConnection from EXDevLauncherController."]}
+{"_e":"metro:bundling:started","_t":1786400457831,"id":"2","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786400457832,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786400458039,"id":"2","total":1,"ms":206.83525}
+{"_e":"metro:client_log","_t":1786400458536,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1786400458536,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1786400458536,"level":"warn","data":["Sending `websocketMessage` with no listeners registered."]}
+{"_e":"metro:client_log","_t":1786400458879,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786400458879,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1786401488381,"id":"3","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786401488382,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786401488687,"id":"3","total":1,"ms":304.968709}
+{"_e":"metro:client_log","_t":1786401489699,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786401489704,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"root:init","_t":1786401515089,"format":"v0-jsonl","version":"57.0.11"}
+{"_e":"env:mode","_t":1786401515089,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1786401515092,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"https://5cea-38-10-153-36.ngrok-free.app"}}
+{"_e":"devserver:start","_t":1786401515646,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1786401515913,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1786401516125,"plugins":[]}
+{"_e":"metro:instantiate","_t":1786401516836,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1786401529921,"id":"1","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786401529922,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786401529925,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786401530035,"id":"1","progress":0.0172265625,"total":160,"current":21}
+{"_e":"metro:bundling:progress","_t":1786401530134,"id":"1","progress":0.15932843725725587,"total":476,"current":190}
+{"_e":"metro:bundling:progress","_t":1786401530234,"id":"1","progress":0.30414178803034636,"total":738,"current":407}
+{"_e":"metro:bundling:progress","_t":1786401530334,"id":"1","progress":0.38126580347438077,"total":1145,"current":707}
+{"_e":"metro:bundling:progress","_t":1786401530434,"id":"1","progress":0.5654944051443673,"total":1254,"current":943}
+{"_e":"metro:bundling:progress","_t":1786401530534,"id":"1","progress":0.7420499656328465,"total":1335,"current":1150}
+{"_e":"metro:bundling:progress","_t":1786401530634,"id":"1","progress":0.7420499656328465,"total":1510,"current":1276}
+{"_e":"metro:bundling:progress","_t":1786401530734,"id":"1","progress":0.7420499656328465,"total":1829,"current":1549}
+{"_e":"metro:bundling:progress","_t":1786401530834,"id":"1","progress":0.8734813563544789,"total":2049,"current":1915}
+{"_e":"metro:bundling:progress","_t":1786401530934,"id":"1","progress":0.958622175820975,"total":2248,"current":2201}
+{"_e":"metro:bundling:done","_t":1786401531037,"id":"1","total":2248,"ms":1116.044958}
+{"_e":"metro:client_log","_t":1786401531925,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786401531930,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786401537519,"level":"warn","data":["Sending `onAnimatedValueUpdate` with no listeners registered."]}
+{"_e":"metro:bundling:started","_t":1786401851598,"id":"2","platform":"ios","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786401851598,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786401851723,"id":"2","total":1,"ms":125.369959}
+{"_e":"metro:client_log","_t":1786401852625,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786401852630,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}

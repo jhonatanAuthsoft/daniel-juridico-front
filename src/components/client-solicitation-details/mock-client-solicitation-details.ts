@@ -15,6 +15,8 @@ export type CompatibleLawyer = {
   availability: string;
   location: string;
   role: string;
+  /** Compatibility score 0–100 from matching. */
+  compatibility: number;
   avatarColor: string;
   registration: string;
   biography: string;
@@ -34,7 +36,7 @@ export type ClientSolicitationDetails = {
   id: string;
   title: string;
   status: SolicitationStatus;
-  /** API workflow status (`ABERTA`, `CANCELADA`, …). */
+  /** API workflow status (`AGUARDANDO_MATCHING`, `CANCELADA`, …). */
   workflowStatus: SolicitationWorkflowStatus;
   practice: string;
   specialties: string[];
@@ -57,6 +59,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     availability: 'Disponível',
     location: 'Rio Branco - Salvador',
     role: 'Pautista',
+    compatibility: 50,
     avatarColor: '#7A5C58',
     registration: 'OAB 155242/BA',
     biography:
@@ -89,6 +92,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     availability: 'Disponível',
     location: 'Centro - Salvador',
     role: 'Advogado',
+    compatibility: 50,
     avatarColor: '#8A6D5B',
     registration: 'OAB 204851/BA',
     biography:
@@ -113,6 +117,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     availability: 'Disponível',
     location: 'Pelourinho - Salvador',
     role: 'Advogado',
+    compatibility: 50,
     avatarColor: '#626B73',
     registration: 'OAB 178420/BA',
     biography:
@@ -137,6 +142,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     availability: 'Disponível',
     location: 'Pelourinho - Salvador',
     role: 'Advogado',
+    compatibility: 40,
     avatarColor: '#8A3345',
     registration: 'OAB 192376/BA',
     biography:
@@ -159,7 +165,7 @@ export const MOCK_CLIENT_SOLICITATION_DETAILS: ClientSolicitationDetails[] =
     id: solicitation.id,
     title: solicitation.title,
     status: solicitation.status,
-    workflowStatus: 'ABERTA',
+    workflowStatus: solicitation.workflowStatus,
     practice: 'Pautista',
     specialties: ['Direito Civil', 'Direito Penal', 'Direito da Família'],
     subspecialties: ['Contratos', 'Responsabilidade Civil', 'Cobrança e Execução'],
@@ -168,7 +174,7 @@ export const MOCK_CLIENT_SOLICITATION_DETAILS: ClientSolicitationDetails[] =
     billingMethod: 'A combinar',
     description: solicitation.description,
     compatibleLawyers: MOCK_COMPATIBLE_LAWYERS.slice(0, solicitation.lawyerCount),
-    canCancel: true,
+    canCancel: solicitation.workflowStatus === 'AGUARDANDO_MATCHING',
   }));
 
 export function getSolicitationStatusLabel(status: SolicitationStatus): string {

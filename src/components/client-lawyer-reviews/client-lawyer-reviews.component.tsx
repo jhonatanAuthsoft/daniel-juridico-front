@@ -28,6 +28,11 @@ type ClientLawyerReviewsProps = {
   /** When set, own reviews show delete and call this on confirm. */
   onDeleteOwnReview?: (reviewId: string) => Promise<void>;
   isDeletingOwn?: boolean;
+  onSubmitReview?: (payload: {
+    rating: number;
+    comment: string;
+  }) => Promise<void>;
+  isSubmittingReview?: boolean;
 };
 
 function formatRatingLabel(rating: number): string {
@@ -49,10 +54,11 @@ export function ClientLawyerReviews({
   canReview = false,
   onDeleteOwnReview,
   isDeletingOwn = false,
+  onSubmitReview,
+  isSubmittingReview = false,
 }: ClientLawyerReviewsProps) {
   const [expanded, setExpanded] = useState(false);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
-  const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [currentReviews, setCurrentReviews] = useState(() => reviews);
   const [currentTotal, setCurrentTotal] = useState(total);
   const [reviewToDeleteId, setReviewToDeleteId] = useState<string | null>(null);
@@ -79,6 +85,17 @@ export function ClientLawyerReviews({
     setReviewToDeleteId(null);
   };
 
+  const submitReview = async (payload: {
+    rating: number;
+    comment: string;
+  }) => {
+    if (!onSubmitReview || isSubmittingReview) {
+      return;
+    }
+    setReviewModalVisible(false);
+    await onSubmitReview(payload);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.divider} />
@@ -90,13 +107,10 @@ export function ClientLawyerReviews({
 
       {canCreateReview ? (
         <Button
-          accessibilityLabel={
-            reviewSubmitted ? 'Avaliação enviada' : 'Deixar uma avaliação'
-          }
-          disabled={reviewSubmitted}
+          accessibilityLabel="Deixar uma avaliação"
           onPress={() => setReviewModalVisible(true)}
           variant="secondary">
-          {reviewSubmitted ? 'Avaliação enviada' : 'Deixar uma avaliação'}
+          Deixar uma avaliação
         </Button>
       ) : null}
 
@@ -177,10 +191,10 @@ export function ClientLawyerReviews({
       ) : null}
 
       <ClientReviewFormModal
+        isSubmitting={isSubmittingReview}
         onClose={() => setReviewModalVisible(false)}
-        onSubmit={() => {
-          setReviewSubmitted(true);
-          setReviewModalVisible(false);
+        onSubmit={(payload) => {
+          void submitReview(payload);
         }}
         visible={reviewModalVisible}
       />

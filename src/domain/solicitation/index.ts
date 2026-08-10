@@ -4,8 +4,11 @@ export { cancelClientSolicitationUseCase } from './cancel-client-solicitation.us
 export { getClientSolicitationUseCase } from './get-client-solicitation.use-case';
 export { listClientSolicitationsUseCase } from './list-client-solicitations.use-case';
 export { listSolicitationMatchesUseCase } from './list-solicitation-matches.use-case';
-export { solicitationKeys } from './solicitation.keys';
+export { solicitationKeys, PAGE_SIZE } from './solicitation.keys';
 export { useCancelClientSolicitation } from './use-cancel-client-solicitation';
 export { useClientSolicitationDetails } from './use-client-solicitation-details';
-export { useClientSolicitations } from './use-client-solicitations';
+export {
+  useClientSolicitations,
+  type ClientSolicitationsInfiniteParams,
+} from './use-client-solicitations';
 export { useCreateSolicitation } from './use-create-solicitation';

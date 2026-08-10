@@ -30,6 +30,7 @@ describe('mapLawyerReviewsWireToResult', () => {
 
     expect(result.total).toBe(2);
     expect(result.averageRating).toBe(4.8);
+    expect(result.canReview).toBe(false);
     expect(result.items).toEqual([
       {
         id: 'rev-1',
@@ -55,10 +56,12 @@ describe('mapLawyerReviewsWireToResult', () => {
       items: [],
       mediaAvaliacoes: 0,
       totalAvaliacoes: 0,
+      podeAvaliar: true,
     });
 
     expect(result.items).toEqual([]);
     expect(result.total).toBe(0);
     expect(result.averageRating).toBe(0);
+    expect(result.canReview).toBe(true);
   });
 });

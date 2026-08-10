@@ -1,6 +1,8 @@
 import {
+  canCancelSolicitationStatus,
   mapCreateSolicitationParamsToWire,
   mapCreateSolicitationWireToResult,
+  mapListItemWireToCard,
   mapListagemWireToResult,
   normalizeListagemPayload,
 } from './solicitation.mapper';
@@ -63,7 +65,7 @@ describe('solicitation.mapper', () => {
     expect(
       mapCreateSolicitationWireToResult({
         id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
-        status: 'ABERTA',
+        status: 'AGUARDANDO_MATCHING',
         titulo: 'Demanda',
         modalidade: 'CONSULTORIA',
         especialidadeCodigo: 'CIVIL',
@@ -79,7 +81,7 @@ describe('solicitation.mapper', () => {
       }),
     ).toEqual({
       id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
-      status: 'ABERTA',
+      status: 'AGUARDANDO_MATCHING',
       title: 'Demanda',
       totalMatches: 3,
       createdAt: '2026-08-04T12:00:00',
@@ -91,7 +93,7 @@ describe('solicitation.mapper', () => {
       items: [
         {
           id: 'sol-1',
-          status: 'ABERTA',
+          status: 'AGUARDANDO_MATCHING',
           urgencia: 'URGENTE',
           titulo: 'Caso',
           descricao: 'Desc',
@@ -102,7 +104,7 @@ describe('solicitation.mapper', () => {
         },
       ],
       contagemPorStatus: {
-        ABERTA: 1,
+        AGUARDANDO_MATCHING: 1,
         CANCELADA: 2,
       },
     });
@@ -110,7 +112,7 @@ describe('solicitation.mapper', () => {
     const result = mapListagemWireToResult(normalized, 1);
     expect(result.items).toHaveLength(1);
     expect(result.items[0].title).toBe('Caso');
-    expect(result.countsByStatus.ABERTA).toBe(1);
+    expect(result.countsByStatus.AGUARDANDO_MATCHING).toBe(1);
     expect(result.countsByStatus.CANCELADA).toBe(2);
   });
 
@@ -118,7 +120,7 @@ describe('solicitation.mapper', () => {
     const normalized = normalizeListagemPayload([
       {
         id: 'sol-1',
-        status: 'ABERTA',
+        status: 'AGUARDANDO_MATCHING',
         urgencia: 'MEDIO',
         titulo: 'Legado',
         descricao: 'Desc',
@@ -132,6 +134,49 @@ describe('solicitation.mapper', () => {
     const result = mapListagemWireToResult(normalized, 1);
     expect(result.items).toHaveLength(1);
     expect(result.items[0].title).toBe('Legado');
-    expect(result.countsByStatus.ABERTA).toBe(1);
+    expect(result.countsByStatus.AGUARDANDO_MATCHING).toBe(1);
+  });
+
+  it('uses accepted connections count for MATCH_REALIZADO footer', () => {
+    const card = mapListItemWireToCard({
+      id: 'sol-1',
+      status: 'MATCH_REALIZADO',
+      urgencia: 'URGENTE',
+      titulo: 'Caso',
+      descricao: 'Desc',
+      dataAbertura: '2026-08-04T12:00:00',
+      especialidadeCodigo: 'CIVIL',
+      especialidade: 'Civil',
+      totalMatches: 5,
+      totalConexoesAceitas: 1,
+    });
+
+    expect(card.footerVariant).toBe('accepted');
+    expect(card.lawyerCount).toBe(1);
+  });
+
+  it('uses totalMatches for pending compatible footer', () => {
+    const card = mapListItemWireToCard({
+      id: 'sol-2',
+      status: 'AGUARDANDO_MATCHING',
+      urgencia: 'MEDIO',
+      titulo: 'Caso',
+      descricao: 'Desc',
+      dataAbertura: '2026-08-04T12:00:00',
+      especialidadeCodigo: 'CIVIL',
+      especialidade: 'Civil',
+      totalMatches: 5,
+      totalConexoesAceitas: 0,
+    });
+
+    expect(card.footerVariant).toBe('compatible');
+    expect(card.lawyerCount).toBe(5);
+  });
+
+  it('allows cancel only while AGUARDANDO_MATCHING', () => {
+    expect(canCancelSolicitationStatus('AGUARDANDO_MATCHING')).toBe(true);
+    expect(canCancelSolicitationStatus('MATCH_REALIZADO')).toBe(false);
+    expect(canCancelSolicitationStatus('CANCELADA')).toBe(false);
+    expect(canCancelSolicitationStatus(undefined)).toBe(false);
   });
 });

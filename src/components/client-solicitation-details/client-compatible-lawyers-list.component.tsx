@@ -3,6 +3,7 @@ import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { BagIcon } from '@/assets/icon/bag';
 import { MapPinIcon } from '@/assets/icon/map-pin';
+import { PercentIcon } from '@/assets/icon/percent';
 import { Button } from '@/atomic/button';
 import { Body2, Heading1 } from '@/atomic/typography';
 import type { ClientConnectionStatusValue } from '@/components/client-connection-status';
@@ -138,6 +139,16 @@ export function ClientCompatibleLawyersList({
                     height={16}
                   />
                   <Body2 color={BrandColors.neutral.white}>{lawyer.role}</Body2>
+                </View>
+                <View style={styles.metaRow}>
+                  <PercentIcon
+                    color={BrandColors.neutral.white}
+                    width={16}
+                    height={16}
+                  />
+                  <Body2 color={BrandColors.neutral.white}>
+                    {lawyer.compatibility}% de compatibilidade
+                  </Body2>
                 </View>
               </Pressable>
 

@@ -16,6 +16,8 @@ export type {
   PublicLawyerProfileWire,
 } from './public-profile.types';
 export type {
+  CreateLawyerReviewInput,
+  CreateLawyerReviewResult,
   DeleteLawyerReviewResult,
   LawyerReview,
   LawyerReviewsResult,
@@ -42,4 +44,8 @@ export {
 } from './reviews.mapper';
 export { registerLawyer } from './lawyer.api';
 export { getPublicLawyerProfile } from './public-profile.api';
-export { deleteLawyerReview, listLawyerReviews } from './reviews.api';
+export {
+  createLawyerReview,
+  deleteLawyerReview,
+  listLawyerReviews,
+} from './reviews.api';

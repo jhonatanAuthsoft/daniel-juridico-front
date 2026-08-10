@@ -73,7 +73,7 @@ export function StepDocumentation() {
         placeholder="00.000.000-0"
         keyboardType="number-pad"
         format={InputMasks.rg}
-        validate={FieldValidators.digitsMin(5, 'RG inválido')}
+        validate={FieldValidators.rg}
         maxLength={12}
       />
 
@@ -84,13 +84,13 @@ export function StepDocumentation() {
           <View style={styles.rowItemGrow}>
             <InputSelectField
               name="issuingAuthority"
-              placeholder="SSP"
+              placeholder="Selecione"
               options={ISSUING_AUTHORITY_OPTIONS}
               required
             />
           </View>
           <View style={styles.rowItemUf}>
-            <InputSelectField name="uf" placeholder="BA" options={UF_OPTIONS} required />
+            <InputSelectField name="uf" placeholder="UF" options={UF_OPTIONS} required />
           </View>
         </View>
       </View>

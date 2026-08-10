@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { SymbolView } from 'expo-symbols';
+import { useDeferredValue, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -54,7 +55,7 @@ type FilterChip = {
 };
 
 const FILTER_TO_API_STATUS: Record<Exclude<FilterId, 'all'>, StatusSolicitacaoApi> = {
-  pending: 'ABERTA',
+  pending: 'AGUARDANDO_MATCHING',
   accepted: 'MATCH_REALIZADO',
   canceled: 'CANCELADA',
 };
@@ -73,15 +74,7 @@ export default function ClientHomeScreen() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isPullRefreshing, setIsPullRefreshing] = useState(false);
-
-  const listParams = useMemo(
-    () => ({
-      limit: 50,
-      offset: 0,
-      status: apiStatusForFilter(activeFilter),
-    }),
-    [activeFilter],
-  );
+  const deferredSearch = useDeferredValue(searchQuery.trim());
 
   const {
     data,
@@ -90,7 +83,13 @@ export default function ClientHomeScreen() {
     error,
     refetch,
     isFetched,
-  } = useClientSolicitations(listParams);
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useClientSolicitations({
+    status: apiStatusForFilter(activeFilter),
+    busca: deferredSearch || undefined,
+  });
 
   const handlePullRefresh = async () => {
     setIsPullRefreshing(true);
@@ -101,12 +100,17 @@ export default function ClientHomeScreen() {
     }
   };
 
-  const solicitations = data?.items ?? [];
-  const countsByStatus = data?.countsByStatus ?? emptySolicitationStatusCounts();
+  const solicitations = useMemo(
+    () => data?.pages.flatMap((page) => page.items) ?? [],
+    [data],
+  );
+  const countsByStatus =
+    data?.pages[0]?.countsByStatus ?? emptySolicitationStatusCounts();
   const totalByStatus = Object.values(countsByStatus).reduce(
     (sum, count) => sum + count,
     0,
   );
+  const hasSearchQuery = deferredSearch.length > 0;
   /** True only after a successful fetch with zero solicitations overall. */
   const hasNoSolicitationsAtAll =
     isFetched &&
@@ -115,7 +119,7 @@ export default function ClientHomeScreen() {
     solicitations.length === 0 &&
     totalByStatus === 0 &&
     activeFilter === 'all' &&
-    !searchQuery.trim();
+    !hasSearchQuery;
 
   const filterChips = useMemo((): FilterChip[] => {
     return [
@@ -123,7 +127,7 @@ export default function ClientHomeScreen() {
       {
         id: 'pending',
         label: 'Pendentes',
-        count: countsByStatus.ABERTA,
+        count: countsByStatus.AGUARDANDO_MATCHING,
       },
       {
         id: 'accepted',
@@ -141,24 +145,14 @@ export default function ClientHomeScreen() {
   const tabBarTotalHeight = TAB_BAR_CONTENT_HEIGHT + insets.bottom;
   const fabBottom = tabBarTotalHeight + FAB_GAP_ABOVE_TAB;
 
-  const filteredData = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) {
-      return solicitations;
-    }
-
-    return solicitations.filter(
-      (item) =>
-        item.title.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query),
-    );
-  }, [searchQuery, solicitations]);
-  const hasListItems = filteredData.length > 0;
-  const hasSearchQuery = searchQuery.trim().length > 0;
+  const hasListItems = solicitations.length > 0;
   const listPaddingBottom =
     hasListItems || !hasNoSolicitationsAtAll
       ? fabBottom + FAB_HEIGHT + LIST_GAP_ABOVE_FAB
       : tabBarTotalHeight + Spacing.sm;
+
+  const showInitialLoading = isLoading && !hasListItems && !isPullRefreshing;
+  const showInitialError = isError && !hasListItems;
 
   return (
     <View style={styles.root}>
@@ -261,11 +255,11 @@ export default function ClientHomeScreen() {
           )}
         </View>
 
-        {isLoading && !hasListItems ? (
+        {showInitialLoading ? (
           <View style={styles.centeredState}>
             <ActivityIndicator color={BrandColors.primary.light} size="large" />
           </View>
-        ) : isError && !hasListItems ? (
+        ) : showInitialError ? (
           <View style={styles.centeredState}>
             <Heading1 color={BrandColors.neutral.white} style={styles.emptyTitle}>
               Não foi possível carregar
@@ -288,7 +282,7 @@ export default function ClientHomeScreen() {
           </View>
         ) : (
           <FlatList
-            data={filteredData}
+            data={solicitations}
             keyExtractor={(item) => item.id}
             contentContainerStyle={[styles.listContent, { paddingBottom: listPaddingBottom }]}
             showsVerticalScrollIndicator={false}
@@ -297,6 +291,37 @@ export default function ClientHomeScreen() {
               void handlePullRefresh();
             }}
             ItemSeparatorComponent={() => <Separator size="sm" />}
+            ListFooterComponent={
+              hasNextPage ? (
+                <View style={styles.listFooter}>
+                  {isFetchingNextPage ? (
+                    <ActivityIndicator color={BrandColors.primary.light} />
+                  ) : (
+                    <Pressable
+                      accessibilityLabel="Ver mais"
+                      accessibilityRole="button"
+                      onPress={() => {
+                        void fetchNextPage();
+                      }}
+                      style={({ pressed }) => [
+                        styles.loadMoreButton,
+                        pressed && styles.pressed,
+                      ]}>
+                      <SymbolView
+                        name={{
+                          ios: 'chevron.down',
+                          android: 'keyboard_arrow_down',
+                          web: 'keyboard_arrow_down',
+                        }}
+                        size={20}
+                        tintColor={BrandColors.primary.light}
+                      />
+                      <Link color={BrandColors.primary.light}>Ver mais</Link>
+                    </Pressable>
+                  )}
+                </View>
+              ) : null
+            }
             ListEmptyComponent={
               hasNoSolicitationsAtAll ? (
                 <ClientEmptyState
@@ -439,6 +464,17 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     flexGrow: 1,
+  },
+  listFooter: {
+    paddingVertical: Spacing.sm,
+    alignItems: 'center',
+  },
+  loadMoreButton: {
+    minHeight: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.xxs,
   },
   centeredState: {
     flex: 1,

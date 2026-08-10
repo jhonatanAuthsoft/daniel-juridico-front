@@ -6,11 +6,9 @@ export type SolicitationFooterVariant = 'accepted' | 'compatible';
 
 /** Workflow status from `GET /solicitacoes` (`StatusSolicitacaoEnum`). */
 export type SolicitationWorkflowStatus =
-  | 'ABERTA'
   | 'AGUARDANDO_MATCHING'
   | 'MATCH_REALIZADO'
-  | 'CANCELADA'
-  | 'ENCERRADA';
+  | 'CANCELADA';
 
 export type ClientSolicitationCardData = {
   id: string;
@@ -56,12 +54,15 @@ export function formatSolicitationFooter(
   if (variant === 'accepted') {
     return {
       countLabel: String(count),
-      rest: ' advogados aceitaram sua solicitação',
+      rest:
+        count === 1
+          ? ' advogado aceitou sua solicitação'
+          : ' advogados aceitaram sua solicitação',
     };
   }
 
   return {
     countLabel: String(count),
-    rest: ' advogados compatíveis',
+    rest: count === 1 ? ' advogado compatível' : ' advogados compatíveis',
   };
 }

@@ -28,7 +28,7 @@ const baseForm: ClientSignupFormValues = {
   maritalStatus: 'solteiro',
   profession: 'Analista',
   monthlyIncome: '5000',
-  pronouns: 'ela-dela',
+  pronouns: 'ELA',
   profileImageUri: 'file://local.jpg',
   profileImageKey: 'tmp/clientes/perfil/abc.jpg',
 };
@@ -43,6 +43,8 @@ describe('client.mapper', () => {
       numeroDocumento: '52998224725',
       nomeCompleto: 'Maria Silva',
       rg: '1234567',
+      rgOrgaoEmissor: 'SSP',
+      rgUf: 'SP',
       dataNascimento: '1990-05-20',
       pronomes: 'ELA',
       telefone: '11999999999',
@@ -68,11 +70,14 @@ describe('client.mapper', () => {
     expect(payload.razaoSocial).toBe('Empresa Exemplo LTDA');
     expect(payload.areaAtuacao).toBe('Tecnologia');
     expect(payload.numeroDocumento).toBe('12345678000195');
+    expect(payload.rgOrgaoEmissor).toBeUndefined();
+    expect(payload.rgUf).toBeUndefined();
   });
 
   it('parses birth dates and pronouns', () => {
     expect(toIsoBirthDate('20/05/1990')).toBe('1990-05-20');
-    expect(mapPronounsToApi('ele-dele')).toBe('ELE');
-    expect(mapPronounsToApi('nao-informar')).toBe('NEUTRO');
+    expect(mapPronounsToApi('ELE')).toBe('ELE');
+    expect(mapPronounsToApi('ELA')).toBe('ELA');
+    expect(mapPronounsToApi('NEUTRO')).toBe('NEUTRO');
   });
 });

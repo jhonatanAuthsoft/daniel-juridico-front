@@ -22,20 +22,22 @@ export function toIsoBirthDate(value: string): string | undefined {
 }
 
 /**
- * Pending analysis: front pronouns → API enum.
- * `elu-delu` and `nao-informar` currently map to NEUTRO.
+ * Converts UI pronoun select value to API `PronomesEnum`.
+ * Select values are already `ELE` | `ELA` | `NEUTRO`.
  */
 export function mapPronounsToApi(value: string): PronounsApi {
-  switch (value) {
-    case 'ele-dele':
-      return 'ELE';
-    case 'ela-dela':
-      return 'ELA';
-    case 'elu-delu':
-    case 'nao-informar':
-    default:
-      return 'NEUTRO';
+  const normalized = value.trim().toUpperCase();
+  if (normalized === 'ELE' || normalized === 'ELA') {
+    return normalized;
   }
+  // Legacy UI values kept for safety during rollout.
+  if (normalized === 'ELE-DELE') {
+    return 'ELE';
+  }
+  if (normalized === 'ELA-DELA') {
+    return 'ELA';
+  }
+  return 'NEUTRO';
 }
 
 function mapPersonType(personType: ClientSignupFormValues['personType']): DocumentTypeApi {
@@ -92,6 +94,8 @@ export function mapClientSignupFormToRegisterRequest(
     ...base,
     nomeCompleto: form.fullName.trim(),
     rg: form.rg.trim(),
+    rgOrgaoEmissor: form.issuingAuthority.trim(),
+    rgUf: form.uf.trim().toUpperCase(),
     dataNascimento: toIsoBirthDate(form.birthDate),
     profissao: form.profession.trim(),
   };

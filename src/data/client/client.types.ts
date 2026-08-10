@@ -14,6 +14,8 @@ export type RegisterClientRequest = {
   tipoDocumento: DocumentTypeApi;
   numeroDocumento: string;
   rg?: string;
+  rgOrgaoEmissor?: string;
+  rgUf?: string;
   dataNascimento?: string;
   pronomes: PronounsApi;
   telefone: string;

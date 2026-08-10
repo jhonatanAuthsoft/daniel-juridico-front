@@ -14,7 +14,7 @@ export const MOCK_CLIENT_SOLICITATIONS: ClientSolicitationCardData[] = [
   {
     id: 'sol-2',
     status: 'urgente',
-    workflowStatus: 'ABERTA',
+    workflowStatus: 'AGUARDANDO_MATCHING',
     title: 'Pensão Alimentícia',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do.',
     date: '25/06/2026',
@@ -24,7 +24,7 @@ export const MOCK_CLIENT_SOLICITATIONS: ClientSolicitationCardData[] = [
   {
     id: 'sol-3',
     status: 'medio',
-    workflowStatus: 'ABERTA',
+    workflowStatus: 'AGUARDANDO_MATCHING',
     title: 'Divórcio Consensual',
     description: 'Preciso de orientação para iniciar um processo de divórcio amigável.',
     date: '18/06/2026',
@@ -44,7 +44,7 @@ export const MOCK_CLIENT_SOLICITATIONS: ClientSolicitationCardData[] = [
   {
     id: 'sol-5',
     status: 'emergencia',
-    workflowStatus: 'ABERTA',
+    workflowStatus: 'AGUARDANDO_MATCHING',
     title: 'Medida Protetiva',
     description: 'Situação de risco e necessidade de orientação jurídica imediata.',
     date: '02/06/2026',
@@ -54,7 +54,7 @@ export const MOCK_CLIENT_SOLICITATIONS: ClientSolicitationCardData[] = [
   {
     id: 'sol-6',
     status: 'tenho_tempo',
-    workflowStatus: 'ABERTA',
+    workflowStatus: 'AGUARDANDO_MATCHING',
     title: 'Consultoria Contratual',
     description: 'Quero revisar um contrato de prestação de serviços sem urgência.',
     date: '28/05/2026',

@@ -7,13 +7,28 @@ import {
 
 import { mapLawyerReviewsWireToResult } from './reviews.mapper';
 import type {
+  CreateLawyerReviewInput,
+  CreateLawyerReviewResult,
   DeleteLawyerReviewResult,
+  LawyerReviewItemWire,
   LawyerReviewsListWire,
   LawyerReviewsResult,
   ListLawyerReviewsParams,
 } from './reviews.types';
 
 const DEFAULT_LIMIT = 50;
+
+function mapReviewItemWire(wire: LawyerReviewItemWire): CreateLawyerReviewResult {
+  const mapped = mapLawyerReviewsWireToResult({
+    items: [wire],
+    totalAvaliacoes: 1,
+    podeAvaliar: false,
+  }).items[0];
+  if (!mapped) {
+    throw new Error('Resposta de avaliação inválida.');
+  }
+  return mapped;
+}
 
 /**
  * Lists reviews for a lawyer (authenticated).
@@ -48,6 +63,43 @@ export async function listLawyerReviews(
     'Não foi possível carregar as avaliações.',
   );
   return mapLawyerReviewsWireToResult(data);
+}
+
+/**
+ * Creates a review for a lawyer (authenticated client with ACEITA connection).
+ * `POST /advogados/{id}/avaliacoes`
+ */
+export async function createLawyerReview(
+  lawyerUserId: string,
+  input: CreateLawyerReviewInput,
+  signal?: AbortSignal,
+): Promise<CreateLawyerReviewResult> {
+  const id = lawyerUserId.trim();
+  if (!id) {
+    throw new Error('Identificador do advogado inválido.');
+  }
+
+  const comment = input.comment.trim();
+  if (!comment) {
+    throw new Error('O comentário é obrigatório.');
+  }
+
+  const response = await authenticatedHttpRequest<
+    ApiResponse<LawyerReviewItemWire>
+  >(apiUrl(`/advogados/${encodeURIComponent(id)}/avaliacoes`), {
+    method: 'POST',
+    signal,
+    body: JSON.stringify({
+      nota: input.rating,
+      comentario: comment,
+    }),
+  });
+
+  const data = assertApiSuccess(
+    response,
+    'Não foi possível enviar a avaliação.',
+  );
+  return mapReviewItemWire(data);
 }
 
 /**

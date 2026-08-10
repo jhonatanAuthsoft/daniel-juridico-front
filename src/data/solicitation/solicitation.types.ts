@@ -26,11 +26,9 @@ export type NivelLocalidadeApi =
 
 /** Workflow status from the API (`StatusSolicitacaoEnum`). */
 export type StatusSolicitacaoApi =
-  | 'ABERTA'
   | 'AGUARDANDO_MATCHING'
   | 'MATCH_REALIZADO'
-  | 'CANCELADA'
-  | 'ENCERRADA';
+  | 'CANCELADA';
 
 /** Wire body for `POST /solicitacoes`. */
 export type CreateSolicitationWireRequest = {
@@ -77,6 +75,8 @@ export type SolicitacaoListagemItemWire = {
   especialidadeCodigo: string;
   especialidade: string;
   totalMatches: number;
+  /** Accepted connections count (`ACEITA`). Used for "aceitaram" footer. */
+  totalConexoesAceitas?: number;
 };
 
 export type SolicitacaoListagemWire = {
@@ -131,6 +131,8 @@ export type ListSolicitationsParams = {
   offset?: number;
   /** API workflow status filter (`?status=`). */
   status?: StatusSolicitacaoApi;
+  /** Server-side search on title/description (`?busca=`). */
+  busca?: string;
 };
 
 export type SolicitationStatusCounts = Record<StatusSolicitacaoApi, number>;

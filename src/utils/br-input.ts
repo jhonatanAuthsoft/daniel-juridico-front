@@ -69,13 +69,24 @@ export function maskAlphanumericOnly(value: string, maxLength?: number): string 
   return maxLength !== undefined ? cleaned.slice(0, maxLength) : cleaned;
 }
 
-/** Progressive RG mask (padrão comum): 00.000.000-0 — até 9 dígitos. */
+/** Progressive RG mask (padrão comum): 00.000.000-0 — até 9 dígitos, 1 verificador. */
 export function maskRg(value: string): string {
   const digits = onlyDigits(value).slice(0, 9);
-  return digits
-    .replace(/(\d{2})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  if (digits.length <= 2) {
+    return digits;
+  }
+  if (digits.length <= 5) {
+    return `${digits.slice(0, 2)}.${digits.slice(2)}`;
+  }
+  if (digits.length <= 8) {
+    return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5)}`;
+  }
+  return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}-${digits.slice(8)}`;
+}
+
+/** RG completo: exatamente 9 dígitos (8 + 1 verificador). */
+export function isValidRg(value: string): boolean {
+  return onlyDigits(value).length === 9;
 }
 
 /** Simple BRL-ish amount: digits + optional decimal comma (2 places). */
@@ -143,7 +154,14 @@ export function isValidCep(value: string): boolean {
   return onlyDigits(value).length === 8;
 }
 
-export function isValidDateBr(value: string): boolean {
+export type DateBrOptions = {
+  /** Inclusive minimum calendar year. Defaults to 1900. */
+  minYear?: number;
+  /** When false, dates after today (local) are invalid. Defaults to true. */
+  allowFuture?: boolean;
+};
+
+export function isValidDateBr(value: string, options: DateBrOptions = {}): boolean {
   const digits = onlyDigits(value);
   if (digits.length !== 8) {
     return false;
@@ -151,15 +169,26 @@ export function isValidDateBr(value: string): boolean {
   const day = Number(digits.slice(0, 2));
   const month = Number(digits.slice(2, 4));
   const year = Number(digits.slice(4, 8));
-  if (month < 1 || month > 12 || day < 1 || year < 1900) {
+  const minYear = options.minYear ?? 1900;
+  if (month < 1 || month > 12 || day < 1 || year < minYear) {
     return false;
   }
   const date = new Date(year, month - 1, day);
-  return (
-    date.getFullYear() === year &&
-    date.getMonth() === month - 1 &&
-    date.getDate() === day
-  );
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return false;
+  }
+  if (options.allowFuture === false) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date > today) {
+      return false;
+    }
+  }
+  return true;
 }
 
 export function isValidYear(value: string, min = 1950, max = new Date().getFullYear() + 1): boolean {

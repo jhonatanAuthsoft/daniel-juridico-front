@@ -13,6 +13,7 @@ export type LawyerReviewsListWire = {
   items: LawyerReviewItemWire[];
   mediaAvaliacoes?: number | string | null;
   totalAvaliacoes?: number | null;
+  podeAvaliar?: boolean;
 };
 
 export type ListLawyerReviewsParams = {
@@ -33,7 +34,15 @@ export type LawyerReviewsResult = {
   items: LawyerReview[];
   averageRating: number;
   total: number;
+  canReview: boolean;
 };
+
+export type CreateLawyerReviewInput = {
+  rating: number;
+  comment: string;
+};
+
+export type CreateLawyerReviewResult = LawyerReview;
 
 export type DeleteLawyerReviewResult = {
   id: string;

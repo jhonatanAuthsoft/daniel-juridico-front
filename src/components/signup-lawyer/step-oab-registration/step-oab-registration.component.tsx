@@ -133,7 +133,7 @@ export function StepOabRegistration() {
         placeholder="00/00/0000"
         keyboardType="number-pad"
         format={InputMasks.dateBr}
-        validate={FieldValidators.dateBr}
+        validate={FieldValidators.dateBrOabIssue}
         maxLength={10}
       />
 
@@ -189,6 +189,7 @@ export function StepOabRegistration() {
                 placeholder="00/00/0000"
                 keyboardType="number-pad"
                 format={InputMasks.dateBr}
+                validate={FieldValidators.dateBrOabIssue}
                 maxLength={10}
               />
               <InputImageField

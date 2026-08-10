@@ -9,7 +9,10 @@ import {
   MOCK_CLIENT_SOLICITATION_DETAILS,
 } from './mock-client-solicitation-details';
 
-const details = MOCK_CLIENT_SOLICITATION_DETAILS[0];
+const details =
+  MOCK_CLIENT_SOLICITATION_DETAILS.find(
+    (item) => item.workflowStatus === 'AGUARDANDO_MATCHING',
+  ) ?? MOCK_CLIENT_SOLICITATION_DETAILS[0];
 
 const mockMutateAsync = jest.fn().mockResolvedValue({
   id: 'cx-1',
@@ -74,6 +77,11 @@ describe('client solicitation detail components', () => {
 
     expect(screen.getByText('Advogados compatíveis')).toBeTruthy();
     expect(screen.getByText(details.compatibleLawyers[0].name)).toBeTruthy();
+    expect(
+      screen.getByText(
+        `${details.compatibleLawyers[0].compatibility}% de compatibilidade`,
+      ),
+    ).toBeTruthy();
     expect(
       screen.getAllByTestId('professional-image-placeholder'),
     ).toHaveLength(details.compatibleLawyers.length);

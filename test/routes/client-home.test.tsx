@@ -10,7 +10,7 @@ const MOCK_ITEMS: ClientSolicitationCardData[] = [
   {
     id: 'sol-1',
     status: 'urgente',
-    workflowStatus: 'ABERTA',
+    workflowStatus: 'AGUARDANDO_MATCHING',
     title: 'Pensão Alimentícia',
     description: 'Preciso de orientação sobre pensão alimentícia.',
     date: '01/08/2026',
@@ -20,7 +20,7 @@ const MOCK_ITEMS: ClientSolicitationCardData[] = [
   {
     id: 'sol-2',
     status: 'medio',
-    workflowStatus: 'ABERTA',
+    workflowStatus: 'AGUARDANDO_MATCHING',
     title: 'Contrato de Aluguel',
     description: 'Revisão de contrato de locação.',
     date: '02/08/2026',
@@ -53,7 +53,7 @@ describe('ClientHomeScreen', () => {
         totalElements: MOCK_ITEMS.length,
         countsByStatus: {
           ...emptySolicitationStatusCounts(),
-          ABERTA: 2,
+          AGUARDANDO_MATCHING: 2,
         },
       },
       isLoading: false,
@@ -145,7 +145,7 @@ describe('ClientHomeScreen', () => {
         totalElements: MOCK_ITEMS.length,
         countsByStatus: {
           ...emptySolicitationStatusCounts(),
-          ABERTA: 7,
+          AGUARDANDO_MATCHING: 7,
           MATCH_REALIZADO: 8,
           CANCELADA: 9,
         },

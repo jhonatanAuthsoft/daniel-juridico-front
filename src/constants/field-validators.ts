@@ -5,6 +5,7 @@ import {
   isValidCpf,
   isValidDateBr,
   isValidPhone,
+  isValidRg,
   isValidYear,
   onlyDigits,
 } from '@/utils/br-input';
@@ -72,6 +73,33 @@ export const FieldValidators = {
       return 'Campo obrigatório';
     }
     return isValidDateBr(value) ? true : 'Data inválida';
+  },
+
+  /** Data de nascimento: ano ≥ 1920 e não no futuro. */
+  dateBrBirth: (value: string) => {
+    if (!value.trim()) {
+      return 'Campo obrigatório';
+    }
+    return isValidDateBr(value, { minYear: 1920, allowFuture: false })
+      ? true
+      : 'Data inválida';
+  },
+
+  /** Data de expedição OAB: ano ≥ 1950 e não no futuro. */
+  dateBrOabIssue: (value: string) => {
+    if (!value.trim()) {
+      return 'Campo obrigatório';
+    }
+    return isValidDateBr(value, { minYear: 1950, allowFuture: false })
+      ? true
+      : 'Data inválida';
+  },
+
+  rg: (value: string) => {
+    if (!value.trim()) {
+      return 'Campo obrigatório';
+    }
+    return isValidRg(value) ? true : 'RG inválido';
   },
 
   year: (value: string) => {

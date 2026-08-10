@@ -154,11 +154,11 @@ export const MARITAL_STATUS_OPTIONS: SelectOption[] = [
   { value: 'uniao-estavel', label: 'União estável' },
 ];
 
+/** Client pronouns — values match the server `PronomesEnum`. */
 export const PRONOUN_OPTIONS: SelectOption[] = [
-  { value: 'ele-dele', label: 'Ele/Dele' },
-  { value: 'ela-dela', label: 'Ela/Dela' },
-  { value: 'elu-delu', label: 'Elu/Delu' },
-  { value: 'nao-informar', label: 'Prefiro não informar' },
+  { value: 'ELE', label: 'Ele/Dele' },
+  { value: 'ELA', label: 'Ela/Dela' },
+  { value: 'NEUTRO', label: 'Neutro' },
 ];
 
 /** Lawyer treatment pronouns — values match the server `PronomeTratamentoEnum`. */

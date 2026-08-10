@@ -122,7 +122,6 @@ export function InputOTP<TFieldValues extends FieldValues = FieldValues>({
                       onChangeText={(text) => handleChangeText(index, text)}
                       onKeyPress={(event) => handleKeyPress(index, event)}
                       onBlur={onBlur}
-                      placeholder={String(index + 1)}
                       placeholderTextColor={BrandColors.neutral.light}
                       keyboardType="number-pad"
                       textContentType="oneTimeCode"

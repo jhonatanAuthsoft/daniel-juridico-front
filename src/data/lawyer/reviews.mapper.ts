@@ -51,6 +51,7 @@ export function mapLawyerReviewsWireToResult(
     items,
     total: totalRaw != null ? Math.max(0, Math.trunc(totalRaw)) : items.length,
     averageRating: averageRaw ?? 0,
+    canReview: Boolean(wire?.podeAvaliar),
   };
 }
 

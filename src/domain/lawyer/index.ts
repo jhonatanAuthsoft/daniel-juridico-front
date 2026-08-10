@@ -13,3 +13,8 @@ export {
   useDeleteLawyerReview,
   type DeleteLawyerReviewParams,
 } from './use-delete-lawyer-review';
+export { createLawyerReviewUseCase } from './create-lawyer-review.use-case';
+export {
+  useCreateLawyerReview,
+  type CreateLawyerReviewParams,
+} from './use-create-lawyer-review';

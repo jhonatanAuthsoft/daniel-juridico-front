@@ -49,13 +49,13 @@ export async function createSolicitation(
 
 /**
  * Lists solicitations for the authenticated client.
- * `GET /solicitacoes?limit&offset&status`
+ * `GET /solicitacoes?limit&offset&status&busca`
  */
 export async function listClientSolicitations(
   params: ListSolicitationsParams = {},
   signal?: AbortSignal,
 ): Promise<ListSolicitationsResult> {
-  const limit = params.limit ?? 50;
+  const limit = params.limit ?? 10;
   const offset = params.offset ?? 0;
   const query = new URLSearchParams({
     limit: String(limit),
@@ -63,6 +63,10 @@ export async function listClientSolicitations(
   });
   if (params.status) {
     query.set('status', params.status);
+  }
+  const busca = params.busca?.trim();
+  if (busca) {
+    query.set('busca', busca);
   }
 
   const response = await authenticatedHttpRequest<

@@ -105,7 +105,7 @@ export function StepPersonalDocuments() {
             placeholder="00.000.000-0"
             keyboardType="number-pad"
             format={InputMasks.rg}
-            validate={FieldValidators.digitsMin(5, 'RG inválido')}
+            validate={FieldValidators.rg}
             maxLength={12}
           />
           <View>
@@ -117,7 +117,7 @@ export function StepPersonalDocuments() {
               <View style={styles.rowItemGrow}>
                 <InputSelectField
                   name="issuingAuthority"
-                  placeholder="SSP"
+                  placeholder="Selecione"
                   options={ISSUING_AUTHORITY_OPTIONS}
                   required
                 />
@@ -125,7 +125,7 @@ export function StepPersonalDocuments() {
               <View style={styles.rowItemUf}>
                 <InputSelectField
                   name="uf"
-                  placeholder="BA"
+                  placeholder="UF"
                   options={UF_OPTIONS}
                   required
                 />
@@ -147,7 +147,7 @@ export function StepPersonalDocuments() {
             placeholder="00/00/0000"
             keyboardType="number-pad"
             format={InputMasks.dateBr}
-            validate={FieldValidators.dateBr}
+            validate={FieldValidators.dateBrBirth}
             maxLength={10}
           />
         </>

@@ -31,6 +31,7 @@ import {
   useLawyerConnectionStatus,
 } from '@/domain/connection';
 import {
+  useCreateLawyerReview,
   useDeleteLawyerReview,
   useLawyerReviews,
   usePublicLawyerProfile,
@@ -107,6 +108,7 @@ export default function ClientLawyerProfileScreen() {
 
   const { data: reviewsData } = useLawyerReviews(lawyerId);
   const deleteReview = useDeleteLawyerReview();
+  const createReview = useCreateLawyerReview();
 
   const { data: connection } = useLawyerConnectionStatus(
     lawyerId,
@@ -378,7 +380,9 @@ export default function ClientLawyerProfileScreen() {
       ) : null}
 
       <ClientLawyerReviews
+        canReview={reviewsData?.canReview ?? false}
         isDeletingOwn={deleteReview.isPending}
+        isSubmittingReview={createReview.isPending}
         onDeleteOwnReview={async (reviewId) => {
           try {
             await deleteReview.mutateAsync({
@@ -391,6 +395,20 @@ export default function ClientLawyerProfileScreen() {
               getErrorMessage(error, 'Não foi possível excluir a avaliação.'),
             );
             throw error;
+          }
+        }}
+        onSubmitReview={async ({ rating, comment }) => {
+          try {
+            await createReview.mutateAsync({
+              lawyerUserId: profile.id,
+              rating,
+              comment,
+            });
+          } catch (error) {
+            Alert.alert(
+              'Avaliação',
+              getErrorMessage(error, 'Não foi possível enviar a avaliação.'),
+            );
           }
         }}
         reviews={
