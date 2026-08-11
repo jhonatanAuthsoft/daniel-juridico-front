@@ -1,4 +1,5 @@
 export { ClientSolicitationCard, type ClientSolicitationCardProps } from './client-solicitation-card.component';
+export { ClientSolicitationCardShimmer } from './client-solicitation-card-shimmer.component';
 export {
   formatSolicitationFooter,
   SOLICITATION_STATUS_META,

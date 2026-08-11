@@ -29,6 +29,36 @@ const MOCK_ITEMS: ClientSolicitationCardData[] = [
   },
 ];
 
+const MOCK_COUNTS = {
+  ...emptySolicitationStatusCounts(),
+  AGUARDANDO_MATCHING: 2,
+};
+
+function mockListQuery(overrides: Record<string, unknown> = {}) {
+  return {
+    data: {
+      pages: [
+        {
+          items: MOCK_ITEMS,
+          totalElements: MOCK_ITEMS.length,
+          countsByStatus: MOCK_COUNTS,
+        },
+      ],
+      pageParams: [0],
+    },
+    isLoading: false,
+    isFetched: true,
+    isError: false,
+    error: null,
+    refetch: jest.fn(),
+    isRefetching: false,
+    fetchNextPage: jest.fn(),
+    hasNextPage: false,
+    isFetchingNextPage: false,
+    ...overrides,
+  };
+}
+
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: mockPush }),
 }));
@@ -47,22 +77,7 @@ jest.mock('@/domain/solicitation', () => ({
 describe('ClientHomeScreen', () => {
   beforeEach(() => {
     mockPush.mockClear();
-    mockUseClientSolicitations.mockReturnValue({
-      data: {
-        items: MOCK_ITEMS,
-        totalElements: MOCK_ITEMS.length,
-        countsByStatus: {
-          ...emptySolicitationStatusCounts(),
-          AGUARDANDO_MATCHING: 2,
-        },
-      },
-      isLoading: false,
-      isFetched: true,
-      isError: false,
-      error: null,
-      refetch: jest.fn(),
-      isRefetching: false,
-    });
+    mockUseClientSolicitations.mockImplementation(() => mockListQuery());
   });
 
   it('opens the new solicitation form from the CTA', () => {
@@ -82,19 +97,20 @@ describe('ClientHomeScreen', () => {
   });
 
   it('shows the empty state and replaces the floating CTA when there are no results', () => {
-    mockUseClientSolicitations.mockReturnValue({
-      data: {
-        items: [],
-        totalElements: 0,
-        countsByStatus: emptySolicitationStatusCounts(),
-      },
-      isLoading: false,
-      isFetched: true,
-      isError: false,
-      error: null,
-      refetch: jest.fn(),
-      isRefetching: false,
-    });
+    mockUseClientSolicitations.mockReturnValue(
+      mockListQuery({
+        data: {
+          pages: [
+            {
+              items: [],
+              totalElements: 0,
+              countsByStatus: emptySolicitationStatusCounts(),
+            },
+          ],
+          pageParams: [0],
+        },
+      }),
+    );
 
     render(<ClientHomeScreen />);
 
@@ -111,6 +127,26 @@ describe('ClientHomeScreen', () => {
   });
 
   it('shows the no-results state and heading for an empty search', async () => {
+    mockUseClientSolicitations.mockImplementation(
+      (params: { busca?: string } = {}) => {
+        if (params.busca) {
+          return mockListQuery({
+            data: {
+              pages: [
+                {
+                  items: [],
+                  totalElements: 0,
+                  countsByStatus: MOCK_COUNTS,
+                },
+              ],
+              pageParams: [0],
+            },
+          });
+        }
+        return mockListQuery();
+      },
+    );
+
     render(<ClientHomeScreen />);
 
     fireEvent.press(screen.getByRole('button', { name: 'Pesquisar' }));
@@ -132,31 +168,31 @@ describe('ClientHomeScreen', () => {
     fireEvent.press(screen.getByText('Canceladas'));
 
     expect(mockUseClientSolicitations).toHaveBeenLastCalledWith({
-      limit: 50,
-      offset: 0,
       status: 'CANCELADA',
+      busca: undefined,
     });
   });
 
   it('shows status counts from the API on filter chips', () => {
-    mockUseClientSolicitations.mockReturnValue({
-      data: {
-        items: MOCK_ITEMS,
-        totalElements: MOCK_ITEMS.length,
-        countsByStatus: {
-          ...emptySolicitationStatusCounts(),
-          AGUARDANDO_MATCHING: 7,
-          MATCH_REALIZADO: 8,
-          CANCELADA: 9,
+    mockUseClientSolicitations.mockReturnValue(
+      mockListQuery({
+        data: {
+          pages: [
+            {
+              items: MOCK_ITEMS,
+              totalElements: MOCK_ITEMS.length,
+              countsByStatus: {
+                ...emptySolicitationStatusCounts(),
+                AGUARDANDO_MATCHING: 7,
+                MATCH_REALIZADO: 8,
+                CANCELADA: 9,
+              },
+            },
+          ],
+          pageParams: [0],
         },
-      },
-      isLoading: false,
-      isFetched: true,
-      isError: false,
-      error: null,
-      refetch: jest.fn(),
-      isRefetching: false,
-    });
+      }),
+    );
 
     render(<ClientHomeScreen />);
 
@@ -166,5 +202,22 @@ describe('ClientHomeScreen', () => {
     expect(screen.getByText('7')).toBeTruthy();
     expect(screen.getByText('8')).toBeTruthy();
     expect(screen.getByText('9')).toBeTruthy();
+  });
+
+  it('keeps the header visible and shows card shimmers while loading', () => {
+    mockUseClientSolicitations.mockReturnValue(
+      mockListQuery({
+        data: undefined,
+        isLoading: true,
+        isFetched: false,
+      }),
+    );
+
+    render(<ClientHomeScreen />);
+
+    expect(screen.getByText('Solicitações')).toBeTruthy();
+    expect(screen.getByText('Todas')).toBeTruthy();
+    expect(screen.getAllByLabelText('Carregando solicitação')).toHaveLength(4);
+    expect(screen.queryByText('Pensão Alimentícia')).toBeNull();
   });
 });

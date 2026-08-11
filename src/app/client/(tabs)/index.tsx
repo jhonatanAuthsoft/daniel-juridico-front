@@ -6,6 +6,7 @@ import {
   FlatList,
   Platform,
   Pressable,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -16,11 +17,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SearchIcon } from '@/assets/icon/search';
 import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
+import { LoadingState } from '@/atomic/loading-state';
 import { Separator } from '@/atomic/separator';
 import { Body2, Display, Heading1, Link } from '@/atomic/typography';
 import { ClientEmptyState } from '@/components/client-empty-state';
 import {
   ClientSolicitationCard,
+  ClientSolicitationCardShimmer,
 } from '@/components/client-solicitation-card';
 import {
   BrandColors,
@@ -45,6 +48,12 @@ const FAB_HEIGHT = 48;
 const FAB_GAP_ABOVE_TAB = 16;
 /** Distance between last list item and top of FAB when scrolled to end. */
 const LIST_GAP_ABOVE_FAB = 8;
+const LIST_SHIMMER_KEYS = [
+  'solicitation-shimmer-a',
+  'solicitation-shimmer-b',
+  'solicitation-shimmer-c',
+  'solicitation-shimmer-d',
+] as const;
 
 type FilterId = 'all' | 'pending' | 'accepted' | 'canceled';
 
@@ -65,6 +74,22 @@ function apiStatusForFilter(filter: FilterId): StatusSolicitacaoApi | undefined 
     return undefined;
   }
   return FILTER_TO_API_STATUS[filter];
+}
+
+function SolicitationsListShimmer({ paddingBottom }: { paddingBottom: number }) {
+  return (
+    <ScrollView
+      contentContainerStyle={[styles.listContent, { paddingBottom }]}
+      scrollEnabled={false}
+      showsVerticalScrollIndicator={false}>
+      {LIST_SHIMMER_KEYS.map((key, index) => (
+        <View key={key}>
+          {index > 0 ? <Separator size="sm" /> : null}
+          <ClientSolicitationCardShimmer />
+        </View>
+      ))}
+    </ScrollView>
+  );  
 }
 
 export default function ClientHomeScreen() {
@@ -101,11 +126,11 @@ export default function ClientHomeScreen() {
   };
 
   const solicitations = useMemo(
-    () => data?.pages.flatMap((page) => page.items) ?? [],
+    () => data?.pages?.flatMap((page) => page.items) ?? [],
     [data],
   );
   const countsByStatus =
-    data?.pages[0]?.countsByStatus ?? emptySolicitationStatusCounts();
+    data?.pages?.[0]?.countsByStatus ?? emptySolicitationStatusCounts();
   const totalByStatus = Object.values(countsByStatus).reduce(
     (sum, count) => sum + count,
     0,
@@ -151,8 +176,12 @@ export default function ClientHomeScreen() {
       ? fabBottom + FAB_HEIGHT + LIST_GAP_ABOVE_FAB
       : tabBarTotalHeight + Spacing.sm;
 
-  const showInitialLoading = isLoading && !hasListItems && !isPullRefreshing;
-  const showInitialError = isError && !hasListItems;
+  const showListLoading =
+    !hasListItems &&
+    !isError &&
+    (isLoading || !isFetched) &&
+    !isPullRefreshing;
+  const showListError = isError && !hasListItems;
 
   return (
     <View style={styles.root}>
@@ -255,98 +284,123 @@ export default function ClientHomeScreen() {
           )}
         </View>
 
-        {showInitialLoading ? (
-          <View style={styles.centeredState}>
-            <ActivityIndicator color={BrandColors.primary.light} size="large" />
-          </View>
-        ) : showInitialError ? (
-          <View style={styles.centeredState}>
-            <Heading1 color={BrandColors.neutral.white} style={styles.emptyTitle}>
-              Não foi possível carregar
-            </Heading1>
-            <Body2 color={BrandColors.neutral.white} style={styles.emptyDescription}>
-              {getErrorMessage(error, 'Tente novamente em instantes.')}
-            </Body2>
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Tentar novamente"
-              onPress={() => {
-                void refetch();
+        <View style={styles.listArea}>
+          <LoadingState
+            data={hasListItems}
+            error={showListError}
+            loading={showListLoading}>
+            <LoadingState.Shimmer>
+              <SolicitationsListShimmer paddingBottom={listPaddingBottom} />
+            </LoadingState.Shimmer>
+
+            <LoadingState.ErrorPlaceholder>
+              <View style={styles.centeredState}>
+                <Heading1 color={BrandColors.neutral.white} style={styles.emptyTitle}>
+                  Não foi possível carregar
+                </Heading1>
+                <Body2 color={BrandColors.neutral.white} style={styles.emptyDescription}>
+                  {getErrorMessage(error, 'Tente novamente em instantes.')}
+                </Body2>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Tentar novamente"
+                  onPress={() => {
+                    void refetch();
+                  }}
+                  style={({ pressed }) => [
+                    styles.emptyCta,
+                    pressed && styles.fabPressed,
+                  ]}>
+                  <Link color={BrandColors.neutral.xdark}>Tentar novamente</Link>
+                </Pressable>
+              </View>
+            </LoadingState.ErrorPlaceholder>
+
+            <LoadingState.EmptyState>
+              <ScrollView
+                contentContainerStyle={[
+                  styles.listContent,
+                  styles.emptyScrollContent,
+                  { paddingBottom: listPaddingBottom },
+                ]}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={isPullRefreshing}
+                    tintColor={BrandColors.primary.light}
+                    onRefresh={() => {
+                      void handlePullRefresh();
+                    }}
+                  />
+                }
+                showsVerticalScrollIndicator={false}>
+                {hasNoSolicitationsAtAll ? (
+                  <ClientEmptyState
+                    variant="no-data"
+                    onCreatePress={() => router.push('/client/nova-solicitacao')}
+                  />
+                ) : (
+                  <ClientEmptyState
+                    variant="no-results"
+                    description={
+                      hasSearchQuery
+                        ? 'Não encontramos solicitações que correspondam à sua busca.'
+                        : 'Não encontramos solicitações que correspondam aos filtros selecionados.'
+                    }
+                  />
+                )}
+              </ScrollView>
+            </LoadingState.EmptyState>
+
+            <FlatList
+              data={solicitations}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={[styles.listContent, { paddingBottom: listPaddingBottom }]}
+              showsVerticalScrollIndicator={false}
+              refreshing={isPullRefreshing}
+              onRefresh={() => {
+                void handlePullRefresh();
               }}
-              style={({ pressed }) => [
-                styles.emptyCta,
-                pressed && styles.fabPressed,
-              ]}>
-              <Link color={BrandColors.neutral.xdark}>Tentar novamente</Link>
-            </Pressable>
-          </View>
-        ) : (
-          <FlatList
-            data={solicitations}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={[styles.listContent, { paddingBottom: listPaddingBottom }]}
-            showsVerticalScrollIndicator={false}
-            refreshing={isPullRefreshing}
-            onRefresh={() => {
-              void handlePullRefresh();
-            }}
-            ItemSeparatorComponent={() => <Separator size="sm" />}
-            ListFooterComponent={
-              hasNextPage ? (
-                <View style={styles.listFooter}>
-                  {isFetchingNextPage ? (
-                    <ActivityIndicator color={BrandColors.primary.light} />
-                  ) : (
-                    <Pressable
-                      accessibilityLabel="Ver mais"
-                      accessibilityRole="button"
-                      onPress={() => {
-                        void fetchNextPage();
-                      }}
-                      style={({ pressed }) => [
-                        styles.loadMoreButton,
-                        pressed && styles.pressed,
-                      ]}>
-                      <SymbolView
-                        name={{
-                          ios: 'chevron.down',
-                          android: 'keyboard_arrow_down',
-                          web: 'keyboard_arrow_down',
+              ItemSeparatorComponent={() => <Separator size="sm" />}
+              ListFooterComponent={
+                hasNextPage ? (
+                  <View style={styles.listFooter}>
+                    {isFetchingNextPage ? (
+                      <ActivityIndicator color={BrandColors.primary.light} />
+                    ) : (
+                      <Pressable
+                        accessibilityLabel="Ver mais"
+                        accessibilityRole="button"
+                        onPress={() => {
+                          void fetchNextPage();
                         }}
-                        size={20}
-                        tintColor={BrandColors.primary.light}
-                      />
-                      <Link color={BrandColors.primary.light}>Ver mais</Link>
-                    </Pressable>
-                  )}
-                </View>
-              ) : null
-            }
-            ListEmptyComponent={
-              hasNoSolicitationsAtAll ? (
-                <ClientEmptyState
-                  variant="no-data"
-                  onCreatePress={() => router.push('/client/nova-solicitacao')}
+                        style={({ pressed }) => [
+                          styles.loadMoreButton,
+                          pressed && styles.pressed,
+                        ]}>
+                        <SymbolView
+                          name={{
+                            ios: 'chevron.down',
+                            android: 'keyboard_arrow_down',
+                            web: 'keyboard_arrow_down',
+                          }}
+                          size={20}
+                          tintColor={BrandColors.primary.light}
+                        />
+                        <Link color={BrandColors.primary.light}>Ver mais</Link>
+                      </Pressable>
+                    )}
+                  </View>
+                ) : null
+              }
+              renderItem={({ item }) => (
+                <ClientSolicitationCard
+                  {...item}
+                  onPress={() => router.push(`/client/solicitacao/${item.id}`)}
                 />
-              ) : (
-                <ClientEmptyState
-                  variant="no-results"
-                  description={
-                    hasSearchQuery
-                      ? 'Não encontramos solicitações que correspondam à sua busca.'
-                      : 'Não encontramos solicitações que correspondam aos filtros selecionados.'
-                  }
-                />
-              )
-            }
-            renderItem={({ item }) => (
-              <ClientSolicitationCard
-                {...item}
-                onPress={() => router.push(`/client/solicitacao/${item.id}`)}
-              />
-            )}
-          />
-        )}
+              )}
+            />
+          </LoadingState>
+        </View>
       </View>
 
       {!hasNoSolicitationsAtAll ? (
@@ -399,6 +453,9 @@ const styles = StyleSheet.create({
     maxWidth: MaxContentWidth,
     width: '100%',
     alignSelf: 'center',
+  },
+  listArea: {
+    flex: 1,
   },
   titleRow: {
     flexDirection: 'row',
@@ -464,6 +521,9 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
     flexGrow: 1,
+  },
+  emptyScrollContent: {
+    justifyContent: 'center',
   },
   listFooter: {
     paddingVertical: Spacing.sm,
