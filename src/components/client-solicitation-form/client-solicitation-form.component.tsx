@@ -1,7 +1,7 @@
-import { SymbolView } from 'expo-symbols';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
 
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { FilterIcon } from '@/assets/icon/filter';
 import { Button } from '@/atomic/button';
 import { Form, InputSelectField, InputTextField, useForm } from '@/atomic/form';
@@ -243,18 +243,11 @@ export function ClientSolicitationForm({
               height={18}
             />
             <Link color={BrandColors.primary.light}>Filtros avançados</Link>
-            <SymbolView
-              name={{
-                ios: advancedFiltersOpen ? 'chevron.up' : 'chevron.down',
-                android: advancedFiltersOpen
-                  ? 'keyboard_arrow_up'
-                  : 'keyboard_arrow_down',
-                web: advancedFiltersOpen
-                  ? 'keyboard_arrow_up'
-                  : 'keyboard_arrow_down',
-              }}
-              size={18}
-              tintColor={BrandColors.primary.light}
+            <CaretLeftIcon
+              color={BrandColors.primary.light}
+              direction={advancedFiltersOpen ? 'up' : 'down'}
+              height={18}
+              width={18}
             />
           </Pressable>
 

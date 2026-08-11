@@ -1,6 +1,6 @@
-import { SymbolView } from 'expo-symbols';
 import { Pressable, StyleSheet } from 'react-native';
 
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Link as TypographLink } from '@/atomic/typography';
 import { BrandColors, Spacing } from '@/constants/theme';
 
@@ -9,20 +9,10 @@ export type BackLinkProps = {
   children?: string;
 };
 
-function ChevronLeftIcon() {
-  return (
-    <SymbolView
-      name={{ ios: 'chevron.left', android: 'chevron_left', web: 'chevron_left' }}
-      size={16}
-      tintColor={BrandColors.primary.light}
-    />
-  );
-}
-
 export function BackLink({ onPress, children = 'Voltar' }: BackLinkProps) {
   return (
     <Pressable accessibilityRole="link" onPress={onPress} style={styles.backLink}>
-      <ChevronLeftIcon />
+      <CaretLeftIcon color={BrandColors.primary.light} height={16} width={16} />
       <TypographLink color={BrandColors.primary.light}>{children}</TypographLink>
     </Pressable>
   );

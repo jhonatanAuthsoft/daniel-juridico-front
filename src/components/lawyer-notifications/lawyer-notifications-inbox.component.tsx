@@ -1,8 +1,8 @@
-import { SymbolView } from 'expo-symbols';
 import { useRouter } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Body1 } from '@/atomic/typography';
 import { Separator } from '@/atomic/separator';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
@@ -29,15 +29,7 @@ export function LawyerNotificationsInbox() {
             hitSlop={Spacing.xxs}
             onPress={() => router.back()}
             style={({ pressed }) => pressed && styles.pressed}>
-            <SymbolView
-              name={{
-                ios: 'chevron.left',
-                android: 'chevron_left',
-                web: 'chevron_left',
-              }}
-              size={24}
-              tintColor={BrandColors.neutral.white}
-            />
+            <CaretLeftIcon color={BrandColors.neutral.white} height={24} width={24} />
           </Pressable>
           <Body1 color={BrandColors.neutral.white} style={styles.headerTitle}>
             Caixa de entrada

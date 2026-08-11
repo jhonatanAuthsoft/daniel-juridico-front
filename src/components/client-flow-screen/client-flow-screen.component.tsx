@@ -1,4 +1,3 @@
-import { SymbolView } from 'expo-symbols';
 import type { ReactNode } from 'react';
 import {
   KeyboardAvoidingView,
@@ -12,6 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { XIcon } from '@/assets/icon/x';
 import { Body1, Display } from '@/atomic/typography';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
@@ -56,11 +56,7 @@ export function ClientFlowScreen({
           hitSlop={Spacing.xxs}
           onPress={onBack}
           style={({ pressed }) => pressed && styles.pressed}>
-          <SymbolView
-            name={{ ios: 'chevron.left', android: 'chevron_left', web: 'chevron_left' }}
-            size={24}
-            tintColor={BrandColors.neutral.white}
-          />
+          <CaretLeftIcon color={BrandColors.neutral.white} height={24} width={24} />
         </Pressable>
       ) : null}
 

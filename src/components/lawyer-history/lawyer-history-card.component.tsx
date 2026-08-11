@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { CheckIcon } from '@/assets/icon/check';
-import { ChevronRightIcon } from '@/assets/icon/chevron-right';
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { XIcon } from '@/assets/icon/x';
 import { Body1, Body2, Heading2 } from '@/atomic/typography';
 import { SOLICITATION_STATUS_META } from '@/components/client-solicitation-card';
@@ -58,7 +58,12 @@ export function LawyerHistoryCard({
             </Body2>
           </View>
         </View>
-        <ChevronRightIcon color={BrandColors.neutral.white} width={20} height={20} />
+        <CaretLeftIcon
+          color={BrandColors.neutral.white}
+          direction="right"
+          width={20}
+          height={20}
+        />
       </View>
 
       <Body1 color={BrandColors.neutral.light} numberOfLines={2}>

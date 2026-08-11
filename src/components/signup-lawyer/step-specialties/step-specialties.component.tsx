@@ -1,4 +1,3 @@
-import { SymbolView } from 'expo-symbols';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import {
@@ -9,7 +8,9 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { SymbolView } from 'expo-symbols';
 
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { GlassBackground } from '@/atomic/glass';
 import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption } from '@/atomic/typography';
@@ -65,14 +66,11 @@ function CategoryPanel({
           style={styles.panelTitle}>
           {category.label}
         </Body1>
-        <SymbolView
-          name={{
-            ios: expanded ? 'chevron.up' : 'chevron.down',
-            android: expanded ? 'expand_less' : 'expand_more',
-            web: expanded ? 'expand_less' : 'expand_more',
-          }}
-          size={20}
-          tintColor={BrandColors.neutral.light}
+        <CaretLeftIcon
+          color={BrandColors.neutral.light}
+          direction={expanded ? 'up' : 'down'}
+          height={20}
+          width={20}
         />
       </Pressable>
 

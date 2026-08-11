@@ -1,8 +1,8 @@
 import { Image } from 'expo-image';
-import { SymbolView } from 'expo-symbols';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Button } from '@/atomic/button';
 import { Body1, Body2, Heading1, Link } from '@/atomic/typography';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
@@ -175,14 +175,11 @@ export function ClientLawyerReviews({
             styles.expandButton,
             pressed && styles.pressed,
           ]}>
-          <SymbolView
-            name={{
-              ios: expanded ? 'chevron.up' : 'chevron.down',
-              android: expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down',
-              web: expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down',
-            }}
-            size={20}
-            tintColor={BrandColors.primary.light}
+          <CaretLeftIcon
+            color={BrandColors.primary.light}
+            direction={expanded ? 'up' : 'down'}
+            height={20}
+            width={20}
           />
           <Link color={BrandColors.primary.light}>
             {expanded ? 'Ver menos avaliações' : 'Veja mais avaliações'}

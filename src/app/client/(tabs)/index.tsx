@@ -1,5 +1,4 @@
 import { useRouter } from 'expo-router';
-import { SymbolView } from 'expo-symbols';
 import { useDeferredValue, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
@@ -14,6 +13,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { SearchIcon } from '@/assets/icon/search';
 import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
@@ -377,14 +377,11 @@ export default function ClientHomeScreen() {
                           styles.loadMoreButton,
                           pressed && styles.pressed,
                         ]}>
-                        <SymbolView
-                          name={{
-                            ios: 'chevron.down',
-                            android: 'keyboard_arrow_down',
-                            web: 'keyboard_arrow_down',
-                          }}
-                          size={20}
-                          tintColor={BrandColors.primary.light}
+                        <CaretLeftIcon
+                          color={BrandColors.primary.light}
+                          direction="down"
+                          height={20}
+                          width={20}
                         />
                         <Link color={BrandColors.primary.light}>Ver mais</Link>
                       </Pressable>

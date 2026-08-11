@@ -130,4 +130,20 @@ describe('ClientSolicitationDetailsScreen', () => {
       `/client/advogado/${lawyer.id}?solicitacaoId=${encodeURIComponent(awaitingDetails.id)}`,
     );
   });
+
+  it('keeps the header visible and shows detail shimmers while loading', () => {
+    mockUseClientSolicitationDetails.mockReturnValue({
+      solicitation: undefined,
+      isLoading: true,
+      isError: false,
+      error: null,
+      refetch: jest.fn(),
+    });
+
+    const screen = render(<ClientSolicitationDetailsScreen />);
+
+    expect(screen.getByText('Visualizar Solicitação')).toBeTruthy();
+    expect(screen.getByLabelText('Carregando solicitação')).toBeTruthy();
+    expect(screen.queryByText('Dados da solicitação')).toBeNull();
+  });
 });

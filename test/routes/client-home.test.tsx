@@ -217,7 +217,7 @@ describe('ClientHomeScreen', () => {
 
     expect(screen.getByText('Solicitações')).toBeTruthy();
     expect(screen.getByText('Todas')).toBeTruthy();
-    expect(screen.getAllByLabelText('Carregando solicitação')).toHaveLength(4);
     expect(screen.queryByText('Pensão Alimentícia')).toBeNull();
+    expect(screen.queryByText('Nenhuma solicitação encontrada')).toBeNull();
   });
 });

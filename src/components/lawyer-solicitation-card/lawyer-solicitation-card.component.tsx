@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { CalendarIcon } from '@/assets/icon/calendar';
-import { ChevronRightIcon } from '@/assets/icon/chevron-right';
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { ClockIcon } from '@/assets/icon/clock';
 import { MapPinIcon } from '@/assets/icon/map-pin';
 import { Body1, Body2, Heading2 } from '@/atomic/typography';
@@ -47,7 +47,12 @@ export function LawyerSolicitationCard({
             </Body2>
           </View>
         </View>
-        <ChevronRightIcon color={BrandColors.neutral.white} width={20} height={20} />
+        <CaretLeftIcon
+          color={BrandColors.neutral.white}
+          direction="right"
+          width={20}
+          height={20}
+        />
       </View>
 
       <Body1 color={BrandColors.neutral.white} numberOfLines={2}>

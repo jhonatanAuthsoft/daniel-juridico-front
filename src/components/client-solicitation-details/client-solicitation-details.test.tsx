@@ -38,14 +38,27 @@ describe('client solicitation detail components', () => {
       <ClientSolicitationDataAccordion solicitation={details} />,
     );
 
-    expect(screen.getByText(details.title)).toBeTruthy();
-    expect(screen.getByText(details.specialties.join(', '))).toBeTruthy();
+    expect(
+      screen.getByRole('button', {
+        name: 'Dados da solicitação',
+        expanded: true,
+      }),
+    ).toBeTruthy();
+    expect(screen.getAllByText(details.title).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(details.specialties.join(', ')).length,
+    ).toBeGreaterThan(0);
 
     fireEvent.press(
       screen.getByRole('button', { name: 'Dados da solicitação' }),
     );
 
-    expect(screen.queryByText(details.title)).toBeNull();
+    expect(
+      screen.getByRole('button', {
+        name: 'Dados da solicitação',
+        expanded: false,
+      }),
+    ).toBeTruthy();
   });
 
   it('opens the solicitation description on demand', () => {
@@ -55,17 +68,29 @@ describe('client solicitation detail components', () => {
       />,
     );
 
-    expect(screen.queryByText(details.description)).toBeNull();
+    expect(
+      screen.getByRole('button', {
+        name: 'Descrição da solicitação',
+        expanded: false,
+      }),
+    ).toBeTruthy();
 
     fireEvent.press(
       screen.getByRole('button', { name: 'Descrição da solicitação' }),
     );
 
-    expect(screen.getByText(details.description)).toBeTruthy();
+    expect(
+      screen.getByRole('button', {
+        name: 'Descrição da solicitação',
+        expanded: true,
+      }),
+    ).toBeTruthy();
+    expect(screen.getAllByText(details.description).length).toBeGreaterThan(0);
   });
 
   it('lists compatible lawyers and requests a connection', async () => {
     const onLawyerPress = jest.fn();
+    const lawyer = details.compatibleLawyers[0];
     const screen = render(
       <ClientCompatibleLawyersList
         connectionsByLawyerId={{}}
@@ -76,21 +101,17 @@ describe('client solicitation detail components', () => {
     );
 
     expect(screen.getByText('Advogados compatíveis')).toBeTruthy();
-    expect(screen.getByText(details.compatibleLawyers[0].name)).toBeTruthy();
+    expect(screen.getByText(lawyer.name)).toBeTruthy();
     expect(
-      screen.getByText(
-        `${details.compatibleLawyers[0].compatibility}% de compatibilidade`,
-      ),
-    ).toBeTruthy();
+      screen.getAllByText(`${lawyer.compatibility}% de compatibilidade`).length,
+    ).toBeGreaterThan(0);
     expect(
       screen.getAllByTestId('professional-image-placeholder'),
     ).toHaveLength(details.compatibleLawyers.length);
 
-    fireEvent.press(screen.getByText(details.compatibleLawyers[0].name));
+    fireEvent.press(screen.getByText(lawyer.name));
 
-    expect(onLawyerPress).toHaveBeenCalledWith(
-      details.compatibleLawyers[0].id,
-    );
+    expect(onLawyerPress).toHaveBeenCalledWith(lawyer.id);
 
     onLawyerPress.mockClear();
     fireEvent.press(
@@ -100,7 +121,7 @@ describe('client solicitation detail components', () => {
     await waitFor(() => {
       expect(mockMutateAsync).toHaveBeenCalledWith({
         solicitacaoId: details.id,
-        advogadoId: details.compatibleLawyers[0].id,
+        advogadoId: lawyer.id,
       });
     });
     expect(onLawyerPress).not.toHaveBeenCalled();

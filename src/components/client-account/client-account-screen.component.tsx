@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ChevronRightIcon } from '@/assets/icon/chevron-right';
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Body1, Body2, Display, Link } from '@/atomic/typography';
 import { ProfileAvatar } from '@/components/profile-avatar';
 import { useAuth } from '@/domain/auth';
@@ -94,8 +94,9 @@ export function ClientAccountScreen() {
               <Body1 color={BrandColors.neutral.white} style={styles.menuLabel}>
                 {item}
               </Body1>
-              <ChevronRightIcon
+              <CaretLeftIcon
                 color={BrandColors.neutral.white}
+                direction="right"
                 width={20}
                 height={20}
               />

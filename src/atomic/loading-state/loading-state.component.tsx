@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from 'react';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import type { StyleProp, ViewStyle } from 'react-native';
 
 type LoadingStateType = 'loading' | 'error' | 'data' | 'empty';
 
@@ -52,6 +53,7 @@ export type LoadingStateProps = {
   data: boolean;
   loading: boolean;
   error: boolean;
+  style?: StyleProp<ViewStyle>;
 };
 
 function getChildDisplayName(child: ReactNode): string | undefined {
@@ -111,7 +113,7 @@ export function LoadingState(props: LoadingStateProps) {
     <Animated.View
       entering={FadeIn}
       exiting={FadeOut}
-      style={{ flex: 1, flexGrow: 1 }}>
+      style={[{ flex: 1, flexGrow: 1 }, props.style]}>
       {children}
     </Animated.View>
   );

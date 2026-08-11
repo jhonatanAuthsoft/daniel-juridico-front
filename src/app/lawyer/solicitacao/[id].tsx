@@ -1,4 +1,3 @@
-import { SymbolView } from 'expo-symbols';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import {
@@ -11,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Button } from '@/atomic/button';
 import { Body1, Display, Heading1, Link } from '@/atomic/typography';
 import { LawyerSolicitationDecisionCard } from '@/components/lawyer-solicitation-details';
@@ -131,15 +131,7 @@ export default function LawyerSolicitationDetailsScreen() {
             hitSlop={Spacing.xxs}
             onPress={() => router.back()}
             style={({ pressed }) => pressed && styles.pressed}>
-            <SymbolView
-              name={{
-                ios: 'chevron.left',
-                android: 'chevron_left',
-                web: 'chevron_left',
-              }}
-              size={24}
-              tintColor={BrandColors.neutral.white}
-            />
+            <CaretLeftIcon color={BrandColors.neutral.white} height={24} width={24} />
           </Pressable>
           <Body1 color={BrandColors.neutral.white} style={styles.headerTitle}>
             Pedido de conexão

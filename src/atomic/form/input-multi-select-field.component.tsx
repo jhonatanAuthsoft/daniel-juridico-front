@@ -1,4 +1,3 @@
-import { SymbolView } from 'expo-symbols';
 import { useMemo, useState } from 'react';
 import {
   FlatList,
@@ -18,6 +17,7 @@ import {
 } from 'react-hook-form';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { CheckboxEmptyIcon } from '@/assets/icon/checkbox-empty';
 import { CheckedCheckboxIcon } from '@/assets/icon/checked-checkbox';
 import { SearchIcon } from '@/assets/icon/search';
@@ -172,14 +172,11 @@ export function InputMultiSelectField<
                   {summary}
                 </Body1>
                 <View style={styles.iconRight}>
-                  <SymbolView
-                    name={{
-                      ios: 'chevron.down',
-                      android: 'arrow_drop_down',
-                      web: 'keyboard_arrow_down',
-                    }}
-                    size={20}
-                    tintColor={BrandColors.neutral.light}
+                  <CaretLeftIcon
+                    color={BrandColors.neutral.light}
+                    direction="down"
+                    height={20}
+                    width={20}
                   />
                 </View>
               </View>
