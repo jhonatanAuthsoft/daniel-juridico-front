@@ -1,6 +1,7 @@
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { XIcon } from '@/assets/icon/x';
+import { ModalScrim } from '@/atomic/modal';
 import { Body1, Heading1 } from '@/atomic/typography';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
@@ -39,16 +40,15 @@ export function PracticeHelpModal({ visible, onClose }: PracticeHelpModalProps) 
   return (
     <Modal
       animationType="fade"
+      navigationBarTranslucent
       onRequestClose={onClose}
+      statusBarTranslucent
       transparent
       visible={visible}>
-      <View style={styles.overlay}>
-        <Pressable
-          accessibilityLabel="Fechar ajuda"
-          accessibilityRole="button"
-          onPress={onClose}
-          style={StyleSheet.absoluteFill}
-        />
+      <ModalScrim
+        accessibilityLabel="Fechar ajuda"
+        align="center"
+        onDismiss={onClose}>
         <View
           accessibilityRole="summary"
           accessibilityViewIsModal
@@ -85,22 +85,14 @@ export function PracticeHelpModal({ visible, onClose }: PracticeHelpModalProps) 
             ))}
           </View>
         </View>
-      </View>
+      </ModalScrim>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: Spacing.sm,
-    backgroundColor: 'rgba(18, 20, 24, 0.82)',
-  },
   dialog: {
     width: '100%',
-    maxWidth: 420,
     gap: Spacing.sm,
     padding: Spacing.sm,
     borderWidth: 1,

@@ -40,7 +40,8 @@ const current = ENV[APP_ENV];
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: current.name,
-  slug: 'laweact',
+  // Must match the EAS project linked by extra.eas.projectId (cannot be renamed there).
+  slug: 'laweact-demo',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/images/ios-app-icon.png',
@@ -67,6 +68,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     'expo-router',
     'expo-dev-client',
+    'expo-image',
     [
       'expo-splash-screen',
       {

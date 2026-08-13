@@ -296,6 +296,7 @@ export function ClientReviewFormModal({
               placeholderTextColor={BrandColors.neutral.light}
               style={[styles.input, commentError && styles.inputError]}
               textAlignVertical="top"
+              underlineColorAndroid="transparent"
               value={comment}
             />
             <Body2 color={BrandColors.neutral.white}>
@@ -406,6 +407,7 @@ const styles = StyleSheet.create({
     color: BrandColors.neutral.white,
     fontFamily: InterFontFamily[400],
     fontSize: 16,
+    backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
   },
   inputError: {
     borderColor: BrandColors.feedback.error.medium,

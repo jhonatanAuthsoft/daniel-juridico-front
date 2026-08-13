@@ -41,10 +41,12 @@ export default function RootLayout() {
           <SplashGuard>
             <Stack
               initialRouteName="login"
+              detachInactiveScreens={false}
               screenOptions={{
                 headerShown: false,
                 contentStyle: { backgroundColor: BrandColors.neutral.xdark },
                 animation: 'none',
+                freezeOnBlur: false,
               }}>
               <Stack.Screen name="login" />
               <Stack.Screen name="index" />

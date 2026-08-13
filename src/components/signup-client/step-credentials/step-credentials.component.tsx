@@ -6,6 +6,7 @@ import { InputTextField, useWatch } from '@/atomic/form';
 import { PasswordRequirementsFeedback } from '@/atomic/password-requirements-feedback';
 import { Separator } from '@/atomic/separator';
 import { FieldValidators } from '@/constants/field-validators';
+import { createEmailAvailableValidator } from '@/domain/auth';
 import { InputMasks } from '@/constants/input-masks';
 import { BrandColors, Spacing } from '@/constants/theme';
 
@@ -31,7 +32,7 @@ export function StepCredentials({ showPasswordErrors }: StepCredentialsProps) {
         autoCapitalize="none"
         autoComplete="email"
         textContentType="emailAddress"
-        validate={FieldValidators.email}
+        validate={createEmailAvailableValidator()}
       />
       <InputTextField
         name="phone"

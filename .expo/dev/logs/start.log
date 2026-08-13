@@ -2795,3 +2795,374 @@
 {"_e":"metro:client_log","_t":1786409475865,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
 {"_e":"metro:client_log","_t":1786409475871,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
 {"_e":"metro:client_log","_t":1786409476578,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:server_log","_t":1786413245371,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786413384024,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786413569701,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786413794964,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786414194069,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786416825594,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786416989306,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786417280865,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786417508457,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786417768337,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786417887266,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786418001548,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786418340503,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786418448433,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786418591826,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786418989430,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786419475777,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786420037352,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786420286191,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786420489883,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786420835922,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786422168697,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786423311066,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786424525385,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786425675131,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786426274084,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786426619979,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786426932817,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786428070691,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786428509541,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786429592951,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786430618325,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786431704683,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786432738004,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786434264322,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786435211607,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786436158830,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786437190747,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786438228115,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786439046048,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786440041915,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786440989071,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786441435617,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786442382583,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786442706937,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786443508271,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786443654307,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786443987205,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786444122749,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786444271644,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786444403320,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786445498914,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786445607313,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786445745438,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786445858879,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786445968267,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786446164595,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786446308323,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786446438010,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786446586919,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786446731538,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786446879848,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786447085968,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786447226929,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786447446005,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786447760011,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786447898188,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786448027172,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786448239188,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786448376145,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786448523226,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786448667638,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786448816342,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786448962926,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786449082655,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786449345926,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786449480131,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786449617117,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786449758127,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786449907352,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786450051576,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786450198503,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786450333950,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786450477562,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786450596652,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786450724698,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786450869063,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786451011631,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786451157129,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786451294501,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786451429894,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786451575406,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"metro:server_log","_t":1786451717818,"level":"error","data":["[timeout] connection terminated with Device for app='%s' on device='%s' after not responding for %s seconds.","com.laweact.app.dev","iPhone 16 Pro","60"]}
+{"_e":"root:init","_t":1786584985823,"format":"v0-jsonl","version":"57.0.14"}
+{"_e":"env:mode","_t":1786584985823,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1786584985825,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"https://7c05-38-10-153-110.ngrok-free.app"}}
+{"_e":"devserver:start","_t":1786584986367,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1786584986658,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1786584986845,"plugins":[]}
+{"_e":"metro:instantiate","_t":1786584987347,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1786584991062,"id":"1","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786584991062,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786584991069,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786584991625,"id":"1","progress":0.010000000000000002,"total":1,"current":1}
+{"_e":"metro:bundling:progress","_t":1786584991727,"id":"1","progress":0.09972299168975068,"total":19,"current":6}
+{"_e":"metro:bundling:progress","_t":1786584991833,"id":"1","progress":0.09972299168975068,"total":48,"current":11}
+{"_e":"metro:bundling:progress","_t":1786584991932,"id":"1","progress":0.14694444444444446,"total":60,"current":23}
+{"_e":"metro:bundling:progress","_t":1786584992033,"id":"1","progress":0.36,"total":65,"current":39}
+{"_e":"metro:bundling:progress","_t":1786584992148,"id":"1","progress":0.36,"total":98,"current":57}
+{"_e":"metro:bundling:progress","_t":1786584992248,"id":"1","progress":0.43312148440353565,"total":117,"current":77}
+{"_e":"metro:bundling:progress","_t":1786584992349,"id":"1","progress":0.43312148440353565,"total":262,"current":100}
+{"_e":"metro:bundling:progress","_t":1786584992448,"id":"1","progress":0.43312148440353565,"total":325,"current":129}
+{"_e":"metro:bundling:progress","_t":1786584992548,"id":"1","progress":0.43312148440353565,"total":339,"current":141}
+{"_e":"metro:bundling:progress","_t":1786584992651,"id":"1","progress":0.43312148440353565,"total":388,"current":158}
+{"_e":"metro:bundling:progress","_t":1786584992751,"id":"1","progress":0.43312148440353565,"total":403,"current":167}
+{"_e":"metro:bundling:progress","_t":1786584992851,"id":"1","progress":0.43312148440353565,"total":450,"current":214}
+{"_e":"metro:bundling:progress","_t":1786584992951,"id":"1","progress":0.43312148440353565,"total":529,"current":264}
+{"_e":"metro:bundling:progress","_t":1786584993051,"id":"1","progress":0.43312148440353565,"total":588,"current":315}
+{"_e":"metro:bundling:progress","_t":1786584993152,"id":"1","progress":0.43312148440353565,"total":652,"current":352}
+{"_e":"metro:bundling:progress","_t":1786584993253,"id":"1","progress":0.43312148440353565,"total":657,"current":356}
+{"_e":"metro:bundling:progress","_t":1786584993354,"id":"1","progress":0.43312148440353565,"total":676,"current":364}
+{"_e":"metro:bundling:progress","_t":1786584993454,"id":"1","progress":0.43312148440353565,"total":687,"current":369}
+{"_e":"metro:bundling:progress","_t":1786584993554,"id":"1","progress":0.43312148440353565,"total":692,"current":373}
+{"_e":"metro:bundling:progress","_t":1786584993654,"id":"1","progress":0.43312148440353565,"total":751,"current":422}
+{"_e":"metro:bundling:progress","_t":1786584993754,"id":"1","progress":0.43312148440353565,"total":818,"current":480}
+{"_e":"metro:bundling:progress","_t":1786584993854,"id":"1","progress":0.43312148440353565,"total":843,"current":521}
+{"_e":"metro:bundling:progress","_t":1786584993954,"id":"1","progress":0.4342627789929708,"total":868,"current":572}
+{"_e":"metro:bundling:progress","_t":1786584994056,"id":"1","progress":0.45130078646039806,"total":911,"current":612}
+{"_e":"metro:bundling:progress","_t":1786584994157,"id":"1","progress":0.4575293866397026,"total":958,"current":648}
+{"_e":"metro:bundling:progress","_t":1786584994257,"id":"1","progress":0.4575293866397026,"total":1121,"current":701}
+{"_e":"metro:bundling:progress","_t":1786584994357,"id":"1","progress":0.4575293866397026,"total":1169,"current":730}
+{"_e":"metro:bundling:progress","_t":1786584994458,"id":"1","progress":0.4575293866397026,"total":1188,"current":784}
+{"_e":"metro:bundling:progress","_t":1786584994558,"id":"1","progress":0.4736543924930351,"total":1206,"current":830}
+{"_e":"metro:bundling:progress","_t":1786584994658,"id":"1","progress":0.5147269225893305,"total":1221,"current":876}
+{"_e":"metro:bundling:progress","_t":1786584994758,"id":"1","progress":0.5806167639262195,"total":1231,"current":938}
+{"_e":"metro:bundling:progress","_t":1786584994858,"id":"1","progress":0.6016190006574622,"total":1248,"current":968}
+{"_e":"metro:bundling:progress","_t":1786584994959,"id":"1","progress":0.6128512276214358,"total":1271,"current":995}
+{"_e":"metro:bundling:progress","_t":1786584995059,"id":"1","progress":0.635009765625,"total":1280,"current":1020}
+{"_e":"metro:bundling:progress","_t":1786584995160,"id":"1","progress":0.6595255777169091,"total":1288,"current":1046}
+{"_e":"metro:bundling:progress","_t":1786584995260,"id":"1","progress":0.6635486400713563,"total":1289,"current":1050}
+{"_e":"metro:bundling:progress","_t":1786584995360,"id":"1","progress":0.6652796785947641,"total":1291,"current":1053}
+{"_e":"metro:bundling:progress","_t":1786584995461,"id":"1","progress":0.6856912547727422,"total":1297,"current":1074}
+{"_e":"metro:bundling:progress","_t":1786584995563,"id":"1","progress":0.6959375288975379,"total":1303,"current":1087}
+{"_e":"metro:bundling:progress","_t":1786584995691,"id":"1","progress":0.6961496480861153,"total":1304,"current":1088}
+{"_e":"metro:bundling:progress","_t":1786584995792,"id":"1","progress":0.6991101139574659,"total":1312,"current":1097}
+{"_e":"metro:bundling:progress","_t":1786584995893,"id":"1","progress":0.7215452594369398,"total":1335,"current":1134}
+{"_e":"metro:bundling:progress","_t":1786584995993,"id":"1","progress":0.7445297590231019,"total":1349,"current":1164}
+{"_e":"metro:bundling:progress","_t":1786584996093,"id":"1","progress":0.7667455633334386,"total":1367,"current":1197}
+{"_e":"metro:bundling:progress","_t":1786584996193,"id":"1","progress":0.7935550421422406,"total":1383,"current":1232}
+{"_e":"metro:bundling:progress","_t":1786584996293,"id":"1","progress":0.7935550421422406,"total":1433,"current":1259}
+{"_e":"metro:bundling:progress","_t":1786584996393,"id":"1","progress":0.7935550421422406,"total":1492,"current":1302}
+{"_e":"metro:bundling:progress","_t":1786584996498,"id":"1","progress":0.7935550421422406,"total":1539,"current":1322}
+{"_e":"metro:bundling:progress","_t":1786584996598,"id":"1","progress":0.7935550421422406,"total":1541,"current":1329}
+{"_e":"metro:bundling:progress","_t":1786584996699,"id":"1","progress":0.7935550421422406,"total":1548,"current":1346}
+{"_e":"metro:bundling:progress","_t":1786584996800,"id":"1","progress":0.7935550421422406,"total":1568,"current":1373}
+{"_e":"metro:bundling:progress","_t":1786584996900,"id":"1","progress":0.7935550421422406,"total":1616,"current":1425}
+{"_e":"metro:bundling:progress","_t":1786584997000,"id":"1","progress":0.7935550421422406,"total":1688,"current":1458}
+{"_e":"metro:bundling:progress","_t":1786584997100,"id":"1","progress":0.7935550421422406,"total":1703,"current":1472}
+{"_e":"metro:bundling:progress","_t":1786584997228,"id":"1","progress":0.7935550421422406,"total":1717,"current":1491}
+{"_e":"metro:bundling:progress","_t":1786584997328,"id":"1","progress":0.7935550421422406,"total":1821,"current":1525}
+{"_e":"metro:bundling:progress","_t":1786584997428,"id":"1","progress":0.7935550421422406,"total":1846,"current":1553}
+{"_e":"metro:bundling:progress","_t":1786584997528,"id":"1","progress":0.7935550421422406,"total":1860,"current":1585}
+{"_e":"metro:bundling:progress","_t":1786584997628,"id":"1","progress":0.7935550421422406,"total":1879,"current":1621}
+{"_e":"metro:bundling:progress","_t":1786584997729,"id":"1","progress":0.7935550421422406,"total":1899,"current":1648}
+{"_e":"metro:bundling:progress","_t":1786584997830,"id":"1","progress":0.7935550421422406,"total":1940,"current":1680}
+{"_e":"metro:bundling:progress","_t":1786584997931,"id":"1","progress":0.7935550421422406,"total":1964,"current":1703}
+{"_e":"metro:bundling:progress","_t":1786584998033,"id":"1","progress":0.7935550421422406,"total":1973,"current":1742}
+{"_e":"metro:bundling:progress","_t":1786584998133,"id":"1","progress":0.8312610851612007,"total":1994,"current":1818}
+{"_e":"metro:bundling:progress","_t":1786584998233,"id":"1","progress":0.8581579663869706,"total":2010,"current":1862}
+{"_e":"metro:bundling:progress","_t":1786584998333,"id":"1","progress":0.8581579663869706,"total":2081,"current":1908}
+{"_e":"metro:bundling:progress","_t":1786584998433,"id":"1","progress":0.8581579663869706,"total":2102,"current":1932}
+{"_e":"metro:bundling:progress","_t":1786584998534,"id":"1","progress":0.8581579663869706,"total":2116,"current":1951}
+{"_e":"metro:bundling:progress","_t":1786584998634,"id":"1","progress":0.8588629346664713,"total":2116,"current":1961}
+{"_e":"metro:bundling:progress","_t":1786584998736,"id":"1","progress":0.8840424083044983,"total":2125,"current":1998}
+{"_e":"metro:bundling:progress","_t":1786584998841,"id":"1","progress":0.9208790143049219,"total":2130,"current":2044}
+{"_e":"metro:bundling:progress","_t":1786584998940,"id":"1","progress":0.9255611559324078,"total":2135,"current":2054}
+{"_e":"metro:bundling:progress","_t":1786584999040,"id":"1","progress":0.9255611559324078,"total":2196,"current":2082}
+{"_e":"metro:bundling:progress","_t":1786584999140,"id":"1","progress":0.9255611559324078,"total":2218,"current":2124}
+{"_e":"metro:bundling:progress","_t":1786584999245,"id":"1","progress":0.9477443524093452,"total":2266,"current":2206}
+{"_e":"metro:bundling:progress","_t":1786584999345,"id":"1","progress":0.9692588895044155,"total":2324,"current":2288}
+{"_e":"metro:bundling:progress","_t":1786584999458,"id":"1","progress":0.999,"total":2365,"current":2365}
+{"_e":"metro:bundling:done","_t":1786584999783,"id":"1","total":2365,"ms":8720.87975}
+{"_e":"metro:client_log","_t":1786585006831,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585006832,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585107064,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786585164416,"id":"7","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786585164416,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786585164504,"id":"7","total":1,"ms":87.446708}
+{"_e":"metro:client_log","_t":1786585170924,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585170924,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585172218,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786585277131,"id":"a","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786585277131,"id":"a","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786585277133,"id":"a","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786585277281,"id":"a","total":1,"ms":149.5795}
+{"_e":"metro:client_log","_t":1786585281848,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585281848,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585283152,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1786585285907,"level":"error","data":["[ReferenceError: Property 'TAB_BAR_CONTENT_HEIGHT' doesn't exist]","\n\n\u001b[1mCode: index.tsx\u001b[22m\n\u001b[0m \u001b[90m 165 |\u001b[39m       }\u001b[33m,\u001b[39m\n \u001b[90m 166 |\u001b[39m     ]\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 167 |\u001b[39m   }\u001b[33m,\u001b[39m [countsByStatus])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 168 |\u001b[39m\n \u001b[90m 169 |\u001b[39m   \u001b[36mconst\u001b[39m tabBarTotalHeight \u001b[33m=\u001b[39m getTabBarTotalHeight(insets\u001b[33m.\u001b[39mbottom)\u001b[33m;\u001b[39m\n \u001b[90m 170 |\u001b[39m   \u001b[36mconst\u001b[39m fabBottom \u001b[33m=\u001b[39m tabBarTotalHeight \u001b[33m+\u001b[39m \u001b[33mFAB_GAP_ABOVE_TAB\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\n\u001b[1mCall Stack\u001b[22m\n\u001b[90m  ClientHomeScreen (\u001b]8;;src/app/client/(tabs)/index.tsx:167:23\u0007src/app/client/(tabs)/index.tsx:167:23\u001b]8;;\u0007)\u001b[39m","\n\n\u001b[1mCode: app-tabs.tsx\u001b[22m\n\u001b[0m \u001b[90m 16 |\u001b[39m }\u001b[33m:\u001b[39m \u001b[33mAppTabsProps\u001b[39m) {\n \u001b[90m 17 |\u001b[39m   \u001b[36mreturn\u001b[39m (\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m     \u001b[33m<\u001b[39m\u001b[33mTabs\u001b[39m\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m       tabBar\u001b[33m=\u001b[39m{(props) \u001b[33m=>\u001b[39m \u001b[33m<\u001b[39m\u001b[33mAppTabBar\u001b[39m {\u001b[33m...\u001b[39mprops} visuals\u001b[33m=\u001b[39m{visuals} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m}\n \u001b[90m 20 |\u001b[39m       screenOptions\u001b[33m=\u001b[39m{{\n \u001b[90m 21 |\u001b[39m         headerShown\u001b[33m:\u001b[39m \u001b[36mfalse\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\n\u001b[1mCall Stack\u001b[22m\n\u001b[90m  AppTabs (\u001b]8;;src/components/app-tabs.tsx:18:5\u0007src/components/app-tabs.tsx:18:5\u001b]8;;\u0007)\u001b[39m\n\u001b[90m  ClientTabsLayout (\u001b]8;;src/app/client/(tabs)/_layout.tsx:5:10\u0007src/app/client/(tabs)/_layout.tsx:5:10\u001b]8;;\u0007)\u001b[39m\n\u001b[90m  ClientShellLayout (\u001b]8;;src/app/client/_layout.tsx:11:26\u0007src/app/client/_layout.tsx:11:26\u001b]8;;\u0007)\u001b[39m\n\u001b[90m  RootLayout (\u001b]8;;src/app/_layout.tsx:42:13\u0007src/app/_layout.tsx:42:13\u001b]8;;\u0007)\u001b[39m"]}
+{"_e":"metro:bundling:started","_t":1786585303371,"id":"f","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786585303372,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786585303374,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786585303485,"id":"f","total":1,"ms":113.201041}
+{"_e":"metro:client_log","_t":1786585308133,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585308133,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585309414,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786585330841,"id":"g","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786585330841,"id":"g","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786585330936,"id":"g","total":1,"ms":94.50225}
+{"_e":"metro:client_log","_t":1786585335764,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585335764,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585337067,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786585343585,"id":"h","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786585343585,"id":"h","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786585343665,"id":"h","total":1,"ms":79.85875}
+{"_e":"metro:client_log","_t":1786585349312,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585349312,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585350856,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786585632490,"id":"i","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786585632490,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786585632585,"id":"i","total":1,"ms":95.504125}
+{"_e":"metro:client_log","_t":1786585637097,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585637097,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585638407,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786585810062,"id":"j","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786585810063,"id":"j","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786585810147,"id":"j","total":1,"ms":84.549792}
+{"_e":"metro:client_log","_t":1786585815310,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585815310,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585816528,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786585941503,"id":"k","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786585941503,"id":"k","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786585941600,"id":"k","total":1,"ms":97.058625}
+{"_e":"metro:client_log","_t":1786585947241,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585947241,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786585948677,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1786586010655,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1786586066661,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786586135934,"id":"l","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786586135935,"id":"l","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786586136071,"id":"l","total":1,"ms":136.353791}
+{"_e":"metro:client_log","_t":1786586142440,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786586142440,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786586143695,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786586277759,"id":"m","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786586277759,"id":"m","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786586277863,"id":"m","total":1,"ms":103.530375}
+{"_e":"metro:client_log","_t":1786586283588,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786586283588,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786586285224,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1786586309736,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786586316096,"id":"n","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786586316096,"id":"n","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786586316188,"id":"n","total":1,"ms":91.573291}
+{"_e":"metro:bundling:started","_t":1786586326577,"id":"o","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786586326577,"id":"o","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786586326656,"id":"o","total":1,"ms":79.121458}
+{"_e":"metro:client_log","_t":1786586333383,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786586333383,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786586334843,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:client_log","_t":1786586350637,"level":"warn","data":["Layout children must be of type Screen, all other children are ignored. To use custom children, create a custom <Layout />. Update Layout Route at: \"app/client/(tabs)/_layout\""]}
+{"_e":"metro:bundling:started","_t":1786586516607,"id":"p","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786586516607,"id":"p","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786586516615,"id":"p","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786586516715,"id":"p","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786586516835,"id":"p","total":1,"ms":228.12725}
+{"_e":"metro:client_log","_t":1786586522906,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786586522906,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1786586838428,"id":"q","platform":"android","environment":null,"entry":"node_modules/expo-router/entry.js"}
+{"_e":"metro:bundling:progress","_t":1786586838428,"id":"q","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786586838430,"id":"q","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786586838533,"id":"q","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786586838641,"id":"q","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786586838807,"id":"q","total":1,"ms":379.221458}
+{"_e":"metro:client_log","_t":1786586844997,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786586844997,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786586860796,"level":"warn","data":["InteractionManager has been deprecated and will be removed in a future release. Please refactor long tasks into smaller ones, and  use 'requestIdleCallback' instead."]}
+{"_e":"root:init","_t":1786587070559,"format":"v0-jsonl","version":"57.0.14"}
+{"_e":"env:mode","_t":1786587070559,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1786587070562,"mode":"development","files":["../../../.env"],"env":{"EXPO_PUBLIC_API_BASE_URL":"https://7c05-38-10-153-110.ngrok-free.app"}}
+{"_e":"devserver:start","_t":1786587071106,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../../../src/app","serverComponents":false,"serverActions":false,"serverRendering":true,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1786587071374,"serverRoot":"../../..","projectRoot":"../../..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":true,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"expo:dev-tools-plugin:load","_t":1786587071536,"plugins":[]}
+{"_e":"metro:instantiate","_t":1786587072063,"atlas":false,"workers":7,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1786587073141,"id":"1","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1786587073141,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786587073144,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786587073577,"id":"1","progress":0.010000000000000002,"total":1,"current":1}
+{"_e":"metro:bundling:progress","_t":1786587073677,"id":"1","progress":0.3586259554519257,"total":349,"current":209}
+{"_e":"metro:bundling:progress","_t":1786587073777,"id":"1","progress":0.5767191766435623,"total":690,"current":524}
+{"_e":"metro:bundling:progress","_t":1786587073877,"id":"1","progress":0.5767191766435623,"total":1211,"current":869}
+{"_e":"metro:bundling:progress","_t":1786587073985,"id":"1","progress":0.7692884628099175,"total":1375,"current":1206}
+{"_e":"metro:bundling:progress","_t":1786587074085,"id":"1","progress":0.7692884628099175,"total":1803,"current":1511}
+{"_e":"metro:bundling:progress","_t":1786587074185,"id":"1","progress":0.8505952847760024,"total":2020,"current":1863}
+{"_e":"metro:bundling:progress","_t":1786587074285,"id":"1","progress":0.9448323416485523,"total":2252,"current":2189}
+{"_e":"metro:bundling:progress","_t":1786587074386,"id":"1","progress":0.9957636141667763,"total":2358,"current":2353}
+{"_e":"metro:bundling:progress","_t":1786587074486,"id":"1","progress":0.9966130422292445,"total":2360,"current":2356}
+{"_e":"metro:bundling:progress","_t":1786587074587,"id":"1","progress":0.999,"total":2360,"current":2359}
+{"_e":"metro:bundling:progress","_t":1786587074636,"id":"1","progress":0.999,"total":2360,"current":2360}
+{"_e":"metro:bundling:done","_t":1786587074742,"id":"1","total":2360,"ms":1601.564084}
+{"_e":"metro:client_log","_t":1786587081051,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786587081052,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1786587583882,"id":"2","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1786587583882,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786587583978,"id":"2","total":1,"ms":95.952625}
+{"_e":"metro:client_log","_t":1786587588520,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786587588537,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1786588385234,"id":"3","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1786588385234,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786588385335,"id":"3","total":1,"ms":100.627458}
+{"_e":"metro:client_log","_t":1786588390722,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786588390722,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1786588498196,"id":"4","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1786588498196,"id":"4","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786588498293,"id":"4","total":1,"ms":97.403625}
+{"_e":"metro:client_log","_t":1786588503653,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786588503653,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1786588613422,"id":"5","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1786588613422,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786588613524,"id":"5","total":1,"ms":101.867375}
+{"_e":"metro:client_log","_t":1786588619709,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786588619709,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1786589206450,"id":"6","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1786589206451,"id":"6","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1786589206547,"id":"6","total":1,"ms":96.42325}
+{"_e":"metro:client_log","_t":1786589213297,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786589213298,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:bundling:started","_t":1786589590701,"id":"7","platform":"ios","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1786589590702,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786589590705,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1786589590814,"id":"7","progress":0.0011298637101899583,"total":119,"current":4}
+{"_e":"metro:bundling:progress","_t":1786589590914,"id":"7","progress":0.20231931743036402,"total":249,"current":112}
+{"_e":"metro:bundling:progress","_t":1786589591014,"id":"7","progress":0.32153334789800575,"total":358,"current":203}
+{"_e":"metro:bundling:progress","_t":1786589591115,"id":"7","progress":0.5649115727982613,"total":467,"current":351}
+{"_e":"metro:bundling:progress","_t":1786589591215,"id":"7","progress":0.6315326180593624,"total":565,"current":449}
+{"_e":"metro:bundling:progress","_t":1786589591316,"id":"7","progress":0.6315326180593624,"total":723,"current":553}
+{"_e":"metro:bundling:progress","_t":1786589591417,"id":"7","progress":0.6315326180593624,"total":729,"current":569}
+{"_e":"metro:bundling:progress","_t":1786589591521,"id":"7","progress":0.6525282509698095,"total":770,"current":622}
+{"_e":"metro:bundling:progress","_t":1786589591621,"id":"7","progress":0.6525282509698095,"total":876,"current":675}
+{"_e":"metro:bundling:progress","_t":1786589591726,"id":"7","progress":0.6525282509698095,"total":961,"current":747}
+{"_e":"metro:bundling:progress","_t":1786589591833,"id":"7","progress":0.6525282509698095,"total":1001,"current":784}
+{"_e":"metro:bundling:progress","_t":1786589591964,"id":"7","progress":0.6525282509698095,"total":1018,"current":797}
+{"_e":"metro:bundling:progress","_t":1786589592083,"id":"7","progress":0.6525282509698095,"total":1180,"current":895}
+{"_e":"metro:bundling:progress","_t":1786589592186,"id":"7","progress":0.6525282509698095,"total":1205,"current":935}
+{"_e":"metro:bundling:progress","_t":1786589592294,"id":"7","progress":0.6646922796056636,"total":1256,"current":1024}
+{"_e":"metro:bundling:progress","_t":1786589592394,"id":"7","progress":0.6842881725256946,"total":1308,"current":1082}
+{"_e":"metro:bundling:progress","_t":1786589592495,"id":"7","progress":0.7549875897087149,"total":1373,"current":1193}
+{"_e":"metro:bundling:progress","_t":1786589592595,"id":"7","progress":0.7549875897087149,"total":1511,"current":1280}
+{"_e":"metro:bundling:progress","_t":1786589592750,"id":"7","progress":0.7549875897087149,"total":1569,"current":1353}
+{"_e":"metro:bundling:progress","_t":1786589592895,"id":"7","progress":0.7549875897087149,"total":1571,"current":1355}
+{"_e":"metro:bundling:progress","_t":1786589593008,"id":"7","progress":0.7549875897087149,"total":1699,"current":1417}
+{"_e":"metro:bundling:progress","_t":1786589593139,"id":"7","progress":0.7549875897087149,"total":1807,"current":1487}
+{"_e":"metro:bundling:progress","_t":1786589593230,"id":"7","progress":0.7549875897087149,"total":1880,"current":1633}
+{"_e":"metro:bundling:progress","_t":1786589593331,"id":"7","progress":0.8088623596909176,"total":1898,"current":1707}
+{"_e":"metro:bundling:progress","_t":1786589593431,"id":"7","progress":0.8088623596909176,"total":1970,"current":1744}
+{"_e":"metro:bundling:progress","_t":1786589593535,"id":"7","progress":0.8088623596909176,"total":2026,"current":1812}
+{"_e":"metro:bundling:progress","_t":1786589593634,"id":"7","progress":0.8374809019043696,"total":2074,"current":1898}
+{"_e":"metro:bundling:progress","_t":1786589593734,"id":"7","progress":0.8809163265306124,"total":2100,"current":1971}
+{"_e":"metro:bundling:progress","_t":1786589593918,"id":"7","progress":0.9447622186129353,"total":2142,"current":2082}
+{"_e":"metro:bundling:progress","_t":1786589594046,"id":"7","progress":0.9447622186129353,"total":2195,"current":2132}
+{"_e":"metro:bundling:progress","_t":1786589594146,"id":"7","progress":0.959846993209721,"total":2268,"current":2222}
+{"_e":"metro:bundling:progress","_t":1786589594247,"id":"7","progress":0.9903572774361333,"total":2276,"current":2265}
+{"_e":"metro:bundling:progress","_t":1786589594348,"id":"7","progress":0.9929824778154256,"total":2276,"current":2268}
+{"_e":"metro:bundling:progress","_t":1786589594449,"id":"7","progress":0.9938583167830592,"total":2276,"current":2269}
+{"_e":"metro:bundling:progress","_t":1786589594549,"id":"7","progress":0.9947780768080653,"total":2295,"current":2289}
+{"_e":"metro:bundling:progress","_t":1786589594653,"id":"7","progress":0.9982578400520217,"total":2295,"current":2293}
+{"_e":"metro:bundling:progress","_t":1786589594875,"id":"7","progress":0.999,"total":2295,"current":2294}
+{"_e":"metro:bundling:progress","_t":1786589594977,"id":"7","progress":0.999,"total":2295,"current":2295}
+{"_e":"metro:bundling:done","_t":1786589595188,"id":"7","total":2295,"ms":4486.494292}
+{"_e":"metro:client_log","_t":1786589596504,"level":"warn","data":["Require cycle: src/data/http/index.ts -> src/data/http/put-binary.ts -> src/data/http/index.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}
+{"_e":"metro:client_log","_t":1786589596510,"level":"warn","data":["Require cycle: src/data/auth/auth-refresh-controller.ts -> src/data/auth/refresh.api.ts -> src/data/http/index.ts -> src/data/http/authenticated-http-client.ts -> src/data/auth/auth-refresh-controller.ts\n\nRequire cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle."]}

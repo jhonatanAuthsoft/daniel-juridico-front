@@ -1,5 +1,8 @@
 import { Redirect } from 'expo-router';
 import type { ReactNode } from 'react';
+import { View } from 'react-native';
+
+import { BrandColors } from '@/constants/theme';
 
 import { useAuth } from './auth-provider';
 
@@ -15,7 +18,7 @@ export function TermsGuard({ children }: TermsGuardProps) {
   const { user, isAuthenticated, isHydrating } = useAuth();
 
   if (isHydrating) {
-    return null;
+    return <View style={{ flex: 1, backgroundColor: BrandColors.neutral.xdark }} />;
   }
 
   if (!isAuthenticated || !user) {

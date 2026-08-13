@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   FlatList,
   Modal,
@@ -15,7 +15,6 @@ import {
   type FieldValues,
   type PathValue,
 } from 'react-hook-form';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { CheckboxEmptyIcon } from '@/assets/icon/checkbox-empty';
@@ -23,6 +22,7 @@ import { CheckedCheckboxIcon } from '@/assets/icon/checked-checkbox';
 import { SearchIcon } from '@/assets/icon/search';
 import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
+import { ModalScrim, useExclusiveSelectOpen } from '@/atomic/modal';
 import { Separator } from '@/atomic/separator';
 import { Body1, Body2, InputCaption, InputLabel } from '@/atomic/typography';
 import type { SelectOption } from '@/constants/select-options';
@@ -70,13 +70,19 @@ export function InputMultiSelectField<
   searchPlaceholder = 'Buscar...',
 }: InputMultiSelectFieldProps<TFieldValues>) {
   const { control } = useFormContext<TFieldValues>();
-  const [open, setOpen] = useState(false);
+  const { isOpen: open, requestOpen, requestClose } = useExclusiveSelectOpen();
   const [searchQuery, setSearchQuery] = useState('');
 
   const close = () => {
-    setOpen(false);
+    requestClose();
     setSearchQuery('');
   };
+
+  useEffect(() => {
+    if (!open) {
+      setSearchQuery('');
+    }
+  }, [open]);
 
   const labelByValue = useMemo(() => {
     const map = new Map<string, string>();
@@ -153,7 +159,7 @@ export function InputMultiSelectField<
                 if (disabled) {
                   return;
                 }
-                setOpen(true);
+                requestOpen();
               }}
               style={[
                 styles.fieldShell,
@@ -274,112 +280,109 @@ function MultiSelectOptionsModal({
   return (
     <Modal
       animationType="fade"
+      navigationBarTranslucent
       onRequestClose={onClose}
+      statusBarTranslucent
       transparent
       visible={open}>
-      <View style={styles.modalRoot}>
-        <Pressable
-          accessibilityLabel="Fechar opções"
-          accessibilityRole="button"
-          onPress={onClose}
-          style={styles.modalBackdrop}
-        />
+      <ModalScrim
+        accessibilityLabel="Fechar opções"
+        align="bottom"
+        onDismiss={onClose}>
+        <View style={styles.optionsPanel}>
+          <GlassBackground blurPx={25} gradient={BrandGradients.gradient} />
 
-        <SafeAreaView edges={['bottom']} style={styles.modalSafe}>
-          <View style={styles.optionsPanel}>
-            <GlassBackground blurPx={25} gradient={BrandGradients.gradient} />
-
-            <View style={styles.optionsContent}>
-              <View style={styles.sheetHeader}>
-                <Body1 bold color={BrandColors.neutral.white} style={styles.headerTitle}>
-                  {label}
-                </Body1>
-                <Pressable
-                  accessibilityLabel="Fechar"
-                  accessibilityRole="button"
-                  hitSlop={Spacing.xxs}
-                  onPress={onClose}>
-                  <XIcon color={BrandColors.neutral.white} />
-                </Pressable>
-              </View>
-
-              {searchable ? (
-                <>
-                  <View style={styles.searchShell}>
-                    <GlassBackground blurPx={25} />
-                    <View style={styles.searchContent}>
-                      <SearchIcon
-                        color={BrandColors.neutral.light}
-                        height={18}
-                        width={18}
-                      />
-                      <TextInput
-                        accessibilityLabel={searchPlaceholder}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        onChangeText={setSearchQuery}
-                        placeholder={searchPlaceholder}
-                        placeholderTextColor={BrandColors.neutral.light}
-                        style={styles.searchInput}
-                        value={searchQuery}
-                      />
-                    </View>
-                  </View>
-                  <Separator size="sm" />
-                </>
-              ) : null}
-
-              <FlatList
-                data={filteredOptions}
-                keyExtractor={(item) => item.value}
-                keyboardShouldPersistTaps="handled"
-                style={styles.list}
-                ListEmptyComponent={
-                  <InputCaption color={BrandColors.neutral.light}>
-                    {searchQuery.trim()
-                      ? 'Nenhuma opção encontrada.'
-                      : 'Nenhuma opção disponível.'}
-                  </InputCaption>
-                }
-                ItemSeparatorComponent={() => <View style={styles.optionDivider} />}
-                renderItem={({ item }) => {
-                  const isSelected = selectedValues.includes(item.value);
-
-                  return (
-                    <Pressable
-                      accessibilityRole="checkbox"
-                      accessibilityState={{ checked: isSelected }}
-                      onPress={() => onToggle(item.value)}
-                      style={({ pressed }) => [
-                        styles.optionRow,
-                        pressed && styles.optionRowPressed,
-                      ]}>
-                      {isSelected ? (
-                        <CheckedCheckboxIcon
-                          color={BrandColors.primary.light}
-                          height={24}
-                          width={24}
-                        />
-                      ) : (
-                        <CheckboxEmptyIcon
-                          color={BrandColors.neutral.xlight}
-                          height={24}
-                          width={24}
-                        />
-                      )}
-                      <Body1
-                        color={BrandColors.neutral.white}
-                        style={styles.optionLabel}>
-                        {item.label}
-                      </Body1>
-                    </Pressable>
-                  );
-                }}
-              />
+          <View style={styles.optionsContent}>
+            <View style={styles.sheetHeader}>
+              <Body1 bold color={BrandColors.neutral.white} style={styles.headerTitle}>
+                {label}
+              </Body1>
+              <Pressable
+                accessibilityLabel="Fechar"
+                accessibilityRole="button"
+                hitSlop={Spacing.xxs}
+                onPress={onClose}>
+                <XIcon color={BrandColors.neutral.white} />
+              </Pressable>
             </View>
+
+            {searchable ? (
+              <>
+                <View style={styles.searchShell}>
+                  <GlassBackground blurPx={25} />
+                  <View style={styles.searchContent}>
+                    <SearchIcon
+                      color={BrandColors.neutral.light}
+                      height={18}
+                      width={18}
+                    />
+                    <TextInput
+                      accessibilityLabel={searchPlaceholder}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      onChangeText={setSearchQuery}
+                      placeholder={searchPlaceholder}
+                      placeholderTextColor={BrandColors.neutral.light}
+                      underlineColorAndroid="transparent"
+                      style={styles.searchInput}
+                      value={searchQuery}
+                    />
+                  </View>
+                </View>
+                <Separator size="sm" />
+              </>
+            ) : null}
+
+            <FlatList
+              data={filteredOptions}
+              keyExtractor={(item) => item.value}
+              keyboardShouldPersistTaps="handled"
+              style={styles.list}
+              ListEmptyComponent={
+                <InputCaption color={BrandColors.neutral.light}>
+                  {searchQuery.trim()
+                    ? 'Nenhuma opção encontrada.'
+                    : 'Nenhuma opção disponível.'}
+                </InputCaption>
+              }
+              ItemSeparatorComponent={() => <View style={styles.optionDivider} />}
+              renderItem={({ item }) => {
+                const isSelected = selectedValues.includes(item.value);
+
+                return (
+                  <Pressable
+                    accessibilityRole="checkbox"
+                    accessibilityState={{ checked: isSelected }}
+                    onPress={() => onToggle(item.value)}
+                    style={({ pressed }) => [
+                      styles.optionRow,
+                      pressed && styles.optionRowPressed,
+                    ]}>
+                    {isSelected ? (
+                      <CheckedCheckboxIcon
+                        color={BrandColors.primary.light}
+                        height={24}
+                        width={24}
+                      />
+                    ) : (
+                      <CheckboxEmptyIcon
+                        color={BrandColors.neutral.xlight}
+                        height={24}
+                        width={24}
+                      />
+                    )}
+                    <Body1
+                      color={BrandColors.neutral.white}
+                      style={styles.optionLabel}>
+                      {item.label}
+                    </Body1>
+                  </Pressable>
+                );
+              }}
+            />
           </View>
-        </SafeAreaView>
-      </View>
+        </View>
+      </ModalScrim>
     </Modal>
   );
 }
@@ -413,6 +416,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
     overflow: 'hidden',
+    backgroundColor: BrandColors.neutral.xdark,
     ...glassShadow,
   },
   fieldShellError: {
@@ -458,25 +462,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.xxxs,
   },
-  modalRoot: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
-  modalBackdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-  },
-  modalSafe: {
-    maxHeight: '75%',
-    paddingHorizontal: Spacing.sm,
-    paddingBottom: Spacing.sm,
-  },
   optionsPanel: {
     overflow: 'hidden',
     maxHeight: '100%',
     borderRadius: OPTIONS_RADIUS,
     borderWidth: 1,
     borderColor: BrandColors.accessory.darkBlue,
+    // Solid base so glass gradient stays readable (esp. Android without BlurView).
+    backgroundColor: BrandColors.neutral.xdark,
     ...glassShadow,
   },
   optionsContent: {
@@ -501,6 +494,7 @@ const styles = StyleSheet.create({
     borderRadius: Radius.large,
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
+    backgroundColor: BrandColors.neutral.xdark,
     ...glassShadow,
   },
   searchContent: {
@@ -517,6 +511,7 @@ const styles = StyleSheet.create({
     color: BrandColors.neutral.white,
     fontFamily: InterFontFamily[500],
     fontSize: FontSize.xSmall,
+    backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
   },
   list: {
     flexGrow: 0,

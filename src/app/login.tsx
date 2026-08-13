@@ -59,12 +59,15 @@ export default function LoginScreen() {
         password: values.password,
       });
 
-      if (!result.user.termsAccepted) {
-        router.replace('/signup/terms');
-        return;
-      }
+      // Defer replace one frame so the login tree can settle before Fabric
+      // mounts the authenticated shell (avoids addViewAt races on Android).
+      const href = !result.user.termsAccepted
+        ? '/signup/terms'
+        : homeHrefForRole(result.user.role);
 
-      router.replace(homeHrefForRole(result.user.role));
+      requestAnimationFrame(() => {
+        router.replace(href);
+      });
     } catch (error) {
       Alert.alert('Login', getErrorMessage(error, 'Usuário ou senha inválidos'));
     }

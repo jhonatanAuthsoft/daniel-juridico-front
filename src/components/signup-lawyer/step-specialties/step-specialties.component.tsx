@@ -200,6 +200,7 @@ export function StepSpecialties() {
             style={styles.searchInput}
             autoCapitalize="none"
             autoCorrect={false}
+            underlineColorAndroid="transparent"
           />
         </View>
       </View>
@@ -319,6 +320,7 @@ const styles = StyleSheet.create({
     margin: 0,
     color: BrandColors.neutral.white,
     fontSize: 16,
+    backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
   },
   list: {
     gap: Spacing.sm,

@@ -3,6 +3,7 @@ export { homeHrefForRole, mapApiProfileToRole, roleLabel } from './auth.types';
 export { AuthProvider, useAuth } from './auth-provider';
 export { RoleGuard } from './role-guard';
 export { TermsGuard } from './terms-guard';
+export { createEmailAvailableValidator } from './create-email-available-validator';
 export { authKeys } from './auth.keys';
 export { getMeUseCase } from './get-me.use-case';
 export { useMe } from './use-me';

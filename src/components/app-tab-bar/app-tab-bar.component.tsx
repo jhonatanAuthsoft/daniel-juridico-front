@@ -8,6 +8,18 @@ import { BrandColors, BrandGradients, Radius, Spacing } from '@/constants/theme'
 import type { TabVisual } from './tab-visuals';
 import { CLIENT_TAB_VISUALS } from './tab-visuals';
 
+/** Icon + label + vertical paddings inside the tab bar (above safe-area inset). */
+export const TAB_BAR_CONTENT_HEIGHT = 68;
+
+/** Matches {@link AppTabBar} bottom padding when the device reports no inset. */
+export function getTabBarBottomInset(safeAreaBottom: number): number {
+  return Math.max(safeAreaBottom, Spacing.xs);
+}
+
+export function getTabBarTotalHeight(safeAreaBottom: number): number {
+  return TAB_BAR_CONTENT_HEIGHT + getTabBarBottomInset(safeAreaBottom);
+}
+
 type TabBarProps = {
   state: {
     index: number;
@@ -39,45 +51,48 @@ export function AppTabBar({
   visuals = CLIENT_TAB_VISUALS,
 }: TabBarProps) {
   const insets = useSafeAreaInsets();
+  const items = state.routes.flatMap((route, index) => {
+    const visual = visuals[route.name];
+    if (!visual) {
+      return [];
+    }
+
+    const focused = state.index === index;
+    const color = focused ? BrandColors.primary.light : BrandColors.neutral.white;
+    const { options } = descriptors[route.key];
+
+    const onPress = () => {
+      const event = navigation.emit({
+        type: 'tabPress',
+        target: route.key,
+        canPreventDefault: true,
+      });
+
+      if (!focused && !event.defaultPrevented) {
+        navigation.navigate(route.name, route.params);
+      }
+    };
+
+    return [
+      <Pressable
+        key={route.key}
+        accessibilityRole="button"
+        accessibilityState={focused ? { selected: true } : {}}
+        accessibilityLabel={options.tabBarAccessibilityLabel ?? visual.label}
+        onPress={onPress}
+        style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}>
+        <View style={styles.iconSlot}>{visual.renderIcon(color)}</View>
+        <InputCaption color={color}>{visual.label}</InputCaption>
+      </Pressable>,
+    ];
+  });
 
   return (
-    <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, Spacing.xs) }]}>
-      <GlassBackground blurPx={25} gradient={BrandGradients.gradient} />
-      {state.routes.map((route, index) => {
-        const visual = visuals[route.name];
-        if (!visual) {
-          return null;
-        }
-
-        const focused = state.index === index;
-        const color = focused ? BrandColors.primary.light : BrandColors.neutral.white;
-        const { options } = descriptors[route.key];
-
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            canPreventDefault: true,
-          });
-
-          if (!focused && !event.defaultPrevented) {
-            navigation.navigate(route.name, route.params);
-          }
-        };
-
-        return (
-          <Pressable
-            key={route.key}
-            accessibilityRole="button"
-            accessibilityState={focused ? { selected: true } : {}}
-            accessibilityLabel={options.tabBarAccessibilityLabel ?? visual.label}
-            onPress={onPress}
-            style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}>
-            <View style={styles.iconSlot}>{visual.renderIcon(color)}</View>
-            <InputCaption color={color}>{visual.label}</InputCaption>
-          </Pressable>
-        );
-      })}
+    <View style={[styles.bar, { paddingBottom: getTabBarBottomInset(insets.bottom) }]}>
+      {Platform.OS === 'android' ? null : (
+        <GlassBackground blurPx={25} gradient={BrandGradients.gradient} />
+      )}
+      {items}
     </View>
   );
 }
@@ -90,7 +105,9 @@ const glassShadow = Platform.select({
     shadowRadius: 16,
   },
   android: {
-    elevation: 12,
+    // Avoid elevation: transparent/elevated views paint a gray plate and
+    // can contribute to Fabric mount issues on Android.
+    elevation: 0,
   },
   default: {
     shadowColor: '#000000',
@@ -110,7 +127,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: 'transparent',
+    // Solid base: Android elevation + transparent bg paints a gray plate.
+    backgroundColor: BrandColors.neutral.xdark,
     borderTopLeftRadius: Radius.large,
     borderTopRightRadius: Radius.large,
     borderWidth: StyleSheet.hairlineWidth,

@@ -28,6 +28,8 @@ export type {
 } from './login.types';
 export { mapLoginParamsToWire, mapLoginWireToResult } from './login.mapper';
 export { login } from './login.api';
+export { checkEmailAvailability } from './email-availability.api';
+export type { EmailAvailabilityWire } from './email-availability.api';
 export type { MeResult, MeWireResponse } from './me.types';
 export { mapMeWireToResult } from './me.mapper';
 export { getMe } from './me.api';

@@ -1,5 +1,8 @@
 import { Redirect } from 'expo-router';
 import type { ReactNode } from 'react';
+import { View } from 'react-native';
+
+import { BrandColors } from '@/constants/theme';
 
 import { useAuth } from './auth-provider';
 import { homeHrefForRole, type UserRole } from './auth.types';
@@ -16,8 +19,10 @@ type RoleGuardProps = {
 export function RoleGuard({ allowedRole, children }: RoleGuardProps) {
   const { user, isAuthenticated, isHydrating } = useAuth();
 
+  // Never return `null` on Android Fabric — empty unmount/remount of the
+  // navigator tree contributes to addViewAt crashes after login.
   if (isHydrating) {
-    return null;
+    return <View style={{ flex: 1, backgroundColor: BrandColors.neutral.xdark }} />;
   }
 
   if (!isAuthenticated || !user) {

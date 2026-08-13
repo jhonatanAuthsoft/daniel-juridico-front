@@ -45,18 +45,23 @@ function runRegexValidators(value: string, validators: InputValidatorPattern[] =
 function runValidateFns(
   value: string,
   validate?: FieldValidateFn | FieldValidateFn[],
-): true | string {
+): Promise<true | string> | true | string {
   if (!validate) {
     return true;
   }
   const list = Array.isArray(validate) ? validate : [validate];
-  for (const fn of list) {
-    const result = fn(value);
-    if (result !== true) {
-      return result;
+
+  const run = async (): Promise<true | string> => {
+    for (const fn of list) {
+      const result = await fn(value);
+      if (result !== true) {
+        return result;
+      }
     }
-  }
-  return true;
+    return true;
+  };
+
+  return run();
 }
 
 export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
@@ -80,9 +85,9 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
       control={control}
       name={name}
       rules={{
-        validate: (value) => {
+        validate: async (value) => {
           const text = String(value ?? '');
-          const custom = runValidateFns(text, validate);
+          const custom = await runValidateFns(text, validate);
           if (custom !== true) {
             return custom;
           }
@@ -149,6 +154,8 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
                   placeholderTextColor={
                     isDisabled ? BrandColors.neutral.medium : BrandColors.neutral.light
                   }
+                  underlineColorAndroid="transparent"
+                  textAlignVertical={isMultiline ? 'top' : textInputProps.textAlignVertical}
                   style={[
                     styles.input,
                     isMultiline && styles.inputMultiline,
@@ -227,6 +234,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
     overflow: 'hidden',
+    backgroundColor: BrandColors.neutral.xdark,
     ...glassShadow,
   },
   fieldShellError: {
@@ -252,7 +260,8 @@ const styles = StyleSheet.create({
     margin: 0,
     color: BrandColors.neutral.white,
     fontSize: 16,
-    backgroundColor: 'transparent',
+    // Android keeps a default EditText fill unless this is forced transparent.
+    backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
   },
   inputDisabled: {
     color: BrandColors.neutral.medium,

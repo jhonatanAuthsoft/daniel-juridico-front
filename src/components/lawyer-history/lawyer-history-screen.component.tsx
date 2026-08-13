@@ -123,6 +123,7 @@ export function LawyerHistoryScreen({
                   placeholder="Buscar no histórico"
                   placeholderTextColor={BrandColors.neutral.medium}
                   autoFocus
+                  underlineColorAndroid="transparent"
                   style={styles.searchInput}
                 />
                 <Pressable
@@ -301,6 +302,7 @@ const styles = StyleSheet.create({
     color: BrandColors.neutral.white,
     fontFamily: InterFontFamily[500],
     fontSize: FontSize.xSmall,
+    backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
   },
   filtersRow: {
     flexDirection: 'row',

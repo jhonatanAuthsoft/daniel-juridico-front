@@ -1,6 +1,6 @@
 import ContentLoader, { Rect } from 'react-content-loader/native';
 import type { ReactNode } from 'react';
-import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Platform, View, type StyleProp, type ViewStyle } from 'react-native';
 import type { NumberProp } from 'react-native-svg';
 
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
@@ -50,6 +50,8 @@ function toNumber(value: NumberProp | undefined, fallback: number): number {
 
 /**
  * Atomic shimmer box powered by `react-content-loader/native`.
+ * On Android, SVG loaders are skipped — Fabric has crashed with SvgView
+ * remount races (addViewAt / child already has a parent) after navigation.
  */
 export function Skeleton({
   width = '100%',
@@ -61,6 +63,23 @@ export function Skeleton({
   const numericHeight = toNumber(height, Spacing.sm);
   /** Stable SVG coordinate space; scales to the container width. */
   const viewBoxWidth = 400;
+
+  if (Platform.OS === 'android') {
+    return (
+      <View
+        style={[
+          {
+            width,
+            height: numericHeight,
+            borderRadius: resolvedRadius,
+            backgroundColor: BACKGROUND_COLOR,
+            overflow: 'hidden',
+          },
+          style,
+        ]}
+      />
+    );
+  }
 
   return (
     <View style={[{ width, height: numericHeight }, style]}>
@@ -119,7 +138,3 @@ Shimmer.Button = ShimmerButton;
 export type SkeletonLegacyProps = SkeletonProps & {
   borderRadius?: number;
 };
-
-const styles = StyleSheet.create({});
-
-void styles;

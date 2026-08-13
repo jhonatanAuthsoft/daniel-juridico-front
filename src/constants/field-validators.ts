@@ -10,14 +10,17 @@ import {
   onlyDigits,
 } from '@/utils/br-input';
 
-export type FieldValidateFn = (value: string) => true | string;
+export type FieldValidateResult = true | string;
+export type FieldValidateFn = (
+  value: string,
+) => FieldValidateResult | Promise<FieldValidateResult>;
 
 export function composeValidators(
   ...validators: FieldValidateFn[]
 ): FieldValidateFn {
-  return (value) => {
+  return async (value) => {
     for (const validator of validators) {
-      const result = validator(value);
+      const result = await validator(value);
       if (result !== true) {
         return result;
       }

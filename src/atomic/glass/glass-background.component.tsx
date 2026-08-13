@@ -17,7 +17,13 @@ export type GlassBackgroundProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-function GradientLayer({ gradient }: { gradient: BrandGradientDefinition }) {
+function GradientLayer({
+  gradient,
+  style,
+}: {
+  gradient: BrandGradientDefinition;
+  style?: StyleProp<ViewStyle>;
+}) {
   const points = angleToPoints(gradient.angleDeg);
   const locations = toGradientLocations(gradient.locationsPercent);
 
@@ -27,7 +33,7 @@ function GradientLayer({ gradient }: { gradient: BrandGradientDefinition }) {
       locations={locations}
       start={points.start}
       end={points.end}
-      style={StyleSheet.absoluteFill}
+      style={style ?? StyleSheet.absoluteFill}
     />
   );
 }
@@ -35,6 +41,9 @@ function GradientLayer({ gradient }: { gradient: BrandGradientDefinition }) {
 /**
  * Brand glass fill: Gradient-Gradiente + backdrop blur.
  * Looks correct over dark surfaces (as in Figma).
+ *
+ * On Android, skip BlurView and nested absoluteFill wrappers — those have
+ * contributed to Fabric mount races (addViewAt / child already has a parent).
  */
 export function GlassBackground({
   blurPx = 12.55,
@@ -43,9 +52,17 @@ export function GlassBackground({
 }: GlassBackgroundProps) {
   const intensity = Math.min(100, Math.round(blurPx * 2));
 
+  if (Platform.OS === 'android') {
+    return (
+      <GradientLayer gradient={gradient} style={[StyleSheet.absoluteFill, style]} />
+    );
+  }
+
   return (
     <View pointerEvents="none" style={[StyleSheet.absoluteFill, style]}>
-      <BlurView intensity={intensity} tint="dark" style={StyleSheet.absoluteFill} />
+      {Platform.OS === 'ios' ? (
+        <BlurView intensity={intensity} tint="dark" style={StyleSheet.absoluteFill} />
+      ) : null}
       <View
         style={[
           StyleSheet.absoluteFill,
@@ -76,9 +93,21 @@ export function CtaGlassBackground({ pressed = false, style }: CtaGlassBackgroun
   const redWash = pressed ? BrandGradients.ctaRedWashPressed : BrandGradients.ctaRedWash;
   const glass = pressed ? BrandGradients.ctaGlassPressed : BrandGradients.ctaGlass;
 
+  if (Platform.OS === 'android') {
+    return (
+      <View pointerEvents="none" style={[StyleSheet.absoluteFill, style]}>
+        <GradientLayer gradient={glass} />
+        <GradientLayer gradient={redWash} />
+        {pressed ? <View style={styles.pressedDim} /> : null}
+      </View>
+    );
+  }
+
   return (
     <View pointerEvents="none" style={[StyleSheet.absoluteFill, style]}>
-      <BlurView intensity={intensity} tint="dark" style={StyleSheet.absoluteFill} />
+      {Platform.OS === 'ios' ? (
+        <BlurView intensity={intensity} tint="dark" style={StyleSheet.absoluteFill} />
+      ) : null}
       <View
         style={[
           StyleSheet.absoluteFill,
@@ -91,7 +120,6 @@ export function CtaGlassBackground({ pressed = false, style }: CtaGlassBackgroun
             default: {},
           }),
         ]}>
-        {/* CSS stacks first-listed on top; paint glass then red wash on top */}
         <GradientLayer gradient={glass} />
         <GradientLayer gradient={redWash} />
         {pressed ? <View style={styles.pressedDim} /> : null}

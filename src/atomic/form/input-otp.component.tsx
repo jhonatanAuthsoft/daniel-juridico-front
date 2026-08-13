@@ -128,6 +128,7 @@ export function InputOTP<TFieldValues extends FieldValues = FieldValues>({
                       autoComplete="sms-otp"
                       maxLength={length}
                       selectTextOnFocus
+                      underlineColorAndroid="transparent"
                       style={styles.cellInput}
                     />
                   </View>
@@ -186,6 +187,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     padding: 0,
     margin: 0,
-    backgroundColor: 'transparent',
+    backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
   },
 });

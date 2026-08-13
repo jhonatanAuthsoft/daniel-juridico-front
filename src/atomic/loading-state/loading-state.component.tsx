@@ -5,8 +5,7 @@ import {
   type ReactElement,
   type ReactNode,
 } from 'react';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import type { StyleProp, ViewStyle } from 'react-native';
+import { View, type StyleProp, type ViewStyle } from 'react-native';
 
 type LoadingStateType = 'loading' | 'error' | 'data' | 'empty';
 
@@ -71,7 +70,10 @@ function getChildDisplayName(child: ReactNode): string | undefined {
 }
 
 /**
- * Switches between shimmer / error / empty / content slots with a fade transition.
+ * Switches between shimmer / error / empty / content slots.
+ *
+ * No Reanimated layout animations: on Android + Fabric they can crash with
+ * "child already has a parent" during navigation (e.g. post-login).
  *
  * @example
  * ```tsx
@@ -110,12 +112,9 @@ export function LoadingState(props: LoadingStateProps) {
   }, [currentState, props.children]);
 
   return (
-    <Animated.View
-      entering={FadeIn}
-      exiting={FadeOut}
-      style={[{ flex: 1, flexGrow: 1 }, props.style]}>
+    <View key={currentState} style={[{ flex: 1, flexGrow: 1 }, props.style]}>
       {children}
-    </Animated.View>
+    </View>
   );
 }
 

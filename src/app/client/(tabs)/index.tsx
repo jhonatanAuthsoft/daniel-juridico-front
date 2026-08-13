@@ -20,6 +20,7 @@ import { GlassBackground } from '@/atomic/glass';
 import { LoadingState } from '@/atomic/loading-state';
 import { Separator } from '@/atomic/separator';
 import { Body2, Display, Heading1, Link } from '@/atomic/typography';
+import { getTabBarTotalHeight } from '@/components/app-tab-bar';
 import { ClientEmptyState } from '@/components/client-empty-state';
 import {
   ClientSolicitationCard,
@@ -41,8 +42,6 @@ import {
 } from '@/data/solicitation';
 import { useClientSolicitations } from '@/domain/solicitation';
 
-/** Tab bar content height above the home indicator (icons + labels + padding). */
-const TAB_BAR_CONTENT_HEIGHT = 62;
 const FAB_HEIGHT = 48;
 /** Distance between FAB and top of tab bar. */
 const FAB_GAP_ABOVE_TAB = 16;
@@ -78,18 +77,15 @@ function apiStatusForFilter(filter: FilterId): StatusSolicitacaoApi | undefined 
 
 function SolicitationsListShimmer({ paddingBottom }: { paddingBottom: number }) {
   return (
-    <ScrollView
-      contentContainerStyle={[styles.listContent, { paddingBottom }]}
-      scrollEnabled={false}
-      showsVerticalScrollIndicator={false}>
+    <View style={[styles.listContent, { paddingBottom }]}>
       {LIST_SHIMMER_KEYS.map((key, index) => (
         <View key={key}>
           {index > 0 ? <Separator size="sm" /> : null}
           <ClientSolicitationCardShimmer />
         </View>
       ))}
-    </ScrollView>
-  );  
+    </View>
+  );
 }
 
 export default function ClientHomeScreen() {
@@ -167,7 +163,7 @@ export default function ClientHomeScreen() {
     ];
   }, [countsByStatus]);
 
-  const tabBarTotalHeight = TAB_BAR_CONTENT_HEIGHT + insets.bottom;
+  const tabBarTotalHeight = getTabBarTotalHeight(insets.bottom);
   const fabBottom = tabBarTotalHeight + FAB_GAP_ABOVE_TAB;
 
   const hasListItems = solicitations.length > 0;
@@ -198,6 +194,7 @@ export default function ClientHomeScreen() {
                   placeholder="Buscar solicitação"
                   placeholderTextColor={BrandColors.neutral.medium}
                   autoFocus
+                  underlineColorAndroid="transparent"
                   style={styles.searchInput}
                 />
                 <Pressable
@@ -241,6 +238,7 @@ export default function ClientHomeScreen() {
               <Separator size="sm" />
               <ScrollView
                 horizontal
+                removeClippedSubviews={false}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.filtersRow}>
                 {filterChips.map((chip) => {
@@ -356,6 +354,7 @@ export default function ClientHomeScreen() {
               keyExtractor={(item) => item.id}
               contentContainerStyle={[styles.listContent, { paddingBottom: listPaddingBottom }]}
               showsVerticalScrollIndicator={false}
+              removeClippedSubviews={false}
               refreshing={isPullRefreshing}
               onRefresh={() => {
                 void handlePullRefresh();
@@ -489,6 +488,7 @@ const styles = StyleSheet.create({
     color: BrandColors.neutral.white,
     fontFamily: InterFontFamily[500],
     fontSize: FontSize.xSmall,
+    backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
   },
   filtersRow: {
     flexDirection: 'row',
