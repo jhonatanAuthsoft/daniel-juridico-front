@@ -9,6 +9,7 @@ import {
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from 'react-native';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 import { SplashGuard } from '@/components/splash-guard';
 import { BrandColors } from '@/constants/theme';
@@ -35,30 +36,32 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryProvider>
-      <AuthProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <SplashGuard>
-            <Stack
-              initialRouteName="login"
-              detachInactiveScreens={false}
-              screenOptions={{
-                headerShown: false,
-                contentStyle: { backgroundColor: BrandColors.neutral.xdark },
-                animation: 'none',
-                freezeOnBlur: false,
-              }}>
-              <Stack.Screen name="login" />
-              <Stack.Screen name="index" />
-              <Stack.Screen name="select-profile" />
-              <Stack.Screen name="signup" />
-              <Stack.Screen name="forgot-password" />
-              <Stack.Screen name="client" />
-              <Stack.Screen name="lawyer" />
-            </Stack>
-          </SplashGuard>
-        </ThemeProvider>
-      </AuthProvider>
-    </QueryProvider>
+    <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
+      <QueryProvider>
+        <AuthProvider>
+          <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <SplashGuard>
+              <Stack
+                initialRouteName="login"
+                detachInactiveScreens={false}
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: { backgroundColor: BrandColors.neutral.xdark },
+                  animation: 'none',
+                  freezeOnBlur: false,
+                }}>
+                <Stack.Screen name="login" />
+                <Stack.Screen name="index" />
+                <Stack.Screen name="select-profile" />
+                <Stack.Screen name="signup" />
+                <Stack.Screen name="forgot-password" />
+                <Stack.Screen name="client" />
+                <Stack.Screen name="lawyer" />
+              </Stack>
+            </SplashGuard>
+          </ThemeProvider>
+        </AuthProvider>
+      </QueryProvider>
+    </KeyboardProvider>
   );
 }

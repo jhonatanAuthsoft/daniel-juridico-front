@@ -167,7 +167,6 @@ export function ClientSolicitationForm({
     <ClientFlowScreen
       title="Nova solicitação"
       onClose={onClose}
-      keyboardAvoiding
       contentContainerStyle={styles.content}>
       <Form {...form}>
         <View style={styles.fields}>

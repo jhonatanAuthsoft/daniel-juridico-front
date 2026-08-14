@@ -1,14 +1,15 @@
 import type { ReactNode } from 'react';
 import {
-  KeyboardAvoidingView,
-  Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   View,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
+import {
+  KeyboardAwareScrollView,
+  KeyboardStickyView,
+} from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
@@ -25,7 +26,6 @@ type ClientFlowScreenProps = {
   onBack?: () => void;
   /** When false, children fill the body without scrolling. Default true. */
   scroll?: boolean;
-  keyboardAvoiding?: boolean;
   contentContainerStyle?: StyleProp<ViewStyle>;
   /** Optional content pinned below the scroll area (e.g. primary CTA). */
   footer?: ReactNode;
@@ -33,7 +33,7 @@ type ClientFlowScreenProps = {
 
 /**
  * Shared layout for client solicitation flow screens:
- * fixed header + scrollable body.
+ * fixed header + keyboard-aware scrollable body.
  */
 export function ClientFlowScreen({
   title,
@@ -41,7 +41,6 @@ export function ClientFlowScreen({
   onClose,
   onBack,
   scroll = true,
-  keyboardAvoiding = false,
   contentContainerStyle,
   footer,
 }: ClientFlowScreenProps) {
@@ -86,36 +85,30 @@ export function ClientFlowScreen({
   );
 
   const body = scroll ? (
-    <ScrollView
+    <KeyboardAwareScrollView
+      bottomOffset={Spacing.md}
       contentContainerStyle={[styles.content, contentContainerStyle]}
+      keyboardDismissMode="interactive"
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
       style={styles.flex}>
       {children}
-    </ScrollView>
+    </KeyboardAwareScrollView>
   ) : (
     <View style={[styles.content, styles.flex, contentContainerStyle]}>{children}</View>
   );
 
-  const main = (
-    <View style={styles.shell}>
-      {header}
-      {body}
-      {footer ? <View style={styles.footer}>{footer}</View> : null}
-    </View>
-  );
-
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
-      {keyboardAvoiding ? (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={styles.flex}>
-          {main}
-        </KeyboardAvoidingView>
-      ) : (
-        main
-      )}
+      <View style={styles.shell}>
+        {header}
+        {body}
+        {footer ? (
+          <KeyboardStickyView>
+            <View style={styles.footer}>{footer}</View>
+          </KeyboardStickyView>
+        ) : null}
+      </View>
     </SafeAreaView>
   );
 }

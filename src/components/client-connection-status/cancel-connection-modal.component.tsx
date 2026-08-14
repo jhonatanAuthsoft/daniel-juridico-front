@@ -38,11 +38,11 @@ export function CancelConnectionModal({
 
           <View style={styles.copy}>
             <Heading1 color={BrandColors.neutral.white}>
-              Deseja cancelar a solicitação?
+              Deseja cancelar a conexão?
             </Heading1>
             <Body1 color={BrandColors.neutral.white} style={styles.description}>
-              Deixaremos de buscar advogados compatíveis com sua demanda. Esta
-              ação é irreversível.
+              A solicitação de conexão com este advogado será encerrada. Você
+              poderá conectar-se novamente depois, se quiser.
             </Body1>
           </View>
 
@@ -58,16 +58,14 @@ export function CancelConnectionModal({
               <Link color={BrandColors.primary.light}>Fechar</Link>
             </Pressable>
             <Pressable
-              accessibilityLabel="Cancelar solicitação"
+              accessibilityLabel="Cancelar conexão"
               accessibilityRole="button"
               onPress={onConfirm}
               style={({ pressed }) => [
                 styles.action,
                 pressed && styles.pressed,
               ]}>
-              <Link color={BrandColors.primary.light}>
-                Cancelar solicitação
-              </Link>
+              <Link color={BrandColors.primary.light}>Cancelar conexão</Link>
             </Pressable>
           </View>
         </View>

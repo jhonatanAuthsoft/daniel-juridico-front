@@ -302,6 +302,7 @@ function SelectOptionsModal({
             <FlatList
               data={filteredOptions}
               keyExtractor={(item) => item.value}
+              keyboardDismissMode="on-drag"
               keyboardShouldPersistTaps="handled"
               style={styles.list}
               ListEmptyComponent={

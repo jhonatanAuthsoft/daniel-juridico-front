@@ -1,7 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useRef, useState } from 'react';
 import {
-  KeyboardAvoidingView,
   Modal,
   PanResponder,
   Platform,
@@ -10,8 +9,10 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { Button } from '@/atomic/button';
+import { ModalScrim } from '@/atomic/modal';
 import { Body1, Body2, Heading1 } from '@/atomic/typography';
 import {
   BrandColors,
@@ -235,15 +236,17 @@ export function ClientReviewFormModal({
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
+      navigationBarTranslucent
       onRequestClose={onClose}
+      statusBarTranslucent
       transparent
       visible={visible}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.overlay}>
+      <ModalScrim
+        accessibilityLabel="Fechar avaliação"
+        align="bottom"
+        onDismiss={onClose}>
         <View
-          accessibilityRole="dialog"
           accessibilityViewIsModal
           style={styles.sheet}>
           <View style={styles.handle} />
@@ -261,83 +264,90 @@ export function ClientReviewFormModal({
             />
           </Pressable>
 
-          <View style={styles.intro}>
-            <Heading1 color={BrandColors.neutral.white}>
-              Qual nota você daria para essa conexão?
-            </Heading1>
-            <Body1 color={BrandColors.neutral.white}>
-              Conte-nos sobre a sua experiência com essa conexão
-            </Body1>
-          </View>
-
-          <View style={styles.ratingField}>
-            <StarRatingInput onChangeRating={selectRating} rating={rating} />
-            <View style={styles.ratingLabels}>
-              <Body1 color={BrandColors.neutral.white}>Péssima</Body1>
-              <Body1 color={BrandColors.neutral.white}>Ótimo</Body1>
+          <KeyboardAwareScrollView
+            bottomOffset={Spacing.md}
+            contentContainerStyle={styles.scrollContent}
+            keyboardDismissMode="interactive"
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}>
+            <View style={styles.intro}>
+              <Heading1 color={BrandColors.neutral.white}>
+                Qual nota você daria para essa conexão?
+              </Heading1>
+              <Body1 color={BrandColors.neutral.white}>
+                Conte-nos sobre a sua experiência com essa conexão
+              </Body1>
             </View>
-            {ratingError ? (
-              <Body2 color={BrandColors.feedback.error.medium}>
-                Selecione uma nota.
-              </Body2>
-            ) : null}
-          </View>
 
-          <View style={styles.commentField}>
-            <Body1 color={BrandColors.neutral.white}>
-              Escreva sua avaliação
-            </Body1>
-            <TextInput
-              accessibilityLabel="Escreva sua avaliação"
-              maxLength={MAX_COMMENT_LENGTH}
-              multiline
-              onChangeText={updateComment}
-              placeholder="Descreva sua experiência..."
-              placeholderTextColor={BrandColors.neutral.light}
-              style={[styles.input, commentError && styles.inputError]}
-              textAlignVertical="top"
-              underlineColorAndroid="transparent"
-              value={comment}
-            />
-            <Body2 color={BrandColors.neutral.white}>
-              {MAX_COMMENT_LENGTH - comment.length} caracteres
-            </Body2>
-            {commentError ? (
-              <Body2 color={BrandColors.feedback.error.medium}>
-                Escreva sua avaliação.
-              </Body2>
-            ) : null}
-          </View>
+            <View style={styles.ratingField}>
+              <StarRatingInput onChangeRating={selectRating} rating={rating} />
+              <View style={styles.ratingLabels}>
+                <Body1 color={BrandColors.neutral.white}>Péssima</Body1>
+                <Body1 color={BrandColors.neutral.white}>Ótimo</Body1>
+              </View>
+              {ratingError ? (
+                <Body2 color={BrandColors.feedback.error.medium}>
+                  Selecione uma nota.
+                </Body2>
+              ) : null}
+            </View>
 
-          <Button
-            accessibilityLabel="Avaliar"
-            disabled={isSubmitting}
-            isLoading={isSubmitting}
-            onPress={submitReview}
-            variant="primary">
-            Avaliar
-          </Button>
+            <View style={styles.commentField}>
+              <Body1 color={BrandColors.neutral.white}>
+                Escreva sua avaliação
+              </Body1>
+              <TextInput
+                accessibilityLabel="Escreva sua avaliação"
+                maxLength={MAX_COMMENT_LENGTH}
+                multiline
+                onChangeText={updateComment}
+                placeholder="Descreva sua experiência..."
+                placeholderTextColor={BrandColors.neutral.light}
+                style={[styles.input, commentError && styles.inputError]}
+                textAlignVertical="top"
+                underlineColorAndroid="transparent"
+                value={comment}
+              />
+              <Body2 color={BrandColors.neutral.white}>
+                {MAX_COMMENT_LENGTH - comment.length} caracteres
+              </Body2>
+              {commentError ? (
+                <Body2 color={BrandColors.feedback.error.medium}>
+                  Escreva sua avaliação.
+                </Body2>
+              ) : null}
+            </View>
+
+            <Button
+              accessibilityLabel="Avaliar"
+              disabled={isSubmitting}
+              isLoading={isSubmitting}
+              onPress={submitReview}
+              variant="primary">
+              Avaliar
+            </Button>
+          </KeyboardAwareScrollView>
         </View>
-      </KeyboardAvoidingView>
+      </ModalScrim>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(18, 20, 24, 0.72)',
-  },
   sheet: {
-    maxHeight: '94%',
-    gap: Spacing.md,
-    paddingHorizontal: Spacing.md,
+    maxHeight: '100%',
+    gap: Spacing.sm,
+    paddingHorizontal: Spacing.sm,
     paddingTop: Spacing.sm,
-    paddingBottom: Spacing.lg,
-    borderTopLeftRadius: Radius.large,
-    borderTopRightRadius: Radius.large,
+    paddingBottom: Spacing.sm,
+    borderRadius: Radius.large,
+    borderWidth: 1,
+    borderColor: BrandColors.neutral.medium,
     backgroundColor: BrandColors.neutral.xdark,
+  },
+  scrollContent: {
+    gap: Spacing.md,
+    paddingBottom: Spacing.sm,
   },
   handle: {
     width: 60,
@@ -367,7 +377,7 @@ const styles = StyleSheet.create({
     height: STAR_SIZE,
   },
   a11yLayer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   a11ySegment: {
     position: 'absolute',

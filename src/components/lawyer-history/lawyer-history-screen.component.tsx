@@ -216,6 +216,8 @@ export function LawyerHistoryScreen({
           data={filteredData}
           keyExtractor={(item) => item.id}
           contentContainerStyle={[styles.listContent, { paddingBottom: listPaddingBottom }]}
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <Separator size="sm" />}
           ListEmptyComponent={

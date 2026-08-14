@@ -160,6 +160,8 @@ export default function LawyerHomeScreen() {
               styles.listContent,
               { paddingBottom: listPaddingBottom },
             ]}
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={() => <Separator size="sm" />}
             ListEmptyComponent={

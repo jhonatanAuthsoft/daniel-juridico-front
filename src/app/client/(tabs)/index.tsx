@@ -353,6 +353,8 @@ export default function ClientHomeScreen() {
               data={solicitations}
               keyExtractor={(item) => item.id}
               contentContainerStyle={[styles.listContent, { paddingBottom: listPaddingBottom }]}
+              keyboardDismissMode="on-drag"
+              keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
               removeClippedSubviews={false}
               refreshing={isPullRefreshing}

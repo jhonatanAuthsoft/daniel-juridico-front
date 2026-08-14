@@ -75,6 +75,11 @@ export function ClientLawyerReviews({
   const hasOwnReview = currentReviews.some((review) => review.isOwn);
   const canCreateReview = canReview && !hasOwnReview;
   const canDeleteOwn = typeof onDeleteOwnReview === 'function';
+  const hasReviews = currentReviews.length > 0 || currentTotal > 0;
+
+  if (!hasReviews) {
+    return null;
+  }
 
   const deleteOwnReview = async () => {
     if (!reviewToDeleteId || !onDeleteOwnReview || isDeletingOwn) {

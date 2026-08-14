@@ -1,12 +1,6 @@
 import { useRouter } from 'expo-router';
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/atomic/button';
@@ -62,60 +56,59 @@ export default function ForgotPasswordScreen() {
   return (
     <View style={styles.root}>
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
-        <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <ScrollView
-            contentContainerStyle={styles.content}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}>
-            <Separator size="xxxl" />
+        <KeyboardAwareScrollView
+          bottomOffset={Spacing.md}
+          contentContainerStyle={styles.content}
+          keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          style={styles.flex}>
+          <Separator size="xxxl" />
 
-            <View style={styles.intro}>
-              <Display color={BrandColors.neutral.white}>Recuperação de Senha</Display>
-              <Separator size="xxs" />
-              <Body1 color={BrandColors.neutral.white} style={styles.subtitle}>
-                Informe seu e-mail cadastrado para receber um código de recuperação da sua
-                conta
-              </Body1>
-            </View>
+          <View style={styles.intro}>
+            <Display color={BrandColors.neutral.white}>Recuperação de Senha</Display>
+            <Separator size="xxs" />
+            <Body1 color={BrandColors.neutral.white} style={styles.subtitle}>
+              Informe seu e-mail cadastrado para receber um código de recuperação da sua
+              conta
+            </Body1>
+          </View>
 
-            <Separator size="xl" />
+          <Separator size="xl" />
 
-            <Form {...form}>
-              <InputTextField
-                name="email"
-                label="E-mail"
-                placeholder="Digite seu e-mail"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoComplete="email"
-                textContentType="emailAddress"
-                validate={FieldValidators.email}
-              />
-            </Form>
+          <Form {...form}>
+            <InputTextField
+              name="email"
+              label="E-mail"
+              placeholder="Digite seu e-mail"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+              textContentType="emailAddress"
+              validate={FieldValidators.email}
+            />
+          </Form>
 
-            <Separator size="xxl" />
+          <Separator size="xxl" />
 
-            <Button
-              variant="cta"
-              disabled={!canSubmit}
-              isLoading={isSubmitting}
-              onPress={() => {
-                void form.handleSubmit(onSubmit)();
-              }}>
-              {secondsLeft > 0 ? `Aguarde ${label}` : 'Enviar'}
+          <Button
+            variant="cta"
+            disabled={!canSubmit}
+            isLoading={isSubmitting}
+            onPress={() => {
+              void form.handleSubmit(onSubmit)();
+            }}>
+            {secondsLeft > 0 ? `Aguarde ${label}` : 'Enviar'}
+          </Button>
+
+          <Separator size="xl" />
+
+          <View style={styles.footer}>
+            <Button variant="link" href="/login" linkMode="navigation">
+              Já tem conta? Acesse
             </Button>
-
-            <Separator size="xl" />
-
-            <View style={styles.footer}>
-              <Button variant="link" href="/login" linkMode="navigation">
-                Já tem conta? Acesse
-              </Button>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+          </View>
+        </KeyboardAwareScrollView>
       </SafeAreaView>
     </View>
   );

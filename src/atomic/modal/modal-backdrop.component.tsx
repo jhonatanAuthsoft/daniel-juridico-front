@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, useContext } from 'react';
 import {
   Platform,
   Pressable,
@@ -9,12 +9,18 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  useReanimatedKeyboardAnimation,
+} from 'react-native-keyboard-controller';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import { Spacing } from '@/constants/theme';
 
 /** Shared dim color for select sheets and informative modals. */
 export const MODAL_BACKDROP_COLOR = 'rgba(0, 0, 0, 0.72)';
+
+const ZERO_INSETS = { top: 0, right: 0, bottom: 0, left: 0 };
 
 export type ModalBackdropProps = {
   onPress?: () => void;
@@ -53,6 +59,9 @@ export type ModalScrimProps = {
  * Android Dialogs with `transparent` size to wrap_content — `flex:1` /
  * `absoluteFill` alone do NOT expand the window, so the backdrop clips and the
  * sheet floats mid-screen. Explicit window size forces a full-screen Dialog.
+ *
+ * Keyboard: sheet/dialog lift via `useReanimatedKeyboardAnimation` so search
+ * fields and content stay above the IME on both platforms (edge-to-edge Android).
  */
 export function ModalScrim({
   children,
@@ -61,29 +70,49 @@ export function ModalScrim({
   accessibilityLabel = 'Fechar',
   contentStyle,
 }: ModalScrimProps) {
-  const insets = useSafeAreaInsets();
+  /** Context avoids throwing in Jest when `<SafeAreaProvider>` is absent. */
+  const insets = useContext(SafeAreaInsetsContext) ?? ZERO_INSETS;
   const { width, height: windowHeight } = useWindowDimensions();
+  const { height: keyboardHeight } = useReanimatedKeyboardAnimation();
   /** Cover status bar when Modal uses statusBarTranslucent. */
   const height =
     Platform.OS === 'android'
       ? windowHeight + (StatusBar.currentHeight ?? 0)
       : windowHeight;
   const frameStyle = { width, height };
+  const baseBottomPad =
+    Math.max(insets.bottom, Spacing.sm) +
+    (Platform.OS === 'android' ? Spacing.lg : 0);
+
+  const bottomSheetAnimatedStyle = useAnimatedStyle(() => {
+    const kb = Math.abs(keyboardHeight.value);
+    return {
+      paddingBottom: baseBottomPad + kb,
+      maxHeight: Math.max((height - kb) * 0.75, height * 0.35),
+    };
+  });
+
+  const centerDialogAnimatedStyle = useAnimatedStyle(() => {
+    const kb = Math.abs(keyboardHeight.value);
+    return {
+      transform: [{ translateY: kb > 0 ? -kb / 2 : 0 }],
+      maxHeight: Math.max(height - kb - Spacing.lg * 2, height * 0.4),
+    };
+  });
 
   if (align === 'center') {
     return (
-      <View collapsable={false} style={[styles.scrim, frameStyle]}>
+      <View collapsable={false} style={[styles.scrimCenter, frameStyle]}>
         <Pressable
           accessibilityLabel={accessibilityLabel}
           accessibilityRole="button"
           onPress={onDismiss}
           style={StyleSheet.absoluteFill}
         />
-        <View
-          pointerEvents="box-none"
-          style={[styles.centerAnchor, contentStyle]}>
+        <Animated.View
+          style={[styles.centerDialog, centerDialogAnimatedStyle, contentStyle]}>
           {children}
-        </View>
+        </Animated.View>
       </View>
     );
   }
@@ -96,27 +125,19 @@ export function ModalScrim({
         onPress={onDismiss}
         style={styles.flexFill}
       />
-      <View
-        style={[
-          styles.bottomSheet,
-          {
-            maxHeight: height * 0.75,
-            // Android: lift sheet above nav/gesture area. iOS already sits well via insets.
-            paddingBottom:
-              Math.max(insets.bottom, Spacing.sm) +
-              (Platform.OS === 'android' ? Spacing.lg : 0),
-          },
-          contentStyle,
-        ]}>
+      <Animated.View
+        style={[styles.bottomSheet, bottomSheetAnimatedStyle, contentStyle]}>
         {children}
-      </View>
+      </Animated.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scrim: {
+  scrimCenter: {
     backgroundColor: MODAL_BACKDROP_COLOR,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrimColumn: {
     backgroundColor: MODAL_BACKDROP_COLOR,
@@ -129,10 +150,8 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: Spacing.sm,
   },
-  centerAnchor: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
+  centerDialog: {
+    width: '100%',
     paddingHorizontal: Spacing.sm,
   },
 });

@@ -1,14 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EyeIcon } from '@/assets/icon/eye';
@@ -127,50 +120,49 @@ export default function NewPasswordScreen() {
   return (
     <View style={styles.root}>
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
-        <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <ScrollView
-            contentContainerStyle={styles.content}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}>
-            <Separator size="xxxl" />
+        <KeyboardAwareScrollView
+          bottomOffset={Spacing.md}
+          contentContainerStyle={styles.content}
+          keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          style={styles.flex}>
+          <Separator size="xxxl" />
 
-            <View style={styles.intro}>
-              <Display color={BrandColors.neutral.white}>Nova Senha</Display>
-              <Separator size="xxs" />
-              <Body1 color={BrandColors.neutral.white} style={styles.subtitle}>
-                Cadastre uma nova senha para sua conta
-              </Body1>
-            </View>
+          <View style={styles.intro}>
+            <Display color={BrandColors.neutral.white}>Nova Senha</Display>
+            <Separator size="xxs" />
+            <Body1 color={BrandColors.neutral.white} style={styles.subtitle}>
+              Cadastre uma nova senha para sua conta
+            </Body1>
+          </View>
 
-            <Separator size="xxl" />
+          <Separator size="xxl" />
 
-            <Form {...form}>
-              <NewPasswordField showErrors={showErrors} />
-            </Form>
+          <Form {...form}>
+            <NewPasswordField showErrors={showErrors} />
+          </Form>
 
-            <Separator size="xxl" />
+          <Separator size="xxl" />
 
-            <Button
-              variant="cta"
-              disabled={resetPassword.isPending}
-              isLoading={resetPassword.isPending}
-              onPress={() => {
-                void form.handleSubmit(onSubmit)();
-              }}>
-              Enviar
+          <Button
+            variant="cta"
+            disabled={resetPassword.isPending}
+            isLoading={resetPassword.isPending}
+            onPress={() => {
+              void form.handleSubmit(onSubmit)();
+            }}>
+            Enviar
+          </Button>
+
+          <Separator size="xl" />
+
+          <View style={styles.footer}>
+            <Button variant="link" href="/login" linkMode="navigation">
+              Já tem conta? Acesse
             </Button>
-
-            <Separator size="xl" />
-
-            <View style={styles.footer}>
-              <Button variant="link" href="/login" linkMode="navigation">
-                Já tem conta? Acesse
-              </Button>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+          </View>
+        </KeyboardAwareScrollView>
       </SafeAreaView>
     </View>
   );

@@ -1,14 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/atomic/button';
@@ -110,72 +103,71 @@ export default function VerifyRecoveryCodeScreen() {
   return (
     <View style={styles.root}>
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
-        <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <ScrollView
-            contentContainerStyle={styles.content}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}>
-            <Separator size="xxxl" />
+        <KeyboardAwareScrollView
+          bottomOffset={Spacing.md}
+          contentContainerStyle={styles.content}
+          keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          style={styles.flex}>
+          <Separator size="xxxl" />
 
-            <View style={styles.intro}>
-              <Display color={BrandColors.neutral.white}>Recuperação de Senha</Display>
-              <Separator size="xxs" />
-              <Body1 color={BrandColors.neutral.white} style={styles.subtitle}>
-                Digite o código de 4 dígitos enviado para o e-mail cadastrado
-              </Body1>
-            </View>
-
-            <Separator size="xl" />
-
-            <Form {...form}>
-              <InputOTP name="code" label="Código de recuperação" length={4} />
-            </Form>
-
+          <View style={styles.intro}>
+            <Display color={BrandColors.neutral.white}>Recuperação de Senha</Display>
             <Separator size="xxs" />
+            <Body1 color={BrandColors.neutral.white} style={styles.subtitle}>
+              Digite o código de 4 dígitos enviado para o e-mail cadastrado
+            </Body1>
+          </View>
 
-            <View style={styles.resendRow}>
-              <Pressable
-                accessibilityRole="link"
-                disabled={secondsLeft > 0 || requestRecovery.isPending}
-                onPress={() => {
-                  void resendCode();
-                }}>
-                <TypographLink
-                  color={
-                    secondsLeft > 0 ? BrandColors.neutral.medium : BrandColors.neutral.white
-                  }>
-                  {secondsLeft > 0
-                    ? `Reenviar código (${label})`
-                    : requestRecovery.isPending
-                      ? 'Reenviando...'
-                      : 'Reenviar código'}
-                </TypographLink>
-              </Pressable>
-            </View>
+          <Separator size="xl" />
 
-            <Separator size="xxl" />
+          <Form {...form}>
+            <InputOTP name="code" label="Código de recuperação" length={4} />
+          </Form>
 
-            <Button
-              variant="cta"
-              disabled={isBusy}
-              isLoading={validateCode.isPending}
+          <Separator size="xxs" />
+
+          <View style={styles.resendRow}>
+            <Pressable
+              accessibilityRole="link"
+              disabled={secondsLeft > 0 || requestRecovery.isPending}
               onPress={() => {
-                void form.handleSubmit(onSubmit)();
+                void resendCode();
               }}>
-              Validar
+              <TypographLink
+                color={
+                  secondsLeft > 0 ? BrandColors.neutral.medium : BrandColors.neutral.white
+                }>
+                {secondsLeft > 0
+                  ? `Reenviar código (${label})`
+                  : requestRecovery.isPending
+                    ? 'Reenviando...'
+                    : 'Reenviar código'}
+              </TypographLink>
+            </Pressable>
+          </View>
+
+          <Separator size="xxl" />
+
+          <Button
+            variant="cta"
+            disabled={isBusy}
+            isLoading={validateCode.isPending}
+            onPress={() => {
+              void form.handleSubmit(onSubmit)();
+            }}>
+            Validar
+          </Button>
+
+          <Separator size="xl" />
+
+          <View style={styles.footer}>
+            <Button variant="link" href="/login" linkMode="navigation">
+              Já tem conta? Acesse
             </Button>
-
-            <Separator size="xl" />
-
-            <View style={styles.footer}>
-              <Button variant="link" href="/login" linkMode="navigation">
-                Já tem conta? Acesse
-              </Button>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+          </View>
+        </KeyboardAwareScrollView>
       </SafeAreaView>
     </View>
   );
