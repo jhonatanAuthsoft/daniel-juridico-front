@@ -53,6 +53,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     supportsTablet: true,
   },
   android: {
+    icon: './assets/images/android-app-icon.png',
     adaptiveIcon: {
       backgroundColor: '#EE2E24',
       foregroundImage: './assets/images/android-app-icon.png',
