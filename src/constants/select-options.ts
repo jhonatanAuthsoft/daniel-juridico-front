@@ -1,3 +1,5 @@
+import { normalizeSearchText } from '@/utils/br-input';
+
 export type SelectOption = {
   value: string;
   label: string;
@@ -177,6 +179,32 @@ export function stateLabelFromValue(uf: string): string {
   return (
     STATE_OPTIONS.find((option) => option.value === normalized)?.label ?? normalized
   );
+}
+
+/**
+ * Normalizes a state field value to a 2-letter UF code.
+ * Accepts either the UF (`SP`) or the full state name (`São Paulo`).
+ */
+export function resolveUfFromStateValue(
+  stateValue: string,
+  options: readonly SelectOption[] = STATE_OPTIONS,
+): string {
+  const trimmed = stateValue.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  const upper = trimmed.toUpperCase();
+  if (upper.length === 2) {
+    const byCode = options.find((option) => option.value.toUpperCase() === upper);
+    return byCode ? byCode.value.toUpperCase() : upper;
+  }
+
+  const normalizedLabel = normalizeSearchText(trimmed);
+  const byLabel = options.find(
+    (option) => normalizeSearchText(option.label) === normalizedLabel,
+  );
+  return byLabel ? byLabel.value.toUpperCase() : '';
 }
 
 /**

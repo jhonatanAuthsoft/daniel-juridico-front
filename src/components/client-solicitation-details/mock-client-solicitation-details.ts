@@ -18,6 +18,8 @@ export type CompatibleLawyer = {
   /** Compatibility score 0–100 from matching. */
   compatibility: number;
   avatarColor: string;
+  /** S3 object key for the profile photo, or null when unset. */
+  photoUrl: string | null;
   registration: string;
   biography: string;
   address: string;
@@ -61,6 +63,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     role: 'Pautista',
     compatibility: 50,
     avatarColor: '#7A5C58',
+    photoUrl: null,
     registration: 'OAB 155242/BA',
     biography:
       'Sou especialista em direito civil, com foco em contratos e responsabilidade civil. Atuo com ética e transparência, buscando sempre a melhor solução para meus clientes. Agende sua consulta!',
@@ -94,6 +97,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     role: 'Advogado',
     compatibility: 50,
     avatarColor: '#8A6D5B',
+    photoUrl: null,
     registration: 'OAB 204851/BA',
     biography:
       'Atuo na defesa dos interesses dos meus clientes com escuta atenta, clareza e soluções jurídicas personalizadas.',
@@ -119,6 +123,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     role: 'Advogado',
     compatibility: 50,
     avatarColor: '#626B73',
+    photoUrl: null,
     registration: 'OAB 178420/BA',
     biography:
       'Advogada com atuação prática e transparente, comprometida com orientação acessível e atendimento humanizado.',
@@ -144,6 +149,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     role: 'Advogado',
     compatibility: 40,
     avatarColor: '#8A3345',
+    photoUrl: null,
     registration: 'OAB 192376/BA',
     biography:
       'Especialista em soluções preventivas e contenciosas, com comunicação direta e acompanhamento próximo de cada caso.',

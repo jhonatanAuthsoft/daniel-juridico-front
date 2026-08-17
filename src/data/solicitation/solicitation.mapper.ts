@@ -392,6 +392,7 @@ export function mapMatchResultToCompatibleLawyer(
     role: 'Advogado',
     compatibility: match.compatibility,
     avatarColor: AVATAR_COLORS[index % AVATAR_COLORS.length],
+    photoUrl: match.photoUrl,
     registration: '',
     biography: '',
     address: '',

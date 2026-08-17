@@ -34,6 +34,7 @@ import {
   Radius,
   Spacing,
 } from '@/constants/theme';
+import { normalizeSearchText } from '@/utils/br-input';
 
 const OPTIONS_RADIUS = 16;
 
@@ -48,6 +49,7 @@ export type InputMultiSelectFieldProps<
   required?: boolean;
   searchable?: boolean;
   searchPlaceholder?: string;
+  optionsLoading?: boolean;
 };
 
 function asStringArray(value: unknown): string[] {
@@ -68,6 +70,7 @@ export function InputMultiSelectField<
   required = false,
   searchable = true,
   searchPlaceholder = 'Buscar...',
+  optionsLoading = false,
 }: InputMultiSelectFieldProps<TFieldValues>) {
   const { control } = useFormContext<TFieldValues>();
   const { isOpen: open, requestOpen, requestClose } = useExclusiveSelectOpen();
@@ -228,6 +231,7 @@ export function InputMultiSelectField<
               onToggle={toggleValue}
               open={open}
               options={options}
+              optionsLoading={optionsLoading}
               searchPlaceholder={searchPlaceholder}
               searchQuery={searchQuery}
               searchable={searchable}
@@ -247,6 +251,7 @@ type MultiSelectOptionsModalProps = {
   options: readonly SelectOption[];
   selectedValues: string[];
   searchable: boolean;
+  optionsLoading: boolean;
   searchQuery: string;
   searchPlaceholder: string;
   setSearchQuery: (value: string) => void;
@@ -260,6 +265,7 @@ function MultiSelectOptionsModal({
   options,
   selectedValues,
   searchable,
+  optionsLoading,
   searchQuery,
   searchPlaceholder,
   setSearchQuery,
@@ -267,15 +273,19 @@ function MultiSelectOptionsModal({
   onClose,
 }: MultiSelectOptionsModalProps) {
   const filteredOptions = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
+    const query = normalizeSearchText(searchQuery);
     if (!query) {
       return [...options];
     }
 
     return options.filter((option) =>
-      option.label.toLowerCase().includes(query),
+      normalizeSearchText(option.label).includes(query),
     );
   }, [options, searchQuery]);
+
+  if (!open) {
+    return null;
+  }
 
   return (
     <Modal
@@ -284,7 +294,7 @@ function MultiSelectOptionsModal({
       onRequestClose={onClose}
       statusBarTranslucent
       transparent
-      visible={open}>
+      visible>
       <ModalScrim
         accessibilityLabel="Fechar opções"
         align="bottom"
@@ -341,9 +351,11 @@ function MultiSelectOptionsModal({
               style={styles.list}
               ListEmptyComponent={
                 <InputCaption color={BrandColors.neutral.light}>
-                  {searchQuery.trim()
-                    ? 'Nenhuma opção encontrada.'
-                    : 'Nenhuma opção disponível.'}
+                  {optionsLoading
+                    ? 'Carregando opções...'
+                    : searchQuery.trim()
+                      ? 'Nenhuma opção encontrada.'
+                      : 'Nenhuma opção disponível.'}
                 </InputCaption>
               }
               ItemSeparatorComponent={() => <View style={styles.optionDivider} />}

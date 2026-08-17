@@ -4,6 +4,7 @@ import {
   mapCreateSolicitationWireToResult,
   mapListItemWireToCard,
   mapListagemWireToResult,
+  mapMatchResultToCompatibleLawyer,
   normalizeListagemPayload,
 } from './solicitation.mapper';
 
@@ -178,5 +179,23 @@ describe('solicitation.mapper', () => {
     expect(canCancelSolicitationStatus('MATCH_REALIZADO')).toBe(false);
     expect(canCancelSolicitationStatus('CANCELADA')).toBe(false);
     expect(canCancelSolicitationStatus(undefined)).toBe(false);
+  });
+
+  it('keeps the lawyer photo key on compatible lawyer cards', () => {
+    const lawyer = mapMatchResultToCompatibleLawyer(
+      {
+        lawyerId: 'adv-1',
+        name: 'Marina Yumi Nakamura',
+        photoUrl: 'tmp/advogados/perfil/marina.jpg',
+        position: 1,
+        compatibility: 90,
+        localityLevel: 'MESMA_CIDADE',
+        averageRating: 0,
+        totalReviews: 0,
+      },
+      0,
+    );
+
+    expect(lawyer.photoUrl).toBe('tmp/advogados/perfil/marina.jpg');
   });
 });

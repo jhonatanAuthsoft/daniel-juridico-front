@@ -36,6 +36,15 @@ jest.mock('@/domain/connection', () => ({
     isPending: false,
     variables: undefined,
   }),
+  useCancelConnection: () => ({
+    mutateAsync: jest.fn(),
+    isPending: false,
+    variables: undefined,
+  }),
+}));
+
+jest.mock('@/domain/arquivo', () => ({
+  useObjectReadUrl: () => ({ data: undefined }),
 }));
 
 describe('ClientSolicitationDetailsScreen', () => {

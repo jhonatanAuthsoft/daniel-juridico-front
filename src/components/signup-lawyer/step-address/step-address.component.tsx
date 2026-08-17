@@ -18,6 +18,7 @@ export function StepAddress() {
     cepErrorMessage,
     cityOptions,
     isLoadingCities,
+    isCitiesError,
     hasCep,
     hasState,
   } = useAddressCepAutofill<LawyerSignupFormValues>();
@@ -62,10 +63,17 @@ export function StepAddress() {
         name="city"
         label="Cidade"
         placeholder={
-          isLoadingCities ? 'Carregando cidades...' : 'Selecione a cidade'
+          !hasState
+            ? 'Selecione o estado primeiro'
+            : isLoadingCities
+              ? 'Carregando cidades...'
+              : isCitiesError
+                ? 'Não foi possível carregar as cidades'
+                : 'Selecione a cidade'
         }
         options={cityOptions}
-        disabled={!hasState || isLoadingCities}
+        optionsLoading={isLoadingCities}
+        disabled={!hasState}
         required
       />
       <InputTextField

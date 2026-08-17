@@ -38,6 +38,7 @@ import {
   Radius,
   Spacing,
 } from '@/constants/theme';
+import { normalizeSearchText } from '@/utils/br-input';
 
 /** Figma Values-Medium — not in Radius tokens yet. */
 const OPTIONS_RADIUS = 16;
@@ -55,6 +56,8 @@ export type InputSelectFieldProps<
   /** Shows a search field above the options. Defaults to true. */
   searchable?: boolean;
   searchPlaceholder?: string;
+  /** When true, the empty list shows a loading message instead of "Nenhuma opção disponível". */
+  optionsLoading?: boolean;
   /** Shows a help icon next to the label that calls this handler. */
   onHelpPress?: () => void;
 };
@@ -70,6 +73,7 @@ export function InputSelectField<
   required = false,
   searchable = true,
   searchPlaceholder = 'Buscar...',
+  optionsLoading = false,
   onHelpPress,
 }: InputSelectFieldProps<TFieldValues>) {
   const { control } = useFormContext<TFieldValues>();
@@ -190,10 +194,11 @@ export function InputSelectField<
               onClose={close}
               onSelect={(optionValue) => {
                 onChange(optionValue);
-                close();
+                queueMicrotask(close);
               }}
               open={open}
               options={options}
+              optionsLoading={optionsLoading}
               searchPlaceholder={searchPlaceholder}
               searchQuery={searchQuery}
               searchable={searchable}
@@ -213,6 +218,7 @@ type SelectOptionsModalProps = {
   options: readonly SelectOption[];
   selectedValue?: string;
   searchable: boolean;
+  optionsLoading: boolean;
   searchQuery: string;
   searchPlaceholder: string;
   setSearchQuery: (value: string) => void;
@@ -226,6 +232,7 @@ function SelectOptionsModal({
   options,
   selectedValue,
   searchable,
+  optionsLoading,
   searchQuery,
   searchPlaceholder,
   setSearchQuery,
@@ -233,15 +240,19 @@ function SelectOptionsModal({
   onClose,
 }: SelectOptionsModalProps) {
   const filteredOptions = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
+    const query = normalizeSearchText(searchQuery);
     if (!query) {
       return [...options];
     }
 
     return options.filter((option) =>
-      option.label.toLowerCase().includes(query),
+      normalizeSearchText(option.label).includes(query),
     );
   }, [options, searchQuery]);
+
+  if (!open) {
+    return null;
+  }
 
   return (
     <Modal
@@ -250,7 +261,7 @@ function SelectOptionsModal({
       onRequestClose={onClose}
       statusBarTranslucent
       transparent
-      visible={open}>
+      visible>
       <ModalScrim
         accessibilityLabel="Fechar opções"
         align="bottom"
@@ -307,9 +318,11 @@ function SelectOptionsModal({
               style={styles.list}
               ListEmptyComponent={
                 <InputCaption color={BrandColors.neutral.light}>
-                  {searchQuery.trim()
-                    ? 'Nenhuma opção encontrada.'
-                    : 'Nenhuma opção disponível.'}
+                  {optionsLoading
+                    ? 'Carregando opções...'
+                    : searchQuery.trim()
+                      ? 'Nenhuma opção encontrada.'
+                      : 'Nenhuma opção disponível.'}
                 </InputCaption>
               }
               ItemSeparatorComponent={() => <View style={styles.optionDivider} />}

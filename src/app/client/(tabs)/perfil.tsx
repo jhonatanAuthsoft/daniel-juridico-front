@@ -1,5 +1,10 @@
 import { ClientAccountScreen } from '@/components/client-account';
+import { DevelopmentGuard } from '@/components/development-guard';
 
 export default function ClientPerfilScreen() {
-  return <ClientAccountScreen />;
+  return (
+    <DevelopmentGuard>
+      <ClientAccountScreen />
+    </DevelopmentGuard>
+  );
 }

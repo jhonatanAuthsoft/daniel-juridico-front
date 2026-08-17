@@ -43,7 +43,8 @@ export type RegisterLawyerRequest = {
   nomeMae: string;
   pronomeTratamento: TreatmentPronounApi;
   telefone: string;
-  fotoUrl?: string | null;
+  /** S3 object key (`ADVOGADO_PERFIL`). Required on signup. */
+  fotoUrl: string;
   universidade: string;
   curso: string;
   anoFormacao?: number;

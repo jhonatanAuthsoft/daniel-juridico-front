@@ -17,7 +17,7 @@ import {
   InputCaption,
   Link as TypographLink,
 } from '@/atomic/typography';
-import { STATE_OPTIONS, stateLabelFromValue } from '@/constants/select-options';
+import { resolveUfFromStateValue, STATE_OPTIONS, stateLabelFromValue } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { useCitiesByUf } from '@/domain/address';
 
@@ -77,9 +77,23 @@ export function StepServiceRadius() {
   const draftState = useWatch({ control, name: 'serviceDraftState' }) ?? '';
   const draftCities = useWatch({ control, name: 'serviceDraftCities' }) ?? [];
 
-  const normalizedState = draftState.trim().toUpperCase();
-  const { data: cityOptions = [], isFetching } = useCitiesByUf(normalizedState);
+  const normalizedState = resolveUfFromStateValue(draftState);
+  const hasValidState = normalizedState.length === 2;
+  const {
+    data: cityOptions = [],
+    isFetching,
+    isError: isCitiesError,
+  } = useCitiesByUf(normalizedState);
   const previousStateRef = useRef(normalizedState);
+
+  useEffect(() => {
+    const resolved = resolveUfFromStateValue(draftState);
+    if (!resolved || resolved === draftState.trim()) {
+      return;
+    }
+    previousStateRef.current = resolved;
+    setValue('serviceDraftState', resolved);
+  }, [draftState, setValue]);
 
   /** Index being edited; `null` means the editor creates a new state group. */
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -101,7 +115,7 @@ export function StepServiceRadius() {
 
   const saveDraft = () => {
     const cities = normalizeCities(draftCities);
-    if (!normalizedState || cities.length === 0) {
+    if (!hasValidState || cities.length === 0) {
       return;
     }
 
@@ -147,7 +161,7 @@ export function StepServiceRadius() {
     }
   };
 
-  const canSave = Boolean(normalizedState) && normalizeCities(draftCities).length > 0;
+  const canSave = hasValidState && normalizeCities(draftCities).length > 0;
   const errorMessage =
     errors.serviceAreas?.root?.message ?? errors.serviceAreas?.message;
 
@@ -164,10 +178,17 @@ export function StepServiceRadius() {
           name="serviceDraftCities"
           label="Cidade"
           placeholder={
-            isFetching ? 'Carregando cidades...' : 'Selecione a cidade'
+            !hasValidState
+              ? 'Selecione o estado primeiro'
+              : isFetching
+                ? 'Carregando cidades...'
+                : isCitiesError
+                  ? 'Não foi possível carregar as cidades'
+                  : 'Selecione a cidade'
           }
           options={cityOptions}
-          disabled={!normalizedState || isFetching}
+          optionsLoading={isFetching}
+          disabled={!hasValidState}
         />
 
         <Button variant="primary" disabled={!canSave} onPress={saveDraft}>

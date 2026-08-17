@@ -6,10 +6,19 @@ import {
   Inter_800ExtraBold,
   useFonts,
 } from '@expo-google-fonts/inter';
+import { requireOptionalNativeModule } from 'expo';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from 'react-native';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
+
+void requireOptionalNativeModule<{
+  setPreferencesAsync: (settings: {
+    showFloatingActionButton: boolean;
+  }) => Promise<void>;
+}>('DevMenuPreferences')?.setPreferencesAsync({
+  showFloatingActionButton: false,
+});
 
 import { SplashGuard } from '@/components/splash-guard';
 import { BrandColors } from '@/constants/theme';

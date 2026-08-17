@@ -63,7 +63,7 @@ describe('StepServiceRadius', () => {
     expect(screen.getByText('Estado')).toBeTruthy();
     expect(screen.getByText('Cidade')).toBeTruthy();
     expect(screen.getByText('Selecione o estado')).toBeTruthy();
-    expect(screen.getByText('Selecione a cidade')).toBeTruthy();
+    expect(screen.getByText('Selecione o estado primeiro')).toBeTruthy();
   });
 
   it('lists the cities of the selected state', () => {

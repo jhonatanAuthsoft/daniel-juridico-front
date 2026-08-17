@@ -74,6 +74,16 @@ describe('client.mapper', () => {
     expect(payload.rgUf).toBeUndefined();
   });
 
+  it('omits fotoUrl when the client does not upload a profile photo', () => {
+    const payload = mapClientSignupFormToRegisterRequest({
+      ...baseForm,
+      profileImageUri: '',
+      profileImageKey: '',
+    });
+
+    expect(payload.fotoUrl).toBeUndefined();
+  });
+
   it('parses birth dates and pronouns', () => {
     expect(toIsoBirthDate('20/05/1990')).toBe('1990-05-20');
     expect(mapPronounsToApi('ELE')).toBe('ELE');

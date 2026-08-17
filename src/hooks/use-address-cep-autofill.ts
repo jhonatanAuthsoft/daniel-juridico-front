@@ -8,6 +8,7 @@ import {
 } from 'react-hook-form';
 
 import type { SelectOption } from '@/constants/select-options';
+import { resolveUfFromStateValue } from '@/constants/select-options';
 import { useCep, useCitiesByUf } from '@/domain/address';
 import { isValidCep } from '@/utils/br-input';
 
@@ -68,9 +69,8 @@ export function useAddressCepAutofill<T extends FieldValues>(
   const { control, setValue } = useFormContext<T>();
 
   const zipCode = useWatch({ control, name: fields.zipCode }) as string;
-  const state = ((useWatch({ control, name: fields.state }) as string) ?? '')
-    .trim()
-    .toUpperCase();
+  const rawState = (useWatch({ control, name: fields.state }) as string) ?? '';
+  const state = resolveUfFromStateValue(rawState);
   const city = (useWatch({ control, name: fields.city }) as string) ?? '';
 
   const { data, isFetching, isError, error, isSuccess } = useCep(zipCode);
@@ -82,6 +82,17 @@ export function useAddressCepAutofill<T extends FieldValues>(
 
   const lastAppliedCepRef = useRef<string | null>(null);
   const previousStateRef = useRef(state);
+
+  useEffect(() => {
+    const resolved = resolveUfFromStateValue(rawState);
+    if (!resolved || resolved === rawState.trim()) {
+      return;
+    }
+    setValue(fields.state, resolved as PathValue<T, Path<T>>, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  }, [fields.state, rawState, setValue]);
 
   useEffect(() => {
     if (previousStateRef.current === state) {

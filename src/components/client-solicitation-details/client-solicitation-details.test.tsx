@@ -37,6 +37,16 @@ jest.mock('@/domain/connection', () => ({
   }),
 }));
 
+jest.mock('@/domain/arquivo', () => ({
+  useObjectReadUrl: (key: string | null | undefined) => {
+    const photoKey = key?.trim();
+    if (!photoKey) {
+      return { data: undefined };
+    }
+    return { data: { readUrl: `https://cdn.example/${photoKey}` } };
+  },
+}));
+
 describe('client solicitation detail components', () => {
   beforeEach(() => {
     mockMutateAsync.mockClear();
@@ -115,9 +125,9 @@ describe('client solicitation detail components', () => {
     expect(
       screen.getAllByText(`${lawyer.compatibility}% de compatibilidade`).length,
     ).toBeGreaterThan(0);
-    expect(
-      screen.getAllByTestId('professional-image-placeholder'),
-    ).toHaveLength(details.compatibleLawyers.length);
+    expect(screen.getAllByTestId('compatible-lawyer-photo')).toHaveLength(
+      details.compatibleLawyers.length,
+    );
 
     fireEvent.press(screen.getByText(lawyer.name));
 
@@ -235,5 +245,33 @@ describe('client solicitation detail components', () => {
 
     fireEvent.press(screen.getByRole('button', { name: 'Exibir contato' }));
     expect(onLawyerPress).toHaveBeenCalledWith(lawyerAccepted.id);
+  });
+
+  it('shows each lawyer photo from the signed read URL', () => {
+    const marina = {
+      ...details.compatibleLawyers[0],
+      photoUrl: 'tmp/advogados/perfil/marina.jpg',
+    };
+    const beatriz = {
+      ...details.compatibleLawyers[1],
+      photoUrl: 'tmp/advogados/perfil/beatriz.jpg',
+    };
+
+    const screen = render(
+      <ClientCompatibleLawyersList
+        connectionsByLawyerId={{}}
+        lawyers={[marina, beatriz]}
+        onLawyerPress={jest.fn()}
+        solicitacaoId={details.id}
+      />,
+    );
+
+    const photos = screen.getAllByTestId('compatible-lawyer-photo');
+    expect(photos[0]).toHaveProp('source', [
+      { uri: 'https://cdn.example/tmp/advogados/perfil/marina.jpg' },
+    ]);
+    expect(photos[1]).toHaveProp('source', [
+      { uri: 'https://cdn.example/tmp/advogados/perfil/beatriz.jpg' },
+    ]);
   });
 });

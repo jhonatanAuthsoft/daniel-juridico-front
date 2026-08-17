@@ -6,6 +6,15 @@ export function onlyDigits(value: string): string {
   return value.replace(/\D/g, '');
 }
 
+/** Case- and accent-insensitive text for select search filters. */
+export function normalizeSearchText(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '');
+}
+
 export function maskCpf(value: string): string {
   const digits = onlyDigits(value).slice(0, 11);
   return digits

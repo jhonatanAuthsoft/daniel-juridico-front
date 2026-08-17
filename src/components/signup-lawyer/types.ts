@@ -63,7 +63,7 @@ export type LawyerSignupFormValues = {
   billingMethods: string[];
   pronouns: string;
   profileImageUri: string;
-  /** S3 object key from POST /arquivos/url-upload (ADVOGADO_PERFIL). */
+  /** S3 object key from POST /arquivos/url-upload (ADVOGADO_PERFIL). Required. */
   profileImageKey: string;
   biography: string;
 };

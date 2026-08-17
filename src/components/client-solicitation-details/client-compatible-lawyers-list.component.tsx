@@ -12,6 +12,7 @@ import type { ClientConnectionStatusValue } from '@/components/client-connection
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import type { ConnectionResult } from '@/data/connection';
+import { useObjectReadUrl } from '@/domain/arquivo';
 import {
   useCancelConnection,
   useCreateConnection,
@@ -36,6 +37,24 @@ type LawyerActionProps = {
   onRequest: (lawyerId: string) => void;
   onCancel: (connectionId: string) => void;
 };
+
+const PROFESSIONAL_PLACEHOLDER = require(
+  '@/assets/images/professional-image-placeholder.png',
+);
+
+function CompatibleLawyerPhoto({ photoKey }: { photoKey: string | null }) {
+  const { data: read } = useObjectReadUrl(photoKey);
+  const uri = read?.readUrl?.trim();
+
+  return (
+    <Image
+      testID="compatible-lawyer-photo"
+      source={uri ? { uri } : PROFESSIONAL_PLACEHOLDER}
+      contentFit="cover"
+      style={styles.avatarImage}
+    />
+  );
+}
 
 function LawyerConnectionAction({
   lawyer,
@@ -183,12 +202,7 @@ export function ClientCompatibleLawyersList({
                       styles.avatar,
                       { backgroundColor: lawyer.avatarColor },
                     ]}>
-                    <Image
-                      testID="professional-image-placeholder"
-                      source={require('@/assets/images/professional-image-placeholder.png')}
-                      contentFit="cover"
-                      style={styles.avatarImage}
-                    />
+                    <CompatibleLawyerPhoto photoKey={lawyer.photoUrl} />
                   </View>
 
                   <View style={styles.profileContent}>

@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { InputSelectField } from '@/atomic/form';
@@ -43,15 +43,39 @@ describe('InputSelectField', () => {
     expect(screen.queryByText('Acre')).toBeNull();
   });
 
-  it('selects a filtered option', () => {
+  it('ignores accents when filtering options', () => {
+    function AccentedHarness() {
+      const form = useForm({ defaultValues: { city: '' } });
+      return (
+        <FormProvider {...form}>
+          <InputSelectField
+            name="city"
+            options={[{ value: 'São Paulo', label: 'São Paulo' }]}
+            placeholder="Selecione a cidade"
+          />
+        </FormProvider>
+      );
+    }
+
+    const screen = render(<AccentedHarness />);
+
+    fireEvent.press(screen.getByText('Selecione a cidade'));
+    fireEvent.changeText(screen.getByLabelText('Buscar...'), 'sao paulo');
+
+    expect(screen.getByText('São Paulo')).toBeTruthy();
+  });
+
+  it('selects a filtered option', async () => {
     const screen = render(<SelectHarness />);
 
     fireEvent.press(screen.getByText('Selecione o estado'));
     fireEvent.changeText(screen.getByLabelText('Buscar...'), 'ron');
     fireEvent.press(screen.getByText('Rondônia'));
 
+    await waitFor(() => {
+      expect(screen.queryByLabelText('Buscar...')).toBeNull();
+    });
     expect(screen.getByText('Rondônia')).toBeTruthy();
-    expect(screen.queryByLabelText('Buscar...')).toBeNull();
   });
 
   it('hides search when searchable is false', () => {

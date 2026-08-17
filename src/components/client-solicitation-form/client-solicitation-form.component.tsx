@@ -11,7 +11,7 @@ import Animated, {
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { FilterIcon } from '@/assets/icon/filter';
 import { Button } from '@/atomic/button';
-import { Form, InputSelectField, InputTextField, useForm } from '@/atomic/form';
+import { Form, InputSelectField, InputTextField, useForm, useWatch } from '@/atomic/form';
 import { Body2, Link } from '@/atomic/typography';
 import { ClientFlowScreen } from '@/components/client-flow-screen';
 import { ConnectionError } from '@/components/connection-error';
@@ -19,7 +19,7 @@ import {
   CLIENT_EMERGENCY_ATTENTION_MESSAGE,
   EmergencyAttentionBanner,
 } from '@/components/emergency-attention-banner';
-import { STATE_OPTIONS } from '@/constants/select-options';
+import { resolveUfFromStateValue, STATE_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import { useCitiesByUf } from '@/domain/address';
@@ -209,15 +209,26 @@ export function ClientSolicitationForm({
     mode: 'onChange',
   });
   const values = form.watch();
+  const stateValue = useWatch({ control: form.control, name: 'state' }) ?? '';
+  const normalizedState = resolveUfFromStateValue(stateValue);
+  const hasValidState = normalizedState.length === 2;
   const createSolicitation = useCreateSolicitation();
+
+  useEffect(() => {
+    const resolved = resolveUfFromStateValue(stateValue);
+    if (!resolved || resolved === stateValue) {
+      return;
+    }
+    form.setValue('state', resolved, { shouldDirty: true, shouldValidate: true });
+  }, [form, stateValue]);
 
   const submitSolicitation = async () => {
     try {
-      const result = await createSolicitation.mutateAsync({
+      await createSolicitation.mutateAsync({
         title: values.title,
         practice: values.practice,
         specialty: values.specialty,
-        state: values.state,
+        state: normalizedState || values.state,
         city: values.city,
         urgency: values.urgency,
         problem: values.problem,
@@ -226,13 +237,7 @@ export function ClientSolicitationForm({
         minimumExperienceMonths: values.minimumExperienceMonths,
       });
 
-      Alert.alert(
-        'Solicitação enviada',
-        result.totalMatches > 0
-          ? `Encontramos ${result.totalMatches} advogado(s) compatível(is).`
-          : 'Sua solicitação foi criada. Ainda não há advogados compatíveis no momento.',
-        [{ text: 'OK', onPress: onSubmitted }],
-      );
+      onSubmitted();
     } catch (error) {
       Alert.alert(
         'Solicitação',
@@ -253,9 +258,11 @@ export function ClientSolicitationForm({
     values.specialty || undefined,
   );
 
-  const normalizedState = values.state.trim().toUpperCase();
-  const { data: cityOptions = [], isFetching: isLoadingCities } =
-    useCitiesByUf(normalizedState);
+  const {
+    data: cityOptions = [],
+    isFetching: isLoadingCities,
+    isError: isCitiesError,
+  } = useCitiesByUf(normalizedState);
   const previousStateRef = useRef(normalizedState);
   const previousSpecialtyRef = useRef(values.specialty);
 
@@ -340,10 +347,17 @@ export function ClientSolicitationForm({
             name="city"
             label="Cidade"
             placeholder={
-              isLoadingCities ? 'Carregando cidades...' : 'Selecione a cidade'
+              !hasValidState
+                ? 'Selecione o estado primeiro'
+                : isLoadingCities
+                  ? 'Carregando cidades...'
+                  : isCitiesError
+                    ? 'Não foi possível carregar as cidades'
+                    : 'Selecione a cidade'
             }
             options={cityOptions}
-            disabled={!normalizedState || isLoadingCities}
+            optionsLoading={isLoadingCities}
+            disabled={!hasValidState}
           />
           <InputSelectField
             name="urgency"

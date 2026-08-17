@@ -7,6 +7,7 @@ import {
   maskCpf,
   maskPhone,
   maskRg,
+  normalizeSearchText,
 } from '@/utils/br-input';
 
 describe('br-input', () => {
@@ -67,5 +68,10 @@ describe('br-input', () => {
     expect(isValidDateBr('01/01/1950', { minYear: 1950, allowFuture: false })).toBe(
       true,
     );
+  });
+
+  it('normalizes search text without accents', () => {
+    expect(normalizeSearchText('  São Paulo  ')).toBe('sao paulo');
+    expect(normalizeSearchText('AGUAÍ')).toBe('aguai');
   });
 });
