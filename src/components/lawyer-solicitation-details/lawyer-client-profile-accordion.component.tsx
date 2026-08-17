@@ -5,9 +5,12 @@ import { StyleSheet, View } from 'react-native';
 
 import { Body1, Body2, Heading1 } from '@/atomic/typography';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
+import { useObjectReadUrl } from '@/domain/arquivo';
 
 import { LawyerDetailAccordionShell } from './lawyer-detail-accordion-shell.component';
 import type { LawyerClientProfile } from './mock-lawyer-solicitation-details';
+
+const NO_IMAGE_PLACEHOLDER = require('@/assets/images/no-image-placeholder.png');
 
 type ProfileFieldProps = {
   icon: ReactNode;
@@ -35,13 +38,17 @@ export function LawyerClientProfileAccordion({
   client,
 }: LawyerClientProfileAccordionProps) {
   const iconColor = BrandColors.neutral.white;
+  const photoKey = client.photoKey?.trim() || null;
+  const { data: read } = useObjectReadUrl(photoKey);
+  const readUrl = read?.readUrl?.trim();
+  const imageSource = readUrl ? { uri: readUrl } : NO_IMAGE_PLACEHOLDER;
 
   return (
     <LawyerDetailAccordionShell title="Perfil do cliente">
       <View style={styles.content}>
         <Image
           testID="client-profile-image"
-          source={require('@/assets/images/professional-image-placeholder.png')}
+          source={imageSource}
           contentFit="cover"
           style={styles.image}
         />
@@ -58,7 +65,11 @@ export function LawyerClientProfileAccordion({
         <ProfileField
           icon={
             <SymbolView
-              name={{ ios: 'person.2', android: 'people', web: 'people' }}
+              name={{
+                ios: 'bubble.left',
+                android: 'chat_bubble_outline',
+                web: 'chat_bubble_outline',
+              }}
               size={18}
               tintColor={iconColor}
             />
@@ -80,7 +91,7 @@ export function LawyerClientProfileAccordion({
         <ProfileField
           icon={
             <SymbolView
-              name={{ ios: 'briefcase', android: 'business_center', web: 'business_center' }}
+              name={{ ios: 'bag', android: 'work_outline', web: 'work_outline' }}
               size={18}
               tintColor={iconColor}
             />

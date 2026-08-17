@@ -19,10 +19,19 @@ const mockMutateAsync = jest.fn().mockResolvedValue({
   advogadoId: details.compatibleLawyers[0].id,
   uiStatus: 'pending',
 });
+const mockCancelMutateAsync = jest.fn().mockResolvedValue({
+  id: 'cx-pending',
+  uiStatus: 'idle',
+});
 
 jest.mock('@/domain/connection', () => ({
   useCreateConnection: () => ({
     mutateAsync: mockMutateAsync,
+    isPending: false,
+    variables: undefined,
+  }),
+  useCancelConnection: () => ({
+    mutateAsync: mockCancelMutateAsync,
     isPending: false,
     variables: undefined,
   }),
@@ -31,6 +40,7 @@ jest.mock('@/domain/connection', () => ({
 describe('client solicitation detail components', () => {
   beforeEach(() => {
     mockMutateAsync.mockClear();
+    mockCancelMutateAsync.mockClear();
   });
 
   it('shows solicitation data initially and allows collapsing it', () => {
@@ -125,5 +135,105 @@ describe('client solicitation detail components', () => {
       });
     });
     expect(onLawyerPress).not.toHaveBeenCalled();
+  });
+
+  it('renders connection actions for idle, pending and accepted states', () => {
+    const lawyerIdle = details.compatibleLawyers[0];
+    const lawyerPending = details.compatibleLawyers[1];
+    const lawyerAccepted = details.compatibleLawyers[2];
+    const onLawyerPress = jest.fn();
+
+    const screen = render(
+      <ClientCompatibleLawyersList
+        connectionsByLawyerId={{
+          [lawyerPending.id]: {
+            id: 'cx-pending',
+            solicitacaoId: details.id,
+            clienteId: 'cli-1',
+            advogadoId: lawyerPending.id,
+            status: 'PENDENTE',
+            uiStatus: 'pending',
+            criadoEm: '2026-08-06T12:00:00',
+            decididoEm: null,
+            canceladoEm: null,
+            telefone: null,
+            email: null,
+            nomeAdvogado: lawyerPending.name,
+            nomeCliente: 'Cliente',
+            tituloSolicitacao: null,
+            descricaoSolicitacao: null,
+            urgencia: null,
+            modalidade: null,
+            especialidadeCodigo: null,
+            subespecialidadeCodigo: null,
+            experienciaMinimaMeses: null,
+            uf: null,
+            cidade: null,
+            formaCobranca: null,
+            clienteProfissao: null,
+            clientePronomes: null,
+            clienteEstadoCivil: null,
+            clienteFaixaRenda: null,
+            clienteFotoUrl: null,
+            clienteCidade: null,
+            clienteUf: null,
+            clienteTelefone: null,
+            clienteEmail: null,
+            avaliacaoClienteNota: null,
+            avaliacaoClienteComentario: null,
+          },
+          [lawyerAccepted.id]: {
+            id: 'cx-accepted',
+            solicitacaoId: details.id,
+            clienteId: 'cli-1',
+            advogadoId: lawyerAccepted.id,
+            status: 'ACEITA',
+            uiStatus: 'accepted',
+            criadoEm: '2026-08-06T12:00:00',
+            decididoEm: '2026-08-06T13:00:00',
+            canceladoEm: null,
+            telefone: '11999999999',
+            email: 'adv@laweact.com',
+            nomeAdvogado: lawyerAccepted.name,
+            nomeCliente: 'Cliente',
+            tituloSolicitacao: null,
+            descricaoSolicitacao: null,
+            urgencia: null,
+            modalidade: null,
+            especialidadeCodigo: null,
+            subespecialidadeCodigo: null,
+            experienciaMinimaMeses: null,
+            uf: null,
+            cidade: null,
+            formaCobranca: null,
+            clienteProfissao: null,
+            clientePronomes: null,
+            clienteEstadoCivil: null,
+            clienteFaixaRenda: null,
+            clienteFotoUrl: null,
+            clienteCidade: null,
+            clienteUf: null,
+            clienteTelefone: null,
+            clienteEmail: null,
+            avaliacaoClienteNota: null,
+            avaliacaoClienteComentario: null,
+          },
+        }}
+        lawyers={[lawyerIdle, lawyerPending, lawyerAccepted]}
+        onLawyerPress={onLawyerPress}
+        solicitacaoId={details.id}
+      />,
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Solicitar conexão' }),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: 'Cancelar solicitação' }),
+    ).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Exibir contato' })).toBeTruthy();
+
+    fireEvent.press(screen.getByRole('button', { name: 'Exibir contato' }));
+    expect(onLawyerPress).toHaveBeenCalledWith(lawyerAccepted.id);
   });
 });

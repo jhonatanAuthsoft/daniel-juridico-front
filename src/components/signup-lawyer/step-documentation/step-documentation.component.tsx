@@ -86,6 +86,7 @@ export function StepDocumentation() {
               name="issuingAuthority"
               placeholder="Selecione"
               options={ISSUING_AUTHORITY_OPTIONS}
+              searchable={false}
               required
             />
           </View>

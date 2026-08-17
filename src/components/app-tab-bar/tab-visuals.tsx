@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 
-import { Image } from 'expo-image';
 import { StyleSheet } from 'react-native';
 
 import { BellIcon } from '@/assets/icon/bell';
 import { HistoryIcon } from '@/assets/icon/history';
 import { PaperPlaneIcon } from '@/assets/icon/paper-plane';
+import { ProfileAvatar } from '@/components/profile-avatar';
 import type { UserRole } from '@/domain/auth';
 
 export type TabVisual = {
@@ -25,11 +25,7 @@ function profileVisual(): TabVisual {
   return {
     label: 'Perfil',
     renderIcon: () => (
-      <Image
-        source={require('@/assets/images/profile.png')}
-        style={avatarStyle}
-        contentFit="cover"
-      />
+      <ProfileAvatar style={avatarStyle} testID="tab-profile-image" />
     ),
   };
 }

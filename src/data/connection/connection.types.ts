@@ -27,6 +27,26 @@ export type ConexaoWire = {
   nomeAdvogado: string | null;
   nomeCliente: string | null;
   tituloSolicitacao: string | null;
+  descricaoSolicitacao: string | null;
+  urgencia: string | null;
+  modalidade: string | null;
+  especialidadeCodigo: string | null;
+  subespecialidadeCodigo: string | null;
+  experienciaMinimaMeses: number | null;
+  uf: string | null;
+  cidade: string | null;
+  formaCobranca: string | null;
+  clienteProfissao: string | null;
+  clientePronomes: string | null;
+  clienteEstadoCivil: string | null;
+  clienteFaixaRenda: string | null;
+  clienteFotoUrl: string | null;
+  clienteCidade: string | null;
+  clienteUf: string | null;
+  clienteTelefone: string | null;
+  clienteEmail: string | null;
+  avaliacaoClienteNota: number | string | null;
+  avaliacaoClienteComentario: string | null;
 };
 
 export type CreateConnectionParams = {
@@ -49,6 +69,26 @@ export type ConnectionResult = {
   nomeAdvogado: string | null;
   nomeCliente: string | null;
   tituloSolicitacao: string | null;
+  descricaoSolicitacao: string | null;
+  urgencia: string | null;
+  modalidade: string | null;
+  especialidadeCodigo: string | null;
+  subespecialidadeCodigo: string | null;
+  experienciaMinimaMeses: number | null;
+  uf: string | null;
+  cidade: string | null;
+  formaCobranca: string | null;
+  clienteProfissao: string | null;
+  clientePronomes: string | null;
+  clienteEstadoCivil: string | null;
+  clienteFaixaRenda: string | null;
+  clienteFotoUrl: string | null;
+  clienteCidade: string | null;
+  clienteUf: string | null;
+  clienteTelefone: string | null;
+  clienteEmail: string | null;
+  avaliacaoClienteNota: number | null;
+  avaliacaoClienteComentario: string | null;
 };
 
 export type ListConnectionsParams = {

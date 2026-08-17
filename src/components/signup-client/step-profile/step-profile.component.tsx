@@ -57,6 +57,7 @@ export function StepProfile() {
         label="Pronomes de tratamento"
         placeholder="Selecione o pronome"
         options={PRONOUN_OPTIONS}
+        searchable={false}
         required
       />
 

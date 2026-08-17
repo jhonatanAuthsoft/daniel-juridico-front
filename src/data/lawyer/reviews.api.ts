@@ -89,10 +89,10 @@ export async function createLawyerReview(
   >(apiUrl(`/advogados/${encodeURIComponent(id)}/avaliacoes`), {
     method: 'POST',
     signal,
-    body: JSON.stringify({
+    body: {
       nota: input.rating,
       comentario: comment,
-    }),
+    },
   });
 
   const data = assertApiSuccess(

@@ -76,8 +76,16 @@ export function Button({
             isDisabled && variant === 'cta' && styles.ctaDisabled,
             isDisabled && variant === 'link' && styles.linkDisabled,
           ]}>
-          {showSecondaryGlass ? <GlassBackground blurPx={12.55} /> : null}
-          {showCtaGlass ? <CtaGlassBackground pressed={isPressed} /> : null}
+          {showSecondaryGlass ? (
+            <View pointerEvents="none" style={styles.glassLayer}>
+              <GlassBackground blurPx={12.55} />
+            </View>
+          ) : null}
+          {showCtaGlass ? (
+            <View pointerEvents="none" style={styles.glassLayer}>
+              <CtaGlassBackground pressed={isPressed} />
+            </View>
+          ) : null}
 
           {isPressed && (variant === 'primary' || variant === 'secondary') ? (
             <View pointerEvents="none" style={styles.pressedOverlay} />
@@ -180,6 +188,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.xxs,
     paddingHorizontal: Spacing.sm,
+    zIndex: 1,
+    elevation: 1,
+  },
+  glassLayer: {
+    ...StyleSheet.absoluteFill,
+    zIndex: 0,
+    elevation: 0,
   },
   linkContent: {
     paddingHorizontal: 0,

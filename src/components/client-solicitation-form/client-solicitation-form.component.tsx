@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import Animated, {
+  Easing,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { FilterIcon } from '@/assets/icon/filter';
@@ -8,6 +15,10 @@ import { Form, InputSelectField, InputTextField, useForm } from '@/atomic/form';
 import { Body2, Link } from '@/atomic/typography';
 import { ClientFlowScreen } from '@/components/client-flow-screen';
 import { ConnectionError } from '@/components/connection-error';
+import {
+  CLIENT_EMERGENCY_ATTENTION_MESSAGE,
+  EmergencyAttentionBanner,
+} from '@/components/emergency-attention-banner';
 import { STATE_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
@@ -26,6 +37,12 @@ import {
 import { PracticeHelpModal } from './practice-help-modal.component';
 
 const PROBLEM_MAX_LENGTH = 800;
+const ANIMATION_DURATION_MS = 260;
+const ANIMATION_EASING = Easing.bezier(0.25, 0.1, 0.25, 1);
+const TIMING = {
+  duration: ANIMATION_DURATION_MS,
+  easing: ANIMATION_EASING,
+} as const;
 
 type ClientSolicitationFormValues = {
   title: string;
@@ -57,6 +74,129 @@ const defaultValues: ClientSolicitationFormValues = {
   billingMethod: '',
   minimumExperienceMonths: '',
 };
+
+type AdvancedFiltersSectionProps = {
+  open: boolean;
+  onToggle: () => void;
+  subspecialtyOptions: ReturnType<typeof subspecialtyOptionsFromCategories>;
+};
+
+function AdvancedFiltersSection({
+  open,
+  onToggle,
+  subspecialtyOptions,
+}: AdvancedFiltersSectionProps) {
+  const progress = useSharedValue(open ? 1 : 0);
+  const height = useSharedValue(0);
+  const measuredHeight = useSharedValue(0);
+  const wasOpen = useRef(open);
+
+  useEffect(() => {
+    if (wasOpen.current === open) {
+      return;
+    }
+    wasOpen.current = open;
+    progress.value = withTiming(open ? 1 : 0, TIMING);
+    height.value = withTiming(open ? measuredHeight.value : 0, TIMING);
+  }, [height, measuredHeight, open, progress]);
+
+  const bodyStyle = useAnimatedStyle(() => ({
+    height: height.value,
+    opacity: interpolate(progress.value, [0, 0.2, 1], [0, 0.7, 1]),
+    overflow: 'hidden' as const,
+  }));
+
+  const caretStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        rotate: `${interpolate(progress.value, [0, 1], [0, 180])}deg`,
+      },
+    ],
+  }));
+
+  const fields = (
+    <View style={styles.advancedFields}>
+      <InputSelectField
+        name="subspecialty"
+        label="Subespecialidade"
+        placeholder="Selecione a subespecialidade"
+        options={subspecialtyOptions}
+      />
+      <InputSelectField
+        name="billingMethod"
+        label="Formas de cobrança"
+        placeholder="Selecione o método"
+        options={BILLING_OPTIONS}
+        searchable={false}
+      />
+      <InputTextField
+        name="minimumExperienceMonths"
+        label="Tempo mínimo de experiência (meses)"
+        placeholder="Ex. 6"
+        keyboardType="number-pad"
+        maxLength={3}
+      />
+    </View>
+  );
+
+  return (
+    <View>
+      <Pressable
+        accessibilityLabel="Filtros avançados"
+        accessibilityRole="button"
+        accessibilityState={{ expanded: open }}
+        onPress={onToggle}
+        style={({ pressed }) => [
+          styles.advancedToggle,
+          pressed && styles.pressed,
+        ]}>
+        <FilterIcon
+          testID="filter-icon"
+          color={BrandColors.primary.light}
+          width={16}
+          height={18}
+        />
+        <Link color={BrandColors.primary.light}>Filtros avançados</Link>
+        <Animated.View style={caretStyle}>
+          <CaretLeftIcon
+            color={BrandColors.primary.light}
+            direction="down"
+            height={18}
+            width={18}
+          />
+        </Animated.View>
+      </Pressable>
+
+      <View style={styles.advancedBodySlot}>
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          pointerEvents="none"
+          style={styles.advancedMeasure}
+          onLayout={(event) => {
+            const nextHeight = event.nativeEvent.layout.height;
+            if (nextHeight <= 0) {
+              return;
+            }
+            const previous = measuredHeight.value;
+            measuredHeight.value = nextHeight;
+            if (open && (previous <= 0 || Math.abs(previous - nextHeight) > 1)) {
+              height.value = nextHeight;
+            }
+          }}>
+          {fields}
+        </View>
+        <Animated.View
+          accessibilityElementsHidden={!open}
+          importantForAccessibility={open ? 'yes' : 'no-hide-descendants'}
+          pointerEvents={open ? 'auto' : 'none'}
+          style={bodyStyle}>
+          {fields}
+        </Animated.View>
+      </View>
+    </View>
+  );
+}
 
 export function ClientSolicitationForm({
   onClose,
@@ -181,6 +321,7 @@ export function ClientSolicitationForm({
             label="Atuação"
             placeholder="Selecione a atuação"
             options={PRACTICE_OPTIONS}
+            searchable={false}
             onHelpPress={() => setPracticeHelpVisible(true)}
           />
           <InputSelectField
@@ -209,6 +350,7 @@ export function ClientSolicitationForm({
             label="Grau de urgência"
             placeholder="Selecione o grau de urgência"
             options={URGENCY_OPTIONS}
+            searchable={false}
           />
 
           <View>
@@ -226,53 +368,16 @@ export function ClientSolicitationForm({
             </Body2>
           </View>
 
-          <Pressable
-            accessibilityLabel="Filtros avançados"
-            accessibilityRole="button"
-            accessibilityState={{ expanded: advancedFiltersOpen }}
-            onPress={() => setAdvancedFiltersOpen((open) => !open)}
-            style={({ pressed }) => [
-              styles.advancedToggle,
-              pressed && styles.pressed,
-            ]}>
-            <FilterIcon
-              testID="filter-icon"
-              color={BrandColors.primary.light}
-              width={16}
-              height={18}
-            />
-            <Link color={BrandColors.primary.light}>Filtros avançados</Link>
-            <CaretLeftIcon
-              color={BrandColors.primary.light}
-              direction={advancedFiltersOpen ? 'up' : 'down'}
-              height={18}
-              width={18}
-            />
-          </Pressable>
+          <AdvancedFiltersSection
+            onToggle={() => setAdvancedFiltersOpen((current) => !current)}
+            open={advancedFiltersOpen}
+            subspecialtyOptions={subspecialtyOptions}
+          />
 
-          {advancedFiltersOpen ? (
-            <View style={styles.advancedFields}>
-              <InputSelectField
-                name="subspecialty"
-                label="Subespecialidade"
-                placeholder="Selecione a subespecialidade"
-                options={subspecialtyOptions}
-              />
-              <InputSelectField
-                name="billingMethod"
-                label="Formas de cobrança"
-                placeholder="Selecione o método"
-                options={BILLING_OPTIONS}
-              />
-              <InputTextField
-                name="minimumExperienceMonths"
-                label="Tempo mínimo de experiência (meses)"
-                placeholder="Ex. 6"
-                keyboardType="number-pad"
-                maxLength={3}
-              />
-            </View>
-          ) : null}
+          <EmergencyAttentionBanner
+            message={CLIENT_EMERGENCY_ATTENTION_MESSAGE}
+            visible={values.urgency === 'imediata'}
+          />
         </View>
       </Form>
 
@@ -313,6 +418,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.xxs,
     borderRadius: Radius.small,
+  },
+  advancedBodySlot: {
+    position: 'relative',
+  },
+  advancedMeasure: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    opacity: 0,
+    zIndex: -1,
   },
   advancedFields: {
     gap: Spacing.sm,

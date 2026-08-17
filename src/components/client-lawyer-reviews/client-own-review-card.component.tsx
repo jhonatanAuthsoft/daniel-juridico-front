@@ -1,8 +1,8 @@
-import { Image } from 'expo-image';
 import { SymbolView } from 'expo-symbols';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Body1, Body2, Link } from '@/atomic/typography';
+import { ProfileAvatar } from '@/components/profile-avatar';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
 import type { ClientLawyerReview } from './client-lawyer-reviews.component';
@@ -32,11 +32,7 @@ export function ClientOwnReviewCard({
   return (
     <View testID="lawyer-review-card" style={styles.card}>
       <View style={styles.reviewerRow}>
-        <Image
-          source={require('@/assets/images/professional-image-placeholder.png')}
-          contentFit="cover"
-          style={styles.avatar}
-        />
+        <ProfileAvatar style={styles.avatar} testID="client-review-avatar" />
         <View style={styles.reviewerInfo}>
           <Body1 color={BrandColors.neutral.white}>Você</Body1>
           <View style={styles.ratingRow}>

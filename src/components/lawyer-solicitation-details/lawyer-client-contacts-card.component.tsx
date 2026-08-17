@@ -27,7 +27,7 @@ export function LawyerClientContactsCard({
             tintColor={BrandColors.neutral.white}
           />
           <Body1 color={BrandColors.neutral.white} style={styles.value}>
-            {client.phone}
+            {client.phone.trim() || 'Não informado'}
           </Body1>
         </View>
         <View style={styles.contact}>
@@ -37,7 +37,7 @@ export function LawyerClientContactsCard({
             tintColor={BrandColors.neutral.white}
           />
           <Body1 color={BrandColors.neutral.white} style={styles.value}>
-            {client.email}
+            {client.email.trim() || 'Não informado'}
           </Body1>
         </View>
       </View>

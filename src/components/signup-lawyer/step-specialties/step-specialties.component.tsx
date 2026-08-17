@@ -9,6 +9,13 @@ import {
   View,
 } from 'react-native';
 import { SymbolView } from 'expo-symbols';
+import Animated, {
+  Easing,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { GlassBackground } from '@/atomic/glass';
@@ -22,6 +29,13 @@ import type { SpecialtyCategory } from '../specialties.data';
 import { OptionCheckbox } from '../selectable-option';
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
+
+const ANIMATION_DURATION_MS = 260;
+const ANIMATION_EASING = Easing.bezier(0.25, 0.1, 0.25, 1);
+const TIMING = {
+  duration: ANIMATION_DURATION_MS,
+  easing: ANIMATION_EASING,
+} as const;
 
 type CategoryPanelProps = {
   category: SpecialtyCategory;
@@ -45,12 +59,71 @@ function CategoryPanel({
   const allSelected = selectedCount === childIds.length && childIds.length > 0;
   const someSelected = selectedCount > 0;
   const panelSelected = allSelected || someSelected;
+  const progress = useSharedValue(expanded ? 1 : 0);
+  const height = useSharedValue(0);
+  const measuredHeight = useSharedValue(0);
+  const wasExpanded = useRef(expanded);
+
+  useEffect(() => {
+    if (wasExpanded.current === expanded) {
+      return;
+    }
+    wasExpanded.current = expanded;
+    progress.value = withTiming(expanded ? 1 : 0, TIMING);
+    height.value = withTiming(expanded ? measuredHeight.value : 0, TIMING);
+  }, [expanded, height, measuredHeight, progress]);
+
+  const bodyStyle = useAnimatedStyle(() => ({
+    height: height.value,
+    opacity: interpolate(progress.value, [0, 0.2, 1], [0, 0.7, 1]),
+    overflow: 'hidden' as const,
+  }));
+
+  const caretStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        rotate: `${interpolate(progress.value, [0, 1], [0, 180])}deg`,
+      },
+    ],
+  }));
+
+  const childrenList = (
+    <View style={styles.children}>
+      <Pressable
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: allSelected }}
+        onPress={onToggleAll}
+        style={styles.childRow}>
+        <OptionCheckbox checked={allSelected} />
+        <Body1 bold={allSelected} color={BrandColors.neutral.white}>
+          Marcar todos
+        </Body1>
+      </Pressable>
+      {category.children.map((child) => {
+        const checked = selected.includes(child.id);
+        return (
+          <Pressable
+            key={child.id}
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked }}
+            onPress={() => onToggleChild(child.id)}
+            style={styles.childRow}>
+            <OptionCheckbox checked={checked} />
+            <Body1 bold={checked} color={BrandColors.neutral.white}>
+              {child.label}
+            </Body1>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
 
   return (
     <View style={[styles.panelShell, panelSelected && styles.panelShellSelected]}>
       <GlassBackground blurPx={25} />
       <Pressable
         accessibilityRole="button"
+        accessibilityState={{ expanded }}
         onPress={onToggleExpand}
         style={styles.panelHeader}>
         <Pressable
@@ -66,44 +139,41 @@ function CategoryPanel({
           style={styles.panelTitle}>
           {category.label}
         </Body1>
-        <CaretLeftIcon
-          color={BrandColors.neutral.light}
-          direction={expanded ? 'up' : 'down'}
-          height={20}
-          width={20}
-        />
+        <Animated.View style={caretStyle}>
+          <CaretLeftIcon
+            color={BrandColors.neutral.light}
+            direction="down"
+            height={20}
+            width={20}
+          />
+        </Animated.View>
       </Pressable>
 
-      {expanded ? (
-        <View style={styles.children}>
-          <Pressable
-            accessibilityRole="checkbox"
-            accessibilityState={{ checked: allSelected }}
-            onPress={onToggleAll}
-            style={styles.childRow}>
-            <OptionCheckbox checked={allSelected} />
-            <Body1 bold={allSelected} color={BrandColors.neutral.white}>
-              Marcar todos
-            </Body1>
-          </Pressable>
-          {category.children.map((child) => {
-            const checked = selected.includes(child.id);
-            return (
-              <Pressable
-                key={child.id}
-                accessibilityRole="checkbox"
-                accessibilityState={{ checked }}
-                onPress={() => onToggleChild(child.id)}
-                style={styles.childRow}>
-                <OptionCheckbox checked={checked} />
-                <Body1 bold={checked} color={BrandColors.neutral.white}>
-                  {child.label}
-                </Body1>
-              </Pressable>
-            );
-          })}
+      <View style={styles.bodySlot}>
+        <View
+          pointerEvents="none"
+          style={styles.measure}
+          onLayout={(event) => {
+            const nextHeight = event.nativeEvent.layout.height;
+            if (nextHeight <= 0) {
+              return;
+            }
+            const previous = measuredHeight.value;
+            measuredHeight.value = nextHeight;
+            if (expanded && (previous <= 0 || Math.abs(previous - nextHeight) > 1)) {
+              height.value = nextHeight;
+            }
+          }}>
+          {childrenList}
         </View>
-      ) : null}
+        <Animated.View
+          accessibilityElementsHidden={!expanded}
+          importantForAccessibility={expanded ? 'yes' : 'no-hide-descendants'}
+          pointerEvents={expanded ? 'auto' : 'none'}
+          style={bodyStyle}>
+          {childrenList}
+        </Animated.View>
+      </View>
     </View>
   );
 }
@@ -289,7 +359,8 @@ const glassShadow = Platform.select({
     shadowRadius: 16,
   },
   android: {
-    elevation: 4,
+    // elevation + non-solid fill paints the gray plate on Android.
+    elevation: 0,
   },
   default: {
     shadowColor: '#000000',
@@ -305,9 +376,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
     overflow: 'hidden',
+    backgroundColor: BrandColors.neutral.xdark,
     ...glassShadow,
   },
   searchContent: {
+    zIndex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.xxs,
@@ -331,12 +404,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
     overflow: 'hidden',
+    backgroundColor: BrandColors.neutral.xdark,
     ...glassShadow,
   },
   panelShellSelected: {
     borderColor: BrandColors.accessory.darkBlue,
   },
   panelHeader: {
+    zIndex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.sm,
@@ -345,6 +420,17 @@ const styles = StyleSheet.create({
   },
   panelTitle: {
     flex: 1,
+  },
+  bodySlot: {
+    zIndex: 1,
+    position: 'relative',
+  },
+  measure: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    opacity: 0,
+    zIndex: -1,
   },
   children: {
     paddingHorizontal: Spacing.sm,

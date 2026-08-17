@@ -8,15 +8,26 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Button } from '@/atomic/button';
-import { Body1, Display, Heading1, Link } from '@/atomic/typography';
-import { LawyerSolicitationDecisionCard } from '@/components/lawyer-solicitation-details';
-import { BrandColors, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
-import { getErrorMessage } from '@/data/http';
+import { Body1, Display, Link } from '@/atomic/typography';
 import {
+  LawyerClientContactsCard,
+  LawyerClientProfileAccordion,
+  LawyerClientReviewCard,
+  LawyerEmergencyAttentionBanner,
+  LawyerSolicitationDataAccordion,
+  LawyerSolicitationDecisionCard,
+  LawyerSolicitationDescriptionAccordion,
+} from '@/components/lawyer-solicitation-details';
+import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
+import { getErrorMessage } from '@/data/http';
+import { useSpecialtiesCatalog } from '@/domain/catalog';
+import {
+  isEmergencyConnection,
+  mapConnectionToLawyerSolicitationDetails,
   useAcceptConnection,
   useConnections,
   useRejectConnection,
@@ -24,6 +35,7 @@ import {
 
 export default function LawyerSolicitationDetailsScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const connectionId = Array.isArray(id) ? id[0] : id;
 
@@ -34,6 +46,7 @@ export default function LawyerSolicitationDetailsScreen() {
     refetch,
   } = useConnections();
 
+  const catalogQuery = useSpecialtiesCatalog();
   const acceptConnection = useAcceptConnection();
   const rejectConnection = useRejectConnection();
 
@@ -41,6 +54,24 @@ export default function LawyerSolicitationDetailsScreen() {
     () => connections.find((item) => item.id === connectionId),
     [connectionId, connections],
   );
+
+  const details = useMemo(() => {
+    if (!connection) {
+      return null;
+    }
+
+    const specialty = catalogQuery.data?.items.find(
+      (item) => item.code === connection.especialidadeCodigo,
+    );
+    const subspecialty = specialty?.subspecialties.find(
+      (item) => item.code === connection.subespecialidadeCodigo,
+    );
+
+    return mapConnectionToLawyerSolicitationDetails(connection, {
+      specialtyLabel: specialty?.name,
+      subspecialtyLabel: subspecialty?.name,
+    });
+  }, [catalogQuery.data, connection]);
 
   const handleAccept = async () => {
     if (!connectionId) {
@@ -73,18 +104,18 @@ export default function LawyerSolicitationDetailsScreen() {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.notFound}>
+      <View style={[styles.root, { paddingTop: insets.top }]}>
+        <View style={styles.centered}>
           <ActivityIndicator color={BrandColors.primary.light} size="large" />
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
-  if (isError || !connection) {
+  if (isError || !connection || !details) {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.notFound}>
+      <View style={[styles.root, { paddingTop: insets.top }]}>
+        <View style={styles.centered}>
           <Display color={BrandColors.neutral.white}>
             Pedido não encontrado
           </Display>
@@ -103,27 +134,20 @@ export default function LawyerSolicitationDetailsScreen() {
             <Link color={BrandColors.primary.light}>Voltar</Link>
           </Pressable>
         </View>
-      </SafeAreaView>
+      </View>
     );
   }
 
   const isPending = connection.status === 'PENDENTE';
-  const decision =
-    connection.status === 'ACEITA'
-      ? 'accepted'
-      : connection.status === 'RECUSADA'
-        ? 'rejected'
-        : null;
+  const isAccepted = connection.status === 'ACEITA';
   const isMutating =
     acceptConnection.isPending || rejectConnection.isPending;
+  const showEmergencyBanner =
+    isEmergencyConnection(connection) && connection.status !== 'RECUSADA';
 
   return (
-    <SafeAreaView
-      edges={['top', 'bottom', 'left', 'right']}
-      style={styles.safeArea}>
-      <ScrollView
-        contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}>
+    <View style={styles.root}>
+      <View style={[styles.headerBlock, { paddingTop: insets.top + Spacing.xxs }]}>
         <View style={styles.header}>
           <Pressable
             accessibilityLabel="Voltar"
@@ -134,78 +158,92 @@ export default function LawyerSolicitationDetailsScreen() {
             <CaretLeftIcon color={BrandColors.neutral.white} height={24} width={24} />
           </Pressable>
           <Body1 color={BrandColors.neutral.white} style={styles.headerTitle}>
-            Pedido de conexão
+            Visualizar solicitação
           </Body1>
           <View style={styles.headerSpacer} />
         </View>
+      </View>
 
-        <View style={styles.card}>
-          <Heading1 color={BrandColors.neutral.white}>
-            {connection.nomeCliente?.trim() || 'Cliente'}
-          </Heading1>
-          <Body1 color={BrandColors.neutral.light}>
-            {connection.tituloSolicitacao?.trim() || 'Solicitação'}
-          </Body1>
-          {connection.status === 'ACEITA' ? (
-            <Body1 color={BrandColors.neutral.white}>
-              Conexão aceita. O cliente pode ver seu telefone e e-mail no
-              perfil.
-            </Body1>
-          ) : null}
-        </View>
-
-        {decision ? (
-          <LawyerSolicitationDecisionCard decision={decision} />
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          {
+            paddingBottom:
+              Spacing.lg +
+              (isPending || isAccepted ? 120 : Spacing.sm) +
+              insets.bottom,
+          },
+        ]}
+        showsVerticalScrollIndicator={false}>
+        <LawyerClientProfileAccordion client={details.client} />
+        <LawyerSolicitationDataAccordion solicitation={details} />
+        {isAccepted ? (
+          <LawyerClientContactsCard client={details.client} />
         ) : null}
-
-        {isPending ? (
-          <View style={styles.actions}>
-            <Button
-              accessibilityLabel="Aceitar conexão"
-              disabled={isMutating}
-              isLoading={acceptConnection.isPending}
-              onPress={() => {
-                void handleAccept();
-              }}
-              variant="primary">
-              Aceitar conexão
-            </Button>
-            <Pressable
-              accessibilityLabel="Recusar"
-              accessibilityRole="button"
-              disabled={isMutating}
-              onPress={() => {
-                void handleReject();
-              }}
-              style={({ pressed }) => [
-                styles.refuseButton,
-                pressed && !isMutating && styles.pressed,
-                isMutating && styles.disabled,
-              ]}>
-              <Link color={BrandColors.primary.light}>
-                {rejectConnection.isPending ? 'Recusando…' : 'Recusar'}
-              </Link>
-            </Pressable>
-          </View>
+        <LawyerSolicitationDescriptionAccordion
+          description={details.description}
+        />
+        <LawyerEmergencyAttentionBanner visible={showEmergencyBanner} />
+        {details.decision === 'rejected' ? (
+          <LawyerSolicitationDecisionCard decision="rejected" />
+        ) : null}
+        {details.clientReview ? (
+          <LawyerClientReviewCard
+            client={details.client}
+            review={details.clientReview}
+          />
         ) : null}
       </ScrollView>
-    </SafeAreaView>
+
+      {isPending ? (
+        <View
+          style={[
+            styles.footer,
+            { paddingBottom: Math.max(insets.bottom, Spacing.sm) },
+          ]}>
+          <Button
+            accessibilityLabel="Aceitar solicitação"
+            disabled={isMutating}
+            isLoading={acceptConnection.isPending}
+            onPress={() => {
+              void handleAccept();
+            }}
+            variant="primary">
+            Aceitar solicitação
+          </Button>
+          <Pressable
+            accessibilityLabel="Recusar"
+            accessibilityRole="button"
+            disabled={isMutating}
+            onPress={() => {
+              void handleReject();
+            }}
+            style={({ pressed }) => [
+              styles.refuseButton,
+              pressed && !isMutating && styles.pressed,
+              isMutating && styles.disabled,
+            ]}>
+            <Link color={BrandColors.primary.light}>
+              {rejectConnection.isPending ? 'Recusando…' : 'Recusar'}
+            </Link>
+          </Pressable>
+        </View>
+      ) : null}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  root: {
     flex: 1,
     backgroundColor: BrandColors.neutral.xdark,
   },
-  content: {
+  headerBlock: {
     width: '100%',
     maxWidth: MaxContentWidth,
     alignSelf: 'center',
-    gap: Spacing.sm,
     paddingHorizontal: Spacing.sm,
-    paddingTop: Spacing.xxs,
-    paddingBottom: Spacing.lg,
+    backgroundColor: BrandColors.neutral.xdark,
   },
   header: {
     minHeight: 48,
@@ -220,22 +258,33 @@ const styles = StyleSheet.create({
   headerSpacer: {
     width: 24,
   },
-  card: {
-    gap: Spacing.xs,
-    padding: Spacing.sm,
-    borderRadius: Radius.large,
-    backgroundColor: BrandColors.accessory.darkGray,
+  content: {
+    width: '100%',
+    maxWidth: MaxContentWidth,
+    alignSelf: 'center',
+    gap: Spacing.sm,
+    paddingHorizontal: Spacing.sm,
+    paddingTop: Spacing.sm,
   },
-  actions: {
+  footer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: '100%',
+    maxWidth: MaxContentWidth,
+    alignSelf: 'center',
     gap: Spacing.xs,
-    marginTop: Spacing.xxs,
+    paddingHorizontal: Spacing.sm,
+    paddingTop: Spacing.sm,
+    backgroundColor: BrandColors.neutral.xdark,
   },
   refuseButton: {
     minHeight: 48,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  notFound: {
+  centered: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

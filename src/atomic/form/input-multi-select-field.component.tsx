@@ -396,7 +396,8 @@ const glassShadow = Platform.select({
     shadowRadius: 16,
   },
   android: {
-    elevation: 4,
+    // elevation + non-solid fill paints the gray plate on Android.
+    elevation: 0,
   },
   default: {
     shadowColor: '#000000',

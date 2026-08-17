@@ -1,10 +1,13 @@
 import { Image, type ImageStyle } from 'expo-image';
 import type { StyleProp } from 'react-native';
 
-import { useMe } from '@/domain/auth';
+import { useAuth, useMe } from '@/domain/auth';
 import { useObjectReadUrl } from '@/domain/arquivo';
 
-const PLACEHOLDER = require('@/assets/images/profile.png');
+const NO_IMAGE_PLACEHOLDER = require('@/assets/images/no-image-placeholder.png');
+const PROFESSIONAL_PLACEHOLDER = require(
+  '@/assets/images/professional-image-placeholder.png',
+);
 
 type ProfileAvatarProps = {
   style?: StyleProp<ImageStyle>;
@@ -19,14 +22,17 @@ export function ProfileAvatar({
   style,
   testID = 'profile-image',
 }: ProfileAvatarProps) {
+  const { user } = useAuth();
   const { data: me } = useMe();
   const { data: read } = useObjectReadUrl(me?.photoKey);
   const readUrl = read?.readUrl?.trim();
+  const placeholder =
+    user?.role === 'LAWYER' ? PROFESSIONAL_PLACEHOLDER : NO_IMAGE_PLACEHOLDER;
 
   return (
     <Image
       testID={testID}
-      source={readUrl ? { uri: readUrl } : PLACEHOLDER}
+      source={readUrl ? { uri: readUrl } : placeholder}
       contentFit="cover"
       style={style}
     />

@@ -1,16 +1,21 @@
 import { Image } from 'expo-image';
+import { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { BagIcon } from '@/assets/icon/bag';
 import { MapPinIcon } from '@/assets/icon/map-pin';
 import { PercentIcon } from '@/assets/icon/percent';
 import { Button } from '@/atomic/button';
-import { Body2, Heading1 } from '@/atomic/typography';
+import { Body2, Heading1, Link } from '@/atomic/typography';
+import { CancelConnectionModal } from '@/components/client-connection-status/cancel-connection-modal.component';
 import type { ClientConnectionStatusValue } from '@/components/client-connection-status';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import type { ConnectionResult } from '@/data/connection';
-import { useCreateConnection } from '@/domain/connection';
+import {
+  useCancelConnection,
+  useCreateConnection,
+} from '@/domain/connection';
 
 import type { CompatibleLawyer } from './mock-client-solicitation-details';
 
@@ -21,19 +26,90 @@ type ClientCompatibleLawyersListProps = {
   onLawyerPress: (lawyerId: string) => void;
 };
 
-function connectionButtonLabel(
-  uiStatus: ClientConnectionStatusValue,
-): string {
-  switch (uiStatus) {
-    case 'pending':
-      return 'Conexão solicitada';
-    case 'accepted':
-      return 'Conexão aceita';
-    case 'rejected':
-      return 'Conexão recusada';
-    default:
-      return 'Solicitar conexão';
+type LawyerActionProps = {
+  lawyer: CompatibleLawyer;
+  uiStatus: ClientConnectionStatusValue;
+  connection: ConnectionResult | undefined;
+  isRequesting: boolean;
+  isCancelling: boolean;
+  onLawyerPress: (lawyerId: string) => void;
+  onRequest: (lawyerId: string) => void;
+  onCancel: (connectionId: string) => void;
+};
+
+function LawyerConnectionAction({
+  lawyer,
+  uiStatus,
+  connection,
+  isRequesting,
+  isCancelling,
+  onLawyerPress,
+  onRequest,
+  onCancel,
+}: LawyerActionProps) {
+  const [cancelModalVisible, setCancelModalVisible] = useState(false);
+
+  if (uiStatus === 'accepted') {
+    return (
+      <Button
+        accessibilityLabel="Exibir contato"
+        onPress={() => onLawyerPress(lawyer.id)}
+        variant="primary">
+        Exibir contato
+      </Button>
+    );
   }
+
+  if (uiStatus === 'pending' && connection) {
+    return (
+      <>
+        <Pressable
+          accessibilityLabel="Cancelar solicitação"
+          accessibilityRole="button"
+          disabled={isCancelling}
+          onPress={() => setCancelModalVisible(true)}
+          style={({ pressed }) => [
+            styles.cancelAction,
+            pressed && !isCancelling && styles.pressed,
+            isCancelling && styles.disabled,
+          ]}>
+          <Link color={BrandColors.primary.light}>
+            {isCancelling ? 'Cancelando…' : 'Cancelar solicitação'}
+          </Link>
+        </Pressable>
+        <CancelConnectionModal
+          onClose={() => {
+            if (!isCancelling) {
+              setCancelModalVisible(false);
+            }
+          }}
+          onConfirm={() => {
+            setCancelModalVisible(false);
+            onCancel(connection.id);
+          }}
+          visible={cancelModalVisible}
+        />
+      </>
+    );
+  }
+
+  if (uiStatus === 'rejected') {
+    return (
+      <View style={styles.rejectedAction}>
+        <Link color={BrandColors.neutral.light}>Conexão recusada</Link>
+      </View>
+    );
+  }
+
+  return (
+    <Button
+      accessibilityLabel={isRequesting ? 'Solicitando conexão' : 'Solicitar conexão'}
+      disabled={isRequesting}
+      onPress={() => onRequest(lawyer.id)}
+      variant="secondary">
+      {isRequesting ? 'Solicitando…' : 'Solicitar conexão'}
+    </Button>
+  );
 }
 
 export function ClientCompatibleLawyersList({
@@ -43,6 +119,7 @@ export function ClientCompatibleLawyersList({
   onLawyerPress,
 }: ClientCompatibleLawyersListProps) {
   const createConnection = useCreateConnection();
+  const cancelConnection = useCancelConnection();
 
   const requestConnection = async (lawyerId: string) => {
     try {
@@ -54,6 +131,17 @@ export function ClientCompatibleLawyersList({
       Alert.alert(
         'Conexão',
         getErrorMessage(error, 'Não foi possível solicitar a conexão.'),
+      );
+    }
+  };
+
+  const cancelPendingConnection = async (connectionId: string) => {
+    try {
+      await cancelConnection.mutateAsync(connectionId);
+    } catch (error) {
+      Alert.alert(
+        'Conexão',
+        getErrorMessage(error, 'Não foi possível cancelar a solicitação.'),
       );
     }
   };
@@ -70,10 +158,12 @@ export function ClientCompatibleLawyersList({
       {lawyers.map((lawyer, index) => {
         const connection = connectionsByLawyerId[lawyer.id];
         const uiStatus = connection?.uiStatus ?? 'idle';
-        const canRequest = uiStatus === 'idle';
         const isRequestingThis =
           createConnection.isPending &&
           createConnection.variables?.advogadoId === lawyer.id;
+        const isCancellingThis =
+          cancelConnection.isPending &&
+          cancelConnection.variables === connection?.id;
 
         return (
           <View key={lawyer.id}>
@@ -152,16 +242,20 @@ export function ClientCompatibleLawyersList({
                 </View>
               </Pressable>
 
-              <Button
-                accessibilityLabel={connectionButtonLabel(uiStatus)}
-                disabled={!canRequest}
-                isLoading={isRequestingThis}
-                onPress={() => {
-                  void requestConnection(lawyer.id);
+              <LawyerConnectionAction
+                connection={connection}
+                isCancelling={isCancellingThis}
+                isRequesting={isRequestingThis}
+                lawyer={lawyer}
+                onCancel={(connectionId) => {
+                  void cancelPendingConnection(connectionId);
                 }}
-                variant="secondary">
-                {connectionButtonLabel(uiStatus)}
-              </Button>
+                onLawyerPress={onLawyerPress}
+                onRequest={(lawyerId) => {
+                  void requestConnection(lawyerId);
+                }}
+                uiStatus={uiStatus}
+              />
             </View>
           </View>
         );
@@ -245,7 +339,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.xxxs,
   },
+  cancelAction: {
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  rejectedAction: {
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   pressed: {
     opacity: 0.75,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });

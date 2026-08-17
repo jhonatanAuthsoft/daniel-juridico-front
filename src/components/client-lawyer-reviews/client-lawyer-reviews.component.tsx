@@ -77,7 +77,7 @@ export function ClientLawyerReviews({
   const canDeleteOwn = typeof onDeleteOwnReview === 'function';
   const hasReviews = currentReviews.length > 0 || currentTotal > 0;
 
-  if (!hasReviews) {
+  if (!hasReviews && !canCreateReview) {
     return null;
   }
 
@@ -142,7 +142,7 @@ export function ClientLawyerReviews({
               style={styles.card}>
               <View style={styles.reviewerRow}>
                 <Image
-                  source={require('@/assets/images/professional-image-placeholder.png')}
+                  source={require('@/assets/images/no-image-placeholder.png')}
                   contentFit="cover"
                   style={styles.avatar}
                 />

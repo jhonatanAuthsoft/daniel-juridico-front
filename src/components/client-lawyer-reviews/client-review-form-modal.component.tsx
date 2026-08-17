@@ -1,16 +1,16 @@
-import { SymbolView } from 'expo-symbols';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Modal,
-  PanResponder,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
+import { StarIcon } from '@/assets/icon/star';
+import { XIcon } from '@/assets/icon/x';
 import { Button } from '@/atomic/button';
 import { ModalScrim } from '@/atomic/modal';
 import { Body1, Body2, Heading1 } from '@/atomic/typography';
@@ -23,9 +23,7 @@ import {
 
 const MAX_COMMENT_LENGTH = 800;
 const STAR_VALUES = [1, 2, 3, 4, 5] as const;
-const HALF_STAR_VALUES = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5] as const;
 const STAR_SIZE = 44;
-const STAR_COUNT = STAR_VALUES.length;
 
 type StarFill = 'empty' | 'half' | 'full';
 
@@ -54,17 +52,18 @@ function resolveStarFill(star: number, rating: number): StarFill {
   return 'empty';
 }
 
-/** Maps X across a space-between star row, ignoring the gaps between icons. */
+/** Maps page-relative X across a space-between star row. */
 function ratingFromTrackX(x: number, trackWidth: number): number {
   if (trackWidth <= 0) {
     return 0.5;
   }
 
-  const gapTotal = trackWidth - STAR_COUNT * STAR_SIZE;
-  const gap = STAR_COUNT > 1 ? Math.max(0, gapTotal / (STAR_COUNT - 1)) : 0;
+  const gapTotal = trackWidth - STAR_VALUES.length * STAR_SIZE;
+  const gap =
+    STAR_VALUES.length > 1 ? Math.max(0, gapTotal / (STAR_VALUES.length - 1)) : 0;
   const clampedX = Math.max(0, Math.min(trackWidth, x));
 
-  for (let index = 0; index < STAR_COUNT; index += 1) {
+  for (let index = 0; index < STAR_VALUES.length; index += 1) {
     const left = index * (STAR_SIZE + gap);
     const right = left + STAR_SIZE;
     const middle = left + STAR_SIZE / 2;
@@ -81,39 +80,20 @@ function ratingFromTrackX(x: number, trackWidth: number): number {
   return 5;
 }
 
-function starOffset(index: number, trackWidth: number): number {
-  const gapTotal = trackWidth - STAR_COUNT * STAR_SIZE;
-  const gap = STAR_COUNT > 1 ? Math.max(0, gapTotal / (STAR_COUNT - 1)) : 0;
-  return index * (STAR_SIZE + gap);
-}
-
 function RatingStar({ fill }: { fill: StarFill }) {
+  const emptyColor = BrandColors.neutral.white;
+  const filledColor = BrandColors.feedback.warning.medium;
+
   return (
     <View pointerEvents="none" style={styles.starSlot}>
-      <SymbolView
-        name={{
-          ios: 'star',
-          android: 'star_border',
-          web: 'star_border',
-        }}
-        size={STAR_SIZE}
-        tintColor={BrandColors.neutral.white}
-      />
+      <StarIcon color={emptyColor} filled={false} size={STAR_SIZE} />
       {fill !== 'empty' ? (
         <View
           style={[
             styles.starFillMask,
             fill === 'half' ? styles.starFillHalf : styles.starFillFull,
           ]}>
-          <SymbolView
-            name={{
-              ios: 'star.fill',
-              android: 'star',
-              web: 'star',
-            }}
-            size={STAR_SIZE}
-            tintColor={BrandColors.neutral.white}
-          />
+          <StarIcon color={filledColor} filled size={STAR_SIZE} />
         </View>
       ) : null}
     </View>
@@ -126,71 +106,62 @@ type StarRatingInputProps = {
 };
 
 function StarRatingInput({ rating, onChangeRating }: StarRatingInputProps) {
-  const trackWidthRef = useRef(0);
-  const [trackWidth, setTrackWidth] = useState(0);
+  const trackRef = useRef<View>(null);
+  const originXRef = useRef(0);
+  const widthRef = useRef(0);
   const onChangeRef = useRef(onChangeRating);
   onChangeRef.current = onChangeRating;
 
-  const updateFromX = (x: number) => {
-    onChangeRef.current(ratingFromTrackX(x, trackWidthRef.current));
+  const measureTrack = () => {
+    trackRef.current?.measureInWindow((x, _y, width) => {
+      originXRef.current = x;
+      widthRef.current = width;
+    });
   };
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
-      onStartShouldSetPanResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
-      onPanResponderTerminationRequest: () => false,
-      onPanResponderGrant: (event) => {
-        updateFromX(event.nativeEvent.locationX);
-      },
-      onPanResponderMove: (event) => {
-        updateFromX(event.nativeEvent.locationX);
-      },
-    }),
-  ).current;
+  const applyPageX = (pageX: number) => {
+    onChangeRef.current(ratingFromTrackX(pageX - originXRef.current, widthRef.current));
+  };
+
+  const snapBy = (delta: number) => {
+    const current = rating > 0 ? rating : 0.5;
+    const next = Math.min(5, Math.max(0.5, current + delta));
+    onChangeRating(next);
+  };
 
   return (
     <View
-      {...panResponder.panHandlers}
+      ref={trackRef}
+      accessibilityActions={[{ name: 'increment' }, { name: 'decrement' }]}
       accessibilityLabel="Nota da conexão"
-      onLayout={(event) => {
-        const width = event.nativeEvent.layout.width;
-        trackWidthRef.current = width;
-        setTrackWidth(width);
+      accessibilityRole="adjustable"
+      accessibilityValue={{
+        min: 0.5,
+        max: 5,
+        now: rating || 0,
+        text: rating > 0 ? formatRatingLabel(rating) : 'Nenhuma nota',
       }}
+      onAccessibilityAction={(event) => {
+        if (event.nativeEvent.actionName === 'increment') {
+          snapBy(0.5);
+        } else if (event.nativeEvent.actionName === 'decrement') {
+          snapBy(-0.5);
+        }
+      }}
+      onLayout={measureTrack}
+      onMoveShouldSetResponder={() => true}
+      onResponderGrant={(event) => {
+        measureTrack();
+        applyPageX(event.nativeEvent.pageX);
+      }}
+      onResponderMove={(event) => {
+        applyPageX(event.nativeEvent.pageX);
+      }}
+      onStartShouldSetResponder={() => true}
       style={styles.stars}>
       {STAR_VALUES.map((star) => (
         <RatingStar key={star} fill={resolveStarFill(star, rating)} />
       ))}
-
-      {/* Labels for a11y/tests; real touches are handled by PanResponder (click + drag). */}
-      <View pointerEvents="box-none" style={styles.a11yLayer}>
-        {HALF_STAR_VALUES.map((value) => {
-          const starIndex = Math.ceil(value) - 1;
-          const isHalf = !Number.isInteger(value);
-          const left =
-            starOffset(starIndex, trackWidth) + (isHalf ? 0 : STAR_SIZE / 2);
-
-          return (
-            <Pressable
-              key={value}
-              accessibilityLabel={formatRatingLabel(value)}
-              accessibilityRole="button"
-              accessibilityState={{ selected: rating === value }}
-              onPress={() => onChangeRating(value)}
-              style={[
-                styles.a11ySegment,
-                {
-                  left,
-                  width: STAR_SIZE / 2,
-                },
-              ]}
-            />
-          );
-        })}
-      </View>
     </View>
   );
 }
@@ -201,10 +172,20 @@ export function ClientReviewFormModal({
   onSubmit,
   isSubmitting = false,
 }: ClientReviewFormModalProps) {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
   const [ratingError, setRatingError] = useState(false);
   const [commentError, setCommentError] = useState(false);
+
+  useEffect(() => {
+    if (!visible) {
+      return;
+    }
+    setRating(5);
+    setComment('');
+    setRatingError(false);
+    setCommentError(false);
+  }, [visible]);
 
   const selectRating = (value: number) => {
     setRating(value);
@@ -245,10 +226,9 @@ export function ClientReviewFormModal({
       <ModalScrim
         accessibilityLabel="Fechar avaliação"
         align="bottom"
+        keyboardBehavior="lift"
         onDismiss={onClose}>
-        <View
-          accessibilityViewIsModal
-          style={styles.sheet}>
+        <View accessibilityViewIsModal style={styles.sheet}>
           <View style={styles.handle} />
 
           <Pressable
@@ -257,18 +237,14 @@ export function ClientReviewFormModal({
             hitSlop={Spacing.xxs}
             onPress={onClose}
             style={styles.closeButton}>
-            <SymbolView
-              name={{ ios: 'xmark', android: 'close', web: 'close' }}
-              size={22}
-              tintColor={BrandColors.neutral.white}
-            />
+            <XIcon color={BrandColors.neutral.white} height={18} width={18} />
           </Pressable>
 
-          <KeyboardAwareScrollView
-            bottomOffset={Spacing.md}
+          <ScrollView
             contentContainerStyle={styles.scrollContent}
-            keyboardDismissMode="interactive"
+            keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled
             showsVerticalScrollIndicator={false}>
             <View style={styles.intro}>
               <Heading1 color={BrandColors.neutral.white}>
@@ -326,7 +302,7 @@ export function ClientReviewFormModal({
               variant="primary">
               Avaliar
             </Button>
-          </KeyboardAwareScrollView>
+          </ScrollView>
         </View>
       </ModalScrim>
     </Modal>
@@ -335,7 +311,6 @@ export function ClientReviewFormModal({
 
 const styles = StyleSheet.create({
   sheet: {
-    maxHeight: '100%',
     gap: Spacing.sm,
     paddingHorizontal: Spacing.sm,
     paddingTop: Spacing.sm,
@@ -370,18 +345,9 @@ const styles = StyleSheet.create({
     gap: Spacing.xxs,
   },
   stars: {
-    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: STAR_SIZE,
-  },
-  a11yLayer: {
-    ...StyleSheet.absoluteFill,
-  },
-  a11ySegment: {
-    position: 'absolute',
-    top: 0,
     height: STAR_SIZE,
   },
   starSlot: {

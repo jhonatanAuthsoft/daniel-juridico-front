@@ -54,7 +54,10 @@ export function GlassBackground({
 
   if (Platform.OS === 'android') {
     return (
-      <GradientLayer gradient={gradient} style={[StyleSheet.absoluteFill, style]} />
+      <GradientLayer
+        gradient={gradient}
+        style={[StyleSheet.absoluteFill, style, { pointerEvents: 'none' }]}
+      />
     );
   }
 

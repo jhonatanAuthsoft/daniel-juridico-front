@@ -23,18 +23,31 @@ describe('ClientSolicitationForm', () => {
       <ClientSolicitationForm onClose={jest.fn()} onSubmitted={jest.fn()} />,
     );
 
-    expect(screen.queryByText('Subespecialidade')).toBeNull();
+    const toggle = screen.getByRole('button', { name: 'Filtros avançados' });
+    expect(toggle).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ expanded: false }),
+    );
     expect(screen.getByTestId('filter-icon')).toBeTruthy();
 
-    fireEvent.press(screen.getByRole('button', { name: 'Filtros avançados' }));
+    fireEvent.press(toggle);
 
-    expect(screen.getByText('Subespecialidade')).toBeTruthy();
-    expect(screen.getByText('Formas de cobrança')).toBeTruthy();
-    expect(screen.getByText('Tempo mínimo de experiência (meses)')).toBeTruthy();
+    expect(toggle).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ expanded: true }),
+    );
+    expect(screen.getAllByText('Subespecialidade').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Formas de cobrança').length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText('Tempo mínimo de experiência (meses)').length,
+    ).toBeGreaterThan(0);
 
-    fireEvent.press(screen.getByRole('button', { name: 'Filtros avançados' }));
+    fireEvent.press(toggle);
 
-    expect(screen.queryByText('Subespecialidade')).toBeNull();
+    expect(toggle).toHaveProp(
+      'accessibilityState',
+      expect.objectContaining({ expanded: false }),
+    );
   });
 
   it('limits the problem description to 800 characters', () => {
@@ -48,5 +61,24 @@ describe('ClientSolicitationForm', () => {
     expect(problem.props.maxLength).toBe(800);
     expect(problem.props.value).toHaveLength(800);
     expect(screen.getByText('0 caracteres restantes')).toBeTruthy();
+  });
+
+  it('shows the emergency attention banner only for immediate urgency', () => {
+    const screen = render(
+      <ClientSolicitationForm onClose={jest.fn()} onSubmitted={jest.fn()} />,
+    );
+
+    expect(screen.queryByTestId('emergency-attention-banner')).toBeNull();
+
+    fireEvent.press(screen.getByText('Selecione o grau de urgência'));
+    fireEvent.press(screen.getByText('Emergência'));
+
+    expect(screen.getByTestId('emergency-attention-banner')).toBeTruthy();
+    expect(screen.getByText('Atenção')).toBeTruthy();
+    expect(
+      screen.getByText(
+        /Se estiver em situação de emergência policial, ligue imediatamente para o 190/,
+      ),
+    ).toBeTruthy();
   });
 });

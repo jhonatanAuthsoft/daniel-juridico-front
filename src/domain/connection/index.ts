@@ -20,6 +20,8 @@ export {
   useSolicitationConnections,
 } from './use-connection-queries';
 export {
+  isEmergencyConnection,
   mapConnectionToLawyerCard,
   mapConnectionToLawyerHistoryItem,
+  mapConnectionToLawyerSolicitationDetails,
 } from './connection-ui.mapper';

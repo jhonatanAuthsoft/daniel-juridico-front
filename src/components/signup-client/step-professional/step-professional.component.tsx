@@ -17,6 +17,7 @@ export function StepProfessional() {
         label="Estado civil"
         placeholder="Selecione o estado civil"
         options={MARITAL_STATUS_OPTIONS}
+        searchable={false}
         required
       />
       <InputTextField

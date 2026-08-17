@@ -33,10 +33,10 @@ export function subspecialtyOptionsFromCategories(
 }
 
 export const URGENCY_OPTIONS: SelectOption[] = [
-  { value: 'baixa', label: 'Baixa' },
-  { value: 'media', label: 'Média' },
-  { value: 'alta', label: 'Alta' },
-  { value: 'imediata', label: 'Imediata' },
+  { value: 'baixa', label: 'Tenho tempo' },
+  { value: 'media', label: 'Médio' },
+  { value: 'alta', label: 'Urgente' },
+  { value: 'imediata', label: 'Emergência' },
 ];
 
 export const BILLING_OPTIONS: SelectOption[] = [

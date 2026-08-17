@@ -1,8 +1,8 @@
 import { type ReactNode, useContext } from 'react';
 import {
+  Dimensions,
   Platform,
   Pressable,
-  StatusBar,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -49,6 +49,20 @@ export type ModalScrimProps = {
   onDismiss?: () => void;
   /** `bottom` = sheet; `center` = dialog. */
   align?: 'bottom' | 'center';
+  /**
+   * How the sheet reacts to the IME.
+   * `compress` (default) sits the sheet above the keyboard and uses the
+   * remaining viewport as max height so search results stay visible.
+   * `lift` keeps the sheet height and translates it up (focused field at the
+   * bottom, e.g. review comment).
+   */
+  keyboardBehavior?: 'compress' | 'lift';
+  /**
+   * Stretch the sheet to the available max height (`height: cap` instead of
+   * hugging content). Pending design review — see
+   * `docs/plans/2026-08-16-keyboard-inputs-manual-test.md`.
+   */
+  fillAvailable?: boolean;
   accessibilityLabel?: string;
   contentStyle?: StyleProp<ViewStyle>;
 };
@@ -67,6 +81,8 @@ export function ModalScrim({
   children,
   onDismiss,
   align = 'bottom',
+  keyboardBehavior = 'compress',
+  fillAvailable = false,
   accessibilityLabel = 'Fechar',
   contentStyle,
 }: ModalScrimProps) {
@@ -74,21 +90,37 @@ export function ModalScrim({
   const insets = useContext(SafeAreaInsetsContext) ?? ZERO_INSETS;
   const { width, height: windowHeight } = useWindowDimensions();
   const { height: keyboardHeight } = useReanimatedKeyboardAnimation();
-  /** Cover status bar when Modal uses statusBarTranslucent. */
-  const height =
-    Platform.OS === 'android'
-      ? windowHeight + (StatusBar.currentHeight ?? 0)
-      : windowHeight;
+  const screenHeight = Dimensions.get('screen').height;
+  /** Cover status bar when Modal uses statusBarTranslucent. Prefer screen
+   * height so Android `adjustResize` does not shrink the overlay with the IME. */
+  const height = Platform.OS === 'android' ? screenHeight : windowHeight;
   const frameStyle = { width, height };
   const baseBottomPad =
     Math.max(insets.bottom, Spacing.sm) +
     (Platform.OS === 'android' ? Spacing.lg : 0);
+  const topSafe = (insets.top > 0 ? insets.top : Spacing.lg) + Spacing.sm;
 
   const bottomSheetAnimatedStyle = useAnimatedStyle(() => {
     const kb = Math.abs(keyboardHeight.value);
+    const remaining = Math.max(height - kb - topSafe, 0);
+    const cap =
+      keyboardBehavior === 'lift'
+        ? height * 0.92
+        : Math.min(height * 0.92, remaining);
+
+    if (fillAvailable) {
+      return {
+        paddingBottom: baseBottomPad,
+        maxHeight: cap,
+        height: cap,
+        transform: [{ translateY: -kb }],
+      };
+    }
+
     return {
-      paddingBottom: baseBottomPad + kb,
-      maxHeight: Math.max((height - kb) * 0.75, height * 0.35),
+      paddingBottom: baseBottomPad,
+      maxHeight: cap,
+      transform: [{ translateY: -kb }],
     };
   });
 

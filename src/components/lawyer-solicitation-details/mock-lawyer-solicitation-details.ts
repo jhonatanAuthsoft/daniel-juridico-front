@@ -1,3 +1,4 @@
+import type { SolicitationStatus } from '@/components/client-solicitation-card';
 import { MOCK_LAWYER_HISTORY } from '@/components/lawyer-history/mock-lawyer-history';
 import { MOCK_LAWYER_SOLICITATIONS } from '@/components/lawyer-solicitation-card';
 
@@ -10,22 +11,33 @@ export type LawyerClientProfile = {
   monthlyIncome: string;
   phone: string;
   email: string;
+  /** S3 object key for the client profile photo, when available. */
+  photoKey?: string | null;
 };
 
 export type LawyerSolicitationDecision = 'accepted' | 'rejected';
 
+export type LawyerClientReview = {
+  rating: number;
+  comment: string;
+};
+
 export type LawyerSolicitationDetails = {
   id: string;
   title: string;
-  urgency: string;
+  status: SolicitationStatus;
   practice: string;
   specialties: string[];
+  subspecialties: string[];
+  minimumExperienceMonths: number;
   location: string;
   billingMethod: string;
   description: string;
   client: LawyerClientProfile;
   /** Present when the lawyer already accepted or rejected (Histórico). */
   decision?: LawyerSolicitationDecision;
+  /** Review left by this client about this lawyer, when available. */
+  clientReview?: LawyerClientReview | null;
 };
 
 const DEFAULT_DESCRIPTION =
@@ -55,9 +67,11 @@ const PENDING_DETAILS: LawyerSolicitationDetails[] =
   MOCK_LAWYER_SOLICITATIONS.map((solicitation, index) => ({
     id: solicitation.id,
     title: 'Rescisão de contrato de aluguel',
-    urgency: solicitation.status,
-    practice: 'Consultivo',
-    specialties: ['Direito Civil', 'Direito Imobiliário'],
+    status: solicitation.status,
+    practice: 'Consultoria',
+    specialties: ['Direito Civil'],
+    subspecialties: ['Direito Imobiliário'],
+    minimumExperienceMonths: 6,
     location: solicitation.location,
     billingMethod: 'Honorários contratuais',
     description: DEFAULT_DESCRIPTION,
@@ -68,14 +82,24 @@ const HISTORY_DETAILS: LawyerSolicitationDetails[] = MOCK_LAWYER_HISTORY.map(
   (item, index) => ({
     id: item.id,
     title: 'Rescisão de contrato de aluguel',
-    urgency: item.urgency,
-    practice: 'Consultivo',
-    specialties: ['Direito Civil', 'Direito Imobiliário'],
+    status: item.urgency,
+    practice: 'Consultoria',
+    specialties: ['Direito Civil'],
+    subspecialties: ['Direito Imobiliário'],
+    minimumExperienceMonths: 6,
     location: 'Salvador - Bahia',
     billingMethod: 'Honorários contratuais',
     description: DEFAULT_DESCRIPTION,
     decision: item.decision,
     client: buildClient(item.clientName, 'Salvador - Bahia', index),
+    clientReview:
+      index === 0
+        ? {
+            rating: 4,
+            comment:
+              'Profissional excepcional, muito feliz em ser atendida por ela',
+          }
+        : null,
   }),
 );
 
