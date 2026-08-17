@@ -44,7 +44,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: 'laweact-demo',
   version: '1.0.0',
   orientation: 'portrait',
-  icon: './assets/images/ios-app-icon.png',
+  icon: './assets/images/android-app-icon.png',
   scheme: current.scheme,
   userInterfaceStyle: 'automatic',
   ios: {
