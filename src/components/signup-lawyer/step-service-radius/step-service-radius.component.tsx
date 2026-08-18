@@ -11,6 +11,7 @@ import {
 import { XIcon } from '@/assets/icon/x';
 import { Button } from '@/atomic/button';
 import { InputMultiSelectField, InputSelectField } from '@/atomic/form';
+import { overflowSelectionLabel } from '@/atomic/form/input-multi-select-field.component';
 import { Separator } from '@/atomic/separator';
 import {
   Body1,
@@ -41,6 +42,26 @@ function normalizeCities(cities: string[]): string[] {
   return normalized.sort((a, b) => a.localeCompare(b, 'pt-BR'));
 }
 
+export function validateServiceAreas(
+  serviceAreas: ServiceAreaEntry[] | undefined,
+  draftState: string,
+  draftCities: string[],
+): true | string {
+  if ((serviceAreas ?? []).length > 0) {
+    return true;
+  }
+
+  const hasUnsavedDraft =
+    resolveUfFromStateValue(draftState).length === 2 &&
+    normalizeCities(draftCities).length > 0;
+
+  if (hasUnsavedDraft) {
+    return 'Salve as cidades selecionadas para continuar';
+  }
+
+  return 'Selecione ao menos uma cidade de atuação';
+}
+
 /** Collapses entries that share a state, keeping the first occurrence's position. */
 function mergeByState(entries: ServiceAreaEntry[]): ServiceAreaEntry[] {
   const byState = new Map<string, ServiceAreaEntry>();
@@ -61,15 +82,17 @@ function mergeByState(entries: ServiceAreaEntry[]): ServiceAreaEntry[] {
 }
 
 export function StepServiceRadius() {
-  const { control, setValue } = useFormContext<LawyerSignupFormValues>();
+  const { control, getValues, setValue } = useFormContext<LawyerSignupFormValues>();
   const { fields, remove, replace } = useFieldArray({
     control,
     name: 'serviceAreas',
     rules: {
       validate: (value) =>
-        (value ?? []).length > 0
-          ? true
-          : 'Informe ao menos uma cidade de atuação',
+        validateServiceAreas(
+          value,
+          getValues('serviceDraftState'),
+          getValues('serviceDraftCities'),
+        ),
     },
   });
   const { errors } = useFormState({ control, name: 'serviceAreas' });
@@ -246,7 +269,7 @@ export function StepServiceRadius() {
 
             <Separator size="xxs" />
 
-            <Body1 color={BrandColors.primary.light}>{cities.join('; ')}</Body1>
+            <SavedCitiesSummary cities={cities} />
           </View>
         );
       })}
@@ -261,6 +284,22 @@ export function StepServiceRadius() {
       ) : null}
     </View>
   );
+}
+
+const VISIBLE_SAVED_CITY_COUNT = 2;
+
+function SavedCitiesSummary({ cities }: { cities: string[] }) {
+  const visible = cities.slice(0, VISIBLE_SAVED_CITY_COUNT);
+  const extraLabel = overflowSelectionLabel(
+    cities.length - visible.length,
+    'cidade',
+    'cidades',
+  );
+  const summary = extraLabel
+    ? `${visible.join('; ')}; ${extraLabel}`
+    : visible.join('; ');
+
+  return <Body1 color={BrandColors.primary.light}>{summary}</Body1>;
 }
 
 const styles = StyleSheet.create({

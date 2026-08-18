@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  FlatList,
   Modal,
   Platform,
   Pressable,
@@ -17,8 +16,6 @@ import {
 } from 'react-hook-form';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
-import { CheckboxEmptyIcon } from '@/assets/icon/checkbox-empty';
-import { CheckedCheckboxIcon } from '@/assets/icon/checked-checkbox';
 import { SearchIcon } from '@/assets/icon/search';
 import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
@@ -34,9 +31,14 @@ import {
   Radius,
   Spacing,
 } from '@/constants/theme';
-import { normalizeSearchText } from '@/utils/br-input';
+
+import {
+  SelectOptionsList,
+  useDeferredFilteredOptions,
+} from './select-options-list.component';
 
 const OPTIONS_RADIUS = 16;
+const VISIBLE_TAG_COUNT = 2;
 
 export type InputMultiSelectFieldProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -52,12 +54,28 @@ export type InputMultiSelectFieldProps<
   optionsLoading?: boolean;
 };
 
+export function overflowSelectionLabel(
+  hiddenCount: number,
+  extraSingular = 'opção',
+  extraPlural = 'opções',
+): string {
+  if (hiddenCount <= 0) {
+    return '';
+  }
+  if (hiddenCount === 1) {
+    return `e mais 1 ${extraSingular}`;
+  }
+  return `e mais ${hiddenCount} ${extraPlural}`;
+}
+
 function asStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) {
     return [];
   }
   return value.filter((item): item is string => typeof item === 'string' && item.length > 0);
 }
+
+function ignoreOptionPress(_value: string) {}
 
 export function InputMultiSelectField<
   TFieldValues extends FieldValues = FieldValues,
@@ -119,30 +137,17 @@ export function InputMultiSelectField<
               ? (labelByValue.get(selectedValues[0]) ?? selectedValues[0])
               : `${selectedValues.length} cidades selecionadas`;
 
-        const toggleValue = (optionValue: string) => {
-          if (selectedValues.includes(optionValue)) {
-            onChange(
-              selectedValues.filter((item) => item !== optionValue) as PathValue<
-                TFieldValues,
-                FieldPath<TFieldValues>
-              >,
-            );
-            return;
-          }
-          onChange([
-            ...selectedValues,
-            optionValue,
-          ] as PathValue<TFieldValues, FieldPath<TFieldValues>>);
+        const setSelectedValues = (next: string[]) => {
+          onChange(next as PathValue<TFieldValues, FieldPath<TFieldValues>>);
         };
 
         const removeValue = (optionValue: string) => {
-          onChange(
-            selectedValues.filter((item) => item !== optionValue) as PathValue<
-              TFieldValues,
-              FieldPath<TFieldValues>
-            >,
-          );
+          setSelectedValues(selectedValues.filter((item) => item !== optionValue));
         };
+
+        const visibleTags = selectedValues.slice(0, VISIBLE_TAG_COUNT);
+        const hiddenCount = selectedValues.length - visibleTags.length;
+        const overflowLabel = overflowSelectionLabel(hiddenCount);
 
         return (
           <View style={styles.container}>
@@ -195,7 +200,7 @@ export function InputMultiSelectField<
               <>
                 <Separator size="xxs" />
                 <View style={styles.tagsRow}>
-                  {selectedValues.map((selectedValue) => (
+                  {visibleTags.map((selectedValue) => (
                     <Pressable
                       key={selectedValue}
                       accessibilityRole="button"
@@ -209,6 +214,21 @@ export function InputMultiSelectField<
                       <XIcon color={BrandColors.neutral.white} width={14} height={14} />
                     </Pressable>
                   ))}
+                  {overflowLabel ? (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel={overflowLabel}
+                      disabled={disabled}
+                      onPress={() => {
+                        if (disabled) {
+                          return;
+                        }
+                        requestOpen();
+                      }}
+                      style={styles.overflowTag}>
+                      <Body2 color={BrandColors.primary.light}>{overflowLabel}</Body2>
+                    </Pressable>
+                  ) : null}
                 </View>
               </>
             ) : null}
@@ -228,7 +248,7 @@ export function InputMultiSelectField<
             <MultiSelectOptionsModal
               label={label ?? placeholder}
               onClose={close}
-              onToggle={toggleValue}
+              onCommit={setSelectedValues}
               open={open}
               options={options}
               optionsLoading={optionsLoading}
@@ -255,12 +275,19 @@ type MultiSelectOptionsModalProps = {
   searchQuery: string;
   searchPlaceholder: string;
   setSearchQuery: (value: string) => void;
-  onToggle: (value: string) => void;
+  onCommit: (values: string[]) => void;
   onClose: () => void;
 };
 
-function MultiSelectOptionsModal({
-  open,
+function MultiSelectOptionsModal({ open, ...props }: MultiSelectOptionsModalProps) {
+  if (!open) {
+    return null;
+  }
+
+  return <OpenMultiSelectSheet {...props} />;
+}
+
+function OpenMultiSelectSheet({
   label,
   options,
   selectedValues,
@@ -269,36 +296,33 @@ function MultiSelectOptionsModal({
   searchQuery,
   searchPlaceholder,
   setSearchQuery,
-  onToggle,
+  onCommit,
   onClose,
-}: MultiSelectOptionsModalProps) {
-  const filteredOptions = useMemo(() => {
-    const query = normalizeSearchText(searchQuery);
-    if (!query) {
-      return [...options];
-    }
+}: Omit<MultiSelectOptionsModalProps, 'open'>) {
+  const filteredOptions = useDeferredFilteredOptions(options, searchQuery);
+  const selectedSet = useMemo(() => new Set(selectedValues), [selectedValues]);
+  const selectedDraftRef = useRef(new Set(selectedValues));
 
-    return options.filter((option) =>
-      normalizeSearchText(option.label).includes(query),
-    );
-  }, [options, searchQuery]);
-
-  if (!open) {
-    return null;
-  }
+  const finish = () => {
+    const selected = selectedDraftRef.current;
+    onClose();
+    setTimeout(() => {
+      onCommit([...selected]);
+    }, 0);
+  };
 
   return (
     <Modal
       animationType="fade"
       navigationBarTranslucent
-      onRequestClose={onClose}
+      onRequestClose={finish}
       statusBarTranslucent
       transparent
       visible>
       <ModalScrim
         accessibilityLabel="Fechar opções"
         align="bottom"
-        onDismiss={onClose}>
+        onDismiss={finish}>
         <View style={styles.optionsPanel}>
           <GlassBackground blurPx={25} gradient={BrandGradients.gradient} />
 
@@ -311,7 +335,7 @@ function MultiSelectOptionsModal({
                 accessibilityLabel="Fechar"
                 accessibilityRole="button"
                 hitSlop={Spacing.xxs}
-                onPress={onClose}>
+                onPress={finish}>
                 <XIcon color={BrandColors.neutral.white} />
               </Pressable>
             </View>
@@ -343,55 +367,14 @@ function MultiSelectOptionsModal({
               </>
             ) : null}
 
-            <FlatList
-              data={filteredOptions}
-              keyExtractor={(item) => item.value}
-              keyboardDismissMode="on-drag"
-              keyboardShouldPersistTaps="handled"
-              style={styles.list}
-              ListEmptyComponent={
-                <InputCaption color={BrandColors.neutral.light}>
-                  {optionsLoading
-                    ? 'Carregando opções...'
-                    : searchQuery.trim()
-                      ? 'Nenhuma opção encontrada.'
-                      : 'Nenhuma opção disponível.'}
-                </InputCaption>
-              }
-              ItemSeparatorComponent={() => <View style={styles.optionDivider} />}
-              renderItem={({ item }) => {
-                const isSelected = selectedValues.includes(item.value);
-
-                return (
-                  <Pressable
-                    accessibilityRole="checkbox"
-                    accessibilityState={{ checked: isSelected }}
-                    onPress={() => onToggle(item.value)}
-                    style={({ pressed }) => [
-                      styles.optionRow,
-                      pressed && styles.optionRowPressed,
-                    ]}>
-                    {isSelected ? (
-                      <CheckedCheckboxIcon
-                        color={BrandColors.primary.light}
-                        height={24}
-                        width={24}
-                      />
-                    ) : (
-                      <CheckboxEmptyIcon
-                        color={BrandColors.neutral.xlight}
-                        height={24}
-                        width={24}
-                      />
-                    )}
-                    <Body1
-                      color={BrandColors.neutral.white}
-                      style={styles.optionLabel}>
-                      {item.label}
-                    </Body1>
-                  </Pressable>
-                );
-              }}
+            <SelectOptionsList
+              accessibilityRole="checkbox"
+              onPressOption={ignoreOptionPress}
+              options={filteredOptions}
+              optionsLoading={optionsLoading}
+              searchQuery={searchQuery}
+              selectedDraftRef={selectedDraftRef}
+              selectedValues={selectedSet}
             />
           </View>
         </View>
@@ -456,6 +439,7 @@ const styles = StyleSheet.create({
   tagsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    alignItems: 'center',
     gap: Spacing.xxs,
   },
   tag: {
@@ -470,6 +454,9 @@ const styles = StyleSheet.create({
   },
   tagLabel: {
     maxWidth: 180,
+  },
+  overflowTag: {
+    paddingVertical: Spacing.xxxs,
   },
   errorRow: {
     flexDirection: 'row',
@@ -526,24 +513,5 @@ const styles = StyleSheet.create({
     fontFamily: InterFontFamily[500],
     fontSize: FontSize.xSmall,
     backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
-  },
-  list: {
-    flexGrow: 0,
-  },
-  optionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.sm,
-    paddingVertical: Spacing.sm,
-  },
-  optionRowPressed: {
-    opacity: 0.85,
-  },
-  optionLabel: {
-    flex: 1,
-  },
-  optionDivider: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: 'rgba(230, 232, 227, 0.24)',
   },
 });

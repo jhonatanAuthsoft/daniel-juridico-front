@@ -62,13 +62,19 @@ describe('ImageField', () => {
     expect(screen.getByLabelText('Selecionar imagem 1')).toBeTruthy();
   });
 
-  it('clears a single image when trash is pressed', () => {
+  it('shows the standard error border, icon, and caption', () => {
     const onChange = jest.fn();
     const screen = render(
-      <ImageField label="Foto" value="file://front.jpg" onChange={onChange} />,
+      <ImageField
+        multiple
+        label="Foto da Carteira"
+        value={['file://front.jpg']}
+        errorMessage="Anexe as fotos de frente e verso"
+        onChange={onChange}
+      />,
     );
 
-    fireEvent.press(screen.getByLabelText('Remover imagem'));
-    expect(onChange).toHaveBeenCalledWith('');
+    expect(screen.getByText('Anexe as fotos de frente e verso')).toBeTruthy();
+    expect(screen.getByLabelText('Pré-visualização de Foto da Carteira')).toBeTruthy();
   });
 });

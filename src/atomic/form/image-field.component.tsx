@@ -2,6 +2,7 @@ import { SymbolView } from 'expo-symbols';
 import { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, StyleSheet, View } from 'react-native';
 
+import { XIcon } from '@/assets/icon/x';
 import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption, InputLabel } from '@/atomic/typography';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
@@ -55,6 +56,7 @@ export function ImageField(props: ImageFieldProps) {
 
   const uris = normalizeUris(props);
   const isMultiple = Boolean(props.multiple);
+  const hasError = Boolean(errorMessage);
   const canAddMore =
     isMultiple && (maxCount == null || uris.length < maxCount) && !isUploading;
   const aspectRatio = aspect[0] / aspect[1];
@@ -136,7 +138,7 @@ export function ImageField(props: ImageFieldProps) {
           accessibilityRole="button"
           accessibilityLabel={label}
           disabled={isUploading}
-          style={[styles.placeholder, { aspectRatio }]}
+          style={[styles.placeholder, { aspectRatio }, hasError && styles.shellError]}
           onPress={() => {
             void startPick();
           }}>
@@ -156,10 +158,15 @@ export function ImageField(props: ImageFieldProps) {
             </>
           )}
         </Pressable>
-        {errorMessage ? (
+        {hasError ? (
           <>
             <Separator size="xxxs" />
-            <InputCaption color={BrandColors.feedback.error.light}>{errorMessage}</InputCaption>
+            <View style={styles.errorRow}>
+              <XIcon color={BrandColors.feedback.error.medium} />
+              <InputCaption color={BrandColors.feedback.error.light}>
+                {errorMessage}
+              </InputCaption>
+            </View>
           </>
         ) : null}
 
@@ -179,7 +186,7 @@ export function ImageField(props: ImageFieldProps) {
       <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
       <Separator size="xxs" />
 
-      <View style={styles.filledShell}>
+      <View style={[styles.filledShell, hasError && styles.shellError]}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`Pré-visualização de ${label}`}
@@ -208,7 +215,7 @@ export function ImageField(props: ImageFieldProps) {
             const isSelected = index === safePreviewIndex;
             return (
               <Pressable
-                key={`${uri}-${index}`}
+                key={uri}
                 accessibilityRole="button"
                 accessibilityLabel={
                   isMultiple
@@ -259,10 +266,15 @@ export function ImageField(props: ImageFieldProps) {
         </View>
       </View>
 
-      {errorMessage ? (
+      {hasError ? (
         <>
           <Separator size="xxxs" />
-          <InputCaption color={BrandColors.feedback.error.light}>{errorMessage}</InputCaption>
+          <View style={styles.errorRow}>
+            <XIcon color={BrandColors.feedback.error.medium} />
+            <InputCaption color={BrandColors.feedback.error.light}>
+              {errorMessage}
+            </InputCaption>
+          </View>
         </>
       ) : null}
 
@@ -290,6 +302,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.sm,
+  },
+  shellError: {
+    borderWidth: 1.8,
+    borderColor: BrandColors.feedback.error.medium,
   },
   filledShell: {
     width: '100%',
@@ -356,5 +372,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: BrandColors.neutral.xdark,
+  },
+  errorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxxs,
   },
 });

@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  FlatList,
   Modal,
   Platform,
   Pressable,
@@ -16,8 +15,6 @@ import {
 } from 'react-hook-form';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
-import { CheckboxEmptyIcon } from '@/assets/icon/checkbox-empty';
-import { CheckedCheckboxIcon } from '@/assets/icon/checked-checkbox';
 import { HelpIcon } from '@/assets/icon/help';
 import { SearchIcon } from '@/assets/icon/search';
 import { XIcon } from '@/assets/icon/x';
@@ -38,7 +35,11 @@ import {
   Radius,
   Spacing,
 } from '@/constants/theme';
-import { normalizeSearchText } from '@/utils/br-input';
+
+import {
+  SelectOptionsList,
+  useDeferredFilteredOptions,
+} from './select-options-list.component';
 
 /** Figma Values-Medium — not in Radius tokens yet. */
 const OPTIONS_RADIUS = 16;
@@ -239,16 +240,17 @@ function SelectOptionsModal({
   onSelect,
   onClose,
 }: SelectOptionsModalProps) {
-  const filteredOptions = useMemo(() => {
-    const query = normalizeSearchText(searchQuery);
-    if (!query) {
-      return [...options];
-    }
-
-    return options.filter((option) =>
-      normalizeSearchText(option.label).includes(query),
-    );
-  }, [options, searchQuery]);
+  const filteredOptions = useDeferredFilteredOptions(options, searchQuery);
+  const selectedValues = useMemo(
+    () => new Set(selectedValue ? [selectedValue] : []),
+    [selectedValue],
+  );
+  const onPressOption = useCallback(
+    (value: string) => {
+      onSelect(value);
+    },
+    [onSelect],
+  );
 
   if (!open) {
     return null;
@@ -310,55 +312,13 @@ function SelectOptionsModal({
               </>
             ) : null}
 
-            <FlatList
-              data={filteredOptions}
-              keyExtractor={(item) => item.value}
-              keyboardDismissMode="on-drag"
-              keyboardShouldPersistTaps="handled"
-              style={styles.list}
-              ListEmptyComponent={
-                <InputCaption color={BrandColors.neutral.light}>
-                  {optionsLoading
-                    ? 'Carregando opções...'
-                    : searchQuery.trim()
-                      ? 'Nenhuma opção encontrada.'
-                      : 'Nenhuma opção disponível.'}
-                </InputCaption>
-              }
-              ItemSeparatorComponent={() => <View style={styles.optionDivider} />}
-              renderItem={({ item }) => {
-                const isSelected = item.value === selectedValue;
-
-                return (
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: isSelected }}
-                    onPress={() => onSelect(item.value)}
-                    style={({ pressed }) => [
-                      styles.optionRow,
-                      pressed && styles.optionRowPressed,
-                    ]}>
-                    {isSelected ? (
-                      <CheckedCheckboxIcon
-                        color={BrandColors.primary.light}
-                        height={24}
-                        width={24}
-                      />
-                    ) : (
-                      <CheckboxEmptyIcon
-                        color={BrandColors.neutral.xlight}
-                        height={24}
-                        width={24}
-                      />
-                    )}
-                    <Body1
-                      color={BrandColors.neutral.white}
-                      style={styles.optionLabel}>
-                      {item.label}
-                    </Body1>
-                  </Pressable>
-                );
-              }}
+            <SelectOptionsList
+              accessibilityRole="button"
+              onPressOption={onPressOption}
+              options={filteredOptions}
+              optionsLoading={optionsLoading}
+              searchQuery={searchQuery}
+              selectedValues={selectedValues}
             />
           </View>
         </View>
@@ -483,24 +443,5 @@ const styles = StyleSheet.create({
     fontFamily: InterFontFamily[500],
     fontSize: FontSize.xSmall,
     backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
-  },
-  list: {
-    flexGrow: 0,
-  },
-  optionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.sm,
-    paddingVertical: Spacing.sm,
-  },
-  optionRowPressed: {
-    opacity: 0.85,
-  },
-  optionLabel: {
-    flex: 1,
-  },
-  optionDivider: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: 'rgba(230, 232, 227, 0.24)',
   },
 });
