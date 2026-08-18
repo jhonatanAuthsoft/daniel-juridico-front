@@ -37,6 +37,19 @@
         "buildType": "apk"
       }
     },
+    "homolog": {
+      "distribution": "internal",
+      "channel": "homolog",
+      "environment": "preview",
+      "env": {
+        "APP_ENV": "homolog",
+        "EXPO_PUBLIC_APP_ENV": "homolog",
+        "EXPO_PUBLIC_API_BASE_URL": "https://api-stg-laweact.authsoftsolutions.org"
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "production": {
       "channel": "production",
       "autoIncrement": true,

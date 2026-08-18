@@ -1,6 +1,6 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
-type AppEnv = 'development' | 'staging' | 'production';
+type AppEnv = 'development' | 'staging' | 'homolog' | 'production';
 
 const APP_ENV = (process.env.APP_ENV ??
   process.env.EXPO_PUBLIC_APP_ENV ??
@@ -18,6 +18,12 @@ const ENV = {
     scheme: 'laweact-staging',
     bundleIdentifier: 'com.laweact.app.staging',
     androidPackage: 'com.laweact.app.staging',
+  },
+  homolog: {
+    name: 'Laweact Homolog',
+    scheme: 'laweact-homolog',
+    bundleIdentifier: 'com.laweact.app.homolog',
+    androidPackage: 'com.laweact.app.homolog',
   },
   production: {
     name: 'Laweact',
