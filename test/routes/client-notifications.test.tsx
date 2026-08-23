@@ -1,17 +1,18 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import type { ReactNode } from 'react';
 
 import ClientNotificacoesScreen from '@/app/client/(tabs)/notificacoes';
 
-const mockReplace = jest.fn();
+const mockPush = jest.fn();
 const mockBack = jest.fn();
 const mockListNotifications = jest.fn();
 const mockMarkRead = jest.fn();
 const mockMarkAllRead = jest.fn();
+const mockResolveHref = jest.fn();
 
 jest.mock('expo-router', () => ({
-  useRouter: () => ({ replace: mockReplace, back: mockBack }),
+  useRouter: () => ({ push: mockPush, back: mockBack }),
 }));
 
 jest.mock('react-native-safe-area-context', () => {
@@ -26,6 +27,7 @@ jest.mock('@/domain/auth', () => ({
   useAuth: () => ({
     signOut: jest.fn(),
     isAuthenticated: true,
+    user: { id: 'u-1', role: 'CLIENT', name: 'Maria', email: 'a@b.com', termsAccepted: true },
   }),
 }));
 
@@ -50,6 +52,8 @@ jest.mock('@/domain/notification', () => ({
     mutate: mockMarkAllRead,
     isPending: false,
   }),
+  resolveNotificationHrefUseCase: (...args: unknown[]) =>
+    mockResolveHref(...args),
 }));
 
 function wrap(ui: ReactNode) {
@@ -63,16 +67,18 @@ function wrap(ui: ReactNode) {
 
 describe('ClientNotificacoesScreen', () => {
   beforeEach(() => {
-    mockReplace.mockClear();
+    mockPush.mockClear();
     mockBack.mockClear();
     mockMarkRead.mockClear();
     mockMarkAllRead.mockClear();
+    mockResolveHref.mockReset();
+    mockResolveHref.mockResolvedValue('/client/solicitacao/sol-9');
     mockListNotifications.mockReturnValue([
       {
         id: 'notif-1',
-        title: 'Nova solicitação de conexão',
-        body: 'Maria solicitou conexão',
-        type: 'CONEXAO_SOLICITADA',
+        title: 'Conexão aceita',
+        body: 'Dra. Mariana aceitou sua solicitação',
+        type: 'CONEXAO_ACEITA',
         referenceType: 'CONEXAO',
         referenceId: 'cx-1',
         senderId: 'u-1',
@@ -90,7 +96,18 @@ describe('ClientNotificacoesScreen', () => {
     await waitFor(() => {
       expect(screen.getByText('Caixa de entrada')).toBeTruthy();
     });
-    expect(screen.getByText('Nova solicitação de conexão')).toBeTruthy();
+    expect(screen.getByText('Conexão aceita')).toBeTruthy();
     expect(screen.queryByLabelText('Aplicativo em desenvolvimento')).toBeNull();
+  });
+
+  it('marks as read and navigates to the solicitation on press', async () => {
+    const screen = wrap(<ClientNotificacoesScreen />);
+
+    fireEvent.press(screen.getByLabelText('Conexão aceita'));
+
+    await waitFor(() => {
+      expect(mockMarkRead).toHaveBeenCalledWith('notif-1');
+      expect(mockPush).toHaveBeenCalledWith('/client/solicitacao/sol-9');
+    });
   });
 });

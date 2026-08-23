@@ -1,17 +1,18 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import type { ReactNode } from 'react';
 
 import LawyerNotificacoesScreen from '@/app/lawyer/(tabs)/notificacoes';
 
-const mockReplace = jest.fn();
+const mockPush = jest.fn();
 const mockBack = jest.fn();
 const mockListNotifications = jest.fn();
 const mockMarkRead = jest.fn();
 const mockMarkAllRead = jest.fn();
+const mockResolveHref = jest.fn();
 
 jest.mock('expo-router', () => ({
-  useRouter: () => ({ replace: mockReplace, back: mockBack }),
+  useRouter: () => ({ push: mockPush, back: mockBack }),
 }));
 
 jest.mock('react-native-safe-area-context', () => {
@@ -26,6 +27,13 @@ jest.mock('@/domain/auth', () => ({
   useAuth: () => ({
     signOut: jest.fn(),
     isAuthenticated: true,
+    user: {
+      id: 'u-adv',
+      role: 'LAWYER',
+      name: 'Luiza',
+      email: 'adv@b.com',
+      termsAccepted: true,
+    },
   }),
 }));
 
@@ -50,6 +58,8 @@ jest.mock('@/domain/notification', () => ({
     mutate: mockMarkAllRead,
     isPending: false,
   }),
+  resolveNotificationHrefUseCase: (...args: unknown[]) =>
+    mockResolveHref(...args),
 }));
 
 function wrap(ui: ReactNode) {
@@ -63,16 +73,18 @@ function wrap(ui: ReactNode) {
 
 describe('LawyerNotificacoesScreen', () => {
   beforeEach(() => {
-    mockReplace.mockClear();
+    mockPush.mockClear();
     mockBack.mockClear();
     mockMarkRead.mockClear();
     mockMarkAllRead.mockClear();
+    mockResolveHref.mockReset();
+    mockResolveHref.mockResolvedValue('/lawyer/solicitacao/cx-1');
     mockListNotifications.mockReturnValue([
       {
         id: 'notif-1',
-        title: 'Conexão aceita',
-        body: 'Dr. Silva aceitou sua solicitação',
-        type: 'CONEXAO_ACEITA',
+        title: 'Nova solicitação de conexão',
+        body: 'Maria solicitou conexão',
+        type: 'CONEXAO_SOLICITADA',
         referenceType: 'CONEXAO',
         referenceId: 'cx-1',
         senderId: 'u-1',
@@ -90,7 +102,18 @@ describe('LawyerNotificacoesScreen', () => {
     await waitFor(() => {
       expect(screen.getByText('Caixa de entrada')).toBeTruthy();
     });
-    expect(screen.getByText('Conexão aceita')).toBeTruthy();
+    expect(screen.getByText('Nova solicitação de conexão')).toBeTruthy();
     expect(screen.queryByLabelText('Aplicativo em desenvolvimento')).toBeNull();
+  });
+
+  it('marks as read and navigates to the solicitation on press', async () => {
+    const screen = wrap(<LawyerNotificacoesScreen />);
+
+    fireEvent.press(screen.getByLabelText('Nova solicitação de conexão'));
+
+    await waitFor(() => {
+      expect(mockMarkRead).toHaveBeenCalledWith('notif-1');
+      expect(mockPush).toHaveBeenCalledWith('/lawyer/solicitacao/cx-1');
+    });
   });
 });

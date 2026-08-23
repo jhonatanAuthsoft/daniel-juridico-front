@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
+  Alert,
   FlatList,
   Pressable,
   RefreshControl,
@@ -17,7 +18,9 @@ import { useSplashGate } from '@/components/splash-guard';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import type { NotificationResult } from '@/data/notification';
+import { useAuth } from '@/domain/auth';
 import {
+  resolveNotificationHrefUseCase,
   useMarkAllNotificationsRead,
   useMarkNotificationRead,
   useNotifications,
@@ -33,7 +36,9 @@ export function NotificationsInbox() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const splashGate = useSplashGate();
+  const { user } = useAuth();
   const [isPullRefreshing, setIsPullRefreshing] = useState(false);
+  const [openingId, setOpeningId] = useState<string | null>(null);
 
   const {
     data: notifications = [],
@@ -68,9 +73,39 @@ export function NotificationsInbox() {
     }
   };
 
-  const handlePress = (notification: NotificationResult) => {
-    if (notification.isUnread) {
-      markRead.mutate(notification.id);
+  const handlePress = async (notification: NotificationResult) => {
+    if (openingId) {
+      return;
+    }
+
+    const role = user?.role;
+    if (!role) {
+      return;
+    }
+
+    setOpeningId(notification.id);
+    try {
+      if (notification.isUnread) {
+        markRead.mutate(notification.id);
+      }
+
+      const href = await resolveNotificationHrefUseCase(role, notification);
+      if (!href) {
+        Alert.alert(
+          'Não foi possível abrir',
+          'A solicitação vinculada a esta notificação não está disponível.',
+        );
+        return;
+      }
+
+      router.push(href);
+    } catch (err) {
+      Alert.alert(
+        'Não foi possível abrir',
+        getErrorMessage(err, 'Tente novamente em instantes.'),
+      );
+    } finally {
+      setOpeningId(null);
     }
   };
 
@@ -173,7 +208,16 @@ export function NotificationsInbox() {
             />
           }
           renderItem={({ item }) => (
-            <NotificationCard notification={item} onPress={handlePress} />
+            <NotificationCard
+              notification={item}
+              onPress={
+                openingId
+                  ? undefined
+                  : (notification) => {
+                      void handlePress(notification);
+                    }
+              }
+            />
           )}
           showsVerticalScrollIndicator={false}
         />

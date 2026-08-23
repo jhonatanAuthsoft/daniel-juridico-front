@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GlassBackground } from '@/atomic/glass';
 import { InputCaption } from '@/atomic/typography';
 import { BrandColors, BrandGradients, Radius, Spacing } from '@/constants/theme';
+import { useUnreadNotificationsExist } from '@/domain/notification';
 
 import type { TabVisual } from './tab-visuals';
 import { CLIENT_TAB_VISUALS } from './tab-visuals';
@@ -44,6 +45,8 @@ type TabBarProps = {
   visuals?: Record<string, TabVisual>;
 };
 
+const NOTIFICATIONS_TAB = 'notificacoes';
+
 export function AppTabBar({
   state,
   descriptors,
@@ -51,6 +54,9 @@ export function AppTabBar({
   visuals = CLIENT_TAB_VISUALS,
 }: TabBarProps) {
   const insets = useSafeAreaInsets();
+  const { data: unread } = useUnreadNotificationsExist();
+  const hasUnread = Boolean(unread?.exists);
+
   const items = state.routes.flatMap((route, index) => {
     const visual = visuals[route.name];
     if (!visual) {
@@ -60,6 +66,10 @@ export function AppTabBar({
     const focused = state.index === index;
     const color = focused ? BrandColors.primary.light : BrandColors.neutral.white;
     const { options } = descriptors[route.key];
+    const showUnreadDot = route.name === NOTIFICATIONS_TAB && hasUnread;
+    const accessibilityLabel =
+      options.tabBarAccessibilityLabel ??
+      (showUnreadDot ? `${visual.label}, não lidas` : visual.label);
 
     const onPress = () => {
       const event = navigation.emit({
@@ -77,11 +87,23 @@ export function AppTabBar({
       <Pressable
         key={route.key}
         accessibilityRole="button"
-        accessibilityState={focused ? { selected: true } : {}}
-        accessibilityLabel={options.tabBarAccessibilityLabel ?? visual.label}
+        accessibilityState={{ selected: focused }}
+        accessibilityLabel={accessibilityLabel}
         onPress={onPress}
         style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}>
-        <View style={styles.iconSlot}>{visual.renderIcon(color)}</View>
+        <View style={styles.iconSlot}>
+          {visual.renderIcon(color)}
+          {showUnreadDot ? (
+            <View
+              importantForAccessibility="no"
+              style={[
+                styles.unreadDot,
+                focused ? styles.unreadDotSelected : styles.unreadDotIdle,
+              ]}
+              testID="tab-notifications-unread-dot"
+            />
+          ) : null}
+        </View>
         <InputCaption color={color}>{visual.label}</InputCaption>
       </Pressable>,
     ];
@@ -117,6 +139,8 @@ const glassShadow = Platform.select({
   },
 });
 
+const DOT_SIZE = 8;
+
 const styles = StyleSheet.create({
   bar: {
     position: 'absolute',
@@ -150,9 +174,26 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   iconSlot: {
+    width: 24,
     height: 24,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  unreadDot: {
+    position: 'absolute',
+    top: -1,
+    right: -1,
+    width: DOT_SIZE,
+    height: DOT_SIZE,
+    borderRadius: DOT_SIZE / 2,
+    borderWidth: 1.5,
+    borderColor: BrandColors.neutral.xdark,
+  },
+  unreadDotSelected: {
+    backgroundColor: BrandColors.neutral.white,
+  },
+  unreadDotIdle: {
+    backgroundColor: BrandColors.accessory.red,
   },
 });
 
