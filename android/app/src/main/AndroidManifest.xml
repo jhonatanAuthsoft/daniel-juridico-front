@@ -27,7 +27,7 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="laweact-dev"/>
-        <data android:scheme="exp+laweact-demo"/>
+        <data android:scheme="exp+laweact"/>
       </intent-filter>
     </activity>
   </application>
