@@ -3,6 +3,10 @@ import type {
   AcceptTermsResult,
   AcceptTermsWireRequest,
   AcceptTermsWireResponse,
+  UpdatePreferencesParams,
+  UpdatePreferencesResult,
+  UpdatePreferencesWireRequest,
+  UpdatePreferencesWireResponse,
 } from './user.types';
 import { TERMS_VERSION } from './user.types';
 
@@ -27,5 +31,21 @@ export function mapAcceptTermsWireToResult(
     checkboxConfirmed: response.checkboxConfirmado,
     acceptedAt: response.aceitoEm,
     termsAccepted: response.termosAceitos,
+  };
+}
+
+export function mapUpdatePreferencesParamsToWire(
+  params: UpdatePreferencesParams,
+): UpdatePreferencesWireRequest {
+  return {
+    notificacoesPushHabilitadas: params.pushNotificationsEnabled,
+  };
+}
+
+export function mapUpdatePreferencesWireToResult(
+  response: UpdatePreferencesWireResponse,
+): UpdatePreferencesResult {
+  return {
+    pushNotificationsEnabled: Boolean(response.notificacoesPushHabilitadas),
   };
 }

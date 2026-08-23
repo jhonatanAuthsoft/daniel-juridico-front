@@ -1,7 +1,7 @@
 import { mapMeWireToResult } from './me.mapper';
 
 describe('mapMeWireToResult', () => {
-  it('reads client photo key', () => {
+  it('reads client photo key and push preference', () => {
     expect(
       mapMeWireToResult({
         usuario: {
@@ -9,12 +9,16 @@ describe('mapMeWireToResult', () => {
           email: 'a@b.com',
           nomeCompleto: 'A',
           perfil: 'CLIENTE',
+          notificacoesPushHabilitadas: true,
         },
         cliente: {
           perfil: { fotoUrl: 'tmp/clientes/perfil/abc.jpg' },
         },
       }),
-    ).toEqual({ photoKey: 'tmp/clientes/perfil/abc.jpg' });
+    ).toEqual({
+      photoKey: 'tmp/clientes/perfil/abc.jpg',
+      pushNotificationsEnabled: true,
+    });
   });
 
   it('reads lawyer photo key when client is absent', () => {
@@ -25,15 +29,19 @@ describe('mapMeWireToResult', () => {
           email: 'adv@b.com',
           nomeCompleto: 'B',
           perfil: 'ADVOGADO',
+          notificacoesPushHabilitadas: false,
         },
         advogado: {
           perfil: { fotoUrl: 'tmp/advogados/perfil/xyz.png' },
         },
       }),
-    ).toEqual({ photoKey: 'tmp/advogados/perfil/xyz.png' });
+    ).toEqual({
+      photoKey: 'tmp/advogados/perfil/xyz.png',
+      pushNotificationsEnabled: false,
+    });
   });
 
-  it('returns null when fotoUrl is missing or blank', () => {
+  it('returns null photo and defaults push on when fotoUrl is blank', () => {
     expect(
       mapMeWireToResult({
         usuario: {
@@ -44,6 +52,6 @@ describe('mapMeWireToResult', () => {
         },
         cliente: { perfil: { fotoUrl: '  ' } },
       }),
-    ).toEqual({ photoKey: null });
+    ).toEqual({ photoKey: null, pushNotificationsEnabled: true });
   });
 });

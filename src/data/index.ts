@@ -8,3 +8,4 @@ export * from './lawyer';
 export * from './password-recovery';
 export * from './catalog';
 export * from './solicitation';
+export * from './notification';

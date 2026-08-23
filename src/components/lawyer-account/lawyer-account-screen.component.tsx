@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Body1, Body2, Display, Link } from '@/atomic/typography';
 import { ProfileAvatar } from '@/components/profile-avatar';
-import { useAuth } from '@/domain/auth';
+import { useAuth, useMe, useUpdatePreferences } from '@/domain/auth';
 import {
   BrandColors,
   MaxContentWidth,
@@ -35,6 +35,7 @@ type SettingToggleProps = {
   label: string;
   description: string;
   value: boolean;
+  disabled?: boolean;
   onValueChange: (value: boolean) => void;
 };
 
@@ -42,6 +43,7 @@ function SettingToggle({
   label,
   description,
   value,
+  disabled,
   onValueChange,
 }: SettingToggleProps) {
   return (
@@ -53,6 +55,7 @@ function SettingToggle({
       <Switch
         accessibilityLabel={label}
         accessibilityRole="switch"
+        disabled={disabled}
         trackColor={{
           false: BrandColors.neutral.dark,
           true: BrandColors.primary.light,
@@ -70,7 +73,9 @@ export function LawyerAccountScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { user, signOut } = useAuth();
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const { data: me } = useMe();
+  const updatePreferences = useUpdatePreferences();
+  const notificationsEnabled = me?.pushNotificationsEnabled ?? true;
   const [profileUnavailable, setProfileUnavailable] = useState(true);
   const contentPaddingBottom =
     TAB_BAR_CONTENT_HEIGHT + insets.bottom + LIST_GAP_ABOVE_TAB;
@@ -78,6 +83,10 @@ export function LawyerAccountScreen() {
   const handleSignOut = () => {
     void signOut();
     router.replace('/login');
+  };
+
+  const handleNotificationsChange = (value: boolean) => {
+    updatePreferences.mutate({ pushNotificationsEnabled: value });
   };
 
   return (
@@ -146,8 +155,9 @@ export function LawyerAccountScreen() {
         <View style={styles.settings}>
           <SettingToggle
             description="Permite que o aplicativo envie notificações para você"
+            disabled={updatePreferences.isPending}
             label="Notificações"
-            onValueChange={setNotificationsEnabled}
+            onValueChange={handleNotificationsChange}
             value={notificationsEnabled}
           />
           <SettingToggle

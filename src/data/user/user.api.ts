@@ -8,11 +8,16 @@ import {
 import {
   mapAcceptTermsParamsToWire,
   mapAcceptTermsWireToResult,
+  mapUpdatePreferencesParamsToWire,
+  mapUpdatePreferencesWireToResult,
 } from './user.mapper';
 import type {
   AcceptTermsParams,
   AcceptTermsResult,
   AcceptTermsWireResponse,
+  UpdatePreferencesParams,
+  UpdatePreferencesResult,
+  UpdatePreferencesWireResponse,
 } from './user.types';
 
 /**
@@ -35,4 +40,27 @@ export async function acceptTerms(
 
   const data = assertApiSuccess(response, 'Falha ao aceitar os termos.');
   return mapAcceptTermsWireToResult(data);
+}
+
+/**
+ * Updates push notification preference for the authenticated user.
+ * `PATCH /usuarios/me/preferencias`
+ */
+export async function updatePreferences(
+  params: UpdatePreferencesParams,
+  signal?: AbortSignal,
+): Promise<UpdatePreferencesResult> {
+  const response = await authenticatedHttpRequest<
+    ApiResponse<UpdatePreferencesWireResponse>
+  >(apiUrl('/usuarios/me/preferencias'), {
+    method: 'PATCH',
+    body: mapUpdatePreferencesParamsToWire(params),
+    signal,
+  });
+
+  const data = assertApiSuccess(
+    response,
+    'Não foi possível atualizar as preferências.',
+  );
+  return mapUpdatePreferencesWireToResult(data);
 }
