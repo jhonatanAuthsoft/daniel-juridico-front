@@ -78,9 +78,9 @@ export function maskAlphanumericOnly(value: string, maxLength?: number): string 
   return maxLength !== undefined ? cleaned.slice(0, maxLength) : cleaned;
 }
 
-/** Progressive RG mask (padrão comum): 00.000.000-0 — até 9 dígitos, 1 verificador. */
+/** Progressive RG mask: 00.000.000-00 — até 10 dígitos. */
 export function maskRg(value: string): string {
-  const digits = onlyDigits(value).slice(0, 9);
+  const digits = onlyDigits(value).slice(0, 10);
   if (digits.length <= 2) {
     return digits;
   }
@@ -93,9 +93,9 @@ export function maskRg(value: string): string {
   return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}-${digits.slice(8)}`;
 }
 
-/** RG completo: exatamente 9 dígitos (8 + 1 verificador). */
+/** RG completo: exatamente 10 dígitos. */
 export function isValidRg(value: string): boolean {
-  return onlyDigits(value).length === 9;
+  return onlyDigits(value).length === 10;
 }
 
 /** Simple BRL-ish amount: digits + optional decimal comma (2 places). */

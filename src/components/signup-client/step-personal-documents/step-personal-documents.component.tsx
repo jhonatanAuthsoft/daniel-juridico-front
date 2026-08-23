@@ -102,11 +102,11 @@ export function StepPersonalDocuments() {
           <InputTextField
             name="rg"
             label="RG"
-            placeholder="00.000.000-0"
+            placeholder="00.000.000-00"
             keyboardType="number-pad"
             format={InputMasks.rg}
             validate={FieldValidators.rg}
-            maxLength={12}
+            maxLength={13}
           />
           <View>
             <InputLabel color={BrandColors.neutral.white}>

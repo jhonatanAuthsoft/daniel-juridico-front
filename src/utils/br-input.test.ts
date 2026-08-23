@@ -21,14 +21,17 @@ describe('br-input', () => {
     expect(maskPhone('1133334444')).toBe('(11) 3333-4444');
   });
 
-  it('masks RG with a single check digit', () => {
+  it('masks RG with up to 10 digits', () => {
+    expect(maskRg('1234567890')).toBe('12.345.678-90');
     expect(maskRg('123456789')).toBe('12.345.678-9');
     expect(maskRg('12345678')).toBe('12.345.678');
     expect(maskRg('12345')).toBe('12.345');
+    expect(maskRg('12345678901')).toBe('12.345.678-90');
   });
 
-  it('validates RG requires exactly 9 digits', () => {
-    expect(isValidRg('12.345.678-9')).toBe(true);
+  it('validates RG requires exactly 10 digits', () => {
+    expect(isValidRg('12.345.678-90')).toBe(true);
+    expect(isValidRg('12.345.678-9')).toBe(false);
     expect(isValidRg('12.345.678')).toBe(false);
     expect(isValidRg('1234')).toBe(false);
   });
