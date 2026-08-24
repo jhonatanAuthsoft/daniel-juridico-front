@@ -1,10 +1,5 @@
-import { ClientNotificationsInbox } from '@/components/client-notifications';
-import { DevelopmentGuard } from '@/components/development-guard';
+import { NotificationsInbox } from '@/components/notifications-inbox';
 
 export default function ClientNotificacoesScreen() {
-  return (
-    <DevelopmentGuard>
-      <ClientNotificationsInbox />
-    </DevelopmentGuard>
-  );
+  return <NotificationsInbox />;
 }

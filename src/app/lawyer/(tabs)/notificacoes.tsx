@@ -1,10 +1,5 @@
-import { LawyerNotificationsInbox } from '@/components/lawyer-notifications';
-import { DevelopmentGuard } from '@/components/development-guard';
+import { NotificationsInbox } from '@/components/notifications-inbox';
 
 export default function LawyerNotificacoesScreen() {
-  return (
-    <DevelopmentGuard>
-      <LawyerNotificationsInbox />
-    </DevelopmentGuard>
-  );
+  return <NotificationsInbox />;
 }

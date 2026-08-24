@@ -2,31 +2,42 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
 
 type AppEnv = 'development' | 'staging' | 'homolog' | 'production';
 
+/** Expo avalia app.config com cwd = raiz do app; evita __dirname (sem @types/node). */
+const googleServicesFile = (() => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { existsSync } = require('node:fs') as {
+    existsSync: (path: string) => boolean;
+  };
+  return existsSync(`${process.cwd()}/google-services.json`)
+    ? './google-services.json'
+    : undefined;
+})();
+
 const APP_ENV = (process.env.APP_ENV ??
   process.env.EXPO_PUBLIC_APP_ENV ??
   'development') as AppEnv;
 
 const ENV = {
   development: {
-    name: 'Laweact Dev',
+    name: 'laweact-dev',
     scheme: 'laweact-dev',
     bundleIdentifier: 'com.laweact.app.dev',
     androidPackage: 'com.laweact.app.dev',
   },
   staging: {
-    name: 'Laweact Staging',
+    name: 'laweact-stg',
     scheme: 'laweact-staging',
     bundleIdentifier: 'com.laweact.app.staging',
     androidPackage: 'com.laweact.app.staging',
   },
   homolog: {
-    name: 'Laweact Homolog',
+    name: 'laweact-hml',
     scheme: 'laweact-homolog',
     bundleIdentifier: 'com.laweact.app.homolog',
     androidPackage: 'com.laweact.app.homolog',
   },
   production: {
-    name: 'Laweact',
+    name: 'laweact',
     scheme: 'laweact',
     bundleIdentifier: 'com.laweact.app',
     androidPackage: 'com.laweact.app',
@@ -46,8 +57,8 @@ const current = ENV[APP_ENV];
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: current.name,
-  // Must match the EAS project linked by extra.eas.projectId (cannot be renamed there).
-  slug: 'laweact-demo',
+  slug: 'laweact',
+  owner: 'laweact',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/images/android-app-icon.png',
@@ -66,6 +77,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     predictiveBackGestureEnabled: false,
     package: current.androidPackage,
+    ...(googleServicesFile ? { googleServicesFile } : {}),
     permissions: ['android.permission.RECORD_AUDIO'],
   },
   web: {
@@ -107,7 +119,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     router: {},
     appEnv: APP_ENV,
     eas: {
-      projectId: '0f752743-4881-4980-b51b-797522cb6793',
+      projectId: '51eb8600-97f3-40bc-93cf-e493dd496d90',
     },
   },
 });

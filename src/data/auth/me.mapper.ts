@@ -16,5 +16,9 @@ export function mapMeWireToResult(wire: MeWireResponse): MeResult {
     normalizePhotoKey(wire.cliente?.perfil?.fotoUrl) ??
     normalizePhotoKey(wire.advogado?.perfil?.fotoUrl);
 
-  return { photoKey };
+  return {
+    photoKey,
+    pushNotificationsEnabled:
+      wire.usuario?.notificacoesPushHabilitadas !== false,
+  };
 }

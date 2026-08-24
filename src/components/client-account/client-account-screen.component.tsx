@@ -1,6 +1,5 @@
 import { SymbolView } from 'expo-symbols';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
 import {
   Pressable,
   ScrollView,
@@ -13,7 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Body1, Body2, Display, Link } from '@/atomic/typography';
 import { ProfileAvatar } from '@/components/profile-avatar';
-import { useAuth } from '@/domain/auth';
+import { useAuth, useMe, useUpdatePreferences } from '@/domain/auth';
 import {
   BrandColors,
   MaxContentWidth,
@@ -34,13 +33,19 @@ export function ClientAccountScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { user, signOut } = useAuth();
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const { data: me } = useMe();
+  const updatePreferences = useUpdatePreferences();
+  const notificationsEnabled = me?.pushNotificationsEnabled ?? true;
   const contentPaddingBottom =
     TAB_BAR_CONTENT_HEIGHT + insets.bottom + LIST_GAP_ABOVE_TAB;
 
   const handleSignOut = () => {
     void signOut();
     router.replace('/login');
+  };
+
+  const handleNotificationsChange = (value: boolean) => {
+    updatePreferences.mutate({ pushNotificationsEnabled: value });
   };
 
   return (
@@ -116,13 +121,14 @@ export function ClientAccountScreen() {
           <Switch
             accessibilityLabel="Notificações"
             accessibilityRole="switch"
+            disabled={updatePreferences.isPending}
             trackColor={{
               false: BrandColors.neutral.dark,
               true: BrandColors.primary.light,
             }}
             thumbColor={BrandColors.neutral.white}
             ios_backgroundColor={BrandColors.neutral.dark}
-            onValueChange={setNotificationsEnabled}
+            onValueChange={handleNotificationsChange}
             value={notificationsEnabled}
           />
         </View>

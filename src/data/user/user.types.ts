@@ -43,3 +43,23 @@ export type AcceptTermsResult = {
   acceptedAt: string;
   termsAccepted: boolean;
 };
+
+/** App-facing params for `PATCH /usuarios/me/preferencias`. */
+export type UpdatePreferencesParams = {
+  pushNotificationsEnabled: boolean;
+};
+
+/** Wire body for `PATCH /usuarios/me/preferencias`. */
+export type UpdatePreferencesWireRequest = {
+  notificacoesPushHabilitadas: boolean;
+};
+
+/** Wire response for `PATCH /usuarios/me/preferencias`. */
+export type UpdatePreferencesWireResponse = {
+  notificacoesPushHabilitadas: boolean;
+};
+
+/** Domain-friendly view of preferences. */
+export type UpdatePreferencesResult = {
+  pushNotificationsEnabled: boolean;
+};

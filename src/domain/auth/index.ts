@@ -7,6 +7,8 @@ export { createEmailAvailableValidator } from './create-email-available-validato
 export { authKeys } from './auth.keys';
 export { getMeUseCase } from './get-me.use-case';
 export { useMe } from './use-me';
+export { useUpdatePreferences } from './use-update-preferences';
+export { updatePreferencesUseCase } from './update-preferences.use-case';
 export { useAcceptTerms } from './use-accept-terms';
 export { acceptTermsUseCase } from './accept-terms.use-case';
 export { useLogin } from './use-login';
