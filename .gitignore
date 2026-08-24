@@ -3,6 +3,11 @@ node_modules/
 .env
 .env.local
 
+# FCM V1 service account (privado — upload só no EAS, nunca commit)
+*-firebase-adminsdk-*.json
+firebase-service-account.json
+credentials/fcm-*.json
+
 # Yarn (project uses npm)
 .yarn/
 .pnp.*

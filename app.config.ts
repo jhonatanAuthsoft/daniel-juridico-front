@@ -2,6 +2,17 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
 
 type AppEnv = 'development' | 'staging' | 'homolog' | 'production';
 
+/** Expo avalia app.config com cwd = raiz do app; evita __dirname (sem @types/node). */
+const googleServicesFile = (() => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { existsSync } = require('node:fs') as {
+    existsSync: (path: string) => boolean;
+  };
+  return existsSync(`${process.cwd()}/google-services.json`)
+    ? './google-services.json'
+    : undefined;
+})();
+
 const APP_ENV = (process.env.APP_ENV ??
   process.env.EXPO_PUBLIC_APP_ENV ??
   'development') as AppEnv;
@@ -66,6 +77,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     predictiveBackGestureEnabled: false,
     package: current.androidPackage,
+    ...(googleServicesFile ? { googleServicesFile } : {}),
     permissions: ['android.permission.RECORD_AUDIO'],
   },
   web: {
