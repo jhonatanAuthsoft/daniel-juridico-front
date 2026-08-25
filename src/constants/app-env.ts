@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 
-export type AppEnv = 'development' | 'staging' | 'homolog' | 'production';
+export type AppEnv = 'development' | 'staging' | 'production';
 
 export function getAppEnv(): AppEnv {
   const fromExtra = Constants.expoConfig?.extra?.appEnv;
@@ -9,11 +9,15 @@ export function getAppEnv(): AppEnv {
 
   if (
     value === 'staging' ||
-    value === 'homolog' ||
     value === 'production' ||
     value === 'development'
   ) {
     return value;
+  }
+
+  // Legacy alias: homolog was collapsed into staging.
+  if (value === 'homolog') {
+    return 'staging';
   }
 
   return 'development';

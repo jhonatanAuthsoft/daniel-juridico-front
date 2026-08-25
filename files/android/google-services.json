@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "529828324810",
+    "project_id": "laweact",
+    "storage_bucket": "laweact.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529828324810:android:5dbe2b1376887789919b33",
+        "android_client_info": {
+          "package_name": "com.laweact.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfdnnjcg5u8Y6OKy4IxXfvHlx6M9covYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529828324810:android:fc23e07bbf80a6c1919b33",
+        "android_client_info": {
+          "package_name": "com.laweact.app.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfdnnjcg5u8Y6OKy4IxXfvHlx6M9covYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529828324810:android:e819a7d8f356d1a9919b33",
+        "android_client_info": {
+          "package_name": "com.laweact.app.staging"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfdnnjcg5u8Y6OKy4IxXfvHlx6M9covYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

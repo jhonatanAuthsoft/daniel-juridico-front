@@ -1,17 +1,6 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
-type AppEnv = 'development' | 'staging' | 'homolog' | 'production';
-
-/** Expo avalia app.config com cwd = raiz do app; evita __dirname (sem @types/node). */
-const googleServicesFile = (() => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { existsSync } = require('node:fs') as {
-    existsSync: (path: string) => boolean;
-  };
-  return existsSync(`${process.cwd()}/google-services.json`)
-    ? './google-services.json'
-    : undefined;
-})();
+type AppEnv = 'development' | 'staging' | 'production';
 
 const APP_ENV = (process.env.APP_ENV ??
   process.env.EXPO_PUBLIC_APP_ENV ??
@@ -23,24 +12,24 @@ const ENV = {
     scheme: 'laweact-dev',
     bundleIdentifier: 'com.laweact.app.dev',
     androidPackage: 'com.laweact.app.dev',
+    androidGoogleServicesFile: './files/android/google-services-dev.json',
+    iosGoogleServicesFile: './files/ios/GoogleService-Info-dev.plist',
   },
   staging: {
     name: 'laweact-stg',
     scheme: 'laweact-staging',
     bundleIdentifier: 'com.laweact.app.staging',
     androidPackage: 'com.laweact.app.staging',
-  },
-  homolog: {
-    name: 'laweact-hml',
-    scheme: 'laweact-homolog',
-    bundleIdentifier: 'com.laweact.app.homolog',
-    androidPackage: 'com.laweact.app.homolog',
+    androidGoogleServicesFile: './files/android/google-services-stg.json',
+    iosGoogleServicesFile: './files/ios/GoogleService-Info-stg.plist',
   },
   production: {
     name: 'laweact',
     scheme: 'laweact',
     bundleIdentifier: 'com.laweact.app',
     androidPackage: 'com.laweact.app',
+    androidGoogleServicesFile: './files/android/google-services.json',
+    iosGoogleServicesFile: './files/ios/GoogleService-Info.plist',
   },
 } as const satisfies Record<
   AppEnv,
@@ -49,10 +38,30 @@ const ENV = {
     scheme: string;
     bundleIdentifier: string;
     androidPackage: string;
+    androidGoogleServicesFile: string;
+    iosGoogleServicesFile: string;
   }
 >;
 
-const current = ENV[APP_ENV];
+const current =
+  APP_ENV in ENV ? ENV[APP_ENV as AppEnv] : ENV.development;
+
+/** Expo avalia app.config com cwd = raiz do app; evita __dirname (sem @types/node). */
+function resolveGoogleServicesFile(relativePath: string): string | undefined {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { existsSync } = require('node:fs') as {
+    existsSync: (path: string) => boolean;
+  };
+  const absolutePath = `${process.cwd()}/${relativePath.replace(/^\.\//, '')}`;
+  return existsSync(absolutePath) ? relativePath : undefined;
+}
+
+const androidGoogleServicesFile = resolveGoogleServicesFile(
+  current.androidGoogleServicesFile,
+);
+const iosGoogleServicesFile = resolveGoogleServicesFile(
+  current.iosGoogleServicesFile,
+);
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -68,6 +77,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     icon: './assets/images/ios-app-icon.png',
     bundleIdentifier: current.bundleIdentifier,
     supportsTablet: true,
+    ...(iosGoogleServicesFile ? { googleServicesFile: iosGoogleServicesFile } : {}),
   },
   android: {
     icon: './assets/images/android-app-icon.png',
@@ -77,7 +87,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     predictiveBackGestureEnabled: false,
     package: current.androidPackage,
-    ...(googleServicesFile ? { googleServicesFile } : {}),
+    ...(androidGoogleServicesFile
+      ? { googleServicesFile: androidGoogleServicesFile }
+      : {}),
     permissions: ['android.permission.RECORD_AUDIO'],
   },
   web: {
@@ -117,7 +129,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   extra: {
     router: {},
-    appEnv: APP_ENV,
+    appEnv: APP_ENV in ENV ? APP_ENV : 'development',
     eas: {
       projectId: '51eb8600-97f3-40bc-93cf-e493dd496d90',
     },

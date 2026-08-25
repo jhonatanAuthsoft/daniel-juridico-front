@@ -3,6 +3,11 @@ node_modules/
 .env
 .env.local
 
+# Continuous Native Generation (CNG): EAS/prebuild gera a partir do app.config
+# Não versionar — senão applicationId/bundleId ficam fixos (ex.: .dev) em todos os profiles.
+/android/
+/ios/
+
 # FCM V1 service account (privado — upload só no EAS, nunca commit)
 *-firebase-adminsdk-*.json
 firebase-service-account.json

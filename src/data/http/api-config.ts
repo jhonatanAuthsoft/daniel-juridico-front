@@ -9,7 +9,6 @@ import { getAppEnv, type AppEnv } from '@/constants/app-env';
 const DEFAULT_API_BASE_URL: Record<AppEnv, string | undefined> = {
   development: undefined,
   staging: 'https://api-stg-laweact.authsoftsolutions.org',
-  homolog: 'https://api-stg-laweact.authsoftsolutions.org',
   production: undefined,
 };
 
