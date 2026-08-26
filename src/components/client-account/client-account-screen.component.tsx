@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Body1, Body2, Display, Link } from '@/atomic/typography';
-import { ProfileAvatar } from '@/components/profile-avatar';
+import { AccountProfilePhoto } from '@/components/profile-avatar';
 import { useAuth, useMe, useUpdatePreferences } from '@/domain/auth';
 import {
   BrandColors,
@@ -24,6 +24,7 @@ const MENU_ITEMS = [
   'Editar Dados',
   'Alterar Senha',
   'Termos e condições',
+  'Suporte',
 ] as const;
 
 const TAB_BAR_CONTENT_HEIGHT = 62;
@@ -62,22 +63,7 @@ export function ClientAccountScreen() {
         <Display color={BrandColors.neutral.white}>Conta</Display>
 
         <View style={styles.identity}>
-          <View style={styles.avatarWrap}>
-            <ProfileAvatar style={styles.avatar} />
-            <Pressable
-              accessibilityLabel="Editar foto de perfil"
-              accessibilityRole="button"
-              style={({ pressed }) => [
-                styles.editAvatar,
-                pressed && styles.pressed,
-              ]}>
-              <SymbolView
-                name={{ ios: 'pencil', android: 'edit', web: 'edit' }}
-                size={16}
-                tintColor={BrandColors.neutral.white}
-              />
-            </Pressable>
-          </View>
+          <AccountProfilePhoto />
           <Body1 color={BrandColors.neutral.white} style={styles.name}>
             {user?.name ?? 'Maria Silva Lima'}
           </Body1>
@@ -92,6 +78,19 @@ export function ClientAccountScreen() {
               key={item}
               accessibilityLabel={item}
               accessibilityRole="button"
+              onPress={() => {
+                if (item === 'Editar Dados') {
+                  router.push('/client/perfil/editar-dados');
+                  return;
+                }
+                if (item === 'Alterar Senha') {
+                  router.push('/client/perfil/alterar-senha');
+                  return;
+                }
+                if (item === 'Termos e condições') {
+                  router.push('/client/perfil/termos');
+                }
+              }}
               style={({ pressed }) => [
                 styles.menuItem,
                 pressed && styles.pressed,
@@ -174,28 +173,6 @@ const styles = StyleSheet.create({
   identity: {
     alignItems: 'center',
     gap: Spacing.xxs,
-  },
-  avatarWrap: {
-    width: 128,
-    height: 128,
-    marginBottom: Spacing.xxs,
-  },
-  avatar: {
-    width: 128,
-    height: 128,
-    borderRadius: 64,
-    backgroundColor: BrandColors.neutral.dark,
-  },
-  editAvatar: {
-    position: 'absolute',
-    right: 4,
-    bottom: 4,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: BrandColors.neutral.dark,
   },
   name: {
     textAlign: 'center',

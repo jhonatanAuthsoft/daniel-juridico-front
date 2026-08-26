@@ -15,6 +15,18 @@ import type {
   RegisterLawyerWireResponse,
   SpecialtyWireRequest,
   TreatmentPronounApi,
+  UpdateLawyerAddressParams,
+  UpdateLawyerAddressWireRequest,
+  UpdateLawyerBiographyParams,
+  UpdateLawyerBiographyWireRequest,
+  UpdateLawyerBillingParams,
+  UpdateLawyerBillingWireRequest,
+  UpdateLawyerDocumentationParams,
+  UpdateLawyerDocumentationWireRequest,
+  UpdateLawyerGeneralDataParams,
+  UpdateLawyerGeneralDataWireRequest,
+  UpdateLawyerGraduationParams,
+  UpdateLawyerGraduationWireRequest,
 } from './lawyer.types';
 
 function onlyDigits(value: string) {
@@ -205,5 +217,72 @@ export function mapRegisterLawyerWireToResult(
       termsAccepted: Boolean(response.usuario.termosAceitos),
     },
     raw: response,
+  };
+}
+
+export function mapUpdateLawyerGeneralDataToWire(
+  params: UpdateLawyerGeneralDataParams,
+): UpdateLawyerGeneralDataWireRequest {
+  return { nomeCompleto: params.fullName.trim() };
+}
+
+export function mapUpdateLawyerAddressToWire(
+  params: UpdateLawyerAddressParams,
+): UpdateLawyerAddressWireRequest {
+  const complemento = params.complement.trim();
+  return {
+    cep: formatCep(params.cep),
+    logradouro: params.street.trim(),
+    numero: params.number.trim(),
+    complemento: complemento || undefined,
+    bairro: params.neighborhood.trim(),
+    cidade: cityLabelFromValue(params.state, params.city.trim()),
+    estado: params.state.trim().toUpperCase(),
+  };
+}
+
+export function mapUpdateLawyerBillingToWire(
+  params: UpdateLawyerBillingParams,
+): UpdateLawyerBillingWireRequest {
+  return {
+    formasCobranca: params.billingMethods.map(mapBillingMethodToApi),
+  };
+}
+
+export function mapUpdateLawyerBiographyToWire(
+  params: UpdateLawyerBiographyParams,
+): UpdateLawyerBiographyWireRequest {
+  const biografia = params.biography.trim();
+  return {
+    pronomeTratamento: mapTreatmentPronounToApi(params.pronouns),
+    biografia: biografia || undefined,
+  };
+}
+
+export function mapUpdateLawyerDocumentationToWire(
+  params: UpdateLawyerDocumentationParams,
+): UpdateLawyerDocumentationWireRequest {
+  const oabsSuplementares = params.supplementalOabs
+    .filter((entry) => entry.number.trim())
+    .map((entry) => mapOab(entry.number, entry.uf, entry.issueDate, entry.photoKeys ?? []));
+
+  return {
+    oabPrincipal: mapOab(
+      params.oabNumber,
+      params.oabUf,
+      params.oabIssueDate,
+      params.oabPhotoKeys ?? [],
+    ),
+    oabsSuplementares,
+  };
+}
+
+export function mapUpdateLawyerGraduationToWire(
+  params: UpdateLawyerGraduationParams,
+): UpdateLawyerGraduationWireRequest {
+  return {
+    universidade: params.university.trim(),
+    curso: params.course.trim(),
+    anoFormacao: toYear(params.graduationYear) ?? 0,
   };
 }

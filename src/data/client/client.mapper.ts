@@ -8,6 +8,12 @@ import type {
   RegisterClientRequest,
   RegisterClientResult,
   RegisterClientWireResponse,
+  UpdateClientAddressParams,
+  UpdateClientAddressWireRequest,
+  UpdateClientGeneralDataParams,
+  UpdateClientGeneralDataWireRequest,
+  UpdateClientPersonalProfileParams,
+  UpdateClientPersonalProfileWireRequest,
 } from './client.types';
 
 function onlyDigits(value: string) {
@@ -116,5 +122,39 @@ export function mapRegisterClientWireToResult(
       termsAccepted: Boolean(response.usuario.termosAceitos),
     },
     raw: response,
+  };
+}
+
+export function mapUpdateClientGeneralDataToWire(
+  params: UpdateClientGeneralDataParams,
+): UpdateClientGeneralDataWireRequest {
+  return { nomeCompleto: params.fullName.trim() };
+}
+
+export function mapUpdateClientAddressToWire(
+  params: UpdateClientAddressParams,
+): UpdateClientAddressWireRequest {
+  const complemento = params.complement.trim();
+  return {
+    cep: formatCep(params.cep),
+    logradouro: params.street.trim(),
+    numero: params.number.trim(),
+    complemento: complemento || undefined,
+    bairro: params.neighborhood.trim(),
+    cidade: cityLabelFromValue(params.state, params.city.trim()),
+    estado: params.state.trim().toUpperCase(),
+  };
+}
+
+export function mapUpdateClientPersonalProfileToWire(
+  params: UpdateClientPersonalProfileParams,
+): UpdateClientPersonalProfileWireRequest {
+  const isCnpj = params.documentType === 'cnpj';
+  const profession = params.profession.trim();
+  return {
+    pronomes: mapPronounsToApi(params.pronouns),
+    ...(isCnpj ? { areaAtuacao: profession } : { profissao: profession }),
+    estadoCivil: params.maritalStatus.trim(),
+    faixaRenda: params.monthlyIncome.trim(),
   };
 }

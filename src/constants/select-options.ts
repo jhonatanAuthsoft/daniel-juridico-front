@@ -165,8 +165,8 @@ export const PRONOUN_OPTIONS: SelectOption[] = [
 
 /** Lawyer treatment pronouns — values match the server `PronomeTratamentoEnum`. */
 export const TREATMENT_PRONOUN_OPTIONS: SelectOption[] = [
-  { value: 'DOUTOR', label: 'Doutor' },
-  { value: 'DOUTORA', label: 'Doutora' },
+  { value: 'DOUTOR', label: 'Doutor (Dr.)' },
+  { value: 'DOUTORA', label: 'Doutora (Dra.)' },
   { value: 'NEUTRO', label: 'Neutro' },
 ];
 

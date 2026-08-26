@@ -5,12 +5,23 @@ export type {
   RegisterClientResult,
   RegisterClientUserWire,
   RegisterClientWireResponse,
+  UpdateClientAddressParams,
+  UpdateClientGeneralDataParams,
+  UpdateClientPersonalProfileParams,
 } from './client.types';
 export type { ApiErrorItem, ApiResponse } from '@/data/http';
 export {
   mapClientSignupFormToRegisterRequest,
   mapPronounsToApi,
   mapRegisterClientWireToResult,
+  mapUpdateClientAddressToWire,
+  mapUpdateClientGeneralDataToWire,
+  mapUpdateClientPersonalProfileToWire,
   toIsoBirthDate,
 } from './client.mapper';
-export { registerClient } from './client.api';
+export {
+  registerClient,
+  updateClientAddress,
+  updateClientGeneralData,
+  updateClientPersonalProfile,
+} from './client.api';

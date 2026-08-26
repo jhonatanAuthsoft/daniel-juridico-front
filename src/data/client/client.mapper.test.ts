@@ -1,6 +1,9 @@
 import {
   mapClientSignupFormToRegisterRequest,
   mapPronounsToApi,
+  mapUpdateClientAddressToWire,
+  mapUpdateClientGeneralDataToWire,
+  mapUpdateClientPersonalProfileToWire,
   toIsoBirthDate,
 } from './client.mapper';
 import type { ClientSignupFormValues } from '@/components/signup-client';
@@ -89,5 +92,67 @@ describe('client.mapper', () => {
     expect(mapPronounsToApi('ELE')).toBe('ELE');
     expect(mapPronounsToApi('ELA')).toBe('ELA');
     expect(mapPronounsToApi('NEUTRO')).toBe('NEUTRO');
+  });
+
+  it('maps general data name to the PATCH wire body', () => {
+    expect(mapUpdateClientGeneralDataToWire({ fullName: '  Maria Silva Lima  ' })).toEqual({
+      nomeCompleto: 'Maria Silva Lima',
+    });
+  });
+
+  it('maps address form to the PATCH wire body', () => {
+    expect(
+      mapUpdateClientAddressToWire({
+        cep: '01311100',
+        state: 'sp',
+        city: 'São Paulo',
+        neighborhood: 'Consolação',
+        street: 'Rua Augusta',
+        number: '200',
+        complement: 'Cj 10',
+      }),
+    ).toEqual({
+      cep: '01311-100',
+      estado: 'SP',
+      cidade: 'São Paulo',
+      bairro: 'Consolação',
+      logradouro: 'Rua Augusta',
+      numero: '200',
+      complemento: 'Cj 10',
+    });
+  });
+
+  it('maps CPF personal profile to profissao and optional blanks', () => {
+    expect(
+      mapUpdateClientPersonalProfileToWire({
+        documentType: 'cpf',
+        pronouns: 'ELE',
+        profession: 'Designer',
+        maritalStatus: 'solteiro',
+        monthlyIncome: '2500',
+      }),
+    ).toEqual({
+      pronomes: 'ELE',
+      profissao: 'Designer',
+      estadoCivil: 'solteiro',
+      faixaRenda: '2500',
+    });
+  });
+
+  it('maps CNPJ personal profile to areaAtuacao', () => {
+    expect(
+      mapUpdateClientPersonalProfileToWire({
+        documentType: 'cnpj',
+        pronouns: 'NEUTRO',
+        profession: 'Consultoria jurídica',
+        maritalStatus: '',
+        monthlyIncome: '',
+      }),
+    ).toEqual({
+      pronomes: 'NEUTRO',
+      areaAtuacao: 'Consultoria jurídica',
+      estadoCivil: '',
+      faixaRenda: '',
+    });
   });
 });

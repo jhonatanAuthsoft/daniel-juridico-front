@@ -4,6 +4,12 @@ import {
   mapPracticeAreaToModalidade,
   mapSpecialtiesToApi,
   mapTreatmentPronounToApi,
+  mapUpdateLawyerAddressToWire,
+  mapUpdateLawyerBiographyToWire,
+  mapUpdateLawyerBillingToWire,
+  mapUpdateLawyerDocumentationToWire,
+  mapUpdateLawyerGeneralDataToWire,
+  mapUpdateLawyerGraduationToWire,
 } from './lawyer.mapper';
 import type { LawyerSignupFormValues } from '@/components/signup-lawyer/types';
 
@@ -150,5 +156,104 @@ describe('lawyer.mapper', () => {
     expect(mapSpecialtiesToApi(['CIVIL:CONTRATOS'])).toEqual([
       { especialidadeCodigo: 'CIVIL', subespecialidadeCodigo: 'CONTRATOS' },
     ]);
+  });
+
+  it('maps general data name to the PATCH wire body', () => {
+    expect(mapUpdateLawyerGeneralDataToWire({ fullName: '  João Advogado Lima  ' })).toEqual({
+      nomeCompleto: 'João Advogado Lima',
+    });
+  });
+
+  it('maps address form to the PATCH wire body', () => {
+    expect(
+      mapUpdateLawyerAddressToWire({
+        cep: '01311100',
+        state: 'sp',
+        city: 'São Paulo',
+        neighborhood: 'Consolação',
+        street: 'Rua Augusta',
+        number: '200',
+        complement: 'Cj 10',
+      }),
+    ).toEqual({
+      cep: '01311-100',
+      estado: 'SP',
+      cidade: 'São Paulo',
+      bairro: 'Consolação',
+      logradouro: 'Rua Augusta',
+      numero: '200',
+      complemento: 'Cj 10',
+    });
+  });
+
+  it('maps billing methods to catalog codes', () => {
+    expect(
+      mapUpdateLawyerBillingToWire({
+        billingMethods: ['percentage', 'court_awarded'],
+      }),
+    ).toEqual({
+      formasCobranca: ['HONORARIOS_PERCENTUAIS', 'HONORARIOS_ARBITRADOS'],
+    });
+  });
+
+  it('maps biography and treatment pronoun', () => {
+    expect(
+      mapUpdateLawyerBiographyToWire({
+        pronouns: 'DOUTORA',
+        biography: '  Advogada civilista.  ',
+      }),
+    ).toEqual({
+      pronomeTratamento: 'DOUTORA',
+      biografia: 'Advogada civilista.',
+    });
+  });
+
+  it('maps documentation OABs to the PATCH wire body', () => {
+    expect(
+      mapUpdateLawyerDocumentationToWire({
+        oabNumber: '123456',
+        oabUf: 'sp',
+        oabIssueDate: '15/03/2016',
+        oabPhotoKeys: ['tmp/advogados/oab/front.jpg', 'tmp/advogados/oab/back.jpg'],
+        supplementalOabs: [
+          {
+            number: '654321',
+            uf: 'rj',
+            issueDate: '10/01/2018',
+            photoKeys: [],
+          },
+          { number: '  ', uf: 'BA', issueDate: '', photoKeys: [] },
+        ],
+      }),
+    ).toEqual({
+      oabPrincipal: {
+        numero: '123456',
+        uf: 'SP',
+        dataExpedicao: '2016-03-15',
+        fotosUrls: ['tmp/advogados/oab/front.jpg', 'tmp/advogados/oab/back.jpg'],
+      },
+      oabsSuplementares: [
+        {
+          numero: '654321',
+          uf: 'RJ',
+          dataExpedicao: '2018-01-10',
+          fotosUrls: undefined,
+        },
+      ],
+    });
+  });
+
+  it('maps graduation to the PATCH wire body', () => {
+    expect(
+      mapUpdateLawyerGraduationToWire({
+        university: ' PUC-SP ',
+        course: ' Direito ',
+        graduationYear: '2018',
+      }),
+    ).toEqual({
+      universidade: 'PUC-SP',
+      curso: 'Direito',
+      anoFormacao: 2018,
+    });
   });
 });

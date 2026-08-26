@@ -7,6 +7,14 @@ export type {
   UpdatePreferencesResult,
   UpdatePreferencesWireRequest,
   UpdatePreferencesWireResponse,
+  UpdateProfilePhotoParams,
+  UpdateProfilePhotoResult,
+  UpdateProfilePhotoWireRequest,
+  UpdateProfilePhotoWireResponse,
+  UpdatePasswordParams,
+  UpdatePasswordResult,
+  UpdatePasswordWireRequest,
+  UpdatePasswordWireResponse,
 } from './user.types';
 export { TERMS_VERSION } from './user.types';
 export {
@@ -14,5 +22,14 @@ export {
   mapAcceptTermsWireToResult,
   mapUpdatePreferencesParamsToWire,
   mapUpdatePreferencesWireToResult,
+  mapUpdateProfilePhotoParamsToWire,
+  mapUpdateProfilePhotoWireToResult,
+  mapUpdatePasswordParamsToWire,
+  mapUpdatePasswordWireToResult,
 } from './user.mapper';
-export { acceptTerms, updatePreferences } from './user.api';
+export {
+  acceptTerms,
+  updatePreferences,
+  updateProfilePhoto,
+  updatePassword,
+} from './user.api';

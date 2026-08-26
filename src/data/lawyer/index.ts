@@ -8,6 +8,13 @@ export type {
   RegisterLawyerWireResponse,
   SpecialtyWireRequest,
   TreatmentPronounApi,
+  UpdateLawyerAddressParams,
+  UpdateLawyerBiographyParams,
+  UpdateLawyerBillingParams,
+  UpdateLawyerDocumentationParams,
+  UpdateLawyerGeneralDataParams,
+  UpdateLawyerGraduationParams,
+  UpdateLawyerOabParams,
 } from './lawyer.types';
 export type {
   PublicLawyerCatalogItem,
@@ -30,6 +37,12 @@ export {
   mapRegisterLawyerWireToResult,
   mapSpecialtiesToApi,
   mapTreatmentPronounToApi,
+  mapUpdateLawyerAddressToWire,
+  mapUpdateLawyerBiographyToWire,
+  mapUpdateLawyerBillingToWire,
+  mapUpdateLawyerDocumentationToWire,
+  mapUpdateLawyerGeneralDataToWire,
+  mapUpdateLawyerGraduationToWire,
 } from './lawyer.mapper';
 export {
   formatPublicLawyerEducation,
@@ -42,7 +55,15 @@ export {
   mapLawyerReviewsToClientReviews,
   mapLawyerReviewsWireToResult,
 } from './reviews.mapper';
-export { registerLawyer } from './lawyer.api';
+export {
+  registerLawyer,
+  updateLawyerAddress,
+  updateLawyerBiography,
+  updateLawyerBilling,
+  updateLawyerDocumentation,
+  updateLawyerGeneralData,
+  updateLawyerGraduation,
+} from './lawyer.api';
 export { getPublicLawyerProfile } from './public-profile.api';
 export {
   createLawyerReview,

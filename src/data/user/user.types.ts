@@ -63,3 +63,45 @@ export type UpdatePreferencesWireResponse = {
 export type UpdatePreferencesResult = {
   pushNotificationsEnabled: boolean;
 };
+
+/** App-facing params for `PATCH /usuarios/me/foto`. */
+export type UpdateProfilePhotoParams = {
+  photoKey: string;
+};
+
+/** Wire body for `PATCH /usuarios/me/foto`. */
+export type UpdateProfilePhotoWireRequest = {
+  fotoUrl: string;
+};
+
+/** Wire response for `PATCH /usuarios/me/foto`. */
+export type UpdateProfilePhotoWireResponse = {
+  fotoUrl: string;
+};
+
+/** Domain-friendly view of the updated profile photo. */
+export type UpdateProfilePhotoResult = {
+  photoKey: string;
+};
+
+/** App-facing params for `PATCH /usuarios/me/senha`. */
+export type UpdatePasswordParams = {
+  currentPassword: string;
+  newPassword: string;
+};
+
+/** Wire body for `PATCH /usuarios/me/senha`. */
+export type UpdatePasswordWireRequest = {
+  senhaAtual: string;
+  novaSenha: string;
+};
+
+/** Wire response for `PATCH /usuarios/me/senha`. */
+export type UpdatePasswordWireResponse = {
+  mensagem: string;
+};
+
+/** Domain-friendly view of the password update. */
+export type UpdatePasswordResult = {
+  message: string;
+};

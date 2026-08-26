@@ -106,3 +106,94 @@ export type RegisterLawyerResult = {
   };
   raw: RegisterLawyerWireResponse;
 };
+
+/** App params for `PATCH /advogados/me/dados-gerais`. */
+export type UpdateLawyerGeneralDataParams = {
+  fullName: string;
+};
+
+/** Wire body for `PATCH /advogados/me/dados-gerais`. */
+export type UpdateLawyerGeneralDataWireRequest = {
+  nomeCompleto: string;
+};
+
+/** App params for `PATCH /advogados/me/endereco`. */
+export type UpdateLawyerAddressParams = {
+  cep: string;
+  state: string;
+  city: string;
+  neighborhood: string;
+  street: string;
+  number: string;
+  complement: string;
+};
+
+/** Wire body for `PATCH /advogados/me/endereco`. */
+export type UpdateLawyerAddressWireRequest = {
+  cep: string;
+  logradouro: string;
+  numero: string;
+  complemento?: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+};
+
+/** App params for `PATCH /advogados/me/formas-cobranca`. */
+export type UpdateLawyerBillingParams = {
+  billingMethods: string[];
+};
+
+/** Wire body for `PATCH /advogados/me/formas-cobranca`. */
+export type UpdateLawyerBillingWireRequest = {
+  formasCobranca: string[];
+};
+
+/** App params for `PATCH /advogados/me/biografia`. */
+export type UpdateLawyerBiographyParams = {
+  pronouns: string;
+  biography: string;
+};
+
+/** Wire body for `PATCH /advogados/me/biografia`. */
+export type UpdateLawyerBiographyWireRequest = {
+  pronomeTratamento: TreatmentPronounApi;
+  biografia?: string | null;
+};
+
+/** App params for a single OAB on `PATCH /advogados/me/documentacao`. */
+export type UpdateLawyerOabParams = {
+  number: string;
+  uf: string;
+  issueDate: string;
+  photoKeys: string[];
+};
+
+/** App params for `PATCH /advogados/me/documentacao`. */
+export type UpdateLawyerDocumentationParams = {
+  oabNumber: string;
+  oabUf: string;
+  oabIssueDate: string;
+  oabPhotoKeys: string[];
+  supplementalOabs: UpdateLawyerOabParams[];
+};
+
+/** Wire body for `PATCH /advogados/me/documentacao`. */
+export type UpdateLawyerDocumentationWireRequest = {
+  oabPrincipal: OabWireRequest;
+  oabsSuplementares?: OabWireRequest[];
+};
+
+/** App params for `PATCH /advogados/me/graduacao`. */
+export type UpdateLawyerGraduationParams = {
+  university: string;
+  course: string;
+  graduationYear: string;
+};
+
+/** Wire body for `PATCH /advogados/me/graduacao`. */
+export type UpdateLawyerGraduationWireRequest = {
+  universidade: string;
+  curso: string;
+  anoFormacao: number;
+};
