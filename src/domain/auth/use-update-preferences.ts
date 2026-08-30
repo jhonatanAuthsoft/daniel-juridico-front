@@ -26,6 +26,7 @@ export function useUpdatePreferences() {
           return {
             photoKey: null,
             pushNotificationsEnabled: params.pushNotificationsEnabled,
+            profileUnavailable: false,
             clientProfile: null,
             lawyerProfile: null,
           };

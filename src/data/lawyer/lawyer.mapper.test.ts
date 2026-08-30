@@ -9,6 +9,7 @@ import {
   mapUpdateLawyerBillingToWire,
   mapUpdateLawyerDocumentationToWire,
   mapUpdateLawyerGeneralDataToWire,
+  mapUpdateLawyerAvailabilityToWire,
   mapUpdateLawyerGraduationToWire,
 } from './lawyer.mapper';
 import type { LawyerSignupFormValues } from '@/components/signup-lawyer/types';
@@ -240,6 +241,15 @@ describe('lawyer.mapper', () => {
           fotosUrls: undefined,
         },
       ],
+    });
+  });
+
+  it('maps profileUnavailable to disponibilidade', () => {
+    expect(mapUpdateLawyerAvailabilityToWire({ profileUnavailable: true })).toEqual({
+      disponibilidade: 'INDISPONIVEL',
+    });
+    expect(mapUpdateLawyerAvailabilityToWire({ profileUnavailable: false })).toEqual({
+      disponibilidade: 'DISPONIVEL',
     });
   });
 

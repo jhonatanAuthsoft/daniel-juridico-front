@@ -197,3 +197,13 @@ export type UpdateLawyerGraduationWireRequest = {
   curso: string;
   anoFormacao: number;
 };
+
+/** App params for `PATCH /advogados/me/disponibilidade`. */
+export type UpdateLawyerAvailabilityParams = {
+  profileUnavailable: boolean;
+};
+
+/** Wire body for `PATCH /advogados/me/disponibilidade`. */
+export type UpdateLawyerAvailabilityWireRequest = {
+  disponibilidade: 'DISPONIVEL' | 'INDISPONIVEL';
+};

@@ -40,6 +40,7 @@ jest.mock('@/data/auth', () => {
 const cachedMe: MeResult = {
   photoKey: 'tmp/clientes/perfil/abc.jpg',
   pushNotificationsEnabled: true,
+  profileUnavailable: false,
   clientProfile: {
     fullName: 'Maria Silva',
     email: 'maria@laweact.com',
@@ -136,6 +137,7 @@ describe('client edit-data cache', () => {
       expect(queryClient.getQueryData(authKeys.me())).toEqual({
         photoKey: 'tmp/clientes/perfil/abc.jpg',
         pushNotificationsEnabled: true,
+        profileUnavailable: false,
         clientProfile: {
           fullName: 'Maria Silva Lima',
           email: 'maria@laweact.com',

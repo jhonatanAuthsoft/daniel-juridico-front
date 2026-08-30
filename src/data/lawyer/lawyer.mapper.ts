@@ -27,6 +27,8 @@ import type {
   UpdateLawyerGeneralDataWireRequest,
   UpdateLawyerGraduationParams,
   UpdateLawyerGraduationWireRequest,
+  UpdateLawyerAvailabilityParams,
+  UpdateLawyerAvailabilityWireRequest,
 } from './lawyer.types';
 
 function onlyDigits(value: string) {
@@ -284,5 +286,13 @@ export function mapUpdateLawyerGraduationToWire(
     universidade: params.university.trim(),
     curso: params.course.trim(),
     anoFormacao: toYear(params.graduationYear) ?? 0,
+  };
+}
+
+export function mapUpdateLawyerAvailabilityToWire(
+  params: UpdateLawyerAvailabilityParams,
+): UpdateLawyerAvailabilityWireRequest {
+  return {
+    disponibilidade: params.profileUnavailable ? 'INDISPONIVEL' : 'DISPONIVEL',
   };
 }

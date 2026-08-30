@@ -10,6 +10,7 @@ import { useUpdateLawyerBiography } from './use-update-lawyer-biography';
 import { useUpdateLawyerBilling } from './use-update-lawyer-billing';
 import { useUpdateLawyerDocumentation } from './use-update-lawyer-documentation';
 import { useUpdateLawyerGeneralData } from './use-update-lawyer-general-data';
+import { useUpdateLawyerAvailability } from './use-update-lawyer-availability';
 import { useUpdateLawyerGraduation } from './use-update-lawyer-graduation';
 
 const mockUpdateGeneralData = jest.fn();
@@ -18,6 +19,7 @@ const mockUpdateBilling = jest.fn();
 const mockUpdateBiography = jest.fn();
 const mockUpdateDocumentation = jest.fn();
 const mockUpdateGraduation = jest.fn();
+const mockUpdateAvailability = jest.fn();
 const mockUpdateAuthUser = jest.fn();
 const mockGetAuthSessionMemory = jest.fn();
 
@@ -46,6 +48,11 @@ jest.mock('./update-lawyer-graduation.use-case', () => ({
   updateLawyerGraduationUseCase: (params: unknown) => mockUpdateGraduation(params),
 }));
 
+jest.mock('./update-lawyer-availability.use-case', () => ({
+  updateLawyerAvailabilityUseCase: (params: unknown) =>
+    mockUpdateAvailability(params),
+}));
+
 jest.mock('@/data/auth', () => {
   const actual = jest.requireActual<typeof import('@/data/auth')>('@/data/auth');
   return {
@@ -58,6 +65,7 @@ jest.mock('@/data/auth', () => {
 const cachedMe: MeResult = {
   photoKey: 'tmp/advogados/perfil/joao.jpg',
   pushNotificationsEnabled: true,
+  profileUnavailable: false,
   clientProfile: null,
   lawyerProfile: {
     fullName: 'João Advogado',
@@ -132,6 +140,7 @@ describe('lawyer edit-data cache', () => {
     mockUpdateBiography.mockReset();
     mockUpdateDocumentation.mockReset();
     mockUpdateGraduation.mockReset();
+    mockUpdateAvailability.mockReset();
     mockUpdateAuthUser.mockReset();
     mockGetAuthSessionMemory.mockReset();
     mockUpdateGeneralData.mockResolvedValue(patchedDetalhe);
@@ -140,6 +149,13 @@ describe('lawyer edit-data cache', () => {
     mockUpdateBiography.mockResolvedValue(patchedDetalhe);
     mockUpdateDocumentation.mockResolvedValue(patchedDetalhe);
     mockUpdateGraduation.mockResolvedValue(patchedDetalhe);
+    mockUpdateAvailability.mockResolvedValue({
+      ...patchedDetalhe,
+      perfil: {
+        ...patchedDetalhe.perfil,
+        disponibilidade: 'INDISPONIVEL',
+      },
+    });
     mockUpdateAuthUser.mockResolvedValue({});
     mockGetAuthSessionMemory.mockReturnValue({
       token: 'access',
@@ -263,6 +279,25 @@ describe('lawyer edit-data cache', () => {
         queryClient.getQueryData<MeResult>(authKeys.me())?.lawyerProfile?.fullName,
       ).toBe('João Advogado Lima');
     });
+    unmount();
+    queryClient.clear();
+  });
+
+  it('writes PATCH disponibilidade into /me cache without refetching', async () => {
+    const { queryClient, Wrapper } = createWrapper();
+    const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
+    const { result, unmount } = renderHook(() => useUpdateLawyerAvailability(), {
+      wrapper: Wrapper,
+    });
+
+    await result.current.mutateAsync({ profileUnavailable: true });
+
+    await waitFor(() => {
+      expect(
+        queryClient.getQueryData<MeResult>(authKeys.me())?.profileUnavailable,
+      ).toBe(true);
+    });
+    expect(invalidateSpy).not.toHaveBeenCalled();
     unmount();
     queryClient.clear();
   });

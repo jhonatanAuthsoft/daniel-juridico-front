@@ -65,10 +65,10 @@ export function ClientAccountScreen() {
         <View style={styles.identity}>
           <AccountProfilePhoto />
           <Body1 color={BrandColors.neutral.white} style={styles.name}>
-            {user?.name ?? 'Maria Silva Lima'}
+            {user?.name}
           </Body1>
           <Body2 color={BrandColors.neutral.light}>
-            {user?.email ?? 'maria_silvalima@gmail.com'}
+            {user?.email}
           </Body2>
         </View>
 

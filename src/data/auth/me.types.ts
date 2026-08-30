@@ -14,6 +14,7 @@ export type MePerfilWire = {
   estadoCivil?: string | null;
   pronomeTratamento?: string | null;
   biografia?: string | null;
+  disponibilidade?: string | null;
   universidade?: string | null;
   curso?: string | null;
   anoFormacao?: number | string | null;
@@ -121,6 +122,8 @@ export type MeResult = {
   photoKey: string | null;
   /** Push preference from `usuarios.notificacoes_push_habilitadas`. */
   pushNotificationsEnabled: boolean;
+  /** Lawyer profile marked unavailable (`advogados.disponibilidade = INDISPONIVEL`). */
+  profileUnavailable: boolean;
   /** Present for clients; null for lawyers. */
   clientProfile: ClientEditProfile | null;
   /** Present for lawyers; null for clients. */

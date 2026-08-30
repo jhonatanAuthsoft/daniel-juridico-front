@@ -14,6 +14,7 @@ export type {
   UpdateLawyerDocumentationParams,
   UpdateLawyerGeneralDataParams,
   UpdateLawyerGraduationParams,
+  UpdateLawyerAvailabilityParams,
   UpdateLawyerOabParams,
 } from './lawyer.types';
 export type {
@@ -43,6 +44,7 @@ export {
   mapUpdateLawyerDocumentationToWire,
   mapUpdateLawyerGeneralDataToWire,
   mapUpdateLawyerGraduationToWire,
+  mapUpdateLawyerAvailabilityToWire,
 } from './lawyer.mapper';
 export {
   formatPublicLawyerEducation,
@@ -63,6 +65,7 @@ export {
   updateLawyerDocumentation,
   updateLawyerGeneralData,
   updateLawyerGraduation,
+  updateLawyerAvailability,
 } from './lawyer.api';
 export { getPublicLawyerProfile } from './public-profile.api';
 export {

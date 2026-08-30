@@ -15,6 +15,7 @@ import {
   mapUpdateLawyerDocumentationToWire,
   mapUpdateLawyerGeneralDataToWire,
   mapUpdateLawyerGraduationToWire,
+  mapUpdateLawyerAvailabilityToWire,
 } from './lawyer.mapper';
 import type {
   RegisterLawyerRequest,
@@ -26,6 +27,7 @@ import type {
   UpdateLawyerDocumentationParams,
   UpdateLawyerGeneralDataParams,
   UpdateLawyerGraduationParams,
+  UpdateLawyerAvailabilityParams,
 } from './lawyer.types';
 
 /**
@@ -164,4 +166,26 @@ export async function updateLawyerGraduation(
     },
   );
   return assertApiSuccess(response, 'Não foi possível atualizar a graduação.');
+}
+
+/**
+ * Updates the authenticated lawyer's profile availability.
+ * `PATCH /advogados/me/disponibilidade`
+ */
+export async function updateLawyerAvailability(
+  params: UpdateLawyerAvailabilityParams,
+  signal?: AbortSignal,
+): Promise<MeDetalheWire> {
+  const response = await authenticatedHttpRequest<ApiResponse<MeDetalheWire>>(
+    apiUrl('/advogados/me/disponibilidade'),
+    {
+      method: 'PATCH',
+      body: mapUpdateLawyerAvailabilityToWire(params),
+      signal,
+    },
+  );
+  return assertApiSuccess(
+    response,
+    'Não foi possível atualizar a disponibilidade do perfil.',
+  );
 }

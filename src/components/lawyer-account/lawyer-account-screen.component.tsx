@@ -1,6 +1,5 @@
 import { SymbolView } from 'expo-symbols';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
 import {
   Pressable,
   ScrollView,
@@ -14,6 +13,7 @@ import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Body1, Body2, Display, Link } from '@/atomic/typography';
 import { AccountProfilePhoto } from '@/components/profile-avatar';
 import { useAuth, useMe, useUpdatePreferences } from '@/domain/auth';
+import { useUpdateLawyerAvailability } from '@/domain/lawyer';
 import {
   BrandColors,
   MaxContentWidth,
@@ -76,8 +76,9 @@ export function LawyerAccountScreen() {
   const { user, signOut } = useAuth();
   const { data: me } = useMe();
   const updatePreferences = useUpdatePreferences();
+  const updateAvailability = useUpdateLawyerAvailability();
   const notificationsEnabled = me?.pushNotificationsEnabled ?? true;
-  const [profileUnavailable, setProfileUnavailable] = useState(true);
+  const profileUnavailable = me?.profileUnavailable ?? false;
   const contentPaddingBottom =
     TAB_BAR_CONTENT_HEIGHT + insets.bottom + LIST_GAP_ABOVE_TAB;
 
@@ -88,6 +89,10 @@ export function LawyerAccountScreen() {
 
   const handleNotificationsChange = (value: boolean) => {
     updatePreferences.mutate({ pushNotificationsEnabled: value });
+  };
+
+  const handleAvailabilityChange = (value: boolean) => {
+    updateAvailability.mutate({ profileUnavailable: value });
   };
 
   return (
@@ -106,10 +111,10 @@ export function LawyerAccountScreen() {
         <View style={styles.identity}>
           <AccountProfilePhoto />
           <Body1 color={BrandColors.neutral.white} style={styles.name}>
-            {user?.name ?? 'Luiza Bittencourt'}
+            {user?.name}
           </Body1>
           <Body2 color={BrandColors.neutral.light}>
-            {user?.email ?? 'luizabitt@gmail.com'}
+            {user?.email}
           </Body2>
         </View>
 
@@ -161,8 +166,9 @@ export function LawyerAccountScreen() {
           />
           <SettingToggle
             description="Você deixará de receber notificações de urgência e emergência"
+            disabled={updateAvailability.isPending}
             label="Tornar Perfil indisponível"
-            onValueChange={setProfileUnavailable}
+            onValueChange={handleAvailabilityChange}
             value={profileUnavailable}
           />
         </View>

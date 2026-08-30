@@ -6,32 +6,30 @@ const mockReplace = jest.fn();
 const mockPush = jest.fn();
 const mockSignOut = jest.fn().mockResolvedValue(undefined);
 const mockPickEditedImage = jest.fn();
+const mockUseAuth = jest.fn();
+const mockUseMe = jest.fn();
+const mockUpdateAvailability = jest.fn();
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ replace: mockReplace, push: mockPush }),
 }));
 
 jest.mock('@/domain/auth', () => ({
-  useAuth: () => ({
-    user: {
-      id: 'mock-lawyer',
-      name: 'Luiza Bittencourt',
-      email: 'luizabitt@gmail.com',
-      role: 'LAWYER',
-    },
-    isAuthenticated: true,
-    signOut: mockSignOut,
-  }),
-  useMe: () => ({
-    data: { photoKey: null, pushNotificationsEnabled: true },
-    isLoading: false,
-  }),
+  useAuth: () => mockUseAuth(),
+  useMe: () => mockUseMe(),
   useUpdatePreferences: () => ({
     mutate: jest.fn(),
     isPending: false,
   }),
   useUpdateProfilePhoto: () => ({
     mutate: jest.fn(),
+    isPending: false,
+  }),
+}));
+
+jest.mock('@/domain/lawyer', () => ({
+  useUpdateLawyerAvailability: () => ({
+    mutate: mockUpdateAvailability,
     isPending: false,
   }),
 }));
@@ -65,6 +63,25 @@ describe('LawyerPerfilScreen', () => {
     mockPush.mockClear();
     mockSignOut.mockClear();
     mockPickEditedImage.mockClear();
+    mockUpdateAvailability.mockClear();
+    mockUseMe.mockReturnValue({
+      data: {
+        photoKey: null,
+        pushNotificationsEnabled: true,
+        profileUnavailable: false,
+      },
+      isLoading: false,
+    });
+    mockUseAuth.mockReturnValue({
+      user: {
+        id: 'mock-lawyer',
+        name: 'Luiza Bittencourt',
+        email: 'luizabitt@gmail.com',
+        role: 'LAWYER',
+      },
+      isAuthenticated: true,
+      signOut: mockSignOut,
+    });
   });
 
   it('shows the account identity and edit photo control', () => {
@@ -80,6 +97,19 @@ describe('LawyerPerfilScreen', () => {
     expect(screen.getByText('Termos e condições')).toBeTruthy();
     expect(screen.getByText('Suporte')).toBeTruthy();
     expect(screen.getByText('Tornar Perfil indisponível')).toBeTruthy();
+  });
+
+  it('does not show placeholder name or email when the user is missing', () => {
+    mockUseAuth.mockReturnValue({
+      user: null,
+      isAuthenticated: false,
+      signOut: mockSignOut,
+    });
+
+    const screen = render(<LawyerPerfilScreen />);
+
+    expect(screen.queryByText('Luiza Bittencourt')).toBeNull();
+    expect(screen.queryByText('luizabitt@gmail.com')).toBeNull();
   });
 
   it('opens edit data from the account menu', () => {
@@ -112,6 +142,38 @@ describe('LawyerPerfilScreen', () => {
     fireEvent.press(screen.getByLabelText('Editar foto de perfil'));
 
     expect(mockPickEditedImage).toHaveBeenCalledWith({ aspect: [1, 1] });
+  });
+
+  it('reflects stored availability on the profile toggle', () => {
+    const available = render(<LawyerPerfilScreen />);
+
+    expect(available.getByLabelText('Tornar Perfil indisponível').props.value).toBe(
+      false,
+    );
+    available.unmount();
+
+    mockUseMe.mockReturnValue({
+      data: {
+        photoKey: null,
+        pushNotificationsEnabled: true,
+        profileUnavailable: true,
+      },
+      isLoading: false,
+    });
+
+    const unavailable = render(<LawyerPerfilScreen />);
+
+    expect(
+      unavailable.getByLabelText('Tornar Perfil indisponível').props.value,
+    ).toBe(true);
+  });
+
+  it('persists the profile availability toggle', () => {
+    const screen = render(<LawyerPerfilScreen />);
+
+    fireEvent(screen.getByLabelText('Tornar Perfil indisponível'), 'valueChange', true);
+
+    expect(mockUpdateAvailability).toHaveBeenCalledWith({ profileUnavailable: true });
   });
 
   it('signs out and returns to login', () => {

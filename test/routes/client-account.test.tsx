@@ -6,22 +6,14 @@ const mockReplace = jest.fn();
 const mockPush = jest.fn();
 const mockSignOut = jest.fn().mockResolvedValue(undefined);
 const mockPickEditedImage = jest.fn();
+const mockUseAuth = jest.fn();
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ replace: mockReplace, push: mockPush }),
 }));
 
 jest.mock('@/domain/auth', () => ({
-  useAuth: () => ({
-    user: {
-      id: 'mock-client',
-      name: 'Maria Silva Lima',
-      email: 'maria_silvalima@gmail.com',
-      role: 'CLIENT',
-    },
-    isAuthenticated: true,
-    signOut: mockSignOut,
-  }),
+  useAuth: () => mockUseAuth(),
   useMe: () => ({
     data: { photoKey: null, pushNotificationsEnabled: true },
     isLoading: false,
@@ -65,6 +57,16 @@ describe('ClientPerfilScreen', () => {
     mockPush.mockClear();
     mockSignOut.mockClear();
     mockPickEditedImage.mockClear();
+    mockUseAuth.mockReturnValue({
+      user: {
+        id: 'mock-client',
+        name: 'Maria Silva Lima',
+        email: 'maria_silvalima@gmail.com',
+        role: 'CLIENT',
+      },
+      isAuthenticated: true,
+      signOut: mockSignOut,
+    });
   });
 
   it('shows the account identity and edit photo control', () => {
@@ -80,6 +82,19 @@ describe('ClientPerfilScreen', () => {
     expect(screen.getByText('Suporte')).toBeTruthy();
     expect(screen.queryByText('Assinatura e plano')).toBeNull();
     expect(screen.queryByText('Tornar Perfil indisponível')).toBeNull();
+  });
+
+  it('does not show placeholder name or email when the user is missing', () => {
+    mockUseAuth.mockReturnValue({
+      user: null,
+      isAuthenticated: false,
+      signOut: mockSignOut,
+    });
+
+    const screen = render(<ClientPerfilScreen />);
+
+    expect(screen.queryByText('Maria Silva Lima')).toBeNull();
+    expect(screen.queryByText('maria_silvalima@gmail.com')).toBeNull();
   });
 
   it('opens edit data from the account menu', () => {

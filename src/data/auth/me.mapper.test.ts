@@ -23,6 +23,47 @@ describe('mapMeWireToResult', () => {
     );
   });
 
+  it('maps lawyer INDISPONIVEL to profileUnavailable', () => {
+    expect(
+      mapMeWireToResult({
+        usuario: {
+          id: '2',
+          email: 'adv@b.com',
+          nomeCompleto: 'B',
+          perfil: 'ADVOGADO',
+          notificacoesPushHabilitadas: true,
+        },
+        advogado: {
+          perfil: {
+            fotoUrl: 'tmp/advogados/perfil/xyz.png',
+            disponibilidade: 'INDISPONIVEL',
+          },
+        },
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        profileUnavailable: true,
+      }),
+    );
+  });
+
+  it('defaults profileUnavailable to false when disponibilidade is missing', () => {
+    expect(
+      mapMeWireToResult({
+        usuario: {
+          id: '1',
+          email: 'a@b.com',
+          nomeCompleto: 'A',
+          perfil: 'CLIENTE',
+          notificacoesPushHabilitadas: true,
+        },
+        cliente: {
+          perfil: { fotoUrl: 'tmp/clientes/perfil/abc.jpg' },
+        },
+      }).profileUnavailable,
+    ).toBe(false);
+  });
+
   it('reads lawyer photo key when client is absent', () => {
     expect(
       mapMeWireToResult({
@@ -101,6 +142,7 @@ describe('mapMeWireToResult', () => {
     ).toEqual({
       photoKey: 'tmp/clientes/perfil/abc.jpg',
       pushNotificationsEnabled: true,
+      profileUnavailable: false,
       clientProfile: {
         fullName: 'Maria Silva',
         email: 'maria@laweact.com',
@@ -227,6 +269,7 @@ describe('mapMeWireToResult', () => {
     ).toEqual({
       photoKey: 'tmp/clientes/perfil/abc.jpg',
       pushNotificationsEnabled: true,
+      profileUnavailable: false,
       clientProfile: {
         fullName: 'Maria Silva Lima',
         email: 'maria@laweact.com',
@@ -321,6 +364,7 @@ describe('mapMeWireToResult', () => {
     ).toEqual({
       photoKey: 'tmp/advogados/perfil/joao.jpg',
       pushNotificationsEnabled: true,
+      profileUnavailable: false,
       clientProfile: null,
       lawyerProfile: {
         fullName: 'João Advogado',
@@ -428,5 +472,34 @@ describe('mapMeWireToResult', () => {
         }),
       }),
     );
+  });
+
+  it('merges disponibilidade from PATCH /advogados/me into cached /me', () => {
+    const current = mapMeWireToResult({
+      usuario: {
+        id: '2',
+        email: 'joao@laweact.com',
+        nomeCompleto: 'João Advogado',
+        perfil: 'ADVOGADO',
+        notificacoesPushHabilitadas: true,
+      },
+      advogado: {
+        perfil: {
+          fotoUrl: 'tmp/advogados/perfil/joao.jpg',
+          nomeCompleto: 'João Advogado',
+          disponibilidade: 'DISPONIVEL',
+        },
+      },
+    });
+
+    expect(
+      mergeAdvogadoDetalheIntoMe(current, {
+        perfil: {
+          fotoUrl: 'tmp/advogados/perfil/joao.jpg',
+          nomeCompleto: 'João Advogado',
+          disponibilidade: 'INDISPONIVEL',
+        },
+      }).profileUnavailable,
+    ).toBe(true);
   });
 });

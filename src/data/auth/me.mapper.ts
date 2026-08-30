@@ -31,6 +31,10 @@ function normalizePhotoKey(value: unknown): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
+function isProfileUnavailable(perfil: MePerfilWire | null | undefined): boolean {
+  return asText(perfil?.disponibilidade).toUpperCase() === 'INDISPONIVEL';
+}
+
 function mapDocumentType(value: unknown): ClientDocumentType {
   return asText(value).toUpperCase() === 'CNPJ' ? 'cnpj' : 'cpf';
 }
@@ -189,6 +193,7 @@ export function mapMeWireToResult(wire: MeWireResponse): MeResult {
     photoKey,
     pushNotificationsEnabled:
       wire.usuario?.notificacoesPushHabilitadas !== false,
+    profileUnavailable: isProfileUnavailable(wire.advogado?.perfil),
     clientProfile: mapClientProfile(wire),
     lawyerProfile: mapLawyerProfile(wire),
   };
@@ -208,6 +213,7 @@ export function mergeClienteDetalheIntoMe(
   return {
     photoKey,
     pushNotificationsEnabled: current?.pushNotificationsEnabled ?? true,
+    profileUnavailable: false,
     clientProfile: mapClienteDetalheToProfile(detalhe, email),
     lawyerProfile: current?.lawyerProfile ?? null,
   };
@@ -223,10 +229,15 @@ export function mergeAdvogadoDetalheIntoMe(
   const email = current?.lawyerProfile?.email ?? '';
   const photoKey =
     normalizePhotoKey(detalhe.perfil?.fotoUrl) ?? current?.photoKey ?? null;
+  const profileUnavailable =
+    asText(detalhe.perfil?.disponibilidade).length > 0
+      ? isProfileUnavailable(detalhe.perfil)
+      : (current?.profileUnavailable ?? false);
 
   return {
     photoKey,
     pushNotificationsEnabled: current?.pushNotificationsEnabled ?? true,
+    profileUnavailable,
     clientProfile: current?.clientProfile ?? null,
     lawyerProfile: mapAdvogadoDetalheToProfile(detalhe, email),
   };

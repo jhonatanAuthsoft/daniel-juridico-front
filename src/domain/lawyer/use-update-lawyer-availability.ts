@@ -1,21 +1,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { MeResult } from '@/data/auth';
-import type { UpdateProfilePhotoParams } from '@/data/user';
+import type { UpdateLawyerAvailabilityParams } from '@/data/lawyer';
+import { authKeys } from '@/domain/auth/auth.keys';
 
-import { authKeys } from './auth.keys';
-import { updateProfilePhotoUseCase } from './update-profile-photo.use-case';
+import { applyAdvogadoDetalheToMeCache } from './apply-advogado-detalhe-to-me-cache';
+import { updateLawyerAvailabilityUseCase } from './update-lawyer-availability.use-case';
 
 /**
- * Domain hook: update profile photo (`PATCH /usuarios/me/foto`)
- * with optimistic update on `authKeys.me()`.
+ * Domain hook: `PATCH /advogados/me/disponibilidade`.
+ * Optimistically updates `profileUnavailable`, then writes the server detalhe.
  */
-export function useUpdateProfilePhoto() {
+export function useUpdateLawyerAvailability() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: UpdateProfilePhotoParams) =>
-      updateProfilePhotoUseCase(params),
+    mutationFn: (params: UpdateLawyerAvailabilityParams) =>
+      updateLawyerAvailabilityUseCase(params),
     onMutate: async (params) => {
       await queryClient.cancelQueries({ queryKey: authKeys.me() });
 
@@ -24,16 +25,16 @@ export function useUpdateProfilePhoto() {
       queryClient.setQueryData<MeResult>(authKeys.me(), (old) => {
         if (!old) {
           return {
-            photoKey: params.photoKey,
+            photoKey: null,
             pushNotificationsEnabled: true,
-            profileUnavailable: false,
+            profileUnavailable: params.profileUnavailable,
             clientProfile: null,
             lawyerProfile: null,
           };
         }
         return {
           ...old,
-          photoKey: params.photoKey,
+          profileUnavailable: params.profileUnavailable,
         };
       });
 
@@ -44,8 +45,8 @@ export function useUpdateProfilePhoto() {
         queryClient.setQueryData(authKeys.me(), context.previous);
       }
     },
-    onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: authKeys.me() });
+    onSuccess: (detalhe) => {
+      applyAdvogadoDetalheToMeCache(queryClient, detalhe);
     },
   });
 }
