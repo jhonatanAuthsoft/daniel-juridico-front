@@ -1,5 +1,4 @@
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
-import { Alert } from 'react-native';
 
 import { ClientSolicitationForm } from './client-solicitation-form.component';
 
@@ -78,9 +77,8 @@ describe('ClientSolicitationForm', () => {
     mockMutateAsync.mockResolvedValue({ totalMatches: 2 });
   });
 
-  it('returns to the listing after a successful submit without an alert', async () => {
+  it('returns to the listing after a successful submit', async () => {
     const onSubmitted = jest.fn();
-    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     const screen = render(
       <ClientSolicitationForm onClose={jest.fn()} onSubmitted={onSubmitted} />,
     );
@@ -91,9 +89,6 @@ describe('ClientSolicitationForm', () => {
     await waitFor(() => {
       expect(onSubmitted).toHaveBeenCalledTimes(1);
     });
-    expect(alertSpy).not.toHaveBeenCalled();
-
-    alertSpy.mockRestore();
   });
 
   it('expands and collapses the advanced filters', () => {

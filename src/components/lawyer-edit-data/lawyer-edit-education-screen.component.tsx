@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { AccountStackScreen } from '@/components/client-edit-data';
 import { FieldValidators } from '@/constants/field-validators';
@@ -21,6 +22,7 @@ type EducationForm = {
 
 export function LawyerEditEducationScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { profile, fromMe } = useLawyerEditProfile();
   const updateGraduation = useUpdateLawyerGraduation();
   const form = useForm<EducationForm>({
@@ -51,9 +53,9 @@ export function LawyerEditEducationScreen() {
       });
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Alterar graduação',
+      banner(
         getErrorMessage(error, 'Não foi possível salvar as alterações.'),
+        'error',
       );
     }
   });

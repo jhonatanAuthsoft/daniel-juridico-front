@@ -1,10 +1,11 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputOTP, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, Display, Link as TypographLink } from '@/atomic/typography';
@@ -33,6 +34,7 @@ function resolveEmail(value: string | string[] | undefined): string {
 
 export default function VerifyRecoveryCodeScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const params = useLocalSearchParams<{ email?: string; waitSeconds?: string }>();
   const email = resolveEmail(params.email);
   const validateCode = useValidateRecoveryCode();
@@ -61,7 +63,7 @@ export default function VerifyRecoveryCodeScreen() {
 
     const code = values.code.trim();
     if (!/^\d{4}$/.test(code)) {
-      Alert.alert('Recuperação de senha', 'Informe o código de 4 dígitos.');
+      banner('Informe o código de 4 dígitos.', 'warning');
       return;
     }
 
@@ -72,9 +74,9 @@ export default function VerifyRecoveryCodeScreen() {
         params: { email, code },
       });
     } catch (error) {
-      Alert.alert(
-        'Recuperação de senha',
+      banner(
         getErrorMessage(error, 'Código inválido ou expirado. Solicite um novo código.'),
+        'error',
       );
     }
   };
@@ -87,15 +89,15 @@ export default function VerifyRecoveryCodeScreen() {
     try {
       const result = await requestRecovery.mutateAsync({ email });
       start(result.waitSeconds);
-      Alert.alert(
-        'Recuperação de senha',
+      banner(
         result.message ||
           'Se existir uma conta com este e-mail, enviaremos um código de redefinição.',
+        'success',
       );
     } catch (error) {
-      Alert.alert(
-        'Recuperação de senha',
+      banner(
         getErrorMessage(error, 'Não foi possível reenviar o código.'),
+        'error',
       );
     }
   };

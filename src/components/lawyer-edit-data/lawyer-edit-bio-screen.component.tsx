@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputSelectField, InputTextField, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { InputCaption } from '@/atomic/typography';
@@ -23,6 +24,7 @@ type BioForm = {
 
 export function LawyerEditBioScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { profile, fromMe } = useLawyerEditProfile();
   const updateBiography = useUpdateLawyerBiography();
   const form = useForm<BioForm>({
@@ -50,9 +52,9 @@ export function LawyerEditBioScreen() {
       });
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Alterar biografia e pronome',
+      banner(
         getErrorMessage(error, 'Não foi possível salvar as alterações.'),
+        'error',
       );
     }
   });

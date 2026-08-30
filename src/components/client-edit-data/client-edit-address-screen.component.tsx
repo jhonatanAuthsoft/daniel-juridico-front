@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { ActivityIndicator, Alert, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputSelectField, InputTextField, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { InputCaption } from '@/atomic/typography';
@@ -119,6 +120,7 @@ export function AddressFields() {
 
 export function ClientEditAddressScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { profile, fromMe } = useClientEditProfile();
   const updateAddress = useUpdateClientAddress();
   const values: AddressForm = {
@@ -155,9 +157,9 @@ export function ClientEditAddressScreen() {
       await updateAddress.mutateAsync(formValues);
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Alterar endereço',
+      banner(
         getErrorMessage(error, 'Não foi possível salvar as alterações.'),
+        'error',
       );
     }
   });

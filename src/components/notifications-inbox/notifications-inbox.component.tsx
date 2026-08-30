@@ -1,16 +1,17 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
-  Alert,
   FlatList,
   Pressable,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
+import { useBanner } from '@/atomic/feedback-banner';
 import { LoadingState } from '@/atomic/loading-state';
 import { Separator } from '@/atomic/separator';
 import { Body1, Body2, Link } from '@/atomic/typography';
@@ -34,6 +35,7 @@ const LIST_GAP_ABOVE_TAB = 16;
 
 export function NotificationsInbox() {
   const router = useRouter();
+  const banner = useBanner();
   const insets = useSafeAreaInsets();
   const splashGate = useSplashGate();
   const { user } = useAuth();
@@ -73,6 +75,17 @@ export function NotificationsInbox() {
     }
   };
 
+  const renderRefreshControl = () => (
+    <RefreshControl
+      colors={[BrandColors.primary.light]}
+      onRefresh={() => {
+        void handlePullRefresh();
+      }}
+      refreshing={isPullRefreshing}
+      tintColor={BrandColors.primary.light}
+    />
+  );
+
   const handlePress = async (notification: NotificationResult) => {
     if (openingId) {
       return;
@@ -91,18 +104,18 @@ export function NotificationsInbox() {
 
       const href = await resolveNotificationHrefUseCase(role, notification);
       if (!href) {
-        Alert.alert(
-          'Não foi possível abrir',
+        banner(
           'A solicitação vinculada a esta notificação não está disponível.',
+          'error',
         );
         return;
       }
 
       router.push(href);
     } catch (err) {
-      Alert.alert(
-        'Não foi possível abrir',
+      banner(
         getErrorMessage(err, 'Tente novamente em instantes.'),
+        'error',
       );
     } finally {
       setOpeningId(null);
@@ -158,7 +171,14 @@ export function NotificationsInbox() {
         </LoadingState.Shimmer>
 
         <LoadingState.ErrorPlaceholder>
-          <View style={[styles.listContent, { paddingBottom: listPaddingBottom }]}>
+          <ScrollView
+            contentContainerStyle={[
+              styles.listContent,
+              styles.flexGrow,
+              { paddingBottom: listPaddingBottom },
+            ]}
+            refreshControl={renderRefreshControl()}
+            showsVerticalScrollIndicator={false}>
             <Body2 color={BrandColors.neutral.light}>
               {getErrorMessage(error, 'Não foi possível carregar as notificações.')}
             </Body2>
@@ -171,15 +191,18 @@ export function NotificationsInbox() {
               }}>
               <Link color={BrandColors.primary.light}>Tentar novamente</Link>
             </Pressable>
-          </View>
+          </ScrollView>
         </LoadingState.ErrorPlaceholder>
 
         <LoadingState.EmptyState>
-          <View
-            style={[
+          <ScrollView
+            contentContainerStyle={[
               styles.emptyWrap,
+              styles.flexGrow,
               { paddingBottom: listPaddingBottom },
-            ]}>
+            ]}
+            refreshControl={renderRefreshControl()}
+            showsVerticalScrollIndicator={false}>
             <Body1 color={BrandColors.neutral.white} style={styles.emptyTitle}>
               Nenhuma notificação
             </Body1>
@@ -187,7 +210,7 @@ export function NotificationsInbox() {
             <Body2 color={BrandColors.neutral.light} style={styles.emptyDescription}>
               Quando houver novas notificações, elas aparecerão aqui.
             </Body2>
-          </View>
+          </ScrollView>
         </LoadingState.EmptyState>
 
         <FlatList
@@ -198,15 +221,7 @@ export function NotificationsInbox() {
           data={notifications}
           ItemSeparatorComponent={() => <Separator size="sm" />}
           keyExtractor={(item) => item.id}
-          refreshControl={
-            <RefreshControl
-              onRefresh={() => {
-                void handlePullRefresh();
-              }}
-              refreshing={isPullRefreshing}
-              tintColor={BrandColors.primary.light}
-            />
-          }
+          refreshControl={renderRefreshControl()}
           renderItem={({ item }) => (
             <NotificationCard
               notification={item}
@@ -263,6 +278,9 @@ const styles = StyleSheet.create({
     maxWidth: MaxContentWidth,
     alignSelf: 'center',
     paddingHorizontal: Spacing.sm,
+  },
+  flexGrow: {
+    flexGrow: 1,
   },
   emptyWrap: {
     flex: 1,

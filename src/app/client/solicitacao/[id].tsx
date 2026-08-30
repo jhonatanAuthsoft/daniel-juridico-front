@@ -3,13 +3,13 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   StyleSheet,
   View,
 } from 'react-native';
 
 import { LoadingState } from '@/atomic/loading-state';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Body2, Display, Link } from '@/atomic/typography';
 import { ClientFlowScreen } from '@/components/client-flow-screen';
 import {
@@ -30,6 +30,7 @@ import {
 
 export default function ClientSolicitationDetailsScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
   const { id } = useLocalSearchParams<{ id: string }>();
   const solicitationId = Array.isArray(id) ? id[0] : id;
@@ -63,12 +64,12 @@ export default function ClientSolicitationDetailsScreen() {
       setCancelModalVisible(false);
       router.back();
     } catch (cancelError) {
-      Alert.alert(
-        'Cancelar solicitação',
+      banner(
         getErrorMessage(
           cancelError,
           'Não foi possível cancelar a solicitação.',
         ),
+        'error',
       );
     }
   };

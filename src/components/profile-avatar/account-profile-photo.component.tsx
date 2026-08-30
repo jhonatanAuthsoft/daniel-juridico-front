@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
-import { ActivityIndicator, Alert, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import type { StyleProp } from 'react-native';
 import type { ImageStyle } from 'expo-image';
 
 import { EditAltIcon } from '@/assets/icon/edit-alt';
+import { useBanner } from '@/atomic/feedback-banner';
 import { BrandColors } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import { useAuth, useUpdateProfilePhoto } from '@/domain/auth';
@@ -24,6 +25,7 @@ type AccountProfilePhotoProps = {
  */
 export function AccountProfilePhoto({ avatarStyle }: AccountProfilePhotoProps) {
   const { user } = useAuth();
+  const banner = useBanner();
   const updatePhoto = useUpdateProfilePhoto();
   const finalidade =
     user?.role === 'LAWYER' ? 'ADVOGADO_PERFIL' : 'CLIENTE_PERFIL';
@@ -38,15 +40,15 @@ export function AccountProfilePhoto({ avatarStyle }: AccountProfilePhotoProps) {
         { photoKey: result.key },
         {
           onError: (error) => {
-            Alert.alert(
-              'Foto de perfil',
+            banner(
               getErrorMessage(error, 'Não foi possível atualizar a foto de perfil.'),
+              'error',
             );
           },
         },
       );
     },
-    [updatePhoto],
+    [banner, updatePhoto],
   );
 
   const { pickEditedImage, editModal, isUploading } = useImageEditFlow(

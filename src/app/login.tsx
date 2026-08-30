@@ -48,8 +48,6 @@ export default function LoginScreen() {
   }, [splashGate]);
 
   const onSubmit = async (values: LoginFormValues) => {
-    setErrorMessage(null);
-
     try {
       const result = await login.mutateAsync({
         email: values.email,
@@ -108,13 +106,11 @@ export default function LoginScreen() {
           </View>
 
           {errorMessage ? (
-            <>
-              <Separator size="sm" />
-              <FeedbackBanner
-                message={errorMessage}
-                onDismiss={() => setErrorMessage(null)}
-              />
-            </>
+            <FeedbackBanner
+              message={errorMessage}
+              onDismiss={() => setErrorMessage(null)}
+              style={styles.errorBanner}
+            />
           ) : null}
 
           <Separator size="sm" />
@@ -218,6 +214,9 @@ const styles = StyleSheet.create({
   },
   intro: {
     alignItems: 'center',
+  },
+  errorBanner: {
+    marginTop: Spacing.sm,
   },
   subtitle: {
     textAlign: 'center',

@@ -1,6 +1,8 @@
 import * as ImagePicker from 'expo-image-picker';
 import { Alert, Linking } from 'react-native';
 
+import { showBanner } from '@/atomic/feedback-banner';
+
 const MAX_IMAGE_BYTES = 25 * 1024 * 1024;
 
 export type PickImageFromGalleryOptions = {
@@ -85,12 +87,12 @@ export async function pickImageFromGallery(
   const asset = result.assets[0];
 
   if (asset.fileSize != null && asset.fileSize > MAX_IMAGE_BYTES) {
-    Alert.alert('Arquivo muito grande', 'O tamanho máximo permitido é 25 MB.');
+    showBanner('O tamanho máximo permitido é 25 MB.', 'warning');
     return null;
   }
 
   if (!isAllowedImageType(asset.mimeType, asset.uri)) {
-    Alert.alert('Formato inválido', 'Use imagens nos formatos .jpeg ou .png.');
+    showBanner('Use imagens nos formatos .jpeg ou .png.', 'warning');
     return null;
   }
 

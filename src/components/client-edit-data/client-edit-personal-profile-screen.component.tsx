@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputSelectField, InputTextField, useForm } from '@/atomic/form';
 import { Body1 } from '@/atomic/typography';
 import { OptionCheckbox } from '@/components/signup-lawyer';
@@ -28,6 +29,7 @@ type PersonalProfileForm = {
 
 export function ClientEditPersonalProfileScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { profile, fromMe } = useClientEditProfile();
   const updatePersonalProfile = useUpdateClientPersonalProfile();
   const isCnpj = profile.documentType === 'cnpj';
@@ -66,9 +68,9 @@ export function ClientEditPersonalProfileScreen() {
       });
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Editar perfil pessoal',
+      banner(
         getErrorMessage(error, 'Não foi possível salvar as alterações.'),
+        'error',
       );
     }
   });

@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import { Controller } from 'react-hook-form';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, useForm } from '@/atomic/form';
 import { Body1 } from '@/atomic/typography';
 import { AccountStackScreen } from '@/components/client-edit-data';
@@ -24,6 +25,7 @@ type BillingForm = {
 
 export function LawyerEditBillingScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { profile, fromMe } = useLawyerEditProfile();
   const updateBilling = useUpdateLawyerBilling();
   const form = useForm<BillingForm>({
@@ -48,9 +50,9 @@ export function LawyerEditBillingScreen() {
       });
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Alterar Métodos de Cobrança',
+      banner(
         getErrorMessage(error, 'Não foi possível salvar as alterações.'),
+        'error',
       );
     }
   });

@@ -2,9 +2,9 @@ import type { ReactNode } from 'react';
 
 import { StyleSheet } from 'react-native';
 
-import { BellIcon } from '@/assets/icon/bell';
-import { HistoryIcon } from '@/assets/icon/history';
-import { PaperPlaneIcon } from '@/assets/icon/paper-plane';
+import { BellsIcon } from '@/assets/icon/bells-icon';
+import { HistoryIcon } from '@/assets/icon/history-icon';
+import { SolicitationIcon } from '@/assets/icon/solicitation-icon';
 import { ProfileAvatar } from '@/components/profile-avatar';
 import type { UserRole } from '@/domain/auth';
 
@@ -34,11 +34,13 @@ function profileVisual(): TabVisual {
 export const CLIENT_TAB_VISUALS: Record<string, TabVisual> = {
   index: {
     label: 'Solicitações',
-    renderIcon: (color) => <PaperPlaneIcon width={22} height={22} color={color} />,
+    renderIcon: (color) => (
+      <SolicitationIcon width={22} height={22} color={color} />
+    ),
   },
   notificacoes: {
     label: 'Notificações',
-    renderIcon: (color) => <BellIcon width={22} height={22} color={color} />,
+    renderIcon: (color) => <BellsIcon width={22} height={22} color={color} />,
   },
   perfil: profileVisual(),
 };
@@ -47,7 +49,9 @@ export const CLIENT_TAB_VISUALS: Record<string, TabVisual> = {
 export const LAWYER_TAB_VISUALS: Record<string, TabVisual> = {
   index: {
     label: 'Solicitações',
-    renderIcon: (color) => <PaperPlaneIcon width={22} height={22} color={color} />,
+    renderIcon: (color) => (
+      <SolicitationIcon width={22} height={22} color={color} />
+    ),
   },
   historico: {
     label: 'Histórico',
@@ -55,7 +59,7 @@ export const LAWYER_TAB_VISUALS: Record<string, TabVisual> = {
   },
   notificacoes: {
     label: 'Notificações',
-    renderIcon: (color) => <BellIcon width={22} height={22} color={color} />,
+    renderIcon: (color) => <BellsIcon width={22} height={22} color={color} />,
   },
   perfil: profileVisual(),
 };

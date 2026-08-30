@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert } from 'react-native';
 
 import { BackLink } from '@/atomic/back-link';
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import {
@@ -31,6 +31,7 @@ import { useRegisterLawyer } from '@/domain/lawyer';
 
 export default function LawyerSignupScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const [step, setStep] = useState(1);
   const [showPasswordErrors, setShowPasswordErrors] = useState(false);
   const form = useForm<LawyerSignupFormValues>({
@@ -59,9 +60,9 @@ export default function LawyerSignupScreen() {
       await registerLawyer.mutateAsync(values);
       router.push('/signup/terms?profile=lawyer');
     } catch (error) {
-      Alert.alert(
-        'Cadastro',
+      banner(
         error instanceof Error ? error.message : 'Não foi possível concluir o cadastro.',
+        'error',
       );
     }
   });

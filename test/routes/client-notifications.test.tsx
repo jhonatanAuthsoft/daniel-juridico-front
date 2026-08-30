@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import type { ReactNode } from 'react';
+import { RefreshControl } from 'react-native';
 
 import ClientNotificacoesScreen from '@/app/client/(tabs)/notificacoes';
 
@@ -10,6 +11,7 @@ const mockListNotifications = jest.fn();
 const mockMarkRead = jest.fn();
 const mockMarkAllRead = jest.fn();
 const mockResolveHref = jest.fn();
+const mockRefetch = jest.fn().mockResolvedValue(undefined);
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: mockPush, back: mockBack }),
@@ -41,7 +43,7 @@ jest.mock('@/domain/notification', () => ({
     isLoading: false,
     isError: false,
     error: null,
-    refetch: jest.fn(),
+    refetch: mockRefetch,
     isFetched: true,
   }),
   useMarkNotificationRead: () => ({
@@ -72,6 +74,7 @@ describe('ClientNotificacoesScreen', () => {
     mockMarkRead.mockClear();
     mockMarkAllRead.mockClear();
     mockResolveHref.mockReset();
+    mockRefetch.mockClear();
     mockResolveHref.mockResolvedValue('/client/solicitacao/sol-9');
     mockListNotifications.mockReturnValue([
       {
@@ -109,5 +112,34 @@ describe('ClientNotificacoesScreen', () => {
       expect(mockMarkRead).toHaveBeenCalledWith('notif-1');
       expect(mockPush).toHaveBeenCalledWith('/client/solicitacao/sol-9');
     });
+  });
+
+  it('refetches from the list on pull-to-refresh without swapping to the loading screen', async () => {
+    const screen = wrap(<ClientNotificacoesScreen />);
+
+    expect(screen.getByText('Conexão aceita')).toBeTruthy();
+
+    await act(async () => {
+      fireEvent(screen.UNSAFE_getByType(RefreshControl), 'refresh');
+    });
+
+    expect(mockRefetch).toHaveBeenCalledTimes(1);
+    expect(screen.getByText('Conexão aceita')).toBeTruthy();
+    expect(screen.getByText('Caixa de entrada')).toBeTruthy();
+  });
+
+  it('refetches from the empty state on pull-to-refresh without swapping to the loading screen', async () => {
+    mockListNotifications.mockReturnValue([]);
+    const screen = wrap(<ClientNotificacoesScreen />);
+
+    expect(screen.getByText('Nenhuma notificação')).toBeTruthy();
+
+    await act(async () => {
+      fireEvent(screen.UNSAFE_getByType(RefreshControl), 'refresh');
+    });
+
+    expect(mockRefetch).toHaveBeenCalledTimes(1);
+    expect(screen.getByText('Nenhuma notificação')).toBeTruthy();
+    expect(screen.getByText('Caixa de entrada')).toBeTruthy();
   });
 });

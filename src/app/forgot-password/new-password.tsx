@@ -1,11 +1,12 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EyeIcon } from '@/assets/icon/eye';
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputTextField, useForm, useWatch } from '@/atomic/form';
 import { PasswordRequirementsFeedback } from '@/atomic/password-requirements-feedback';
 import { Separator } from '@/atomic/separator';
@@ -63,6 +64,7 @@ function NewPasswordField({ showErrors }: { showErrors: boolean }) {
 
 export default function NewPasswordScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const params = useLocalSearchParams<{ email?: string; code?: string }>();
   const email = resolveParam(params.email).toLowerCase();
   const code = resolveParam(params.code);
@@ -88,7 +90,7 @@ export default function NewPasswordScreen() {
       requirement.test(values.password),
     );
     if (!passwordOk) {
-      Alert.alert('Nova senha', 'A senha não atende aos requisitos mínimos.');
+      banner('A senha não atende aos requisitos mínimos.', 'warning');
       return;
     }
 
@@ -99,20 +101,12 @@ export default function NewPasswordScreen() {
         newPassword: values.password,
       });
 
-      Alert.alert(
-        'Senha alterada',
-        result.message || 'Senha alterada com sucesso',
-        [
-          {
-            text: 'Ir para o login',
-            onPress: () => router.replace('/login'),
-          },
-        ],
-      );
+      banner(result.message || 'Senha alterada com sucesso', 'success');
+      router.replace('/login');
     } catch (error) {
-      Alert.alert(
-        'Nova senha',
+      banner(
         getErrorMessage(error, 'Não foi possível redefinir a senha.'),
+        'error',
       );
     }
   };

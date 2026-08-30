@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { AccountStackScreen } from '@/components/client-edit-data';
 import { FieldValidators } from '@/constants/field-validators';
@@ -19,6 +20,7 @@ type NameEmailForm = {
 
 export function LawyerEditNameEmailScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { profile, fromMe } = useLawyerEditProfile();
   const updateGeneralData = useUpdateLawyerGeneralData();
   const form = useForm<NameEmailForm>({
@@ -43,9 +45,9 @@ export function LawyerEditNameEmailScreen() {
       await updateGeneralData.mutateAsync({ fullName: formValues.fullName });
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Alterar nome e email',
+      banner(
         getErrorMessage(error, 'Não foi possível salvar as alterações.'),
+        'error',
       );
     }
   });

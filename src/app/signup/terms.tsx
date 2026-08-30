@@ -1,9 +1,10 @@
 import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
 import { OptionCheckbox } from '@/components/signup-lawyer';
@@ -68,6 +69,7 @@ const TERMS_SECTIONS = [
 
 export default function SignupTermsScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { profile } = useLocalSearchParams<{ profile?: string }>();
   const { signInAs, isAuthenticated, homeHref, user, isHydrating } = useAuth();
   const acceptTerms = useAcceptTerms();
@@ -94,11 +96,11 @@ export default function SignupTermsScreen() {
           scrollConfirmed: true,
         });
       } catch (error) {
-        Alert.alert(
-          'Aceite dos termos',
+        banner(
           error instanceof Error
             ? error.message
             : 'Não foi possível registrar o aceite dos termos.',
+          'error',
         );
         return;
       }

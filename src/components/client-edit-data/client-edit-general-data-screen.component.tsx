@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { Link } from '@/atomic/typography';
 import { FieldValidators } from '@/constants/field-validators';
@@ -32,6 +33,7 @@ function toGeneralValues(
 
 export function ClientEditGeneralDataScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { profile, fromMe } = useClientEditProfile();
   const updateGeneralData = useUpdateClientGeneralData();
   const isCnpj = profile.documentType === 'cnpj';
@@ -66,9 +68,9 @@ export function ClientEditGeneralDataScreen() {
       await updateGeneralData.mutateAsync({ fullName: formValues.fullName });
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Alterar dados gerais',
+      banner(
         getErrorMessage(error, 'Não foi possível salvar as alterações.'),
+        'error',
       );
     }
   });

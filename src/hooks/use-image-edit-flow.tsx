@@ -1,6 +1,6 @@
 import { useCallback, useState, type ReactElement } from 'react';
-import { Alert } from 'react-native';
 
+import { useBanner } from '@/atomic/feedback-banner';
 import {
   ImageEditModal,
   type ImageEditModalProps,
@@ -36,6 +36,7 @@ export function useImageEditFlow(
   const [aspect, setAspect] = useState<[number, number]>([1, 1]);
   const [visible, setVisible] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const banner = useBanner();
 
   const pickEditedImage = useCallback(
     async (pickOptions: PickImageFromGalleryOptions = {}) => {
@@ -79,15 +80,15 @@ export function useImageEditFlow(
         const key = await uploadLocalImage({ uri, finalidade });
         onConfirm({ uri, key });
       } catch (error) {
-        Alert.alert(
-          'Upload',
+        banner(
           getErrorMessage(error, 'Não foi possível enviar a imagem.'),
+          'error',
         );
       } finally {
         setIsUploading(false);
       }
     },
-    [onConfirm, options?.uploadFinalidade],
+    [banner, onConfirm, options?.uploadFinalidade],
   );
 
   return {

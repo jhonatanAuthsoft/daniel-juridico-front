@@ -1,11 +1,12 @@
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { BagIcon } from '@/assets/icon/bag';
 import { MapPinIcon } from '@/assets/icon/map-pin';
 import { PercentIcon } from '@/assets/icon/percent';
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Body2, Heading1, Link } from '@/atomic/typography';
 import { CancelConnectionModal } from '@/components/client-connection-status/cancel-connection-modal.component';
 import type { ClientConnectionStatusValue } from '@/components/client-connection-status';
@@ -137,6 +138,7 @@ export function ClientCompatibleLawyersList({
   connectionsByLawyerId,
   onLawyerPress,
 }: ClientCompatibleLawyersListProps) {
+  const banner = useBanner();
   const createConnection = useCreateConnection();
   const cancelConnection = useCancelConnection();
 
@@ -147,9 +149,9 @@ export function ClientCompatibleLawyersList({
         advogadoId: lawyerId,
       });
     } catch (error) {
-      Alert.alert(
-        'Conexão',
+      banner(
         getErrorMessage(error, 'Não foi possível solicitar a conexão.'),
+        'error',
       );
     }
   };
@@ -158,9 +160,9 @@ export function ClientCompatibleLawyersList({
     try {
       await cancelConnection.mutateAsync(connectionId);
     } catch (error) {
-      Alert.alert(
-        'Conexão',
+      banner(
         getErrorMessage(error, 'Não foi possível cancelar a solicitação.'),
+        'error',
       );
     }
   };

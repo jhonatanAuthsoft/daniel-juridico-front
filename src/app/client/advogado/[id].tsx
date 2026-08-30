@@ -4,13 +4,13 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { type ReactNode } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   StyleSheet,
   View,
 } from 'react-native';
 
 import { Body1, Body2, Display, Heading1, Link } from '@/atomic/typography';
+import { useBanner } from '@/atomic/feedback-banner';
 import { ClientConnectionStatus } from '@/components/client-connection-status';
 import { ClientFlowScreen } from '@/components/client-flow-screen';
 import { ClientLawyerReviews } from '@/components/client-lawyer-reviews';
@@ -89,6 +89,7 @@ function LawyerProfilePhoto({ photoKey }: { photoKey: string | null }) {
 
 export default function ClientLawyerProfileScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { id, solicitacaoId: solicitacaoIdParam } = useLocalSearchParams<{
     id: string;
     solicitacaoId?: string;
@@ -343,12 +344,12 @@ export default function ClientLawyerProfileScreen() {
               try {
                 await cancelConnection.mutateAsync(connection.id);
               } catch (cancelError) {
-                Alert.alert(
-                  'Conexão',
+                banner(
                   getErrorMessage(
                     cancelError,
                     'Não foi possível cancelar a conexão.',
                   ),
+                  'error',
                 );
               }
             })();
@@ -364,12 +365,12 @@ export default function ClientLawyerProfileScreen() {
                   advogadoId: lawyerId,
                 });
               } catch (requestError) {
-                Alert.alert(
-                  'Conexão',
+                banner(
                   getErrorMessage(
                     requestError,
                     'Não foi possível solicitar a conexão.',
                   ),
+                  'error',
                 );
               }
             })();
@@ -390,9 +391,9 @@ export default function ClientLawyerProfileScreen() {
               reviewId,
             });
           } catch (error) {
-            Alert.alert(
-              'Avaliação',
+            banner(
               getErrorMessage(error, 'Não foi possível excluir a avaliação.'),
+              'error',
             );
             throw error;
           }
@@ -405,9 +406,9 @@ export default function ClientLawyerProfileScreen() {
               comment,
             });
           } catch (error) {
-            Alert.alert(
-              'Avaliação',
+            banner(
               getErrorMessage(error, 'Não foi possível enviar a avaliação.'),
+              'error',
             );
           }
         }}

@@ -2,7 +2,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -12,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Body1, Display, Link } from '@/atomic/typography';
 import {
   LawyerClientContactsCard,
@@ -35,6 +35,7 @@ import {
 
 export default function LawyerSolicitationDetailsScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const connectionId = Array.isArray(id) ? id[0] : id;
@@ -80,9 +81,9 @@ export default function LawyerSolicitationDetailsScreen() {
     try {
       await acceptConnection.mutateAsync(connectionId);
     } catch (error) {
-      Alert.alert(
-        'Conexão',
+      banner(
         getErrorMessage(error, 'Não foi possível aceitar a conexão.'),
+        'error',
       );
     }
   };
@@ -95,9 +96,9 @@ export default function LawyerSolicitationDetailsScreen() {
       await rejectConnection.mutateAsync(connectionId);
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Conexão',
+      banner(
         getErrorMessage(error, 'Não foi possível recusar a conexão.'),
+        'error',
       );
     }
   };

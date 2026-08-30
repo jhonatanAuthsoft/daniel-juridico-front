@@ -178,22 +178,22 @@ const styles = StyleSheet.create({
     height: 24,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'visible',
   },
   unreadDot: {
     position: 'absolute',
-    top: -1,
-    right: -1,
+    top: 0,
+    right: 0,
     width: DOT_SIZE,
     height: DOT_SIZE,
     borderRadius: DOT_SIZE / 2,
-    borderWidth: 1.5,
-    borderColor: BrandColors.neutral.xdark,
+    zIndex: 1,
   },
   unreadDotSelected: {
     backgroundColor: BrandColors.neutral.white,
   },
   unreadDotIdle: {
-    backgroundColor: BrandColors.accessory.red,
+    backgroundColor: BrandColors.primary.light,
   },
 });
 

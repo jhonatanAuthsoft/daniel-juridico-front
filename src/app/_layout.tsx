@@ -22,7 +22,7 @@ void requireOptionalNativeModule<{
 
 import { SplashGuard } from '@/components/splash-guard';
 import { BrandColors } from '@/constants/theme';
-import { AuthProvider, QueryProvider } from '@/providers';
+import { AuthProvider, BannerProvider, QueryProvider } from '@/providers';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -50,23 +50,25 @@ export default function RootLayout() {
         <AuthProvider>
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <SplashGuard>
-              <Stack
-                initialRouteName="login"
-                detachInactiveScreens={false}
-                screenOptions={{
-                  headerShown: false,
-                  contentStyle: { backgroundColor: BrandColors.neutral.xdark },
-                  animation: 'none',
-                  freezeOnBlur: false,
-                }}>
-                <Stack.Screen name="login" />
-                <Stack.Screen name="index" />
-                <Stack.Screen name="select-profile" />
-                <Stack.Screen name="signup" />
-                <Stack.Screen name="forgot-password" />
-                <Stack.Screen name="client" />
-                <Stack.Screen name="lawyer" />
-              </Stack>
+              <BannerProvider>
+                <Stack
+                  initialRouteName="login"
+                  detachInactiveScreens={false}
+                  screenOptions={{
+                    headerShown: false,
+                    contentStyle: { backgroundColor: BrandColors.neutral.xdark },
+                    animation: 'none',
+                    freezeOnBlur: false,
+                  }}>
+                  <Stack.Screen name="login" />
+                  <Stack.Screen name="index" />
+                  <Stack.Screen name="select-profile" />
+                  <Stack.Screen name="signup" />
+                  <Stack.Screen name="forgot-password" />
+                  <Stack.Screen name="client" />
+                  <Stack.Screen name="lawyer" />
+                </Stack>
+              </BannerProvider>
             </SplashGuard>
           </ThemeProvider>
         </AuthProvider>

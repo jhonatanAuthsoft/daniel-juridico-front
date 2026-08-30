@@ -1,7 +1,8 @@
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { Body1, Link } from '@/atomic/typography';
 import { AccountStackScreen } from '@/components/client-edit-data';
@@ -21,6 +22,7 @@ function matchesConfirmationPhrase(value: string): boolean {
 
 export function DeleteAccountScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { signOut } = useAuth();
   const deleteAccount = useDeleteAccount();
   const form = useForm<DeleteAccountForm>({
@@ -33,9 +35,9 @@ export function DeleteAccountScreen() {
       await signOut();
       router.replace('/login');
     } catch (error) {
-      Alert.alert(
-        'Apagar conta',
+      banner(
         getErrorMessage(error, 'Não foi possível excluir a conta.'),
+        'error',
       );
     }
   });

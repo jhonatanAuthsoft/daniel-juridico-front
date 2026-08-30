@@ -1,9 +1,10 @@
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, useForm } from '@/atomic/form';
 import { Link } from '@/atomic/typography';
 import { AccountStackScreen } from '@/components/client-edit-data';
@@ -24,6 +25,7 @@ type EditingId = 'primary' | number | null;
 
 export function LawyerEditDocumentationScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { profile, fromMe } = useLawyerEditProfile();
   const updateDocumentation = useUpdateLawyerDocumentation();
   const form = useForm<DocumentationForm>({
@@ -136,9 +138,9 @@ export function LawyerEditDocumentationScreen() {
       });
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Alterar documentação',
+      banner(
         getErrorMessage(error, 'Não foi possível salvar as alterações.'),
+        'error',
       );
     }
   });

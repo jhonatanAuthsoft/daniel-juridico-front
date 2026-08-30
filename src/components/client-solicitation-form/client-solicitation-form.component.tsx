@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   interpolate,
@@ -11,6 +11,7 @@ import Animated, {
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { FilterIcon } from '@/assets/icon/filter';
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputSelectField, InputTextField, useForm, useWatch } from '@/atomic/form';
 import { Body2, Link } from '@/atomic/typography';
 import { ClientFlowScreen } from '@/components/client-flow-screen';
@@ -202,6 +203,7 @@ export function ClientSolicitationForm({
   onClose,
   onSubmitted,
 }: ClientSolicitationFormProps) {
+  const banner = useBanner();
   const [advancedFiltersOpen, setAdvancedFiltersOpen] = useState(false);
   const [practiceHelpVisible, setPracticeHelpVisible] = useState(false);
   const form = useForm<ClientSolicitationFormValues>({
@@ -239,9 +241,9 @@ export function ClientSolicitationForm({
 
       onSubmitted();
     } catch (error) {
-      Alert.alert(
-        'Solicitação',
+      banner(
         getErrorMessage(error, 'Não foi possível criar a solicitação.'),
+        'error',
       );
     }
   };

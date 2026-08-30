@@ -1,9 +1,10 @@
 import { useRouter } from 'expo-router';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
@@ -21,6 +22,7 @@ type ForgotPasswordFormValues = {
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const requestRecovery = useRequestPasswordRecovery();
   const { secondsLeft, label, start } = useCountdownSeconds();
   const form = useForm<ForgotPasswordFormValues>({
@@ -46,9 +48,9 @@ export default function ForgotPasswordScreen() {
         },
       });
     } catch (error) {
-      Alert.alert(
-        'Recuperação de senha',
+      banner(
         getErrorMessage(error, 'Não foi possível solicitar a recuperação de senha.'),
+        'error',
       );
     }
   };

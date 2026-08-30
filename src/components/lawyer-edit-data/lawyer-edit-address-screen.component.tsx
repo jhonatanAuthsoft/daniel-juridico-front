@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, useForm } from '@/atomic/form';
 import {
   AccountStackScreen,
@@ -16,6 +16,7 @@ import { useLawyerEditProfile } from './use-lawyer-edit-profile';
 
 export function LawyerEditAddressScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const { profile, fromMe } = useLawyerEditProfile();
   const updateAddress = useUpdateLawyerAddress();
   const form = useForm<AddressForm>({
@@ -50,9 +51,9 @@ export function LawyerEditAddressScreen() {
       await updateAddress.mutateAsync(formValues);
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Alterar endereço',
+      banner(
         getErrorMessage(error, 'Não foi possível salvar as alterações.'),
+        'error',
       );
     }
   });

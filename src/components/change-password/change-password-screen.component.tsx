@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Alert, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { EyeIcon } from '@/assets/icon/eye';
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputTextField, useForm, useWatch } from '@/atomic/form';
 import { PasswordRequirementsFeedback } from '@/atomic/password-requirements-feedback';
 import { Separator } from '@/atomic/separator';
@@ -94,6 +95,7 @@ function ChangePasswordFields({ showErrors }: { showErrors: boolean }) {
 
 export function ChangePasswordScreen() {
   const router = useRouter();
+  const banner = useBanner();
   const updatePassword = useUpdatePassword();
   const [showErrors, setShowErrors] = useState(false);
   const form = useForm<ChangePasswordForm>({
@@ -106,10 +108,7 @@ export function ChangePasswordScreen() {
   const onSubmit = form.handleSubmit(async (values) => {
     setShowErrors(true);
     if (values.currentPassword === values.newPassword) {
-      Alert.alert(
-        'Alterar senha',
-        'A nova senha deve ser diferente da senha atual.',
-      );
+      banner('A nova senha deve ser diferente da senha atual.', 'warning');
       return;
     }
 
@@ -120,9 +119,9 @@ export function ChangePasswordScreen() {
       });
       router.back();
     } catch (error) {
-      Alert.alert(
-        'Alterar senha',
+      banner(
         getErrorMessage(error, 'Não foi possível alterar a senha.'),
+        'error',
       );
     }
   });

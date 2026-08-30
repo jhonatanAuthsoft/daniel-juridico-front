@@ -1,10 +1,11 @@
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
   Platform,
   Pressable,
+  RefreshControl,
   StyleSheet,
   TextInput,
   View,
@@ -50,6 +51,16 @@ export default function LawyerHomeScreen() {
     isError,
     refetch,
   } = useConnections({ status: 'PENDENTE' });
+  const [isPullRefreshing, setIsPullRefreshing] = useState(false);
+
+  const handlePullRefresh = useCallback(async () => {
+    setIsPullRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setIsPullRefreshing(false);
+    }
+  }, [refetch]);
 
   const solicitations = useMemo(
     () => connections.map(mapConnectionToLawyerCard),
@@ -154,6 +165,7 @@ export default function LawyerHomeScreen() {
           </View>
         ) : (
           <FlatList
+            testID="lawyer-home-list"
             data={filteredData}
             keyExtractor={(item) => item.id}
             contentContainerStyle={[
@@ -163,6 +175,16 @@ export default function LawyerHomeScreen() {
             keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={isPullRefreshing}
+                tintColor={BrandColors.primary.light}
+                colors={[BrandColors.primary.light]}
+                onRefresh={() => {
+                  void handlePullRefresh();
+                }}
+              />
+            }
             ItemSeparatorComponent={() => <Separator size="sm" />}
             ListEmptyComponent={
               <LawyerEmptyState

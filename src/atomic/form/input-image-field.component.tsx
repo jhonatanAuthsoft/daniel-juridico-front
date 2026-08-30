@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
 import {
   Controller,
   useFormContext,
@@ -11,6 +10,7 @@ import {
 import type { ArquivoFinalidade } from '@/data/arquivo';
 import { uploadLocalImage } from '@/data/arquivo';
 import { getErrorMessage } from '@/data/http';
+import { useBanner } from '@/atomic/feedback-banner';
 
 import {
   ImageField,
@@ -58,6 +58,7 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
 ) {
   const { control, setValue, getValues, clearErrors, setError } =
     useFormContext<TFieldValues>();
+  const banner = useBanner();
   const {
     name,
     label,
@@ -94,13 +95,13 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
         clearErrors([name, keyName]);
       } catch (error) {
         const message = getErrorMessage(error, 'Não foi possível enviar a imagem.');
-        Alert.alert('Upload', message);
+        banner(message, 'error');
         setError(keyName, { type: 'manual', message });
       } finally {
         setIsUploading(false);
       }
     },
-    [clearErrors, keyName, name, setError, setValue, uploadFinalidade],
+    [banner, clearErrors, keyName, name, setError, setValue, uploadFinalidade],
   );
 
   const syncMultiKeys = useCallback(
@@ -142,13 +143,13 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
         clearErrors([name, keyName]);
       } catch (error) {
         const message = getErrorMessage(error, 'Não foi possível enviar a imagem.');
-        Alert.alert('Upload', message);
+        banner(message, 'error');
         setError(keyName, { type: 'manual', message });
       } finally {
         setIsUploading(false);
       }
     },
-    [clearErrors, getValues, keyName, name, setError, setValue, uploadFinalidade],
+    [banner, clearErrors, getValues, keyName, name, setError, setValue, uploadFinalidade],
   );
 
   return (
