@@ -2,12 +2,15 @@ import {
   apiUrl,
   assertApiSuccess,
   authenticatedHttpRequest,
+  HttpError,
+  resolveApiErrorMessage,
   type ApiResponse,
 } from '@/data/http';
 
 import {
   mapAcceptTermsParamsToWire,
   mapAcceptTermsWireToResult,
+  mapDeleteAccountWireToResult,
   mapUpdatePasswordParamsToWire,
   mapUpdatePasswordWireToResult,
   mapUpdatePreferencesParamsToWire,
@@ -19,6 +22,7 @@ import type {
   AcceptTermsParams,
   AcceptTermsResult,
   AcceptTermsWireResponse,
+  DeleteAccountResult,
   UpdatePasswordParams,
   UpdatePasswordResult,
   UpdatePasswordWireResponse,
@@ -116,4 +120,30 @@ export async function updatePassword(
 
   const data = assertApiSuccess(response, 'Não foi possível alterar a senha.');
   return mapUpdatePasswordWireToResult(data);
+}
+
+/**
+ * Permanently deletes the authenticated user's account.
+ * `DELETE /usuarios/me`
+ */
+export async function deleteAccount(
+  signal?: AbortSignal,
+): Promise<DeleteAccountResult> {
+  const response = await authenticatedHttpRequest<ApiResponse<null>>(
+    apiUrl('/usuarios/me'),
+    {
+      method: 'DELETE',
+      signal,
+    },
+  );
+
+  if (!response.success) {
+    throw new HttpError(
+      resolveApiErrorMessage(response, 'Não foi possível excluir a conta.'),
+      422,
+      response,
+    );
+  }
+
+  return mapDeleteAccountWireToResult(response);
 }

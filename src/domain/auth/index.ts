@@ -20,6 +20,8 @@ export { useUpdateProfilePhoto } from './use-update-profile-photo';
 export { updateProfilePhotoUseCase } from './update-profile-photo.use-case';
 export { useUpdatePassword } from './use-update-password';
 export { updatePasswordUseCase } from './update-password.use-case';
+export { useDeleteAccount } from './use-delete-account';
+export { deleteAccountUseCase } from './delete-account.use-case';
 export { useAcceptTerms } from './use-accept-terms';
 export { acceptTermsUseCase } from './accept-terms.use-case';
 export { useLogin } from './use-login';

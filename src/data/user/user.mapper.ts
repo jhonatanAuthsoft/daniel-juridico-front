@@ -15,6 +15,8 @@ import type {
   UpdatePasswordResult,
   UpdatePasswordWireRequest,
   UpdatePasswordWireResponse,
+  DeleteAccountWireResponse,
+  DeleteAccountResult,
 } from './user.types';
 import { TERMS_VERSION } from './user.types';
 
@@ -88,5 +90,14 @@ export function mapUpdatePasswordWireToResult(
 ): UpdatePasswordResult {
   return {
     message: response.mensagem,
+  };
+}
+
+export function mapDeleteAccountWireToResult(
+  response: DeleteAccountWireResponse,
+): DeleteAccountResult {
+  const message = response.message?.trim();
+  return {
+    message: message || 'Conta excluída com sucesso',
   };
 }

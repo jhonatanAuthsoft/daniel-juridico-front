@@ -15,6 +15,8 @@ export type {
   UpdatePasswordResult,
   UpdatePasswordWireRequest,
   UpdatePasswordWireResponse,
+  DeleteAccountWireResponse,
+  DeleteAccountResult,
 } from './user.types';
 export { TERMS_VERSION } from './user.types';
 export {
@@ -26,10 +28,12 @@ export {
   mapUpdateProfilePhotoWireToResult,
   mapUpdatePasswordParamsToWire,
   mapUpdatePasswordWireToResult,
+  mapDeleteAccountWireToResult,
 } from './user.mapper';
 export {
   acceptTerms,
   updatePreferences,
   updateProfilePhoto,
   updatePassword,
+  deleteAccount,
 } from './user.api';

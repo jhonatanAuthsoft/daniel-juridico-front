@@ -105,3 +105,13 @@ export type UpdatePasswordWireResponse = {
 export type UpdatePasswordResult = {
   message: string;
 };
+
+/** Wire envelope for `DELETE /usuarios/me` (data is omitted on success). */
+export type DeleteAccountWireResponse = {
+  message?: string | null;
+};
+
+/** Domain-friendly view of the account deletion. */
+export type DeleteAccountResult = {
+  message: string;
+};

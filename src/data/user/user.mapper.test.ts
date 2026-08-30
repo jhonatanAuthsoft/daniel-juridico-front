@@ -1,4 +1,5 @@
 import {
+  mapDeleteAccountWireToResult,
   mapUpdatePasswordParamsToWire,
   mapUpdatePasswordWireToResult,
   mapUpdateProfilePhotoParamsToWire,
@@ -47,6 +48,18 @@ describe('mapUpdatePassword', () => {
       }),
     ).toEqual({
       message: 'Senha alterada com sucesso',
+    });
+  });
+});
+
+describe('mapDeleteAccount', () => {
+  it('maps the envelope message to the domain result', () => {
+    expect(
+      mapDeleteAccountWireToResult({
+        message: 'Conta excluída com sucesso',
+      }),
+    ).toEqual({
+      message: 'Conta excluída com sucesso',
     });
   });
 });
