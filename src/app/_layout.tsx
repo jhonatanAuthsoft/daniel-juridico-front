@@ -22,6 +22,8 @@ void requireOptionalNativeModule<{
 
 import { SplashGuard } from '@/components/splash-guard';
 import { BrandColors } from '@/constants/theme';
+import { OpenFromNotification } from '@/domain/notification';
+import { PushDeviceSync } from '@/domain/push-device';
 import { AuthProvider, BannerProvider, QueryProvider } from '@/providers';
 
 SplashScreen.preventAutoHideAsync();
@@ -48,6 +50,8 @@ export default function RootLayout() {
     <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
       <QueryProvider>
         <AuthProvider>
+          <PushDeviceSync />
+          <OpenFromNotification />
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <SplashGuard>
               <BannerProvider>

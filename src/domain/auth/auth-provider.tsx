@@ -16,6 +16,7 @@ import {
   updateAuthUser,
   type AuthSession,
 } from '@/data/auth';
+import { unregisterPushDeviceUseCase } from '@/domain/push-device/unregister-push-device.use-case';
 
 import {
   type AuthUser,
@@ -134,6 +135,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = useCallback(async () => {
+    try {
+      await unregisterPushDeviceUseCase();
+    } catch {
+      // Logout must proceed even if the device could not be unregistered.
+    }
     await clearAuthSessionStore();
     setUser(null);
     setToken(null);

@@ -7,6 +7,8 @@ export {
 } from './notification.use-cases';
 export { resolveNotificationHref } from './resolve-notification-href';
 export { resolveNotificationHrefUseCase } from './resolve-notification-href.use-case';
+export { notificationsInboxHrefForRole } from './notifications-inbox-href';
+export { OpenFromNotification } from './open-from-notification';
 export {
   useMarkAllNotificationsRead,
   useMarkNotificationRead,

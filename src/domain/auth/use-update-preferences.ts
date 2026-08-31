@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { MeResult } from '@/data/auth';
 import type { UpdatePreferencesParams } from '@/data/user';
+import { syncPushDeviceUseCase } from '@/domain/push-device/sync-push-device.use-case';
+import { unregisterPushDeviceUseCase } from '@/domain/push-device/unregister-push-device.use-case';
 
 import { authKeys } from './auth.keys';
 import { updatePreferencesUseCase } from './update-preferences.use-case';
@@ -42,6 +44,17 @@ export function useUpdatePreferences() {
     onError: (_error, _params, context) => {
       if (context?.previous !== undefined) {
         queryClient.setQueryData(authKeys.me(), context.previous);
+      }
+    },
+    onSuccess: async (_data, params) => {
+      try {
+        if (params.pushNotificationsEnabled) {
+          await syncPushDeviceUseCase();
+        } else {
+          await unregisterPushDeviceUseCase();
+        }
+      } catch {
+        // Preference is already saved; device sync is best-effort.
       }
     },
     onSettled: async () => {

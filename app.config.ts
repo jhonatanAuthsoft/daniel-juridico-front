@@ -90,7 +90,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ...(androidGoogleServicesFile
       ? { googleServicesFile: androidGoogleServicesFile }
       : {}),
-    permissions: ['android.permission.RECORD_AUDIO'],
+    permissions: [
+      'android.permission.RECORD_AUDIO',
+      'android.permission.POST_NOTIFICATIONS',
+    ],
   },
   web: {
     output: 'static',
@@ -115,6 +118,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     'expo-asset',
     'expo-secure-store',
+    [
+      'expo-notifications',
+      {
+        // Android small icon: 96×96 white silhouette on transparent PNG.
+        icon: './assets/images/notification-icon.png',
+        color: '#EE2E24',
+        defaultChannel: 'default',
+      },
+    ],
     [
       'expo-image-picker',
       {

@@ -13,6 +13,7 @@ import { FieldValidators } from '@/constants/field-validators';
 import { InputMasks } from '@/constants/input-masks';
 import { UF_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
+import { useResolvedImageUri } from '@/domain/arquivo';
 
 import {
   formatOabSummary,
@@ -38,6 +39,7 @@ type OabEntryCardProps = {
   onEdit: () => void;
   onCloseEdit: () => void;
   onDelete?: () => void;
+  photosRequired?: boolean;
 };
 
 export function OabEntryCard({
@@ -57,8 +59,14 @@ export function OabEntryCard({
   onEdit,
   onCloseEdit,
   onDelete,
+  photosRequired = false,
 }: OabEntryCardProps) {
   const summary = formatOabSummary(number, uf) || '—';
+  const displayFront = useResolvedImageUri(photoUris[0]);
+  const displayBack = useResolvedImageUri(photoUris[1]);
+  const displayUris = photoUris.map((_, index) =>
+    index === 0 ? displayFront.uri : displayBack.uri,
+  );
 
   if (isEditing) {
     return (
@@ -112,6 +120,8 @@ export function OabEntryCard({
           aspect={OAB_PHOTO_ASPECT}
           maxCount={OAB_PHOTO_MAX}
           minCount={2}
+          required={photosRequired}
+          displayUris={displayUris}
         />
       </View>
     );
@@ -161,8 +171,8 @@ export function OabEntryCard({
             </InputLabel>
             <Separator size="xxs" />
             <View style={styles.photoRow}>
-              <WalletPhotoPreview label="Frente" uri={photoUris[0] ?? ''} />
-              <WalletPhotoPreview label="Verso" uri={photoUris[1] ?? ''} />
+              <WalletPhotoPreview label="Frente" uri={displayFront.uri} />
+              <WalletPhotoPreview label="Verso" uri={displayBack.uri} />
             </View>
           </View>
 

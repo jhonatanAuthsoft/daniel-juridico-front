@@ -1,4 +1,5 @@
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { Image } from 'react-native';
 
 import { LawyerEditAddressScreen } from '@/components/lawyer-edit-data/lawyer-edit-address-screen.component';
 import { LawyerEditBillingScreen } from '@/components/lawyer-edit-data/lawyer-edit-billing-screen.component';
@@ -35,8 +36,8 @@ const lawyerProfile: LawyerEditProfile = {
   oabNumber: '127.583',
   oabUf: 'BA',
   oabIssueDate: '15/03/2016',
-  oabPhotoUris: [],
-  oabPhotoKeys: [],
+  oabPhotoUris: ['https://cdn.example/oab-front.jpg', 'https://cdn.example/oab-back.jpg'],
+  oabPhotoKeys: ['tmp/advogados/oab/front.jpg', 'tmp/advogados/oab/back.jpg'],
   supplementalOabs: [
     { number: '484752004401', uf: 'BA', issueDate: '10/01/2018', photoUris: [], photoKeys: [] },
   ],
@@ -47,6 +48,23 @@ const lawyerProfile: LawyerEditProfile = {
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: mockPush, back: mockBack }),
+}));
+
+jest.mock('@/domain/arquivo', () => ({
+  useResolvedImageUri: (keyOrUri?: string | null) => {
+    const value = keyOrUri?.trim() ?? '';
+    if (!value) {
+      return { uri: '', isResolving: false, isError: false };
+    }
+    if (/^(https?:|file:)/i.test(value)) {
+      return { uri: value, isResolving: false, isError: false };
+    }
+    return {
+      uri: `https://signed.example/${value}`,
+      isResolving: false,
+      isError: false,
+    };
+  },
 }));
 
 jest.mock('@/domain/auth', () => ({
@@ -373,6 +391,40 @@ describe('LawyerEditDocumentationScreen', () => {
     mockUpdateDocumentation.mockClear();
   });
 
+  it('shows signed read URLs for stored OAB wallet photos', () => {
+    mockUseMe.mockReturnValue({
+      data: {
+        photoKey: null,
+        pushNotificationsEnabled: true,
+        clientProfile: null,
+        lawyerProfile: {
+          ...lawyerProfile,
+          oabPhotoUris: [
+            'tmp/advogados/oab/front.jpg',
+            'tmp/advogados/oab/back.jpg',
+          ],
+          oabPhotoKeys: [
+            'tmp/advogados/oab/front.jpg',
+            'tmp/advogados/oab/back.jpg',
+          ],
+        },
+      },
+      isLoading: false,
+    });
+
+    const screen = render(<LawyerEditDocumentationScreen />);
+    fireEvent.press(screen.getByLabelText('OAB Principal'));
+
+    const uris = screen
+      .UNSAFE_getAllByType(Image)
+      .map((node) => node.props.source?.uri)
+      .filter(Boolean);
+    expect(uris).toEqual([
+      'https://signed.example/tmp/advogados/oab/front.jpg',
+      'https://signed.example/tmp/advogados/oab/back.jpg',
+    ]);
+  });
+
   it('lists principal and supplemental OAB cards', () => {
     const screen = render(<LawyerEditDocumentationScreen />);
 
@@ -400,6 +452,32 @@ describe('LawyerEditDocumentationScreen', () => {
     expect(screen.getByLabelText('Fechar OAB Suplementar')).toBeTruthy();
   });
 
+  it('does not save when primary OAB photos were removed', async () => {
+    mockUseMe.mockReturnValue({
+      data: {
+        photoKey: null,
+        pushNotificationsEnabled: true,
+        clientProfile: null,
+        lawyerProfile: {
+          ...lawyerProfile,
+          oabPhotoUris: [],
+          oabPhotoKeys: [],
+        },
+      },
+      isLoading: false,
+    });
+
+    const screen = render(<LawyerEditDocumentationScreen />);
+
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(screen.getAllByText('Anexe as fotos de frente e verso').length).toBeGreaterThan(0);
+    });
+    expect(mockUpdateDocumentation).not.toHaveBeenCalled();
+    expect(mockBack).not.toHaveBeenCalled();
+  });
+
   it('saves documentation and goes back', async () => {
     const screen = render(<LawyerEditDocumentationScreen />);
 
@@ -410,7 +488,7 @@ describe('LawyerEditDocumentationScreen', () => {
         oabNumber: '127.583',
         oabUf: 'BA',
         oabIssueDate: '15/03/2016',
-        oabPhotoKeys: [],
+        oabPhotoKeys: ['tmp/advogados/oab/front.jpg', 'tmp/advogados/oab/back.jpg'],
         supplementalOabs: [
           {
             number: '484752004401',

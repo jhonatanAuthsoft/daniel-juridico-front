@@ -7,6 +7,7 @@ import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption, InputLabel } from '@/atomic/typography';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { pickImageFromGallery } from '@/utils/pick-image-from-gallery';
+import { isDirectImageUri } from '@/utils/is-direct-image-uri';
 
 import { ImageEditModal } from './image-edit-modal.component';
 
@@ -32,9 +33,20 @@ export type ImageFieldMultiProps = ImageFieldBaseProps & {
   multiple: true;
   value: string[];
   onChange: (uris: string[]) => void;
+  /** Signed/local URLs aligned with `value`, used only for display. */
+  displayUris?: string[];
 };
 
 export type ImageFieldProps = ImageFieldSingleProps | ImageFieldMultiProps;
+
+function sourceUriAt(
+  uris: string[],
+  index: number,
+  displayUris: string[] | undefined,
+): string {
+  const candidate = displayUris ? (displayUris[index] ?? '') : (uris[index] ?? '');
+  return isDirectImageUri(candidate) ? candidate : '';
+}
 
 function normalizeUris(props: ImageFieldProps): string[] {
   if (props.multiple) {
@@ -56,6 +68,7 @@ export function ImageField(props: ImageFieldProps) {
 
   const uris = normalizeUris(props);
   const isMultiple = Boolean(props.multiple);
+  const displayUris = props.multiple ? props.displayUris : undefined;
   const hasError = Boolean(errorMessage);
   const canAddMore =
     isMultiple && (maxCount == null || uris.length < maxCount) && !isUploading;
@@ -66,7 +79,7 @@ export function ImageField(props: ImageFieldProps) {
   const [editVisible, setEditVisible] = useState(false);
 
   const safePreviewIndex = uris.length === 0 ? 0 : Math.min(previewIndex, uris.length - 1);
-  const previewUri = uris[safePreviewIndex] ?? '';
+  const previewUri = sourceUriAt(uris, safePreviewIndex, displayUris);
 
   const applyFinalUri = (finalUri: string) => {
     if (props.multiple) {
@@ -197,11 +210,13 @@ export function ImageField(props: ImageFieldProps) {
             }
           }}>
           <View style={[styles.previewArea, { aspectRatio }]}>
-            <Image
-              source={{ uri: previewUri }}
-              style={styles.previewImage}
-              resizeMode="contain"
-            />
+            {previewUri ? (
+              <Image
+                source={{ uri: previewUri }}
+                style={styles.previewImage}
+                resizeMode="contain"
+              />
+            ) : null}
             {isUploading ? (
               <View style={styles.uploadOverlay}>
                 <ActivityIndicator color={BrandColors.neutral.white} />
@@ -213,6 +228,7 @@ export function ImageField(props: ImageFieldProps) {
         <View style={styles.selectorRow}>
           {uris.map((uri, index) => {
             const isSelected = index === safePreviewIndex;
+            const thumbUri = sourceUriAt(uris, index, displayUris);
             return (
               <Pressable
                 key={uri}
@@ -234,7 +250,13 @@ export function ImageField(props: ImageFieldProps) {
                   removeAt(index);
                 }}
                 style={[styles.thumbAction, isSelected && styles.thumbSelected]}>
-                <Image source={{ uri }} style={styles.thumbImage} resizeMode="contain" />
+                {thumbUri ? (
+                  <Image
+                    source={{ uri: thumbUri }}
+                    style={styles.thumbImage}
+                    resizeMode="cover"
+                  />
+                ) : null}
                 {isSelected ? (
                   <View style={styles.thumbOverlay}>
                     <SymbolView
@@ -327,6 +349,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  thumbImage: {
+    width: '100%',
+    height: '100%',
+  },
   uploadOverlay: {
     ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.45)',
@@ -347,11 +373,6 @@ const styles = StyleSheet.create({
     backgroundColor: BrandColors.neutral.xdark,
     borderWidth: 1,
     borderColor: BrandColors.neutral.white,
-  },
-  thumbImage: {
-    ...StyleSheet.absoluteFill,
-    width: '100%',
-    height: '100%',
   },
   thumbSelected: {
     borderColor: BrandColors.primary.light,

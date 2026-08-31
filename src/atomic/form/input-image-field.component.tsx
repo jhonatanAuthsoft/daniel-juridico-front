@@ -37,6 +37,8 @@ type InputImageFieldBaseProps<TFieldValues extends FieldValues> = {
    * - Without `required`: 0 images OR at least this count (e.g. OAB frente+verso).
    */
   minCount?: number;
+  /** Signed/local URLs aligned with the field value, used only for display. */
+  displayUris?: string[];
 };
 
 export type InputImageFieldSingleProps<TFieldValues extends FieldValues = FieldValues> =
@@ -71,6 +73,7 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
     keyName,
     required = false,
     minCount,
+    displayUris,
   } = props;
   const [isUploading, setIsUploading] = useState(false);
 
@@ -198,6 +201,7 @@ export function InputImageField<TFieldValues extends FieldValues = FieldValues>(
             aspect,
             maxCount,
             value: currentUris,
+            displayUris,
             isUploading,
             errorMessage: error?.message,
             onChange: (nextUris) => {

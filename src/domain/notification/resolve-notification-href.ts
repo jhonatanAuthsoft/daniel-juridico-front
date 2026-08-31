@@ -13,7 +13,6 @@ export type ResolveNotificationHrefParams = {
 
 /**
  * Maps an inbox notification to an in-app route.
- * Push open-from-killed is out of scope — reuse this when that lands.
  */
 export function resolveNotificationHref(
   params: ResolveNotificationHrefParams,

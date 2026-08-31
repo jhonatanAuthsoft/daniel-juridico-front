@@ -123,6 +123,19 @@ export function LawyerEditDocumentationScreen() {
   };
 
   const onSubmit = form.handleSubmit(async (formValues) => {
+    const primaryPhotoKeys = (formValues.oabPhotoKeys ?? []).filter(Boolean);
+    if (primaryPhotoKeys.length < 2) {
+      form.setError('oabPhotoUris', {
+        type: 'manual',
+        message: 'Anexe as fotos de frente e verso',
+      });
+      setIsCreating(false);
+      setExpandedId('primary');
+      setEditingId('primary');
+      banner('Anexe as fotos de frente e verso', 'error');
+      return;
+    }
+
     try {
       await updateDocumentation.mutateAsync({
         oabNumber: formValues.oabNumber,
@@ -164,6 +177,7 @@ export function LawyerEditDocumentationScreen() {
             onToggle={() => toggle('primary')}
             onEdit={() => startEdit('primary')}
             onCloseEdit={closeEdit}
+            photosRequired
           />
 
           {fields.map((field, index) => {
