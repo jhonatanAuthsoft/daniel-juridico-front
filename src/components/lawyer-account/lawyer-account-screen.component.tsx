@@ -1,6 +1,8 @@
 import { SymbolView } from 'expo-symbols';
 import { useRouter } from 'expo-router';
 import {
+  Linking,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -96,6 +98,14 @@ export function LawyerAccountScreen() {
     updateAvailability.mutate({ profileUnavailable: value });
   };
 
+  const openSubscriptionManagement = () => {
+    const url =
+      Platform.OS === 'ios'
+        ? 'https://apps.apple.com/account/subscriptions'
+        : 'https://play.google.com/store/account/subscriptions';
+    void Linking.openURL(url);
+  };
+
   return (
     <View style={styles.root}>
       <ScrollView
@@ -132,6 +142,10 @@ export function LawyerAccountScreen() {
                 }
                 if (item === 'Alterar Senha') {
                   router.push('/lawyer/perfil/alterar-senha');
+                  return;
+                }
+                if (item === 'Assinatura e plano') {
+                  openSubscriptionManagement();
                   return;
                 }
                 if (item === 'Termos e condições') {
