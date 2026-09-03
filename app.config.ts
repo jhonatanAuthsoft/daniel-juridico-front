@@ -118,6 +118,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     'expo-asset',
     'expo-secure-store',
+    'expo-iap',
     [
       'expo-notifications',
       {

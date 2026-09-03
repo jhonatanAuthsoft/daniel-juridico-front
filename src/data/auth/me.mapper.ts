@@ -1,3 +1,5 @@
+import type { SubscriptionResult } from '@/data/subscription';
+import { mapSubscriptionWireToResultOrNull } from '@/data/subscription';
 import { maskCep, maskCnpj, maskCpf, maskRg } from '@/utils/br-input';
 
 import type {
@@ -194,6 +196,7 @@ export function mapMeWireToResult(wire: MeWireResponse): MeResult {
     pushNotificationsEnabled:
       wire.usuario?.notificacoesPushHabilitadas !== false,
     profileUnavailable: isProfileUnavailable(wire.advogado?.perfil),
+    subscription: mapSubscriptionWireToResultOrNull(wire.assinatura),
     clientProfile: mapClientProfile(wire),
     lawyerProfile: mapLawyerProfile(wire),
   };
@@ -214,6 +217,7 @@ export function mergeClienteDetalheIntoMe(
     photoKey,
     pushNotificationsEnabled: current?.pushNotificationsEnabled ?? true,
     profileUnavailable: false,
+    subscription: current?.subscription ?? null,
     clientProfile: mapClienteDetalheToProfile(detalhe, email),
     lawyerProfile: current?.lawyerProfile ?? null,
   };
@@ -238,6 +242,7 @@ export function mergeAdvogadoDetalheIntoMe(
     photoKey,
     pushNotificationsEnabled: current?.pushNotificationsEnabled ?? true,
     profileUnavailable,
+    subscription: current?.subscription ?? null,
     clientProfile: current?.clientProfile ?? null,
     lawyerProfile: mapAdvogadoDetalheToProfile(detalhe, email),
   };

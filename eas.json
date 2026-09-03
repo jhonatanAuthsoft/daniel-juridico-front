@@ -11,7 +11,8 @@
       "env": {
         "APP_ENV": "development",
         "EXPO_PUBLIC_APP_ENV": "development",
-        "EXPO_PUBLIC_API_BASE_URL": "https://api-stg-laweact.authsoftsolutions.org"
+        "EXPO_PUBLIC_API_BASE_URL": "https://api-stg-laweact.authsoftsolutions.org",
+        "EXPO_PUBLIC_IAP_PROVIDER": "fake"
       },
       "ios": {
         "simulator": true

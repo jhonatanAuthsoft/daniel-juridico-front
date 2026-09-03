@@ -3,12 +3,14 @@ import { Platform } from 'react-native';
 
 import { BrandColors } from '@/constants/theme';
 import { RoleGuard, TermsGuard } from '@/domain/auth';
+import { SubscriptionGuard } from '@/domain/subscription';
 
 export default function LawyerShellLayout() {
   return (
     <RoleGuard allowedRole="LAWYER">
       <TermsGuard>
-        <Stack
+        <SubscriptionGuard>
+          <Stack
           detachInactiveScreens={Platform.OS !== 'android'}
           screenOptions={{
             headerShown: false,
@@ -17,6 +19,7 @@ export default function LawyerShellLayout() {
             contentStyle: { backgroundColor: BrandColors.neutral.xdark },
           }}
         />
+        </SubscriptionGuard>
       </TermsGuard>
     </RoleGuard>
   );

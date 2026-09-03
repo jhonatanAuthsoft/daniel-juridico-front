@@ -143,6 +143,7 @@ describe('mapMeWireToResult', () => {
       photoKey: 'tmp/clientes/perfil/abc.jpg',
       pushNotificationsEnabled: true,
       profileUnavailable: false,
+      subscription: null,
       clientProfile: {
         fullName: 'Maria Silva',
         email: 'maria@laweact.com',
@@ -270,6 +271,7 @@ describe('mapMeWireToResult', () => {
       photoKey: 'tmp/clientes/perfil/abc.jpg',
       pushNotificationsEnabled: true,
       profileUnavailable: false,
+      subscription: null,
       clientProfile: {
         fullName: 'Maria Silva Lima',
         email: 'maria@laweact.com',
@@ -365,6 +367,7 @@ describe('mapMeWireToResult', () => {
       photoKey: 'tmp/advogados/perfil/joao.jpg',
       pushNotificationsEnabled: true,
       profileUnavailable: false,
+      subscription: null,
       clientProfile: null,
       lawyerProfile: {
         fullName: 'João Advogado',

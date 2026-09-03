@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -7,23 +8,26 @@ import { CheckedCheckboxIcon } from '@/assets/icon/checked-checkbox';
 import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
 import { BrandColors, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
-import { homeHrefForRole, useAuth } from '@/domain/auth';
+import { authKeys, homeHrefForRole, useAuth } from '@/domain/auth';
+import { subscriptionKeys } from '@/domain/subscription';
 
 const REDIRECT_DELAY_MS = 2500;
 
 export default function SignupSubscriptionConfirmedScreen() {
   const router = useRouter();
-  const { signInAs } = useAuth();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   useEffect(() => {
-    signInAs('LAWYER');
+    void queryClient.invalidateQueries({ queryKey: authKeys.me() });
+    void queryClient.invalidateQueries({ queryKey: subscriptionKeys.me() });
 
     const timeoutId = setTimeout(() => {
-      router.replace(homeHrefForRole('LAWYER'));
+      router.replace(homeHrefForRole(user?.role ?? 'LAWYER'));
     }, REDIRECT_DELAY_MS);
 
     return () => clearTimeout(timeoutId);
-  }, [router, signInAs]);
+  }, [queryClient, router, user?.role]);
 
   return (
     <View style={styles.root}>

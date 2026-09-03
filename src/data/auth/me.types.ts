@@ -1,5 +1,7 @@
 /** Wire / domain types for `GET /usuarios/me`. */
 
+import type { SubscriptionWire } from '@/data/subscription';
+
 export type MePerfilWire = {
   fotoUrl?: string | null;
   nomeCompleto?: string | null;
@@ -60,6 +62,7 @@ export type MeWireResponse = {
   };
   cliente?: MeDetalheWire | null;
   advogado?: MeDetalheWire | null;
+  assinatura?: SubscriptionWire | null;
 };
 
 export type ClientDocumentType = 'cpf' | 'cnpj';
@@ -124,6 +127,8 @@ export type MeResult = {
   pushNotificationsEnabled: boolean;
   /** Lawyer profile marked unavailable (`advogados.disponibilidade = INDISPONIVEL`). */
   profileUnavailable: boolean;
+  /** Subscription state for lawyers; null for clients without subscription requirement. */
+  subscription: SubscriptionResult | null;
   /** Present for clients; null for lawyers. */
   clientProfile: ClientEditProfile | null;
   /** Present for lawyers; null for clients. */
