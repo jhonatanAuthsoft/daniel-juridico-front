@@ -17,6 +17,7 @@ const baseConnection: ConnectionResult = {
   criadoEm: '2026-08-06T12:00:00',
   decididoEm: '2026-08-06T13:00:00',
   canceladoEm: null,
+  visualizadaEm: '2026-08-06T12:05:00',
   telefone: null,
   email: null,
   nomeAdvogado: 'Bruna',
@@ -88,6 +89,10 @@ jest.mock('@/domain/connection', () => {
     }),
     useRejectConnection: () => ({
       mutateAsync: jest.fn(),
+      isPending: false,
+    }),
+    useMarkConnectionViewed: () => ({
+      mutateAsync: jest.fn().mockResolvedValue(undefined),
       isPending: false,
     }),
   };

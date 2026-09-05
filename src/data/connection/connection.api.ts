@@ -6,12 +6,19 @@ import {
 } from '@/data/http';
 import { HttpError } from '@/data/http/http-error';
 
-import { mapConexaoWireToResult } from './connection.mapper';
+import {
+  mapContagemPorStatus,
+  mapContagemPorUrgencia,
+  mapConexaoWireToResult,
+  normalizeConexaoListagemPayload,
+} from './connection.mapper';
 import type {
+  ConexaoListagemWire,
   ConexaoWire,
   ConnectionResult,
   CreateConnectionParams,
   ListConnectionsParams,
+  ListConnectionsResult,
 } from './connection.types';
 
 function requireId(value: string, label: string): string {
@@ -94,24 +101,74 @@ export async function rejectConnection(
   return mapConexaoWireToResult(data);
 }
 
-/** `GET /conexoes?status=` — inbox for cliente or advogado. */
+/**
+ * `POST /conexoes/{id}/visualizar` — ADVOGADO.
+ * Idempotent: the server keeps the first `visualizadaEm`.
+ */
+export async function markConnectionViewed(
+  conexaoId: string,
+  signal?: AbortSignal,
+): Promise<ConnectionResult> {
+  const id = requireId(conexaoId, 'Identificador da conexão');
+
+  const response = await authenticatedHttpRequest<ApiResponse<ConexaoWire>>(
+    apiUrl(`/conexoes/${encodeURIComponent(id)}/visualizar`),
+    { method: 'POST', body: {}, signal },
+  );
+
+  const data = assertApiSuccess(
+    response,
+    'Não foi possível marcar a solicitação como visualizada.',
+  );
+  return mapConexaoWireToResult(data);
+}
+
+/**
+ * Inbox for cliente or advogado.
+ * `GET /conexoes?limit&offset&status&urgencia&busca`
+ *
+ * Omitting `limit` asks the server for the whole list, unpaged.
+ */
 export async function listConnections(
   params: ListConnectionsParams = {},
   signal?: AbortSignal,
-): Promise<ConnectionResult[]> {
+): Promise<ListConnectionsResult> {
   const query = new URLSearchParams();
-  if (params.status) {
-    query.set('status', params.status);
+  const statuses = Array.isArray(params.status)
+    ? params.status
+    : params.status
+      ? [params.status]
+      : [];
+  for (const status of statuses) {
+    query.append('status', status);
+  }
+  if (params.limit != null) {
+    query.set('limit', String(params.limit));
+    query.set('offset', String(params.offset ?? 0));
+  }
+  if (params.urgencia) {
+    query.set('urgencia', params.urgencia);
+  }
+  const busca = params.busca?.trim();
+  if (busca) {
+    query.set('busca', busca);
   }
   const suffix = query.toString() ? `?${query.toString()}` : '';
 
-  const response = await authenticatedHttpRequest<ApiResponse<ConexaoWire[]>>(
-    apiUrl(`/conexoes${suffix}`),
-    { method: 'GET', signal },
-  );
+  const response = await authenticatedHttpRequest<
+    ApiResponse<ConexaoListagemWire | ConexaoWire[]>
+  >(apiUrl(`/conexoes${suffix}`), { method: 'GET', signal });
 
   const data = assertApiSuccess(response, 'Não foi possível carregar as conexões.');
-  return (Array.isArray(data) ? data : []).map(mapConexaoWireToResult);
+  const listagem = normalizeConexaoListagemPayload(data);
+  const items = listagem.items.map(mapConexaoWireToResult);
+
+  return {
+    items,
+    totalElements: response.pagination?.totalElements ?? items.length,
+    countsByUrgency: mapContagemPorUrgencia(listagem.contagemPorUrgencia),
+    countsByStatus: mapContagemPorStatus(listagem.contagemPorStatus),
+  };
 }
 
 /** `GET /solicitacoes/{id}/conexoes` — CLIENTE. */

@@ -5,6 +5,7 @@ import {
   mapListItemWireToCard,
   mapListagemWireToResult,
   mapMatchResultToCompatibleLawyer,
+  mapMatchWireToResult,
   normalizeListagemPayload,
 } from './solicitation.mapper';
 
@@ -172,6 +173,8 @@ describe('solicitation.mapper', () => {
 
     expect(card.footerVariant).toBe('compatible');
     expect(card.lawyerCount).toBe(5);
+    expect(card.specialty).toBe('Civil');
+    expect(card.description).toBe('Desc');
   });
 
   it('allows cancel only while AGUARDANDO_MATCHING', () => {
@@ -190,12 +193,115 @@ describe('solicitation.mapper', () => {
         position: 1,
         compatibility: 90,
         localityLevel: 'MESMA_CIDADE',
+        isAvailable: true,
         averageRating: 0,
         totalReviews: 0,
+        neighborhood: 'Bela Vista',
+        city: 'São Paulo',
+        practice: { code: 'PAUTISTA', name: 'Pautista' },
       },
       0,
     );
 
     expect(lawyer.photoUrl).toBe('tmp/advogados/perfil/marina.jpg');
+    expect(lawyer.isAvailable).toBe(true);
+    expect(lawyer.location).toBe('Bela Vista - São Paulo');
+    expect(lawyer.role).toBe('Pautista');
+  });
+
+  it('maps match availability from the wire payload', () => {
+    expect(
+      mapMatchWireToResult({
+        advogadoId: 'adv-1',
+        nome: 'Marina',
+        fotoUrl: null,
+        posicao: 1,
+        compatibilidade: 90,
+        nivelLocalidade: 'MESMA_CIDADE',
+        disponibilidade: 'DISPONIVEL',
+        mediaAvaliacoes: 5,
+        totalAvaliacoes: 1,
+        pontuacao: {
+          modalidade: 20,
+          localidade: 20,
+          especialidade: 20,
+          subespecialidade: 20,
+          experiencia: 10,
+          formaCobranca: 10,
+        },
+      }).isAvailable,
+    ).toBe(true);
+
+    expect(
+      mapMatchWireToResult({
+        advogadoId: 'adv-2',
+        nome: 'Igor',
+        fotoUrl: null,
+        posicao: 2,
+        compatibilidade: 80,
+        nivelLocalidade: 'MESMO_ESTADO',
+        disponibilidade: 'INDISPONIVEL',
+        mediaAvaliacoes: null,
+        totalAvaliacoes: null,
+        pontuacao: {
+          modalidade: 20,
+          localidade: 10,
+          especialidade: 20,
+          subespecialidade: 20,
+          experiencia: 10,
+          formaCobranca: 10,
+        },
+      }).isAvailable,
+    ).toBe(false);
+
+    expect(
+      mapMatchWireToResult({
+        advogadoId: 'adv-3',
+        nome: 'Helena',
+        fotoUrl: null,
+        posicao: 3,
+        compatibilidade: 70,
+        nivelLocalidade: 'MESMA_CIDADE',
+        mediaAvaliacoes: null,
+        totalAvaliacoes: null,
+        pontuacao: {
+          modalidade: 20,
+          localidade: 20,
+          especialidade: 20,
+          subespecialidade: 0,
+          experiencia: 10,
+          formaCobranca: 0,
+        },
+      }).isAvailable,
+    ).toBe(true);
+  });
+
+  it('maps neighborhood, city and practice modality from the match wire', () => {
+    const match = mapMatchWireToResult({
+      advogadoId: 'adv-1',
+      nome: 'Maria Gomes',
+      fotoUrl: null,
+      posicao: 1,
+      compatibilidade: 50,
+      nivelLocalidade: 'MESMA_CIDADE',
+      disponibilidade: 'DISPONIVEL',
+      mediaAvaliacoes: 5,
+      totalAvaliacoes: 1,
+      bairro: 'Rio Branco',
+      cidade: 'Salvador',
+      modalidadeAtuacao: { codigo: 'PAUTISTA', nome: 'Pautista' },
+      pontuacao: {
+        modalidade: 20,
+        localidade: 20,
+        especialidade: 20,
+        subespecialidade: 20,
+        experiencia: 10,
+        formaCobranca: 10,
+      },
+    });
+
+    expect(match.neighborhood).toBe('Rio Branco');
+    expect(match.city).toBe('Salvador');
+    expect(match.practice).toEqual({ code: 'PAUTISTA', name: 'Pautista' });
   });
 });

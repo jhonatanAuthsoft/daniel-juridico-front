@@ -9,7 +9,7 @@ import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
 import { OptionCheckbox } from '@/components/signup-lawyer';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
-import { homeHrefForRole, useAcceptTerms, useAuth } from '@/domain/auth';
+import { useAcceptTerms, useAuth } from '@/domain/auth';
 
 const LOREM_BLOCK =
   'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';
@@ -71,7 +71,7 @@ export default function SignupTermsScreen() {
   const router = useRouter();
   const banner = useBanner();
   const { profile } = useLocalSearchParams<{ profile?: string }>();
-  const { signInAs, isAuthenticated, homeHref, user, isHydrating } = useAuth();
+  const { isAuthenticated, homeHref, user, isHydrating } = useAuth();
   const acceptTerms = useAcceptTerms();
   const [accepted, setAccepted] = useState(false);
 
@@ -84,39 +84,32 @@ export default function SignupTermsScreen() {
   }
 
   const goNext = async () => {
-    if (profile === 'lawyer' && !isAuthenticated) {
+    if (!isAuthenticated) {
+      router.replace('/login');
+      return;
+    }
+
+    try {
+      await acceptTerms.mutateAsync({
+        checkboxConfirmed: true,
+        scrollConfirmed: true,
+      });
+    } catch (error) {
+      banner(
+        error instanceof Error
+          ? error.message
+          : 'Não foi possível registrar o aceite dos termos.',
+        'error',
+      );
+      return;
+    }
+
+    if (profile === 'lawyer') {
       router.push('/signup/subscription');
       return;
     }
 
-    if (isAuthenticated) {
-      try {
-        await acceptTerms.mutateAsync({
-          checkboxConfirmed: true,
-          scrollConfirmed: true,
-        });
-      } catch (error) {
-        banner(
-          error instanceof Error
-            ? error.message
-            : 'Não foi possível registrar o aceite dos termos.',
-          'error',
-        );
-        return;
-      }
-
-      if (profile === 'lawyer') {
-        router.push('/signup/subscription');
-        return;
-      }
-
-      router.replace(homeHref);
-      return;
-    }
-
-    // Fallback for unauthenticated client mock flows.
-    signInAs('CLIENT');
-    router.replace(homeHrefForRole('CLIENT'));
+    router.replace(homeHref);
   };
 
   return (

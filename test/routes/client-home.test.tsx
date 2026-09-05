@@ -14,6 +14,7 @@ const MOCK_ITEMS: ClientSolicitationCardData[] = [
     title: 'Pensão Alimentícia',
     description: 'Preciso de orientação sobre pensão alimentícia.',
     date: '01/08/2026',
+    specialty: 'Direito do Consumidor',
     lawyerCount: 3,
     footerVariant: 'compatible',
   },
@@ -24,6 +25,7 @@ const MOCK_ITEMS: ClientSolicitationCardData[] = [
     title: 'Contrato de Aluguel',
     description: 'Revisão de contrato de locação.',
     date: '02/08/2026',
+    specialty: 'Direito Civil',
     lawyerCount: 1,
     footerVariant: 'compatible',
   },
@@ -94,6 +96,14 @@ describe('ClientHomeScreen', () => {
     fireEvent.press(screen.getAllByText('Pensão Alimentícia')[0]);
 
     expect(mockPush).toHaveBeenCalledWith('/client/solicitacao/sol-1');
+  });
+
+  it('shows the specialty next to the date on each card', () => {
+    render(<ClientHomeScreen />);
+
+    expect(screen.getByText('01/08/2026')).toBeTruthy();
+    expect(screen.getByText('Direito do Consumidor')).toBeTruthy();
+    expect(screen.getByText('Direito Civil')).toBeTruthy();
   });
 
   it('shows the empty state and replaces the floating CTA when there are no results', () => {

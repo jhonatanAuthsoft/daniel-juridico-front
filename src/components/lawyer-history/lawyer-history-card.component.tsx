@@ -1,7 +1,9 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { CalendarIcon } from '@/assets/icon/calendar';
 import { CheckIcon } from '@/assets/icon/check';
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
+import { HammerIcon } from '@/assets/icon/hammer-icon';
 import { XIcon } from '@/assets/icon/x';
 import { Body1, Body2, Heading2 } from '@/atomic/typography';
 import { SOLICITATION_STATUS_META } from '@/components/client-solicitation-card';
@@ -31,6 +33,8 @@ export function LawyerHistoryCard({
   urgency,
   description,
   decision,
+  dateLabel,
+  specialty,
   onPress,
 }: LawyerHistoryCardProps) {
   const urgencyMeta = SOLICITATION_STATUS_META[urgency];
@@ -69,6 +73,23 @@ export function LawyerHistoryCard({
       <Body1 color={BrandColors.neutral.light} numberOfLines={2}>
         {description}
       </Body1>
+
+      <View style={styles.metaBlock}>
+        {dateLabel ? (
+          <View style={styles.metaItem}>
+            <CalendarIcon color={BrandColors.neutral.white} width={16} height={16} />
+            <Body2 color={BrandColors.neutral.white}>{dateLabel}</Body2>
+          </View>
+        ) : null}
+        {specialty ? (
+          <View style={styles.metaItem}>
+            <HammerIcon color={BrandColors.neutral.white} width={16} height={16} />
+            <Body2 color={BrandColors.neutral.white} numberOfLines={1} style={styles.specialty}>
+              {specialty}
+            </Body2>
+          </View>
+        ) : null}
+      </View>
 
       <View style={styles.decisionRow}>
         <DecisionIcon color={decisionMeta.color} width={16} height={16} />
@@ -113,6 +134,18 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
+  },
+  metaBlock: {
+    gap: Spacing.xxs,
+  },
+  metaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxxs,
+    flexShrink: 1,
+  },
+  specialty: {
+    flexShrink: 1,
   },
   decisionRow: {
     flexDirection: 'row',

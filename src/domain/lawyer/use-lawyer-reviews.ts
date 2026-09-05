@@ -1,25 +1,31 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-import type { ListLawyerReviewsParams } from '@/data/lawyer';
-
-import { lawyerKeys } from './lawyer.keys';
+import { lawyerKeys, REVIEWS_PAGE_SIZE } from './lawyer.keys';
 import { listLawyerReviewsUseCase } from './list-lawyer-reviews.use-case';
 
 /**
- * Domain hook: lawyer reviews for the client (`GET /advogados/{id}/avaliacoes`).
+ * Domain hook: paginated lawyer reviews (`GET /advogados/{id}/avaliacoes`),
+ * loading {@link REVIEWS_PAGE_SIZE} items per page via explicit "load more".
  */
-export function useLawyerReviews(
-  lawyerUserId: string | undefined,
-  params: ListLawyerReviewsParams = {},
-) {
+export function useLawyerReviews(lawyerUserId: string | undefined) {
   const id = lawyerUserId?.trim() ?? '';
-  const limit = params.limit ?? 50;
-  const offset = params.offset ?? 0;
 
-  return useQuery({
-    queryKey: lawyerKeys.reviews(id, { limit, offset }),
-    queryFn: ({ signal }) =>
-      listLawyerReviewsUseCase(id, { limit, offset }, signal),
+  return useInfiniteQuery({
+    queryKey: lawyerKeys.reviews(id),
+    queryFn: ({ pageParam, signal }) =>
+      listLawyerReviewsUseCase(
+        id,
+        { limit: REVIEWS_PAGE_SIZE, offset: pageParam },
+        signal,
+      ),
+    initialPageParam: 0,
     enabled: id.length > 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const loaded = allPages.reduce((sum, page) => sum + page.items.length, 0);
+      if (loaded >= lastPage.total) {
+        return undefined;
+      }
+      return loaded;
+    },
   });
 }

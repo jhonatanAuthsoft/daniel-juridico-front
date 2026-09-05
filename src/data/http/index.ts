@@ -12,4 +12,4 @@ export {
   type ApiPagination,
   type ApiResponse,
 } from './api-response';
-export { assertApiSuccess, getErrorMessage } from './assert-api-success';
+export { assertApiSuccess, getErrorCode, getErrorMessage } from './assert-api-success';

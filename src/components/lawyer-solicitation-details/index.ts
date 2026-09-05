@@ -5,6 +5,7 @@ export { LawyerEmergencyAttentionBanner } from './lawyer-emergency-attention-ban
 export { LawyerSolicitationDataAccordion } from './lawyer-solicitation-data-accordion.component';
 export { LawyerSolicitationDecisionCard } from './lawyer-solicitation-decision-card.component';
 export { LawyerSolicitationDescriptionAccordion } from './lawyer-solicitation-description-accordion.component';
+export { RejectConnectionModal } from './reject-connection-modal.component';
 export {
   MOCK_LAWYER_SOLICITATION_DETAILS,
   type LawyerClientProfile,

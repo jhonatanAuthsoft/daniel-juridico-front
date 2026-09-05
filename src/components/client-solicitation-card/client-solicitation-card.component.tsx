@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { CalendarIcon } from '@/assets/icon/calendar';
+import { HammerIcon } from '@/assets/icon/hammer-icon';
 import { Body1, Body2, Heading1 } from '@/atomic/typography';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
@@ -19,6 +20,7 @@ export function ClientSolicitationCard({
   title,
   description,
   date,
+  specialty,
   lawyerCount,
   footerVariant,
   onPress,
@@ -43,9 +45,19 @@ export function ClientSolicitationCard({
         {description}
       </Body1>
 
-      <View style={styles.dateRow}>
-        <CalendarIcon color={BrandColors.neutral.white} width={16} height={16} />
-        <Body2 color={BrandColors.neutral.white}>{date}</Body2>
+      <View style={styles.metaRow}>
+        <View style={styles.metaItem}>
+          <CalendarIcon color={BrandColors.neutral.white} width={16} height={16} />
+          <Body2 color={BrandColors.neutral.white}>{date}</Body2>
+        </View>
+        {specialty ? (
+          <View style={styles.metaItem}>
+            <HammerIcon color={BrandColors.neutral.white} width={16} height={16} />
+            <Body2 color={BrandColors.neutral.white} numberOfLines={1} style={styles.specialty}>
+              {specialty}
+            </Body2>
+          </View>
+        ) : null}
       </View>
 
       <Body1 color={BrandColors.neutral.white}>
@@ -77,9 +89,18 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
   },
-  dateRow: {
+  metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacing.xxs,
+    gap: Spacing.md,
+  },
+  metaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxxs,
+    flexShrink: 1,
+  },
+  specialty: {
+    flexShrink: 1,
   },
 });

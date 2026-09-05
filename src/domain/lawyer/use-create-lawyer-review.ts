@@ -1,4 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  type InfiniteData,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import type {
   CreateLawyerReviewInput,
@@ -14,7 +18,7 @@ export type CreateLawyerReviewParams = CreateLawyerReviewInput & {
 
 type ReviewsCacheSnapshot = [
   readonly unknown[],
-  LawyerReviewsResult | undefined,
+  InfiniteData<LawyerReviewsResult> | undefined,
 ][];
 
 /**
@@ -30,32 +34,40 @@ export function useCreateLawyerReview() {
     onMutate: async ({ lawyerUserId, rating, comment }) => {
       const id = lawyerUserId.trim();
       await queryClient.cancelQueries({
-        queryKey: [...lawyerKeys.reviewsLists(), id],
+        queryKey: lawyerKeys.reviews(id),
       });
 
-      const previous = queryClient.getQueriesData<LawyerReviewsResult>({
-        queryKey: [...lawyerKeys.reviewsLists(), id],
+      const previous = queryClient.getQueriesData<
+        InfiniteData<LawyerReviewsResult>
+      >({
+        queryKey: lawyerKeys.reviews(id),
       }) as ReviewsCacheSnapshot;
 
-      queryClient.setQueriesData<LawyerReviewsResult>(
-        { queryKey: [...lawyerKeys.reviewsLists(), id] },
+      queryClient.setQueriesData<InfiniteData<LawyerReviewsResult>>(
+        { queryKey: lawyerKeys.reviews(id) },
         (old) => {
-          if (!old) {
+          if (!old?.pages[0]) {
             return old;
           }
           const optimistic = {
             id: `optimistic-${Date.now()}`,
             rating,
-            comment: comment.trim(),
+            comment: comment?.trim() ?? '',
             reviewerName: 'Você',
             createdAt: new Date().toISOString(),
             isOwn: true,
           };
+          const firstPage = old.pages[0];
           return {
             ...old,
-            canReview: false,
-            total: old.total + 1,
-            items: [optimistic, ...old.items.filter((review) => !review.isOwn)],
+            pages: [
+              {
+                ...firstPage,
+                total: firstPage.total + 1,
+                items: [optimistic, ...firstPage.items],
+              },
+              ...old.pages.slice(1),
+            ],
           };
         },
       );
@@ -71,7 +83,7 @@ export function useCreateLawyerReview() {
       const id = lawyerUserId.trim();
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: [...lawyerKeys.reviewsLists(), id],
+          queryKey: lawyerKeys.reviews(id),
         }),
         queryClient.invalidateQueries({
           queryKey: lawyerKeys.publicProfile(id),

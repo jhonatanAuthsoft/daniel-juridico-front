@@ -109,6 +109,7 @@ export function mapPublicLawyerProfileWireToResult(
     photoKey,
     biography: asText(wire.biografia),
     availability: asText(wire.disponibilidade) || null,
+    isAvailable: asText(wire.disponibilidade) !== 'INDISPONIVEL',
     averageRating: asNumber(wire.mediaAvaliacoes),
     totalReviews: Math.max(0, asNumber(wire.totalAvaliacoes) ?? 0),
     university: asText(wire.universidade),

@@ -22,8 +22,8 @@ export async function resolveNotificationHrefUseCase(
     return null;
   }
 
-  const connections = await listConnectionsUseCase({}, signal);
-  const connection = connections.find(
+  const { items } = await listConnectionsUseCase({}, signal);
+  const connection = items.find(
     (item) => item.id === notification.referenceId,
   );
 

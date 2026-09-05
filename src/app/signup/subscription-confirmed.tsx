@@ -7,23 +7,21 @@ import { CheckedCheckboxIcon } from '@/assets/icon/checked-checkbox';
 import { Separator } from '@/atomic/separator';
 import { Body1, Display } from '@/atomic/typography';
 import { BrandColors, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
-import { homeHrefForRole, useAuth } from '@/domain/auth';
+import { useAuth } from '@/domain/auth';
 
 const REDIRECT_DELAY_MS = 2500;
 
 export default function SignupSubscriptionConfirmedScreen() {
   const router = useRouter();
-  const { signInAs } = useAuth();
+  const { homeHref } = useAuth();
 
   useEffect(() => {
-    signInAs('LAWYER');
-
     const timeoutId = setTimeout(() => {
-      router.replace(homeHrefForRole('LAWYER'));
+      router.replace(homeHref);
     }, REDIRECT_DELAY_MS);
 
     return () => clearTimeout(timeoutId);
-  }, [router, signInAs]);
+  }, [homeHref, router]);
 
   return (
     <View style={styles.root}>

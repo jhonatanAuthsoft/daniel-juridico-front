@@ -76,6 +76,7 @@ export type PublicLawyerProfile = {
   photoKey: string | null;
   biography: string;
   availability: string | null;
+  isAvailable: boolean;
   averageRating: number | null;
   totalReviews: number;
   university: string;

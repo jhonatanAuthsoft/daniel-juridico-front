@@ -12,7 +12,7 @@ export type CompatibleLawyer = {
   honorific: string;
   initials: string;
   rating: string;
-  availability: string;
+  isAvailable: boolean;
   location: string;
   role: string;
   /** Compatibility score 0–100 from matching. */
@@ -58,7 +58,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     honorific: 'Doutora/Dra.',
     initials: 'MG',
     rating: '5,0',
-    availability: 'Disponível',
+    isAvailable: true,
     location: 'Rio Branco - Salvador',
     role: 'Pautista',
     compatibility: 50,
@@ -92,7 +92,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     honorific: 'Doutora/Dra.',
     initials: 'AC',
     rating: '4,8',
-    availability: 'Disponível',
+    isAvailable: false,
     location: 'Centro - Salvador',
     role: 'Advogado',
     compatibility: 50,
@@ -118,7 +118,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     honorific: 'Doutora/Dra.',
     initials: 'JP',
     rating: '4,0',
-    availability: 'Disponível',
+    isAvailable: true,
     location: 'Pelourinho - Salvador',
     role: 'Advogado',
     compatibility: 50,
@@ -144,7 +144,7 @@ export const MOCK_COMPATIBLE_LAWYERS: CompatibleLawyer[] = [
     honorific: 'Doutora/Dra.',
     initials: 'CN',
     rating: '4,0',
-    availability: 'Disponível',
+    isAvailable: true,
     location: 'Pelourinho - Salvador',
     role: 'Advogado',
     compatibility: 40,

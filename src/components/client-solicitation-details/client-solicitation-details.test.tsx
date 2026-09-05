@@ -166,6 +166,7 @@ describe('client solicitation detail components', () => {
             criadoEm: '2026-08-06T12:00:00',
             decididoEm: null,
             canceladoEm: null,
+            visualizadaEm: null,
             telefone: null,
             email: null,
             nomeAdvogado: lawyerPending.name,
@@ -202,6 +203,7 @@ describe('client solicitation detail components', () => {
             criadoEm: '2026-08-06T12:00:00',
             decididoEm: '2026-08-06T13:00:00',
             canceladoEm: null,
+            visualizadaEm: null,
             telefone: '11999999999',
             email: 'adv@laweact.com',
             nomeAdvogado: lawyerAccepted.name,
@@ -273,5 +275,88 @@ describe('client solicitation detail components', () => {
     expect(photos[1]).toHaveProp('source', [
       { uri: 'https://cdn.example/tmp/advogados/perfil/beatriz.jpg' },
     ]);
+  });
+
+  it('shows unavailable lawyers and opens the modal instead of requesting a connection', async () => {
+    const unavailable = {
+      ...details.compatibleLawyers[0],
+      id: 'lawyer-unavailable',
+      name: 'Igor Indisponível',
+      isAvailable: false,
+    };
+    const screen = render(
+      <ClientCompatibleLawyersList
+        connectionsByLawyerId={{}}
+        lawyers={[unavailable]}
+        onLawyerPress={jest.fn()}
+        solicitacaoId={details.id}
+      />,
+    );
+
+    expect(screen.getByText('Indisponível')).toBeTruthy();
+
+    fireEvent.press(
+      screen.getByRole('button', { name: 'Solicitar conexão' }),
+    );
+
+    expect(await screen.findByText('Advogado indisponível')).toBeTruthy();
+    expect(mockMutateAsync).not.toHaveBeenCalled();
+  });
+
+  it('warns when a pending connection lawyer becomes unavailable', () => {
+    const lawyerPending = details.compatibleLawyers[1];
+    const screen = render(
+      <ClientCompatibleLawyersList
+        connectionsByLawyerId={{
+          [lawyerPending.id]: {
+            id: 'cx-pending',
+            solicitacaoId: details.id,
+            clienteId: 'cli-1',
+            advogadoId: lawyerPending.id,
+            status: 'PENDENTE',
+            uiStatus: 'pending',
+            criadoEm: '2026-08-06T12:00:00',
+            decididoEm: null,
+            canceladoEm: null,
+            visualizadaEm: null,
+            telefone: null,
+            email: null,
+            nomeAdvogado: lawyerPending.name,
+            nomeCliente: 'Cliente',
+            tituloSolicitacao: null,
+            descricaoSolicitacao: null,
+            urgencia: null,
+            modalidade: null,
+            especialidadeCodigo: null,
+            subespecialidadeCodigo: null,
+            experienciaMinimaMeses: null,
+            uf: null,
+            cidade: null,
+            formaCobranca: null,
+            clienteProfissao: null,
+            clientePronomes: null,
+            clienteEstadoCivil: null,
+            clienteFaixaRenda: null,
+            clienteFotoUrl: null,
+            clienteCidade: null,
+            clienteUf: null,
+            clienteTelefone: null,
+            clienteEmail: null,
+            avaliacaoClienteNota: null,
+            avaliacaoClienteComentario: null,
+          },
+        }}
+        lawyers={[lawyerPending]}
+        onLawyerPress={jest.fn()}
+        solicitacaoId={details.id}
+      />,
+    );
+
+    expect(screen.getByText('Indisponível')).toBeTruthy();
+    expect(
+      screen.getByText(
+        'Este advogado está indisponível no momento e pode demorar a responder.',
+      ),
+    ).toBeTruthy();
   });
 });

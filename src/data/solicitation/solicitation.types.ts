@@ -24,6 +24,8 @@ export type NivelLocalidadeApi =
   | 'MESMO_ESTADO'
   | 'FORA_ESTADO';
 
+export type DisponibilidadeApi = 'DISPONIVEL' | 'INDISPONIVEL';
+
 /** Workflow status from the API (`StatusSolicitacaoEnum`). */
 export type StatusSolicitacaoApi =
   | 'AGUARDANDO_MATCHING'
@@ -93,6 +95,11 @@ export type SolicitacaoMatchPontuacaoWire = {
   formaCobranca: number;
 };
 
+export type CatalogoItemWire = {
+  codigo: string;
+  nome: string;
+};
+
 export type SolicitacaoMatchWire = {
   advogadoId: string;
   nome: string;
@@ -100,8 +107,12 @@ export type SolicitacaoMatchWire = {
   posicao: number;
   compatibilidade: number;
   nivelLocalidade: NivelLocalidadeApi;
+  disponibilidade?: DisponibilidadeApi | null;
   mediaAvaliacoes: number | null;
   totalAvaliacoes: number | null;
+  bairro?: string | null;
+  cidade?: string | null;
+  modalidadeAtuacao?: CatalogoItemWire | null;
   pontuacao: SolicitacaoMatchPontuacaoWire;
 };
 
@@ -167,6 +178,10 @@ export type SolicitationMatchResult = {
   position: number;
   compatibility: number;
   localityLevel: NivelLocalidadeApi;
+  isAvailable: boolean;
   averageRating: number | null;
   totalReviews: number | null;
+  neighborhood?: string | null;
+  city?: string | null;
+  practice?: { code: string; name: string } | null;
 };

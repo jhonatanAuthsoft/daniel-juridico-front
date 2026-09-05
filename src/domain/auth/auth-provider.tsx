@@ -18,11 +18,7 @@ import {
 } from '@/data/auth';
 import { unregisterPushDeviceUseCase } from '@/domain/push-device/unregister-push-device.use-case';
 
-import {
-  type AuthUser,
-  type UserRole,
-  homeHrefForRole,
-} from './auth.types';
+import { type AuthUser, homeHrefForRole } from './auth.types';
 
 type AuthContextValue = {
   user: AuthUser | null;
@@ -34,31 +30,11 @@ type AuthContextValue = {
   signInWithSession: (session: AuthSession) => Promise<void>;
   /** Marks terms as accepted and persists the updated session. */
   markTermsAccepted: () => Promise<void>;
-  /** @deprecated Mock helper — prefer signInWithSession. */
-  signInAs: (role: UserRole) => void;
-  setRole: (role: UserRole) => void;
   signOut: () => Promise<void>;
   homeHref: '/client' | '/lawyer' | '/login';
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
-
-const MOCK_USERS: Record<UserRole, AuthUser> = {
-  CLIENT: {
-    id: 'mock-client',
-    email: 'maria_silvalima@gmail.com',
-    name: 'Maria Silva Lima',
-    role: 'CLIENT',
-    termsAccepted: true,
-  },
-  LAWYER: {
-    id: 'mock-lawyer',
-    email: 'luizabitt@gmail.com',
-    name: 'Luiza Bittencourt',
-    role: 'LAWYER',
-    termsAccepted: true,
-  },
-};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -121,19 +97,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(nextUser);
   }, [user]);
 
-  const signInAs = useCallback((role: UserRole) => {
-    const mockUser = MOCK_USERS[role];
-    setUser(mockUser);
-    setToken(null);
-    setRefreshToken(null);
-  }, []);
-
-  const setRole = useCallback((role: UserRole) => {
-    setUser(MOCK_USERS[role]);
-    setToken(null);
-    setRefreshToken(null);
-  }, []);
-
   const signOut = useCallback(async () => {
     try {
       await unregisterPushDeviceUseCase();
@@ -155,8 +118,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isHydrating,
       signInWithSession,
       markTermsAccepted,
-      signInAs,
-      setRole,
       signOut,
       homeHref: user ? homeHrefForRole(user.role) : '/login',
     }),
@@ -167,8 +128,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isHydrating,
       signInWithSession,
       markTermsAccepted,
-      signInAs,
-      setRole,
       signOut,
     ],
   );

@@ -1,17 +1,21 @@
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { BagIcon } from '@/assets/icon/bag';
 import { MapPinIcon } from '@/assets/icon/map-pin';
 import { PercentIcon } from '@/assets/icon/percent';
+import { AvailabilityBadge } from '@/atomic/availability-badge';
 import { Button } from '@/atomic/button';
 import { useBanner } from '@/atomic/feedback-banner';
 import { Body2, Heading1, Link } from '@/atomic/typography';
 import { CancelConnectionModal } from '@/components/client-connection-status/cancel-connection-modal.component';
-import type { ClientConnectionStatusValue } from '@/components/client-connection-status';
+import {
+  LawyerUnavailableModal,
+  type ClientConnectionStatusValue,
+} from '@/components/client-connection-status';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
-import { getErrorMessage } from '@/data/http';
+import { getErrorCode, getErrorMessage } from '@/data/http';
 import type { ConnectionResult } from '@/data/connection';
 import { useObjectReadUrl } from '@/domain/arquivo';
 import {
@@ -39,21 +43,27 @@ type LawyerActionProps = {
   onCancel: (connectionId: string) => void;
 };
 
-const PROFESSIONAL_PLACEHOLDER = require(
-  '@/assets/images/professional-image-placeholder.png',
-);
+const NO_IMAGE_PLACEHOLDER = require('@/assets/images/no-image-placeholder.png');
 
 function CompatibleLawyerPhoto({ photoKey }: { photoKey: string | null }) {
-  const { data: read } = useObjectReadUrl(photoKey);
+  const { data: read, isLoading: isReadUrlLoading } = useObjectReadUrl(photoKey);
   const uri = read?.readUrl?.trim();
+  const isLoadingPhoto = Boolean(photoKey) && isReadUrlLoading && !uri;
 
   return (
-    <Image
-      testID="compatible-lawyer-photo"
-      source={uri ? { uri } : PROFESSIONAL_PLACEHOLDER}
-      contentFit="cover"
-      style={styles.avatarImage}
-    />
+    <View style={styles.avatarWrap}>
+      <Image
+        testID="compatible-lawyer-photo"
+        source={uri ? { uri } : NO_IMAGE_PLACEHOLDER}
+        contentFit="cover"
+        style={StyleSheet.absoluteFill}
+      />
+      {isLoadingPhoto ? (
+        <View style={styles.avatarLoading}>
+          <ActivityIndicator color={BrandColors.primary.light} size="small" />
+        </View>
+      ) : null}
+    </View>
   );
 }
 
@@ -68,6 +78,7 @@ function LawyerConnectionAction({
   onCancel,
 }: LawyerActionProps) {
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
+  const [unavailableModalVisible, setUnavailableModalVisible] = useState(false);
 
   if (uiStatus === 'accepted') {
     return (
@@ -97,6 +108,12 @@ function LawyerConnectionAction({
             {isCancelling ? 'Cancelando…' : 'Cancelar solicitação'}
           </Link>
         </Pressable>
+        {!lawyer.isAvailable ? (
+          <Body2 color={BrandColors.neutral.light} style={styles.pendingHint}>
+            Este advogado está indisponível no momento e pode demorar a
+            responder.
+          </Body2>
+        ) : null}
         <CancelConnectionModal
           onClose={() => {
             if (!isCancelling) {
@@ -122,13 +139,25 @@ function LawyerConnectionAction({
   }
 
   return (
-    <Button
-      accessibilityLabel={isRequesting ? 'Solicitando conexão' : 'Solicitar conexão'}
-      disabled={isRequesting}
-      onPress={() => onRequest(lawyer.id)}
-      variant="secondary">
-      {isRequesting ? 'Solicitando…' : 'Solicitar conexão'}
-    </Button>
+    <>
+      <Button
+        accessibilityLabel={isRequesting ? 'Solicitando conexão' : 'Solicitar conexão'}
+        disabled={isRequesting}
+        onPress={() => {
+          if (!lawyer.isAvailable) {
+            setUnavailableModalVisible(true);
+            return;
+          }
+          onRequest(lawyer.id);
+        }}
+        variant="secondary">
+        {isRequesting ? 'Solicitando…' : 'Solicitar conexão'}
+      </Button>
+      <LawyerUnavailableModal
+        onClose={() => setUnavailableModalVisible(false)}
+        visible={unavailableModalVisible}
+      />
+    </>
   );
 }
 
@@ -141,14 +170,25 @@ export function ClientCompatibleLawyersList({
   const banner = useBanner();
   const createConnection = useCreateConnection();
   const cancelConnection = useCancelConnection();
+  const [unavailableModalVisible, setUnavailableModalVisible] = useState(false);
 
   const requestConnection = async (lawyerId: string) => {
+    const lawyer = lawyers.find((item) => item.id === lawyerId);
+    if (lawyer && !lawyer.isAvailable) {
+      setUnavailableModalVisible(true);
+      return;
+    }
+
     try {
       await createConnection.mutateAsync({
         solicitacaoId,
         advogadoId: lawyerId,
       });
     } catch (error) {
+      if (getErrorCode(error) === 'LAWYER_UNAVAILABLE') {
+        setUnavailableModalVisible(true);
+        return;
+      }
       banner(
         getErrorMessage(error, 'Não foi possível solicitar a conexão.'),
         'error',
@@ -199,13 +239,7 @@ export function ClientCompatibleLawyersList({
                   pressed && styles.pressed,
                 ]}>
                 <View style={styles.profileRow}>
-                  <View
-                    style={[
-                      styles.avatar,
-                      { backgroundColor: lawyer.avatarColor },
-                    ]}>
-                    <CompatibleLawyerPhoto photoKey={lawyer.photoUrl} />
-                  </View>
+                  <CompatibleLawyerPhoto photoKey={lawyer.photoUrl} />
 
                   <View style={styles.profileContent}>
                     <View style={styles.nameRow}>
@@ -219,12 +253,7 @@ export function ClientCompatibleLawyersList({
                         <Text style={styles.star}>★</Text> {lawyer.rating}
                       </Body2>
                     </View>
-                    <View style={styles.availabilityRow}>
-                      <View style={styles.availableDot} />
-                      <Body2 color={BrandColors.neutral.light}>
-                        {lawyer.availability}
-                      </Body2>
-                    </View>
+                    <AvailabilityBadge available={lawyer.isAvailable} />
                   </View>
                 </View>
 
@@ -276,6 +305,10 @@ export function ClientCompatibleLawyersList({
           </View>
         );
       })}
+      <LawyerUnavailableModal
+        onClose={() => setUnavailableModalVisible(false)}
+        visible={unavailableModalVisible}
+      />
     </View>
   );
 }
@@ -321,6 +354,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  avatarWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: Radius.medium,
+    overflow: 'hidden',
+    backgroundColor: BrandColors.neutral.dark,
+  },
+  avatarLoading: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+  },
   avatarImage: {
     width: '100%',
     height: '100%',
@@ -336,16 +382,8 @@ const styles = StyleSheet.create({
   name: {
     flex: 1,
   },
-  availabilityRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xxxs,
-  },
-  availableDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: BrandColors.feedback.success.medium,
+  pendingHint: {
+    textAlign: 'center',
   },
   star: {
     color: BrandColors.feedback.warning.medium,

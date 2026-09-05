@@ -6,6 +6,13 @@ export type StatusConexaoApi =
   | 'RECUSADA'
   | 'CANCELADA';
 
+/** Urgency of the underlying solicitation (`UrgenciaSolicitacaoEnum`). */
+export type UrgenciaConexaoApi =
+  | 'EMERGENCIA'
+  | 'URGENTE'
+  | 'MEDIO'
+  | 'TENHO_TEMPO';
+
 /** UI card status used by `ClientConnectionStatus`. */
 export type ClientConnectionUiStatus =
   | 'idle'
@@ -22,6 +29,8 @@ export type ConexaoWire = {
   criadoEm: string;
   decididoEm: string | null;
   canceladoEm: string | null;
+  /** First time the lawyer opened the solicitation; null = never opened. */
+  visualizadaEm: string | null;
   telefone: string | null;
   email: string | null;
   nomeAdvogado: string | null;
@@ -64,6 +73,8 @@ export type ConnectionResult = {
   criadoEm: string;
   decididoEm: string | null;
   canceladoEm: string | null;
+  /** First time the lawyer opened the solicitation; null = never opened. */
+  visualizadaEm: string | null;
   telefone: string | null;
   email: string | null;
   nomeAdvogado: string | null;
@@ -91,6 +102,32 @@ export type ConnectionResult = {
   avaliacaoClienteComentario: string | null;
 };
 
+export type ConexaoListagemWire = {
+  items: ConexaoWire[];
+  contagemPorUrgencia: Partial<Record<UrgenciaConexaoApi, number>>;
+  contagemPorStatus?: Partial<Record<StatusConexaoApi, number>>;
+};
+
 export type ListConnectionsParams = {
-  status?: StatusConexaoApi;
+  status?: StatusConexaoApi | StatusConexaoApi[];
+  /** Omit to fetch the whole list unpaged. */
+  limit?: number;
+  offset?: number;
+  /** Server-side urgency filter (`?urgencia=`). */
+  urgencia?: UrgenciaConexaoApi;
+  /** Server-side search on counterpart name, title, description and city. */
+  busca?: string;
+};
+
+export type ConnectionUrgencyCounts = Record<UrgenciaConexaoApi, number>;
+
+export type ConnectionStatusCounts = Record<StatusConexaoApi, number>;
+
+export type ListConnectionsResult = {
+  items: ConnectionResult[];
+  totalElements: number;
+  /** Global per-urgency totals, unaffected by the urgency filter and search. */
+  countsByUrgency: ConnectionUrgencyCounts;
+  /** Global per-status totals, unaffected by status, urgency and search. */
+  countsByStatus: ConnectionStatusCounts;
 };

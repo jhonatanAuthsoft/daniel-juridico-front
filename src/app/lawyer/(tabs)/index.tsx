@@ -1,27 +1,27 @@
 import { useRouter } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useDeferredValue, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
   Platform,
   Pressable,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { CaretLeftIcon } from '@/assets/icon/caret-left';
 import { SearchIcon } from '@/assets/icon/search';
 import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
 import { Separator } from '@/atomic/separator';
-import { Body2, Display, Heading1 } from '@/atomic/typography';
+import { Body2, Display, Heading1, Link } from '@/atomic/typography';
+import { getTabBarTotalHeight } from '@/components/app-tab-bar';
 import { LawyerEmptyState } from '@/components/lawyer-empty-state';
-import {
-  LawyerSolicitationCard,
-  type LawyerSolicitationCardData,
-} from '@/components/lawyer-solicitation-card';
+import { LawyerSolicitationCard } from '@/components/lawyer-solicitation-card';
 import {
   BrandColors,
   BrandGradients,
@@ -32,26 +32,51 @@ import {
   Spacing,
 } from '@/constants/theme';
 import {
+  emptyConnectionUrgencyCounts,
+  type UrgenciaConexaoApi,
+} from '@/data/connection';
+import { useSpecialtiesCatalog } from '@/domain/catalog';
+import {
   mapConnectionToLawyerCard,
-  useConnections,
+  useLawyerInboxConnections,
 } from '@/domain/connection';
 
-const TAB_BAR_CONTENT_HEIGHT = 62;
 const LIST_GAP_ABOVE_TAB = 16;
+
+type UrgencyFilterId = 'all' | UrgenciaConexaoApi;
+
+const URGENCY_FILTERS: { id: UrgencyFilterId; label: string }[] = [
+  { id: 'all', label: 'Todas' },
+  { id: 'EMERGENCIA', label: 'Emergência' },
+  { id: 'URGENTE', label: 'Urgência' },
+  { id: 'MEDIO', label: 'Médio' },
+  { id: 'TENHO_TEMPO', label: 'Tenho tempo' },
+];
 
 export default function LawyerHomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const [activeUrgency, setActiveUrgency] = useState<UrgencyFilterId>('all');
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isPullRefreshing, setIsPullRefreshing] = useState(false);
+  const deferredSearch = useDeferredValue(searchQuery.trim());
 
   const {
-    data: connections = [],
+    data,
     isLoading,
     isError,
+    isFetched,
     refetch,
-  } = useConnections({ status: 'PENDENTE' });
-  const [isPullRefreshing, setIsPullRefreshing] = useState(false);
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useLawyerInboxConnections({
+    status: 'PENDENTE',
+    urgencia: activeUrgency === 'all' ? undefined : activeUrgency,
+    busca: deferredSearch || undefined,
+  });
+  const catalogQuery = useSpecialtiesCatalog();
 
   const handlePullRefresh = useCallback(async () => {
     setIsPullRefreshing(true);
@@ -62,31 +87,58 @@ export default function LawyerHomeScreen() {
     }
   }, [refetch]);
 
-  const solicitations = useMemo(
-    () => connections.map(mapConnectionToLawyerCard),
-    [connections],
+  const connections = useMemo(
+    () => data?.pages?.flatMap((page) => page.items) ?? [],
+    [data],
   );
 
+  const solicitations = useMemo(
+    () =>
+      connections.map((connection) => {
+        const specialty = catalogQuery.data?.items.find(
+          (item) => item.code === connection.especialidadeCodigo,
+        );
+        return mapConnectionToLawyerCard(connection, {
+          specialtyLabel: specialty?.name,
+        });
+      }),
+    [catalogQuery.data, connections],
+  );
+
+  const countsByUrgency =
+    data?.pages?.[0]?.countsByUrgency ?? emptyConnectionUrgencyCounts();
+  const totalByUrgency = Object.values(countsByUrgency).reduce(
+    (sum, count) => sum + count,
+    0,
+  );
+
+  const filterChips = useMemo(
+    () =>
+      URGENCY_FILTERS.map((filter) =>
+        filter.id === 'all'
+          ? filter
+          : { ...filter, count: countsByUrgency[filter.id] },
+      ),
+    [countsByUrgency],
+  );
+
+  const hasSearchQuery = deferredSearch.length > 0;
+  const hasListItems = solicitations.length > 0;
+  /** True only after a successful fetch with no pending connection at all. */
+  const hasNoConnectionsAtAll =
+    isFetched &&
+    !isLoading &&
+    !isError &&
+    !hasListItems &&
+    totalByUrgency === 0 &&
+    activeUrgency === 'all' &&
+    !hasSearchQuery;
+
+  const showListLoading =
+    !hasListItems && !isError && (isLoading || !isFetched) && !isPullRefreshing;
+
   const listPaddingBottom =
-    TAB_BAR_CONTENT_HEIGHT + insets.bottom + LIST_GAP_ABOVE_TAB;
-
-  const filteredData = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) {
-      return solicitations;
-    }
-
-    return solicitations.filter((item: LawyerSolicitationCardData) => {
-      return (
-        item.clientName.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query) ||
-        item.location.toLowerCase().includes(query)
-      );
-    });
-  }, [searchQuery, solicitations]);
-
-  const hasSolicitations = solicitations.length > 0;
-  const hasSearchQuery = searchQuery.trim().length > 0;
+    getTabBarTotalHeight(insets.bottom) + LIST_GAP_ABOVE_TAB;
 
   return (
     <View style={styles.root}>
@@ -122,7 +174,7 @@ export default function LawyerHomeScreen() {
           ) : (
             <View style={styles.titleRow}>
               <Display color={BrandColors.neutral.white} style={styles.title}>
-                Pedidos de conexão
+                Solicitações de Clientes
               </Display>
               <Pressable
                 accessibilityRole="button"
@@ -135,12 +187,63 @@ export default function LawyerHomeScreen() {
             </View>
           )}
 
-          {searchOpen && hasSearchQuery ? (
+          {searchOpen ? (
+            hasSearchQuery ? (
+              <>
+                <Separator size="sm" />
+                <Heading1 color={BrandColors.neutral.white}>Seus resultados</Heading1>
+              </>
+            ) : null
+          ) : (
             <>
               <Separator size="sm" />
-              <Heading1 color={BrandColors.neutral.white}>Seus resultados</Heading1>
+              <ScrollView
+                horizontal
+                removeClippedSubviews={false}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.filtersRow}>
+                {filterChips.map((chip) => {
+                  const selected = activeUrgency === chip.id;
+                  const count = 'count' in chip ? chip.count : undefined;
+                  return (
+                    <Pressable
+                      key={chip.id}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected }}
+                      onPress={() => setActiveUrgency(chip.id)}
+                      style={({ pressed }) => [
+                        styles.filterChip,
+                        pressed && styles.pressed,
+                      ]}>
+                      {selected ? (
+                        <GlassBackground
+                          blurPx={25}
+                          gradient={{
+                            colors: [
+                              'rgba(255, 255, 255, 0.20)',
+                              'rgba(255, 255, 255, 0.20)',
+                            ],
+                            angleDeg: 182,
+                            locationsPercent: [0, 100],
+                          }}
+                        />
+                      ) : (
+                        <GlassBackground blurPx={25} gradient={BrandGradients.gradient} />
+                      )}
+                      <View style={styles.filterChipContent}>
+                        <Body2 color={BrandColors.neutral.white}>{chip.label}</Body2>
+                        {count != null ? (
+                          <Body2 color={BrandColors.primary.light}>
+                            {String(count)}
+                          </Body2>
+                        ) : null}
+                      </View>
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
             </>
-          ) : null}
+          )}
 
           {isError ? (
             <>
@@ -159,14 +262,14 @@ export default function LawyerHomeScreen() {
           ) : null}
         </View>
 
-        {isLoading ? (
+        {showListLoading ? (
           <View style={styles.loading}>
             <ActivityIndicator color={BrandColors.primary.light} size="large" />
           </View>
         ) : (
           <FlatList
             testID="lawyer-home-list"
-            data={filteredData}
+            data={solicitations}
             keyExtractor={(item) => item.id}
             contentContainerStyle={[
               styles.listContent,
@@ -175,6 +278,7 @@ export default function LawyerHomeScreen() {
             keyboardDismissMode="on-drag"
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
+            removeClippedSubviews={false}
             refreshControl={
               <RefreshControl
                 refreshing={isPullRefreshing}
@@ -188,8 +292,36 @@ export default function LawyerHomeScreen() {
             ItemSeparatorComponent={() => <Separator size="sm" />}
             ListEmptyComponent={
               <LawyerEmptyState
-                variant={hasSolicitations ? 'no-results' : 'no-data'}
+                variant={hasNoConnectionsAtAll ? 'no-data' : 'no-results'}
               />
+            }
+            ListFooterComponent={
+              hasNextPage ? (
+                <View style={styles.listFooter}>
+                  {isFetchingNextPage ? (
+                    <ActivityIndicator color={BrandColors.primary.light} />
+                  ) : (
+                    <Pressable
+                      accessibilityLabel="Ver mais"
+                      accessibilityRole="button"
+                      onPress={() => {
+                        void fetchNextPage();
+                      }}
+                      style={({ pressed }) => [
+                        styles.loadMoreButton,
+                        pressed && styles.pressed,
+                      ]}>
+                      <CaretLeftIcon
+                        color={BrandColors.primary.light}
+                        direction="down"
+                        height={20}
+                        width={20}
+                      />
+                      <Link color={BrandColors.primary.light}>Ver mais</Link>
+                    </Pressable>
+                  )}
+                </View>
+              ) : null
             }
             renderItem={({ item }) => (
               <LawyerSolicitationCard
@@ -276,12 +408,45 @@ const styles = StyleSheet.create({
     fontSize: FontSize.xSmall,
     backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
   },
+  filtersRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxs,
+    paddingRight: Spacing.sm,
+  },
+  filterChip: {
+    overflow: 'hidden',
+    borderRadius: Radius.large,
+    borderWidth: 1,
+    borderColor: BrandColors.neutral.white,
+    backgroundColor: BrandColors.neutral.xdark,
+    ...glassShadow,
+  },
+  filterChipContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxxs,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: Spacing.xxs,
+    zIndex: 1,
+  },
   listContent: {
     paddingHorizontal: Spacing.sm,
     maxWidth: MaxContentWidth,
     width: '100%',
     alignSelf: 'center',
     flexGrow: 1,
+  },
+  listFooter: {
+    paddingVertical: Spacing.sm,
+    alignItems: 'center',
+  },
+  loadMoreButton: {
+    minHeight: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.xxs,
   },
   loading: {
     flex: 1,

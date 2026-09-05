@@ -1,6 +1,7 @@
 import { SymbolView } from 'expo-symbols';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
+import { StarRating } from '@/assets/icon/star';
 import { Body1, Body2, Link } from '@/atomic/typography';
 import { ProfileAvatar } from '@/components/profile-avatar';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
@@ -19,12 +20,6 @@ function formatRatingLabel(rating: number): string {
   return `${formatted} ${rating === 1 ? 'estrela' : 'estrelas'}`;
 }
 
-function formatStars(rating: number): string {
-  const full = Math.max(0, Math.min(5, Math.floor(rating)));
-  const hasHalf = rating - full >= 0.5 && full < 5;
-  return `${'★'.repeat(full)}${hasHalf ? '½' : ''}`;
-}
-
 export function ClientOwnReviewCard({
   review,
   onDelete,
@@ -36,11 +31,11 @@ export function ClientOwnReviewCard({
         <View style={styles.reviewerInfo}>
           <Body1 color={BrandColors.neutral.white}>Você</Body1>
           <View style={styles.ratingRow}>
-            <Text
-              accessibilityLabel={`${formatRatingLabel(review.rating)}`}
-              style={styles.stars}>
-              {formatStars(review.rating)}
-            </Text>
+            <StarRating
+              accessibilityLabel={formatRatingLabel(review.rating)}
+              rating={review.rating}
+              size={20}
+            />
             <Body2 color={BrandColors.neutral.white}>
               {formatRatingLabel(review.rating)}
             </Body2>
@@ -48,7 +43,9 @@ export function ClientOwnReviewCard({
         </View>
       </View>
 
-      <Body1 color={BrandColors.neutral.white}>{review.comment}</Body1>
+      {review.comment ? (
+        <Body1 color={BrandColors.neutral.white}>{review.comment}</Body1>
+      ) : null}
 
       {onDelete ? (
         <Pressable
@@ -100,11 +97,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     gap: Spacing.xxs,
-  },
-  stars: {
-    color: BrandColors.feedback.warning.medium,
-    fontSize: 20,
-    letterSpacing: 2,
   },
   deleteButton: {
     minHeight: 44,

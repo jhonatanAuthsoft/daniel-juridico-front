@@ -12,6 +12,21 @@ jest.mock('expo-router', () => ({
 
 jest.mock('@/domain/lawyer', () => ({
   usePublicLawyerProfile: () => mockUsePublicLawyerProfile(),
+  useLawyerReviews: () => ({ data: undefined, isLoading: false }),
+  useCreateLawyerReview: () => ({ isPending: false, mutateAsync: jest.fn() }),
+  useDeleteLawyerReview: () => ({ isPending: false, mutateAsync: jest.fn() }),
+}));
+
+jest.mock('@/domain/connection', () => ({
+  useLawyerConnectionStatus: () => ({ data: undefined }),
+  useCreateConnection: () => ({
+    mutateAsync: jest.fn(),
+    isPending: false,
+  }),
+  useCancelConnection: () => ({
+    mutateAsync: jest.fn(),
+    isPending: false,
+  }),
 }));
 
 jest.mock('@/domain/arquivo', () => ({
@@ -41,6 +56,7 @@ const sampleProfile = {
   photoKey: null,
   biography: 'Especialista em direito civil.',
   availability: 'DISPONIVEL',
+  isAvailable: true,
   averageRating: 4.5,
   totalReviews: 12,
   university: 'USP',
@@ -77,6 +93,7 @@ describe('ClientLawyerProfileScreen', () => {
 
     expect(screen.getByText('Visualizar perfil')).toBeTruthy();
     expect(screen.getByText('Maria Gomes (Doutora/Dra.)')).toBeTruthy();
+    expect(screen.getByText('Disponível')).toBeTruthy();
     expect(screen.getByText('Pautista - OAB 155242/SP')).toBeTruthy();
     expect(screen.getByText('Biografia')).toBeTruthy();
     expect(screen.getByText('Especialista em direito civil.')).toBeTruthy();
@@ -110,15 +127,16 @@ describe('ClientLawyerProfileScreen', () => {
     expect(mockRefetch).toHaveBeenCalled();
   });
 
-  it('requests connection locally (UI only until connection API exists)', () => {
+  it('shows the unavailable badge on the public profile', () => {
+    profileState = {
+      data: { ...sampleProfile, isAvailable: false },
+      isLoading: false,
+      isError: false,
+      error: null,
+    };
     const screen = render(<ClientLawyerProfileScreen />);
 
-    fireEvent.press(
-      screen.getByRole('button', { name: 'Solicitar conexão' }),
-    );
-
-    expect(screen.getByText('Solicitação enviada')).toBeTruthy();
-    expect(screen.getByText('Aguardando resposta...')).toBeTruthy();
+    expect(screen.getByText('Indisponível')).toBeTruthy();
   });
 
   it('returns to the previous screen', () => {

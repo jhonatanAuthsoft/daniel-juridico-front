@@ -8,6 +8,7 @@ import {
   acceptConnectionUseCase,
   cancelConnectionUseCase,
   createConnectionUseCase,
+  markConnectionViewedUseCase,
   rejectConnectionUseCase,
 } from './connection.use-cases';
 
@@ -84,6 +85,21 @@ export function useAcceptConnection() {
     mutationFn: (conexaoId: string) => acceptConnectionUseCase(conexaoId),
     onSuccess: async (data) => {
       await invalidateConnectionQueries(queryClient, data);
+    },
+  });
+}
+
+/**
+ * `POST /conexoes/{id}/visualizar` — ADVOGADO.
+ * Refreshes the lists so the "never opened" accent disappears from the card.
+ */
+export function useMarkConnectionViewed() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (conexaoId: string) => markConnectionViewedUseCase(conexaoId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: connectionKeys.lists() });
     },
   });
 }

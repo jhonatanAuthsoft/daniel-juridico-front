@@ -1,13 +1,17 @@
 import { Image, type ImageStyle } from 'expo-image';
-import type { StyleProp } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
-import { useAuth, useMe } from '@/domain/auth';
+import { BrandColors } from '@/constants/theme';
+import { useMe } from '@/domain/auth';
 import { useObjectReadUrl } from '@/domain/arquivo';
 
 const NO_IMAGE_PLACEHOLDER = require('@/assets/images/no-image-placeholder.png');
-const PROFESSIONAL_PLACEHOLDER = require(
-  '@/assets/images/professional-image-placeholder.png',
-);
 
 type ProfileAvatarProps = {
   style?: StyleProp<ImageStyle>;
@@ -16,25 +20,50 @@ type ProfileAvatarProps = {
 
 /**
  * Authenticated user's profile photo from S3 (key via `/usuarios/me`,
- * signed URL via `POST /arquivos/url-leitura`). Falls back to placeholder.
+ * signed URL via `POST /arquivos/url-leitura`). Falls back to no-image placeholder.
  */
 export function ProfileAvatar({
   style,
   testID = 'profile-image',
 }: ProfileAvatarProps) {
-  const { user } = useAuth();
-  const { data: me } = useMe();
-  const { data: read } = useObjectReadUrl(me?.photoKey);
+  const { data: me, isLoading: isMeLoading } = useMe();
+  const photoKey = me?.photoKey?.trim() || '';
+  const { data: read, isLoading: isReadUrlLoading } = useObjectReadUrl(
+    photoKey || null,
+  );
   const readUrl = read?.readUrl?.trim();
-  const placeholder =
-    user?.role === 'LAWYER' ? PROFESSIONAL_PLACEHOLDER : NO_IMAGE_PLACEHOLDER;
+  const isLoadingPhoto =
+    isMeLoading || (photoKey.length > 0 && isReadUrlLoading && !readUrl);
 
   return (
-    <Image
-      testID={testID}
-      source={readUrl ? { uri: readUrl } : placeholder}
-      contentFit="cover"
-      style={style}
-    />
+    <View style={[style as StyleProp<ViewStyle>, styles.container]}>
+      <Image
+        testID={testID}
+        source={readUrl ? { uri: readUrl } : NO_IMAGE_PLACEHOLDER}
+        contentFit="cover"
+        style={StyleSheet.absoluteFill}
+      />
+      {isLoadingPhoto ? (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator
+            color={BrandColors.primary.light}
+            size="small"
+            testID="profile-avatar-loading"
+          />
+        </View>
+      ) : null}
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    overflow: 'hidden',
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+  },
+});

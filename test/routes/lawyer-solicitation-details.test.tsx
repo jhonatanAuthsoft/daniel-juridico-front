@@ -6,6 +6,7 @@ import type { ConnectionResult } from '@/data/connection';
 const mockBack = jest.fn();
 const mockAccept = jest.fn();
 const mockReject = jest.fn();
+const mockMarkViewed = jest.fn();
 const mockUseConnections = jest.fn();
 
 const pendingConnection: ConnectionResult = {
@@ -18,6 +19,7 @@ const pendingConnection: ConnectionResult = {
   criadoEm: '2026-08-06T12:00:00',
   decididoEm: null,
   canceladoEm: null,
+  visualizadaEm: null,
   telefone: null,
   email: null,
   nomeAdvogado: 'Bruna',
@@ -91,6 +93,10 @@ jest.mock('@/domain/connection', () => {
       mutateAsync: mockReject,
       isPending: false,
     }),
+    useMarkConnectionViewed: () => ({
+      mutateAsync: mockMarkViewed,
+      isPending: false,
+    }),
   };
 });
 
@@ -108,9 +114,34 @@ describe('LawyerSolicitationDetailsScreen', () => {
     mockBack.mockClear();
     mockAccept.mockReset();
     mockReject.mockReset();
+    mockMarkViewed.mockReset();
     stubConnections({ ...pendingConnection });
     mockAccept.mockResolvedValue(undefined);
     mockReject.mockResolvedValue(undefined);
+    mockMarkViewed.mockResolvedValue(undefined);
+  });
+
+  it('marks the solicitation as viewed when it is opened for the first time', async () => {
+    render(<LawyerSolicitationDetailsScreen />);
+
+    await waitFor(() => {
+      expect(mockMarkViewed).toHaveBeenCalledWith('law-sol-1');
+    });
+    expect(mockMarkViewed).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not mark again a solicitation already opened before', async () => {
+    stubConnections({
+      ...pendingConnection,
+      visualizadaEm: '2026-08-07T09:00:00',
+    });
+
+    const screen = render(<LawyerSolicitationDetailsScreen />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Visualizar solicitação')).toBeTruthy();
+    });
+    expect(mockMarkViewed).not.toHaveBeenCalled();
   });
 
   it('shows collapsed client profile with open solicitation data and description', () => {
@@ -127,6 +158,11 @@ describe('LawyerSolicitationDetailsScreen', () => {
       screen.getAllByText(/Preciso de orientação sobre rescisão/).length,
     ).toBeGreaterThan(0);
     expect(screen.getByText('Atenção')).toBeTruthy();
+    expect(
+      screen.getByText(
+        'Orientamos seu cliente a ligar 190. Seguimos tentando contato com você para o suporte jurídico.',
+      ),
+    ).toBeTruthy();
   });
 
   it('hides the emergency banner when urgency is not emergency', () => {
@@ -180,6 +216,8 @@ describe('LawyerSolicitationDetailsScreen', () => {
     expect(screen.getByText('Contatos do cliente')).toBeTruthy();
     expect(screen.getByText('(75) 98888-0502')).toBeTruthy();
     expect(screen.getByText('luiza.sampaio@gmail.com')).toBeTruthy();
+    expect(screen.queryByText('Solicitação Aceita')).toBeNull();
+    expect(screen.queryByText('Solicitação Recusada')).toBeNull();
     expect(
       screen.queryByRole('button', { name: 'Aceitar solicitação' }),
     ).toBeNull();
@@ -221,10 +259,31 @@ describe('LawyerSolicitationDetailsScreen', () => {
     expect(screen.queryByText('Avaliação do cliente')).toBeNull();
   });
 
-  it('returns to the list when the solicitation is refused', async () => {
+  it('asks for confirmation before refusing the solicitation', async () => {
     const screen = render(<LawyerSolicitationDetailsScreen />);
 
     fireEvent.press(screen.getByRole('button', { name: 'Recusar' }));
+
+    expect(screen.getByText('Deseja recusar a solicitação?')).toBeTruthy();
+    expect(
+      screen.getByText(
+        'Essa ação é irreversível. Suas informações de contato não serão divulgadas com o cliente.',
+      ),
+    ).toBeTruthy();
+    expect(mockReject).not.toHaveBeenCalled();
+
+    fireEvent.press(screen.getByRole('button', { name: 'Fechar' }));
+
+    expect(screen.queryByText('Deseja recusar a solicitação?')).toBeNull();
+    expect(mockReject).not.toHaveBeenCalled();
+    expect(mockBack).not.toHaveBeenCalled();
+  });
+
+  it('returns to the list when the refusal is confirmed', async () => {
+    const screen = render(<LawyerSolicitationDetailsScreen />);
+
+    fireEvent.press(screen.getByRole('button', { name: 'Recusar' }));
+    fireEvent.press(screen.getByRole('button', { name: 'Recusar solicitação' }));
 
     await waitFor(() => {
       expect(mockReject).toHaveBeenCalledWith('law-sol-1');

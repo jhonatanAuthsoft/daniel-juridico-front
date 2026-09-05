@@ -1,4 +1,4 @@
-import type { ClientSolicitationCardData, SolicitationWorkflowStatus } from '@/components/client-solicitation-card';
+import type { ClientSolicitationCardData, SolicitationStatus, SolicitationWorkflowStatus } from '@/components/client-solicitation-card';
 import type { CompatibleLawyer } from '@/components/client-solicitation-details/mock-client-solicitation-details';
 import { parseSpecialtyId } from '@/components/signup-lawyer/specialties.data';
 import { cityLabelFromValue } from '@/constants/select-options';
@@ -293,6 +293,7 @@ export function mapListItemWireToCard(
     title: item.titulo,
     description: item.descricao,
     date: formatSolicitationDate(item.dataAbertura),
+    specialty: item.especialidade,
     lawyerCount,
     footerVariant,
   };
@@ -365,6 +366,13 @@ export function mapDetalheWireToResult(
 export function mapMatchWireToResult(
   wire: SolicitacaoMatchWire,
 ): SolicitationMatchResult {
+  const practice = wire.modalidadeAtuacao
+    ? {
+        code: wire.modalidadeAtuacao.codigo,
+        name: wire.modalidadeAtuacao.nome,
+      }
+    : undefined;
+
   return {
     lawyerId: String(wire.advogadoId),
     name: wire.nome,
@@ -372,9 +380,32 @@ export function mapMatchWireToResult(
     position: wire.posicao,
     compatibility: wire.compatibilidade,
     localityLevel: wire.nivelLocalidade,
+    isAvailable: wire.disponibilidade !== 'INDISPONIVEL',
     averageRating: wire.mediaAvaliacoes,
     totalReviews: wire.totalAvaliacoes,
+    neighborhood: wire.bairro ?? undefined,
+    city: wire.cidade ?? undefined,
+    practice,
   };
+}
+
+function formatMatchLocation(
+  neighborhood: string | null | undefined,
+  city: string | null | undefined,
+  localityLevel: NivelLocalidadeApi,
+): string {
+  const bairro = neighborhood?.trim();
+  const cidade = city?.trim();
+  if (bairro && cidade) {
+    return `${bairro} - ${cidade}`;
+  }
+  if (cidade) {
+    return cidade;
+  }
+  if (bairro) {
+    return bairro;
+  }
+  return mapLocalidadeLabel(localityLevel);
 }
 
 export function mapMatchResultToCompatibleLawyer(
@@ -387,9 +418,9 @@ export function mapMatchResultToCompatibleLawyer(
     honorific: '',
     initials: initialsFromName(match.name),
     rating: formatRating(match.averageRating),
-    availability: 'Disponível',
-    location: mapLocalidadeLabel(match.localityLevel),
-    role: 'Advogado',
+    isAvailable: match.isAvailable,
+    location: formatMatchLocation(match.neighborhood, match.city, match.localityLevel),
+    role: match.practice?.name?.trim() || 'Advogado',
     compatibility: match.compatibility,
     avatarColor: AVATAR_COLORS[index % AVATAR_COLORS.length],
     photoUrl: match.photoUrl,

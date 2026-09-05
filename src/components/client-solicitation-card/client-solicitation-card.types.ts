@@ -17,6 +17,7 @@ export type ClientSolicitationCardData = {
   title: string;
   description: string;
   date: string;
+  specialty?: string;
   lawyerCount: number;
   footerVariant: SolicitationFooterVariant;
 };

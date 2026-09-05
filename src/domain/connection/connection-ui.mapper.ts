@@ -100,37 +100,58 @@ function formatSpecialtyCode(code: string | null): string {
 /** Maps a pending connection into the lawyer home card shape. */
 export function mapConnectionToLawyerCard(
   connection: ConnectionResult,
+  catalogLabels?: {
+    specialtyLabel?: string | null;
+  },
 ): LawyerSolicitationCardData {
   const status = mapUrgenciaToStatus(connection.urgencia);
   const location = formatLocation(connection.cidade, connection.uf);
+  const specialty =
+    catalogLabels?.specialtyLabel?.trim() ||
+    formatSpecialtyCode(connection.especialidadeCodigo);
 
   return {
     id: connection.id,
     clientName: connection.nomeCliente?.trim() || 'Cliente',
     status,
     description:
-      connection.tituloSolicitacao?.trim() || 'Pedido de conexão',
+      connection.descricaoSolicitacao?.trim()
+      || connection.tituloSolicitacao?.trim()
+      || 'Pedido de conexão',
     timeLabel: formatConnectionTimeLabel(connection.criadoEm),
     timeKind: 'absolute',
     location,
+    specialty,
+    isUnviewed: connection.visualizadaEm == null,
   };
 }
 
 /** Maps accepted/rejected connections into lawyer history items. */
 export function mapConnectionToLawyerHistoryItem(
   connection: ConnectionResult,
+  catalogLabels?: {
+    specialtyLabel?: string | null;
+  },
 ): LawyerHistoryItem | null {
   if (connection.status !== 'ACEITA' && connection.status !== 'RECUSADA') {
     return null;
   }
+
+  const specialty =
+    catalogLabels?.specialtyLabel?.trim() ||
+    formatSpecialtyCode(connection.especialidadeCodigo);
 
   return {
     id: connection.id,
     clientName: connection.nomeCliente?.trim() || 'Cliente',
     urgency: mapUrgenciaToStatus(connection.urgencia),
     description:
-      connection.tituloSolicitacao?.trim() || 'Pedido de conexão',
+      connection.descricaoSolicitacao?.trim()
+      || connection.tituloSolicitacao?.trim()
+      || 'Pedido de conexão',
     decision: connection.status === 'ACEITA' ? 'accepted' : 'rejected',
+    dateLabel: formatConnectionTimeLabel(connection.criadoEm),
+    specialty,
   };
 }
 
@@ -160,7 +181,7 @@ export function mapConnectionToLawyerSolicitationDetails(
   const reviewRating = connection.avaliacaoClienteNota;
   const reviewComment = connection.avaliacaoClienteComentario?.trim() || '';
   const clientReview =
-    reviewRating != null && reviewComment
+    reviewRating != null
       ? { rating: reviewRating, comment: reviewComment }
       : null;
 

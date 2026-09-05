@@ -16,6 +16,7 @@ const sample: ConnectionResult = {
   criadoEm: '2026-08-06T12:00:00.000Z',
   decididoEm: null,
   canceladoEm: null,
+  visualizadaEm: null,
   telefone: null,
   email: null,
   nomeAdvogado: 'Bruna',
@@ -49,10 +50,36 @@ describe('connection-ui.mapper', () => {
     expect(card).toMatchObject({
       id: 'cx-1',
       clientName: 'Ana Cliente',
-      description: 'Revisão de contrato',
+      description: 'Preciso revisar um contrato.',
       status: 'emergencia',
       timeKind: 'absolute',
+      specialty: 'Civil',
     });
+  });
+
+  it('flags the lawyer card as never opened while there is no visualizadaEm', () => {
+    expect(mapConnectionToLawyerCard(sample).isUnviewed).toBe(true);
+    expect(
+      mapConnectionToLawyerCard({
+        ...sample,
+        visualizadaEm: '2026-08-07T09:00:00.000Z',
+      }).isUnviewed,
+    ).toBe(false);
+  });
+
+  it('prefers the catalog specialty label on the lawyer card', () => {
+    const card = mapConnectionToLawyerCard(sample, {
+      specialtyLabel: 'Direito do Consumidor',
+    });
+    expect(card.specialty).toBe('Direito do Consumidor');
+  });
+
+  it('falls back to the title when the solicitation has no description', () => {
+    const card = mapConnectionToLawyerCard({
+      ...sample,
+      descricaoSolicitacao: null,
+    });
+    expect(card.description).toBe('Revisão de contrato');
   });
 
   it('maps accepted/rejected to history items', () => {
@@ -62,6 +89,8 @@ describe('connection-ui.mapper', () => {
       id: 'cx-1',
       decision: 'accepted',
       urgency: 'emergencia',
+      specialty: 'Civil',
+      dateLabel: new Date(sample.criadoEm).toLocaleDateString('pt-BR'),
     });
     expect(
       mapConnectionToLawyerHistoryItem({ ...sample, status: 'RECUSADA' }),
@@ -69,6 +98,15 @@ describe('connection-ui.mapper', () => {
       decision: 'rejected',
     });
     expect(mapConnectionToLawyerHistoryItem(sample)).toBeNull();
+  });
+
+  it('prefers the catalog specialty label on history items', () => {
+    expect(
+      mapConnectionToLawyerHistoryItem(
+        { ...sample, status: 'ACEITA' },
+        { specialtyLabel: 'Direito do Consumidor' },
+      )?.specialty,
+    ).toBe('Direito do Consumidor');
   });
 
   it('maps connection to solicitation details and detects emergency', () => {
@@ -98,6 +136,19 @@ describe('connection-ui.mapper', () => {
       rating: 4,
       comment:
         'Profissional excepcional, muito feliz em ser atendida por ela',
+    });
+  });
+
+  it('maps a client review with stars only when the comment is empty', () => {
+    const details = mapConnectionToLawyerSolicitationDetails({
+      ...sample,
+      avaliacaoClienteNota: 2.5,
+      avaliacaoClienteComentario: null,
+    });
+
+    expect(details.clientReview).toEqual({
+      rating: 2.5,
+      comment: '',
     });
   });
 });

@@ -56,6 +56,15 @@ describe('mapPublicLawyerProfileWireToResult', () => {
     expect(profile.supplementalOabs).toHaveLength(1);
     expect(profile.specialties[0]?.name).toBe('Direito Civil');
     expect(profile.modalities[0]?.name).toBe('Pautista');
+    expect(profile.isAvailable).toBe(true);
+  });
+
+  it('marks the profile as unavailable when disponibilidade is INDISPONIVEL', () => {
+    const profile = mapPublicLawyerProfileWireToResult({
+      ...sampleWire,
+      disponibilidade: 'INDISPONIVEL',
+    });
+    expect(profile.isAvailable).toBe(false);
   });
 
   it('prefers social name already resolved as nome by the API', () => {

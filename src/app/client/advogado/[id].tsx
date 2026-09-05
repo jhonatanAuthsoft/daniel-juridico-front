@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { SymbolView } from 'expo-symbols';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -9,13 +9,17 @@ import {
   View,
 } from 'react-native';
 
+import { AvailabilityBadge } from '@/atomic/availability-badge';
 import { Body1, Body2, Display, Heading1, Link } from '@/atomic/typography';
 import { useBanner } from '@/atomic/feedback-banner';
-import { ClientConnectionStatus } from '@/components/client-connection-status';
+import {
+  ClientConnectionStatus,
+  LawyerUnavailableModal,
+} from '@/components/client-connection-status';
 import { ClientFlowScreen } from '@/components/client-flow-screen';
 import { ClientLawyerReviews } from '@/components/client-lawyer-reviews';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
-import { getErrorMessage } from '@/data/http';
+import { getErrorCode, getErrorMessage } from '@/data/http';
 import {
   formatPublicLawyerEducation,
   formatPublicLawyerModalities,
@@ -37,7 +41,7 @@ import {
   usePublicLawyerProfile,
 } from '@/domain/lawyer';
 
-const PLACEHOLDER_IMAGE = require('@/assets/images/professional-image-placeholder.png');
+const NO_IMAGE_PLACEHOLDER = require('@/assets/images/no-image-placeholder.png');
 
 type ProfileFieldProps = {
   icon: ReactNode;
@@ -74,16 +78,24 @@ function formatSupplementalOabs(profile: PublicLawyerProfile): string {
 }
 
 function LawyerProfilePhoto({ photoKey }: { photoKey: string | null }) {
-  const { data: read } = useObjectReadUrl(photoKey);
+  const { data: read, isLoading: isReadUrlLoading } = useObjectReadUrl(photoKey);
   const uri = read?.readUrl?.trim();
+  const isLoadingPhoto = Boolean(photoKey) && isReadUrlLoading && !uri;
 
   return (
-    <Image
-      testID="lawyer-profile-image"
-      source={uri ? { uri } : PLACEHOLDER_IMAGE}
-      contentFit="cover"
-      style={styles.profileImage}
-    />
+    <View style={styles.profileImageWrap}>
+      <Image
+        testID="lawyer-profile-image"
+        source={uri ? { uri } : NO_IMAGE_PLACEHOLDER}
+        contentFit="cover"
+        style={StyleSheet.absoluteFill}
+      />
+      {isLoadingPhoto ? (
+        <View style={styles.profileImageLoading}>
+          <ActivityIndicator color={BrandColors.primary.light} size="small" />
+        </View>
+      ) : null}
+    </View>
   );
 }
 
@@ -107,7 +119,10 @@ export default function ClientLawyerProfileScreen() {
     refetch,
   } = usePublicLawyerProfile(lawyerId);
 
-  const { data: reviewsData } = useLawyerReviews(lawyerId);
+  const reviewsQuery = useLawyerReviews(lawyerId);
+  const reviewPages = reviewsQuery.data?.pages ?? [];
+  const reviewItems = reviewPages.flatMap((page) => page.items);
+  const reviewsData = reviewPages[0];
   const deleteReview = useDeleteLawyerReview();
   const createReview = useCreateLawyerReview();
 
@@ -117,6 +132,7 @@ export default function ClientLawyerProfileScreen() {
   );
   const createConnection = useCreateConnection();
   const cancelConnection = useCancelConnection();
+  const [unavailableModalVisible, setUnavailableModalVisible] = useState(false);
 
   if (isLoading) {
     return (
@@ -178,6 +194,7 @@ export default function ClientLawyerProfileScreen() {
       <LawyerProfilePhoto photoKey={profile.photoKey} />
 
       <View style={styles.identity}>
+        <AvailabilityBadge available={profile.isAvailable} />
         <Heading1 color={BrandColors.neutral.white}>
           {profile.name}
           {honorificSuffix}
@@ -358,6 +375,10 @@ export default function ClientLawyerProfileScreen() {
             if (!lawyerId || !solicitacaoId) {
               return;
             }
+            if (!profile.isAvailable) {
+              setUnavailableModalVisible(true);
+              return;
+            }
             void (async () => {
               try {
                 await createConnection.mutateAsync({
@@ -365,6 +386,10 @@ export default function ClientLawyerProfileScreen() {
                   advogadoId: lawyerId,
                 });
               } catch (requestError) {
+                if (getErrorCode(requestError) === 'LAWYER_UNAVAILABLE') {
+                  setUnavailableModalVisible(true);
+                  return;
+                }
                 banner(
                   getErrorMessage(
                     requestError,
@@ -382,7 +407,9 @@ export default function ClientLawyerProfileScreen() {
 
       <ClientLawyerReviews
         canReview={reviewsData?.canReview ?? false}
+        hasNextPage={reviewsQuery.hasNextPage}
         isDeletingOwn={deleteReview.isPending}
+        isFetchingNextPage={reviewsQuery.isFetchingNextPage}
         isSubmittingReview={createReview.isPending}
         onDeleteOwnReview={async (reviewId) => {
           try {
@@ -398,6 +425,9 @@ export default function ClientLawyerProfileScreen() {
             throw error;
           }
         }}
+        onLoadMore={() => {
+          void reviewsQuery.fetchNextPage();
+        }}
         onSubmitReview={async ({ rating, comment }) => {
           try {
             await createReview.mutateAsync({
@@ -412,12 +442,13 @@ export default function ClientLawyerProfileScreen() {
             );
           }
         }}
-        reviews={
-          reviewsData
-            ? mapLawyerReviewsToClientReviews(reviewsData.items)
-            : []
-        }
+        reviews={mapLawyerReviewsToClientReviews(reviewItems)}
         total={reviewsData?.total ?? profile.totalReviews}
+      />
+
+      <LawyerUnavailableModal
+        onClose={() => setUnavailableModalVisible(false)}
+        visible={unavailableModalVisible}
       />
     </ClientFlowScreen>
   );
@@ -432,6 +463,19 @@ const styles = StyleSheet.create({
     aspectRatio: 1.03,
     borderRadius: Radius.medium,
     backgroundColor: BrandColors.neutral.dark,
+  },
+  profileImageWrap: {
+    width: '100%',
+    aspectRatio: 1.03,
+    borderRadius: Radius.medium,
+    overflow: 'hidden',
+    backgroundColor: BrandColors.neutral.dark,
+  },
+  profileImageLoading: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.35)',
   },
   identity: {
     gap: Spacing.xxxs,

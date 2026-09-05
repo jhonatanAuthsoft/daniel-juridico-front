@@ -1,8 +1,9 @@
 import { Image } from 'expo-image';
-import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
+import { StarRating } from '@/assets/icon/star';
 import { Button } from '@/atomic/button';
 import { Body1, Body2, Heading1, Link } from '@/atomic/typography';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
@@ -10,8 +11,6 @@ import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { ClientOwnReviewCard } from './client-own-review-card.component';
 import { ClientReviewFormModal } from './client-review-form-modal.component';
 import { DeleteReviewConfirmationModal } from './delete-review-confirmation-modal.component';
-
-const INITIAL_VISIBLE_REVIEWS = 3;
 
 export type ClientLawyerReview = {
   id: string;
@@ -25,6 +24,9 @@ type ClientLawyerReviewsProps = {
   reviews: ClientLawyerReview[];
   total: number;
   canReview?: boolean;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+  onLoadMore?: () => void;
   /** When set, own reviews show delete and call this on confirm. */
   onDeleteOwnReview?: (reviewId: string) => Promise<void>;
   isDeletingOwn?: boolean;
@@ -42,42 +44,25 @@ function formatRatingLabel(rating: number): string {
   return `${formatted} ${rating === 1 ? 'estrela' : 'estrelas'}`;
 }
 
-function formatStars(rating: number): string {
-  const full = Math.max(0, Math.min(5, Math.floor(rating)));
-  const hasHalf = rating - full >= 0.5 && full < 5;
-  return `${'★'.repeat(full)}${hasHalf ? '½' : ''}`;
-}
-
 export function ClientLawyerReviews({
   reviews,
   total,
   canReview = false,
+  hasNextPage = false,
+  isFetchingNextPage = false,
+  onLoadMore,
   onDeleteOwnReview,
   isDeletingOwn = false,
   onSubmitReview,
   isSubmittingReview = false,
 }: ClientLawyerReviewsProps) {
-  const [expanded, setExpanded] = useState(false);
   const [reviewModalVisible, setReviewModalVisible] = useState(false);
-  const [currentReviews, setCurrentReviews] = useState(() => reviews);
-  const [currentTotal, setCurrentTotal] = useState(total);
   const [reviewToDeleteId, setReviewToDeleteId] = useState<string | null>(null);
 
-  useEffect(() => {
-    setCurrentReviews(reviews);
-    setCurrentTotal(total);
-  }, [reviews, total]);
-
-  const visibleReviews = expanded
-    ? currentReviews
-    : currentReviews.slice(0, INITIAL_VISIBLE_REVIEWS);
-  const canExpand = currentReviews.length > INITIAL_VISIBLE_REVIEWS;
-  const hasOwnReview = currentReviews.some((review) => review.isOwn);
-  const canCreateReview = canReview && !hasOwnReview;
   const canDeleteOwn = typeof onDeleteOwnReview === 'function';
-  const hasReviews = currentReviews.length > 0 || currentTotal > 0;
+  const hasReviews = reviews.length > 0 || total > 0;
 
-  if (!hasReviews && !canCreateReview) {
+  if (!hasReviews && !canReview) {
     return null;
   }
 
@@ -107,10 +92,10 @@ export function ClientLawyerReviews({
 
       <View style={styles.header}>
         <Heading1 color={BrandColors.neutral.white}>Avaliações</Heading1>
-        <Heading1 color={BrandColors.neutral.white}>({currentTotal})</Heading1>
+        <Heading1 color={BrandColors.neutral.white}>({total})</Heading1>
       </View>
 
-      {canCreateReview ? (
+      {canReview ? (
         <Button
           accessibilityLabel="Deixar uma avaliação"
           onPress={() => setReviewModalVisible(true)}
@@ -120,7 +105,7 @@ export function ClientLawyerReviews({
       ) : null}
 
       <View style={styles.list}>
-        {visibleReviews.map((review) => {
+        {reviews.map((review) => {
           if (review.isOwn) {
             return (
               <ClientOwnReviewCard
@@ -151,11 +136,11 @@ export function ClientLawyerReviews({
                     {review.reviewerName}
                   </Body1>
                   <View style={styles.ratingRow}>
-                    <Text
+                    <StarRating
                       accessibilityLabel={formatRatingLabel(review.rating)}
-                      style={styles.stars}>
-                      {formatStars(review.rating)}
-                    </Text>
+                      rating={review.rating}
+                      size={20}
+                    />
                     <Body2 color={BrandColors.neutral.white}>
                       {formatRatingLabel(review.rating)}
                     </Body2>
@@ -163,33 +148,35 @@ export function ClientLawyerReviews({
                 </View>
               </View>
 
-              <Body1 color={BrandColors.neutral.white}>{review.comment}</Body1>
+              {review.comment ? (
+                <Body1 color={BrandColors.neutral.white}>{review.comment}</Body1>
+              ) : null}
             </View>
           );
         })}
       </View>
 
-      {canExpand ? (
-        <Pressable
-          accessibilityLabel={
-            expanded ? 'Ver menos avaliações' : 'Veja mais avaliações'
-          }
-          accessibilityRole="button"
-          onPress={() => setExpanded((current) => !current)}
-          style={({ pressed }) => [
-            styles.expandButton,
-            pressed && styles.pressed,
-          ]}>
-          <CaretLeftIcon
-            color={BrandColors.primary.light}
-            direction={expanded ? 'up' : 'down'}
-            height={20}
-            width={20}
-          />
-          <Link color={BrandColors.primary.light}>
-            {expanded ? 'Ver menos avaliações' : 'Veja mais avaliações'}
-          </Link>
-        </Pressable>
+      {hasNextPage ? (
+        isFetchingNextPage ? (
+          <ActivityIndicator color={BrandColors.primary.light} />
+        ) : (
+          <Pressable
+            accessibilityLabel="Ver mais"
+            accessibilityRole="button"
+            onPress={onLoadMore}
+            style={({ pressed }) => [
+              styles.expandButton,
+              pressed && styles.pressed,
+            ]}>
+            <CaretLeftIcon
+              color={BrandColors.primary.light}
+              direction="down"
+              height={20}
+              width={20}
+            />
+            <Link color={BrandColors.primary.light}>Ver mais</Link>
+          </Pressable>
+        )
       ) : null}
 
       <ClientReviewFormModal
@@ -259,11 +246,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     gap: Spacing.xxs,
-  },
-  stars: {
-    color: BrandColors.feedback.warning.medium,
-    fontSize: 20,
-    letterSpacing: 2,
   },
   expandButton: {
     minHeight: 48,

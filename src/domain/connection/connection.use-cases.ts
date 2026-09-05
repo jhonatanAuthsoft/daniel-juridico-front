@@ -5,6 +5,7 @@ import {
   getLawyerConnectionStatus,
   listConnections,
   listSolicitationConnections,
+  markConnectionViewed,
   rejectConnection,
   type CreateConnectionParams,
   type ListConnectionsParams,
@@ -36,6 +37,13 @@ export function rejectConnectionUseCase(
   signal?: AbortSignal,
 ) {
   return rejectConnection(conexaoId, signal);
+}
+
+export function markConnectionViewedUseCase(
+  conexaoId: string,
+  signal?: AbortSignal,
+) {
+  return markConnectionViewed(conexaoId, signal);
 }
 
 export function listConnectionsUseCase(

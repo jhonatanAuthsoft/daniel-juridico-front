@@ -8,6 +8,7 @@ export type {
   ListSolicitationsResult,
   ModalidadeSolicitacaoApi,
   NivelLocalidadeApi,
+  DisponibilidadeApi,
   SolicitationDetailResult,
   SolicitationMatchResult,
   SolicitationStatusCounts,

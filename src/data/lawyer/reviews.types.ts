@@ -3,7 +3,7 @@
 export type LawyerReviewItemWire = {
   id: string;
   nota: number | string;
-  comentario: string;
+  comentario?: string | null;
   nomeAvaliador: string;
   criadoEm?: string | null;
   propria?: boolean;
@@ -39,7 +39,7 @@ export type LawyerReviewsResult = {
 
 export type CreateLawyerReviewInput = {
   rating: number;
-  comment: string;
+  comment?: string;
 };
 
 export type CreateLawyerReviewResult = LawyerReview;

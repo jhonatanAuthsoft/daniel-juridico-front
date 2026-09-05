@@ -16,7 +16,7 @@ import type {
   ListLawyerReviewsParams,
 } from './reviews.types';
 
-const DEFAULT_LIMIT = 50;
+const DEFAULT_LIMIT = 10;
 
 function mapReviewItemWire(wire: LawyerReviewItemWire): CreateLawyerReviewResult {
   const mapped = mapLawyerReviewsWireToResult({
@@ -79,10 +79,7 @@ export async function createLawyerReview(
     throw new Error('Identificador do advogado inválido.');
   }
 
-  const comment = input.comment.trim();
-  if (!comment) {
-    throw new Error('O comentário é obrigatório.');
-  }
+  const comment = input.comment?.trim() ?? '';
 
   const response = await authenticatedHttpRequest<
     ApiResponse<LawyerReviewItemWire>
@@ -91,7 +88,7 @@ export async function createLawyerReview(
     signal,
     body: {
       nota: input.rating,
-      comentario: comment,
+      comentario: comment.length > 0 ? comment : null,
     },
   });
 

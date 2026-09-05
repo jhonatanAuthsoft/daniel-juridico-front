@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -21,6 +21,7 @@ import {
   LawyerSolicitationDataAccordion,
   LawyerSolicitationDecisionCard,
   LawyerSolicitationDescriptionAccordion,
+  RejectConnectionModal,
 } from '@/components/lawyer-solicitation-details';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
@@ -30,6 +31,7 @@ import {
   mapConnectionToLawyerSolicitationDetails,
   useAcceptConnection,
   useConnections,
+  useMarkConnectionViewed,
   useRejectConnection,
 } from '@/domain/connection';
 
@@ -50,11 +52,26 @@ export default function LawyerSolicitationDetailsScreen() {
   const catalogQuery = useSpecialtiesCatalog();
   const acceptConnection = useAcceptConnection();
   const rejectConnection = useRejectConnection();
+  const markConnectionViewed = useMarkConnectionViewed();
+  const [rejectModalVisible, setRejectModalVisible] = useState(false);
 
   const connection = useMemo(
     () => connections.find((item) => item.id === connectionId),
     [connectionId, connections],
   );
+
+  /** Drops the "never opened" accent from the home card. Best-effort. */
+  const markedViewedId = useRef<string | null>(null);
+  useEffect(() => {
+    if (!connection || connection.visualizadaEm != null) {
+      return;
+    }
+    if (markedViewedId.current === connection.id) {
+      return;
+    }
+    markedViewedId.current = connection.id;
+    markConnectionViewed.mutateAsync(connection.id).catch(() => {});
+  }, [connection, markConnectionViewed]);
 
   const details = useMemo(() => {
     if (!connection) {
@@ -92,6 +109,7 @@ export default function LawyerSolicitationDetailsScreen() {
     if (!connectionId) {
       return;
     }
+    setRejectModalVisible(false);
     try {
       await rejectConnection.mutateAsync(connectionId);
       router.back();
@@ -216,9 +234,7 @@ export default function LawyerSolicitationDetailsScreen() {
             accessibilityLabel="Recusar"
             accessibilityRole="button"
             disabled={isMutating}
-            onPress={() => {
-              void handleReject();
-            }}
+            onPress={() => setRejectModalVisible(true)}
             style={({ pressed }) => [
               styles.refuseButton,
               pressed && !isMutating && styles.pressed,
@@ -230,6 +246,14 @@ export default function LawyerSolicitationDetailsScreen() {
           </Pressable>
         </View>
       ) : null}
+
+      <RejectConnectionModal
+        onClose={() => setRejectModalVisible(false)}
+        onConfirm={() => {
+          void handleReject();
+        }}
+        visible={rejectModalVisible}
+      />
     </View>
   );
 }

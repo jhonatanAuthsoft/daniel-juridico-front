@@ -10,6 +10,10 @@ export type LawyerSolicitationCardData = {
   /** Prefer clock icon when relative. */
   timeKind: 'relative' | 'absolute';
   location: string;
+  /** Specialty name from the catalog (empty hides the row). */
+  specialty: string;
+  /** Never opened by the lawyer: shows the side accent in the urgency color. */
+  isUnviewed: boolean;
 };
 
 export const MOCK_LAWYER_SOLICITATIONS: LawyerSolicitationCardData[] = [
@@ -22,6 +26,8 @@ export const MOCK_LAWYER_SOLICITATIONS: LawyerSolicitationCardData[] = [
     timeLabel: '2h atrás',
     timeKind: 'relative',
     location: 'Salvador - Bahia',
+    specialty: 'Direito do Consumidor',
+    isUnviewed: true,
   },
   {
     id: 'law-sol-2',
@@ -32,6 +38,8 @@ export const MOCK_LAWYER_SOLICITATIONS: LawyerSolicitationCardData[] = [
     timeLabel: '2h atrás',
     timeKind: 'relative',
     location: 'Salvador - Bahia',
+    specialty: 'Direito do Consumidor',
+    isUnviewed: false,
   },
   {
     id: 'law-sol-3',
@@ -42,6 +50,8 @@ export const MOCK_LAWYER_SOLICITATIONS: LawyerSolicitationCardData[] = [
     timeLabel: '25/06/2026',
     timeKind: 'absolute',
     location: 'São Paulo - SP',
+    specialty: 'Direito do Consumidor',
+    isUnviewed: false,
   },
   {
     id: 'law-sol-4',
@@ -52,6 +62,8 @@ export const MOCK_LAWYER_SOLICITATIONS: LawyerSolicitationCardData[] = [
     timeLabel: '25/06/2026',
     timeKind: 'absolute',
     location: 'São Paulo - SP',
+    specialty: 'Direito do Consumidor',
+    isUnviewed: false,
   },
   {
     id: 'law-sol-5',
@@ -62,5 +74,7 @@ export const MOCK_LAWYER_SOLICITATIONS: LawyerSolicitationCardData[] = [
     timeLabel: '25/06/2026',
     timeKind: 'absolute',
     location: 'São Paulo - SP',
+    specialty: 'Direito do Consumidor',
+    isUnviewed: false,
   },
 ];

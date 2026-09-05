@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { StarIcon } from '@/assets/icon/star';
+import { StarIcon, STAR_YELLOW, resolveStarFill, type StarFill } from '@/assets/icon/star';
 import { XIcon } from '@/assets/icon/x';
 import { Button } from '@/atomic/button';
 import { ModalScrim } from '@/atomic/modal';
@@ -25,8 +25,6 @@ const MAX_COMMENT_LENGTH = 800;
 const STAR_VALUES = [1, 2, 3, 4, 5] as const;
 const STAR_SIZE = 44;
 
-type StarFill = 'empty' | 'half' | 'full';
-
 type ClientReviewFormModalProps = {
   visible: boolean;
   onClose: () => void;
@@ -40,16 +38,6 @@ function formatRatingLabel(value: number): string {
     : value.toFixed(1).replace('.', ',');
   const unit = value === 1 ? 'estrela' : 'estrelas';
   return `Dar ${formatted} ${unit}`;
-}
-
-function resolveStarFill(star: number, rating: number): StarFill {
-  if (rating >= star) {
-    return 'full';
-  }
-  if (rating >= star - 0.5) {
-    return 'half';
-  }
-  return 'empty';
 }
 
 /** Maps page-relative X across a space-between star row. */
@@ -81,19 +69,16 @@ function ratingFromTrackX(x: number, trackWidth: number): number {
 }
 
 function RatingStar({ fill }: { fill: StarFill }) {
-  const emptyColor = BrandColors.neutral.white;
-  const filledColor = BrandColors.feedback.warning.medium;
-
   return (
     <View pointerEvents="none" style={styles.starSlot}>
-      <StarIcon color={emptyColor} filled={false} size={STAR_SIZE} />
+      <StarIcon color={STAR_YELLOW} filled={false} size={STAR_SIZE} />
       {fill !== 'empty' ? (
         <View
           style={[
             styles.starFillMask,
             fill === 'half' ? styles.starFillHalf : styles.starFillFull,
           ]}>
-          <StarIcon color={filledColor} filled size={STAR_SIZE} />
+          <StarIcon color={STAR_YELLOW} filled size={STAR_SIZE} />
         </View>
       ) : null}
     </View>
@@ -175,7 +160,6 @@ export function ClientReviewFormModal({
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
   const [ratingError, setRatingError] = useState(false);
-  const [commentError, setCommentError] = useState(false);
 
   useEffect(() => {
     if (!visible) {
@@ -184,7 +168,6 @@ export function ClientReviewFormModal({
     setRating(5);
     setComment('');
     setRatingError(false);
-    setCommentError(false);
   }, [visible]);
 
   const selectRating = (value: number) => {
@@ -194,7 +177,6 @@ export function ClientReviewFormModal({
 
   const updateComment = (value: string) => {
     setComment(value);
-    setCommentError(false);
   };
 
   const submitReview = () => {
@@ -203,12 +185,10 @@ export function ClientReviewFormModal({
     }
 
     const hasRatingError = rating === 0;
-    const hasCommentError = comment.trim().length === 0;
 
     setRatingError(hasRatingError);
-    setCommentError(hasCommentError);
 
-    if (hasRatingError || hasCommentError) {
+    if (hasRatingError) {
       return;
     }
 
@@ -279,7 +259,7 @@ export function ClientReviewFormModal({
                 onChangeText={updateComment}
                 placeholder="Descreva sua experiência..."
                 placeholderTextColor={BrandColors.neutral.light}
-                style={[styles.input, commentError && styles.inputError]}
+                style={styles.input}
                 textAlignVertical="top"
                 underlineColorAndroid="transparent"
                 value={comment}
@@ -287,11 +267,6 @@ export function ClientReviewFormModal({
               <Body2 color={BrandColors.neutral.white}>
                 {MAX_COMMENT_LENGTH - comment.length} caracteres
               </Body2>
-              {commentError ? (
-                <Body2 color={BrandColors.feedback.error.medium}>
-                  Escreva sua avaliação.
-                </Body2>
-              ) : null}
             </View>
 
             <Button
@@ -384,8 +359,5 @@ const styles = StyleSheet.create({
     fontFamily: InterFontFamily[400],
     fontSize: 16,
     backgroundColor: Platform.OS === 'android' ? 'rgba(0,0,0,0)' : 'transparent',
-  },
-  inputError: {
-    borderColor: BrandColors.feedback.error.medium,
   },
 });

@@ -1,6 +1,11 @@
 import {
+  emptyConnectionStatusCounts,
+  emptyConnectionUrgencyCounts,
+  mapContagemPorStatus,
+  mapContagemPorUrgencia,
   mapConexaoStatusToUi,
   mapConexaoWireToResult,
+  normalizeConexaoListagemPayload,
 } from './connection.mapper';
 import type { ConexaoWire } from './connection.types';
 
@@ -13,6 +18,7 @@ const sampleWire: ConexaoWire = {
   criadoEm: '2026-08-06T12:00:00',
   decididoEm: '2026-08-06T13:00:00',
   canceladoEm: null,
+  visualizadaEm: null,
   telefone: '11988887777',
   email: 'adv@laweact.com',
   nomeAdvogado: 'Bruna Capital',
@@ -80,5 +86,94 @@ describe('mapConexaoWireToResult', () => {
     expect(result.telefone).toBeNull();
     expect(result.email).toBeNull();
     expect(result.canceladoEm).toBe('2026-08-06T14:00:00');
+  });
+
+  it('carries visualizadaEm so the lawyer card knows it was already opened', () => {
+    expect(mapConexaoWireToResult(sampleWire).visualizadaEm).toBeNull();
+    expect(
+      mapConexaoWireToResult({
+        ...sampleWire,
+        visualizadaEm: '2026-08-07T09:00:00',
+      }).visualizadaEm,
+    ).toBe('2026-08-07T09:00:00');
+  });
+});
+
+describe('mapContagemPorUrgencia', () => {
+  it('fills missing urgency keys with zero', () => {
+    expect(mapContagemPorUrgencia({ EMERGENCIA: 8, URGENTE: 6 })).toEqual({
+      EMERGENCIA: 8,
+      URGENTE: 6,
+      MEDIO: 0,
+      TENHO_TEMPO: 0,
+    });
+  });
+
+  it('returns all zeros for a missing payload', () => {
+    expect(mapContagemPorUrgencia(null)).toEqual(emptyConnectionUrgencyCounts());
+    expect(mapContagemPorUrgencia(undefined)).toEqual(
+      emptyConnectionUrgencyCounts(),
+    );
+  });
+});
+
+describe('mapContagemPorStatus', () => {
+  it('fills missing status keys with zero', () => {
+    expect(mapContagemPorStatus({ ACEITA: 8, RECUSADA: 6 })).toEqual({
+      PENDENTE: 0,
+      ACEITA: 8,
+      RECUSADA: 6,
+      CANCELADA: 0,
+    });
+  });
+
+  it('returns all zeros for a missing payload', () => {
+    expect(mapContagemPorStatus(null)).toEqual(emptyConnectionStatusCounts());
+    expect(mapContagemPorStatus(undefined)).toEqual(emptyConnectionStatusCounts());
+  });
+});
+
+describe('normalizeConexaoListagemPayload', () => {
+  it('keeps items and counts from the paginated payload', () => {
+    const listagem = normalizeConexaoListagemPayload({
+      items: [sampleWire],
+      contagemPorUrgencia: { EMERGENCIA: 3 },
+      contagemPorStatus: { ACEITA: 8, RECUSADA: 6 },
+    });
+
+    expect(listagem.items).toHaveLength(1);
+    expect(listagem.contagemPorUrgencia).toEqual({ EMERGENCIA: 3 });
+    expect(listagem.contagemPorStatus).toEqual({ ACEITA: 8, RECUSADA: 6 });
+  });
+
+  it('derives counts locally when the API returns a bare array', () => {
+    const listagem = normalizeConexaoListagemPayload([
+      sampleWire,
+      { ...sampleWire, id: 'cx-2', urgencia: 'MEDIO' },
+      { ...sampleWire, id: 'cx-3', urgencia: 'medio' },
+      { ...sampleWire, id: 'cx-4', urgencia: null },
+    ]);
+
+    expect(listagem.items).toHaveLength(4);
+    expect(listagem.contagemPorUrgencia).toEqual({
+      EMERGENCIA: 1,
+      URGENTE: 0,
+      MEDIO: 2,
+      TENHO_TEMPO: 0,
+    });
+    expect(listagem.contagemPorStatus).toEqual({
+      PENDENTE: 0,
+      ACEITA: 4,
+      RECUSADA: 0,
+      CANCELADA: 0,
+    });
+  });
+
+  it('falls back to an empty listing for an unexpected payload', () => {
+    expect(normalizeConexaoListagemPayload(null)).toEqual({
+      items: [],
+      contagemPorUrgencia: {},
+      contagemPorStatus: {},
+    });
   });
 });

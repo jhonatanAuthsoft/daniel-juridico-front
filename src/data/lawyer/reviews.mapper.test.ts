@@ -51,6 +51,28 @@ describe('mapLawyerReviewsWireToResult', () => {
     ]);
   });
 
+  it('maps a missing comment to an empty string', () => {
+    const result = mapLawyerReviewsWireToResult({
+      items: [
+        {
+          id: 'rev-3',
+          nota: 2.5,
+          comentario: null,
+          nomeAvaliador: 'Carla Dias',
+          propria: false,
+        },
+      ],
+      totalAvaliacoes: 1,
+    });
+
+    expect(result.items[0]).toMatchObject({
+      id: 'rev-3',
+      rating: 2.5,
+      comment: '',
+      reviewerName: 'Carla Dias',
+    });
+  });
+
   it('returns empty list when there are no reviews', () => {
     const result = mapLawyerReviewsWireToResult({
       items: [],

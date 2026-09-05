@@ -8,6 +8,10 @@ export type LawyerHistoryItem = {
   urgency: SolicitationStatus;
   description: string;
   decision: LawyerHistoryDecision;
+  /** Opening date as dd/MM/yyyy. */
+  dateLabel: string;
+  /** Specialty name from the catalog (empty hides the row). */
+  specialty: string;
 };
 
 export const MOCK_LAWYER_HISTORY: LawyerHistoryItem[] = [
@@ -18,6 +22,8 @@ export const MOCK_LAWYER_HISTORY: LawyerHistoryItem[] = [
     description:
       'Preciso de orientacao sobre rescisao de contrato de aluguel com clausula de multa a...',
     decision: 'accepted',
+    dateLabel: '25/06/2026',
+    specialty: 'Direito do Consumidor',
   },
   {
     id: 'hist-2',
@@ -26,6 +32,8 @@ export const MOCK_LAWYER_HISTORY: LawyerHistoryItem[] = [
     description:
       'Preciso de orientacao sobre rescisao de contrato de aluguel com clausula de multa a...',
     decision: 'rejected',
+    dateLabel: '25/06/2026',
+    specialty: 'Direito do Consumidor',
   },
   {
     id: 'hist-3',
@@ -34,6 +42,8 @@ export const MOCK_LAWYER_HISTORY: LawyerHistoryItem[] = [
     description:
       'Preciso de orientacao sobre rescisao de contrato de aluguel com clausula de multa a...',
     decision: 'accepted',
+    dateLabel: '25/06/2026',
+    specialty: 'Direito do Consumidor',
   },
   {
     id: 'hist-4',
@@ -42,5 +52,7 @@ export const MOCK_LAWYER_HISTORY: LawyerHistoryItem[] = [
     description:
       'Preciso de orientacao sobre rescisao de contrato de aluguel com clausula de multa a...',
     decision: 'rejected',
+    dateLabel: '25/06/2026',
+    specialty: 'Direito do Consumidor',
   },
 ];
