@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Linking, Platform, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/atomic/button';
@@ -10,6 +10,7 @@ import { Body1, Body2, Display, Heading1 } from '@/atomic/typography';
 import { BrandColors, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
 import { authKeys, useAuth, useMe } from '@/domain/auth';
 import {
+  formatPaywallTrialMessage,
   getIapProvider,
   purchaseSubscriptionUseCase,
   restoreSubscriptionUseCase,
@@ -19,21 +20,11 @@ import {
 const TERMS_URL = 'https://laweact.com/termos';
 const PRIVACY_URL = 'https://laweact.com/privacidade';
 
-function trialMessage(daysRemaining: number | null, inTrial: boolean): string {
-  if (inTrial && daysRemaining != null && daysRemaining > 0) {
-    return `Você tem ${daysRemaining} dia${daysRemaining === 1 ? '' : 's'} grátis para testar o app.`;
-  }
-  if (inTrial) {
-    return 'Seu período de testes está ativo.';
-  }
-  return 'Seu período de testes terminou. Assine para continuar usando o app.';
-}
-
 export default function SignupSubscriptionScreen() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { user, signOut } = useAuth();
-  const { data: me } = useMe();
+  const { data: me, isPending } = useMe();
   const subscription = me?.subscription;
 
   const productId = subscription?.productId ?? 'laweact_basic_mensal';
@@ -44,7 +35,11 @@ export default function SignupSubscriptionScreen() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const trialCopy = useMemo(
-    () => trialMessage(subscription?.trialDaysRemaining ?? null, subscription?.inTrial ?? false),
+    () =>
+      formatPaywallTrialMessage(
+        subscription?.inTrial ?? false,
+        subscription?.trialDaysRemaining ?? null,
+      ),
     [subscription?.inTrial, subscription?.trialDaysRemaining],
   );
 
@@ -123,6 +118,18 @@ export default function SignupSubscriptionScreen() {
     router.replace('/login');
   };
 
+  if (isPending) {
+    return (
+      <View style={styles.root}>
+        <ActivityIndicator color={BrandColors.primary.light} style={styles.loading} />
+      </View>
+    );
+  }
+
+  if (subscription?.accessGranted) {
+    return <Redirect href="/lawyer" />;
+  }
+
   return (
     <View style={styles.root}>
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
@@ -141,20 +148,21 @@ export default function SignupSubscriptionScreen() {
 
             <Separator size="lg" />
 
-            <View style={styles.planCard}>
-              <View style={styles.planAccent} />
-              <View style={styles.planBody}>
-                <View style={styles.planHeader}>
-                  <Heading1 color={BrandColors.primary.light}>Plano Basic</Heading1>
-                  {isLoadingProducts ? (
-                    <ActivityIndicator color={BrandColors.neutral.white} />
-                  ) : (
-                    <Body1 color={BrandColors.neutral.white}>{localizedPrice}</Body1>
-                  )}
+            <View style={styles.planCardShell}>
+              <View style={styles.planCard}>
+                <View style={styles.planBody}>
+                  <View style={styles.planHeader}>
+                    <Heading1 color={BrandColors.primary.light}>Plano Basic</Heading1>
+                    {isLoadingProducts ? (
+                      <ActivityIndicator color={BrandColors.neutral.white} />
+                    ) : (
+                      <Body1 color={BrandColors.neutral.white}>{localizedPrice}</Body1>
+                    )}
+                  </View>
+                  <Body1 color={BrandColors.neutral.white}>{trialCopy}</Body1>
+                  <Separator size="sm" />
+                  <Body2 color={BrandColors.neutral.white}>Assinatura mensal automática</Body2>
                 </View>
-                <Body1 color={BrandColors.neutral.white}>{trialCopy}</Body1>
-                <Separator size="sm" />
-                <Body2 color={BrandColors.neutral.white}>Assinatura mensal automática</Body2>
               </View>
             </View>
 
@@ -178,12 +186,14 @@ export default function SignupSubscriptionScreen() {
 
             <Separator size="xs" />
 
-            <Button
-              variant="link"
-              disabled={isPurchasing || isRestoring}
-              onPress={() => void handleRestore()}>
-              {isRestoring ? 'Restaurando...' : 'Restaurar compras'}
-            </Button>
+            <View style={styles.centeredAction}>
+              <Button
+                variant="link"
+                disabled={isPurchasing || isRestoring}
+                onPress={() => void handleRestore()}>
+                {isRestoring ? 'Restaurando...' : 'Restaurar compras'}
+              </Button>
+            </View>
 
             <Separator size="xs" />
 
@@ -199,7 +209,7 @@ export default function SignupSubscriptionScreen() {
 
             <Separator size="sm" />
 
-            <View style={styles.logoutWrap}>
+            <View style={styles.centeredAction}>
               <Button variant="link" onPress={handleSignOut}>
                 Sair da conta
               </Button>
@@ -236,16 +246,18 @@ const styles = StyleSheet.create({
   centeredText: {
     textAlign: 'center',
   },
+  planCardShell: {
+    borderRadius: Radius.large,
+    backgroundColor: BrandColors.primary.light,
+    paddingTop: Spacing.xxs,
+    overflow: 'hidden',
+  },
   planCard: {
     borderRadius: Radius.large,
     backgroundColor: BrandColors.neutral.dark,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.08)',
-  },
-  planAccent: {
-    height: 3,
-    backgroundColor: BrandColors.primary.light,
   },
   planBody: {
     paddingHorizontal: Spacing.sm,
@@ -267,7 +279,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.xxxs,
   },
-  logoutWrap: {
+  centeredAction: {
     alignItems: 'center',
+  },
+  loading: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

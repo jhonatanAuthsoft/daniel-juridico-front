@@ -1,4 +1,4 @@
-import { Redirect, useLocalSearchParams, useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -70,7 +70,6 @@ const TERMS_SECTIONS = [
 export default function SignupTermsScreen() {
   const router = useRouter();
   const banner = useBanner();
-  const { profile } = useLocalSearchParams<{ profile?: string }>();
   const { isAuthenticated, homeHref, user, isHydrating } = useAuth();
   const acceptTerms = useAcceptTerms();
   const [accepted, setAccepted] = useState(false);
@@ -102,11 +101,6 @@ export default function SignupTermsScreen() {
           : 'Não foi possível registrar o aceite dos termos.',
         'error',
       );
-      return;
-    }
-
-    if (profile === 'lawyer') {
-      router.push('/signup/subscription');
       return;
     }
 

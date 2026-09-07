@@ -12,6 +12,7 @@ const mockPush = jest.fn();
 const mockRefetch = jest.fn().mockResolvedValue(undefined);
 const mockFetchNextPage = jest.fn();
 const mockUseLawyerInboxConnections = jest.fn();
+const mockUseMe = jest.fn();
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: mockPush }),
@@ -19,6 +20,10 @@ jest.mock('expo-router', () => ({
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+}));
+
+jest.mock('@/domain/auth', () => ({
+  useMe: () => mockUseMe(),
 }));
 
 jest.mock('@/domain/catalog', () => ({
@@ -116,6 +121,12 @@ describe('LawyerHomeScreen', () => {
     mockPush.mockClear();
     mockRefetch.mockClear();
     mockFetchNextPage.mockClear();
+    mockUseMe.mockReturnValue({
+      data: {
+        subscription: null,
+      },
+      isLoading: false,
+    });
     mockUseLawyerInboxConnections.mockImplementation(() => mockQuery());
   });
 
@@ -127,6 +138,24 @@ describe('LawyerHomeScreen', () => {
       urgencia: undefined,
       busca: undefined,
     });
+  });
+
+  it('shows remaining trial days under the home title', () => {
+    mockUseMe.mockReturnValue({
+      data: {
+        subscription: {
+          inTrial: true,
+          trialDaysRemaining: 12,
+        },
+      },
+      isLoading: false,
+    });
+
+    const screen = render(<LawyerHomeScreen />);
+
+    expect(
+      screen.getByText('Você tem 12 dias restantes no período de testes.'),
+    ).toBeTruthy();
   });
 
   it('shows the no-data state when there is no pending connection at all', () => {

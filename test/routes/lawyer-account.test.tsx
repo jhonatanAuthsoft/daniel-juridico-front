@@ -91,6 +91,27 @@ describe('LawyerPerfilScreen', () => {
     });
   });
 
+  it('shows remaining trial days under the account identity', () => {
+    mockUseMe.mockReturnValue({
+      data: {
+        photoKey: null,
+        pushNotificationsEnabled: true,
+        profileUnavailable: false,
+        subscription: {
+          inTrial: true,
+          trialDaysRemaining: 12,
+        },
+      },
+      isLoading: false,
+    });
+
+    const screen = render(<LawyerPerfilScreen />);
+
+    expect(
+      screen.getByText('Você tem 12 dias restantes no período de testes.'),
+    ).toBeTruthy();
+  });
+
   it('shows the account identity and edit photo control', () => {
     const screen = render(<LawyerPerfilScreen />);
 
