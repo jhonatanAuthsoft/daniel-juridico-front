@@ -267,7 +267,7 @@ export default function LawyerHomeScreen() {
                   void refetch();
                 }}>
                 <Body2 color={BrandColors.primary.light}>
-                  Não foi possível carregar. Toque para tentar novamente.
+                  Não foi possível carregar. Recarregue para tentar novamente.
                 </Body2>
               </Pressable>
             </>

@@ -8,11 +8,12 @@ import { getMeUseCase } from './get-me.use-case';
  * Domain hook: authenticated profile (`GET /usuarios/me`).
  */
 export function useMe() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   return useQuery({
     queryKey: authKeys.me(),
     queryFn: ({ signal }) => getMeUseCase(signal),
     enabled: isAuthenticated,
+    refetchInterval: user?.role === 'LAWYER' ? 30_000 : false,
   });
 }
