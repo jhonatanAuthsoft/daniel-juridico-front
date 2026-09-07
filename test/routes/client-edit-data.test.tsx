@@ -266,8 +266,8 @@ describe('ClientEditPersonalProfileScreen', () => {
     expect(screen.getByText('Renda mensal (opcional)')).toBeTruthy();
     expect(screen.getByDisplayValue('1.500,00')).toBeTruthy();
     expect(
-      screen.getByLabelText('Tornar essas informações públicas para os advogados'),
-    ).toBeTruthy();
+      screen.queryByLabelText('Tornar essas informações públicas para os advogados'),
+    ).toBeNull();
     expect(screen.getByText('Salvar alterações')).toBeTruthy();
   });
 

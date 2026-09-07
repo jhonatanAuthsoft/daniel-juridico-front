@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
 import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputSelectField, InputTextField, useForm } from '@/atomic/form';
 import { Body1 } from '@/atomic/typography';
-import { OptionCheckbox } from '@/components/signup-lawyer';
 import { FieldValidators } from '@/constants/field-validators';
 import { InputMasks } from '@/constants/input-masks';
 import {
@@ -33,7 +32,6 @@ export function ClientEditPersonalProfileScreen() {
   const { profile, fromMe } = useClientEditProfile();
   const updatePersonalProfile = useUpdateClientPersonalProfile();
   const isCnpj = profile.documentType === 'cnpj';
-  const [publicToLawyers, setPublicToLawyers] = useState(false);
   const values: PersonalProfileForm = {
     pronouns: profile.pronouns,
     profession: profile.profession,
@@ -114,18 +112,6 @@ export function ClientEditPersonalProfileScreen() {
         </View>
       </Form>
 
-      <Pressable
-        accessibilityLabel="Tornar essas informações públicas para os advogados"
-        accessibilityRole="checkbox"
-        accessibilityState={{ checked: publicToLawyers }}
-        onPress={() => setPublicToLawyers((current) => !current)}
-        style={({ pressed }) => [styles.checkboxRow, pressed && styles.pressed]}>
-        <OptionCheckbox checked={publicToLawyers} />
-        <Body1 color={BrandColors.neutral.white} style={styles.checkboxLabel}>
-          Tornar essas informações públicas para os advogados
-        </Body1>
-      </Pressable>
-
       <Button
         disabled={updatePersonalProfile.isPending}
         isLoading={updatePersonalProfile.isPending}
@@ -141,16 +127,5 @@ const styles = StyleSheet.create({
   fields: {
     gap: Spacing.sm,
     width: '100%',
-  },
-  checkboxRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: Spacing.xs,
-  },
-  checkboxLabel: {
-    flex: 1,
-  },
-  pressed: {
-    opacity: 0.75,
   },
 });
