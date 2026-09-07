@@ -83,6 +83,25 @@ describe('InputSelectField', () => {
     expect(screen.getByText('Rondônia')).toBeTruthy();
   });
 
+  it('clears an optional selection', async () => {
+    const screen = render(<SelectHarness />);
+
+    fireEvent.press(screen.getByText('Selecione o estado'));
+    fireEvent.press(screen.getByText('Acre'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Acre')).toBeTruthy();
+      expect(screen.getByLabelText('Limpar seleção')).toBeTruthy();
+    });
+
+    fireEvent.press(screen.getByLabelText('Limpar seleção'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Selecione o estado')).toBeTruthy();
+      expect(screen.queryByLabelText('Limpar seleção')).toBeNull();
+    });
+  });
+
   it('hides search when searchable is false', () => {
     const screen = render(<SelectHarness searchable={false} />);
 

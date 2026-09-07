@@ -24,5 +24,7 @@ export { useDeleteAccount } from './use-delete-account';
 export { deleteAccountUseCase } from './delete-account.use-case';
 export { useAcceptTerms } from './use-accept-terms';
 export { acceptTermsUseCase } from './accept-terms.use-case';
+export { useLogScreenAccess } from './use-log-screen-access';
+export { logScreenAccessUseCase } from './log-screen-access.use-case';
 export { useLogin } from './use-login';
 export { loginUseCase, type LoginResult } from './login.use-case';

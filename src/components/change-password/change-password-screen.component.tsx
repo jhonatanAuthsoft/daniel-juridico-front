@@ -13,7 +13,7 @@ import { FieldValidators } from '@/constants/field-validators';
 import { PasswordRequirements } from '@/constants/password-requirements';
 import { BrandColors, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
-import { useUpdatePassword } from '@/domain/auth';
+import { useAuth, useUpdatePassword } from '@/domain/auth';
 
 type ChangePasswordForm = {
   currentPassword: string;
@@ -96,6 +96,7 @@ function ChangePasswordFields({ showErrors }: { showErrors: boolean }) {
 export function ChangePasswordScreen() {
   const router = useRouter();
   const banner = useBanner();
+  const { signOut } = useAuth();
   const updatePassword = useUpdatePassword();
   const [showErrors, setShowErrors] = useState(false);
   const form = useForm<ChangePasswordForm>({
@@ -117,7 +118,12 @@ export function ChangePasswordScreen() {
         currentPassword: values.currentPassword,
         newPassword: values.newPassword,
       });
-      router.back();
+      banner(
+        'Senha alterada com sucesso. Entre novamente com a nova senha.',
+        'success',
+      );
+      await signOut();
+      router.replace('/login');
     } catch (error) {
       banner(
         getErrorMessage(error, 'Não foi possível alterar a senha.'),

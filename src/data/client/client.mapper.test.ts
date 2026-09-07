@@ -151,8 +151,8 @@ describe('client.mapper', () => {
     ).toEqual({
       pronomes: 'NEUTRO',
       areaAtuacao: 'Consultoria jurídica',
-      estadoCivil: '',
-      faixaRenda: '',
+      estadoCivil: null,
+      faixaRenda: null,
     });
   });
 });

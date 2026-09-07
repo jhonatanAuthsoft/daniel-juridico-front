@@ -11,6 +11,8 @@ import {
   mapAcceptTermsParamsToWire,
   mapAcceptTermsWireToResult,
   mapDeleteAccountWireToResult,
+  mapLogScreenAccessParamsToWire,
+  mapLogScreenAccessWireToResult,
   mapUpdatePasswordParamsToWire,
   mapUpdatePasswordWireToResult,
   mapUpdatePreferencesParamsToWire,
@@ -23,6 +25,9 @@ import type {
   AcceptTermsResult,
   AcceptTermsWireResponse,
   DeleteAccountResult,
+  LogScreenAccessParams,
+  LogScreenAccessResult,
+  LogScreenAccessWireResponse,
   UpdatePasswordParams,
   UpdatePasswordResult,
   UpdatePasswordWireResponse,
@@ -146,4 +151,24 @@ export async function deleteAccount(
   }
 
   return mapDeleteAccountWireToResult(response);
+}
+
+/**
+ * Records an authenticated screen opening.
+ * `POST /usuarios/me/acessos-tela`
+ */
+export async function logScreenAccess(
+  params: LogScreenAccessParams,
+  signal?: AbortSignal,
+): Promise<LogScreenAccessResult> {
+  const response = await authenticatedHttpRequest<
+    ApiResponse<LogScreenAccessWireResponse>
+  >(apiUrl('/usuarios/me/acessos-tela'), {
+    method: 'POST',
+    body: mapLogScreenAccessParamsToWire(params),
+    signal,
+  });
+
+  const data = assertApiSuccess(response, 'Não foi possível registrar o acesso.');
+  return mapLogScreenAccessWireToResult(data);
 }

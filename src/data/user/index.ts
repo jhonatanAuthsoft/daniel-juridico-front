@@ -17,6 +17,11 @@ export type {
   UpdatePasswordWireResponse,
   DeleteAccountWireResponse,
   DeleteAccountResult,
+  LogScreenAccessParams,
+  LogScreenAccessResult,
+  LogScreenAccessWireRequest,
+  LogScreenAccessWireResponse,
+  ScreenAccessScreen,
 } from './user.types';
 export { TERMS_VERSION } from './user.types';
 export {
@@ -29,6 +34,8 @@ export {
   mapUpdatePasswordParamsToWire,
   mapUpdatePasswordWireToResult,
   mapDeleteAccountWireToResult,
+  mapLogScreenAccessParamsToWire,
+  mapLogScreenAccessWireToResult,
 } from './user.mapper';
 export {
   acceptTerms,
@@ -36,4 +43,5 @@ export {
   updateProfilePhoto,
   updatePassword,
   deleteAccount,
+  logScreenAccess,
 } from './user.api';

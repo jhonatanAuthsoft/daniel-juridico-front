@@ -20,6 +20,7 @@ import {
   Radius,
   Spacing,
 } from '@/constants/theme';
+import { openSupportEmail } from '@/utils/open-support-email';
 
 const MENU_ITEMS = [
   'Editar Dados',
@@ -135,6 +136,10 @@ export function LawyerAccountScreen() {
                 }
                 if (item === 'Termos e condições') {
                   router.push('/lawyer/perfil/termos');
+                  return;
+                }
+                if (item === 'Suporte') {
+                  void openSupportEmail();
                 }
               }}
               style={({ pressed }) => [

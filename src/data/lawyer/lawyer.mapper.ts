@@ -138,6 +138,24 @@ function mapServiceAreas(
   });
 }
 
+function oldestOabIsoDate(
+  primaryIssueDate: string,
+  supplemental: readonly { issueDate: string; number: string }[],
+): string | undefined {
+  const dates = [
+    toIsoDate(primaryIssueDate),
+    ...supplemental
+      .filter((entry) => entry.number.trim())
+      .map((entry) => toIsoDate(entry.issueDate)),
+  ].filter((value): value is string => Boolean(value));
+
+  if (dates.length === 0) {
+    return undefined;
+  }
+
+  return dates.reduce((oldest, current) => (current < oldest ? current : oldest));
+}
+
 function mapPostgraduates(
   entries: LawyerSignupFormValues['postgraduates'],
 ): PostgraduateWireRequest[] {
@@ -152,7 +170,7 @@ function mapPostgraduates(
 
 /**
  * Maps the lawyer signup form into `POST /advogados/cadastrar` wire body.
- * `atuacaoDesde` is derived from the primary OAB issue date (product decision).
+ * `atuacaoDesde` is the oldest OAB issue date (primary or supplemental).
  * Photo fields send S3 object keys from `/arquivos/url-upload`.
  */
 export function mapLawyerSignupFormToRegisterRequest(
@@ -183,7 +201,7 @@ export function mapLawyerSignupFormToRegisterRequest(
     universidade: form.university.trim(),
     curso: form.course.trim(),
     anoFormacao: toYear(form.graduationYear),
-    atuacaoDesde: toIsoDate(form.oabIssueDate),
+    atuacaoDesde: oldestOabIsoDate(form.oabIssueDate, form.supplementalOabs),
     biografia: form.biography.trim() || undefined,
     cep: formatCep(form.cep),
     logradouro: form.street.trim(),

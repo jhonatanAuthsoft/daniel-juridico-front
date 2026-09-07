@@ -92,7 +92,7 @@ export function StepPersonalDocuments() {
         <>
           <InputTextField
             name="fullName"
-            label="Nome completo (nome social)"
+            label="Nome Completo (Nome Social)"
             placeholder="Maria Gomes Silva"
             autoCapitalize="words"
             autoComplete="name"

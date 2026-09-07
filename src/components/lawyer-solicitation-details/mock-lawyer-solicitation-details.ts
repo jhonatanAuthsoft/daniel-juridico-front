@@ -52,9 +52,9 @@ function buildClient(
     name: clientName,
     location: location.replace(' - ', ', '),
     pronouns: 'Ela/Dela',
-    maritalStatus: index === 0 ? 'Solteiro(a)' : 'Não informado',
+    maritalStatus: index === 0 ? 'Solteiro(a)' : '',
     profession: index === 0 ? 'Professora' : 'Profissional autônoma',
-    monthlyIncome: index === 0 ? 'R$ 5.000,00' : 'R$ 4.000,00',
+    monthlyIncome: index === 0 ? 'R$ 5.000,00' : '',
     phone: '(75) 98888-0502',
     email:
       index === 0

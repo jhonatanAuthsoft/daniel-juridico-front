@@ -154,7 +154,7 @@ export function mapUpdateClientPersonalProfileToWire(
   return {
     pronomes: mapPronounsToApi(params.pronouns),
     ...(isCnpj ? { areaAtuacao: profession } : { profissao: profession }),
-    estadoCivil: params.maritalStatus.trim(),
-    faixaRenda: params.monthlyIncome.trim(),
+    estadoCivil: params.maritalStatus.trim() || null,
+    faixaRenda: params.monthlyIncome.trim() || null,
   };
 }

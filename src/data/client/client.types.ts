@@ -112,6 +112,6 @@ export type UpdateClientPersonalProfileWireRequest = {
   pronomes: PronounsApi;
   profissao?: string;
   areaAtuacao?: string;
-  estadoCivil: string;
-  faixaRenda: string;
+  estadoCivil: string | null;
+  faixaRenda: string | null;
 };

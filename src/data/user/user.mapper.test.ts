@@ -1,5 +1,7 @@
 import {
   mapDeleteAccountWireToResult,
+  mapLogScreenAccessParamsToWire,
+  mapLogScreenAccessWireToResult,
   mapUpdatePasswordParamsToWire,
   mapUpdatePasswordWireToResult,
   mapUpdateProfilePhotoParamsToWire,
@@ -60,6 +62,30 @@ describe('mapDeleteAccount', () => {
       }),
     ).toEqual({
       message: 'Conta excluída com sucesso',
+    });
+  });
+});
+
+describe('mapLogScreenAccess', () => {
+  it('maps TERMS to the TERMOS wire body', () => {
+    expect(mapLogScreenAccessParamsToWire({ screen: 'TERMS' })).toEqual({
+      tela: 'TERMOS',
+    });
+  });
+
+  it('maps the wire log back to the domain result', () => {
+    expect(
+      mapLogScreenAccessWireToResult({
+        id: 'log-1',
+        usuarioId: 'user-1',
+        tela: 'TERMOS',
+        acessadoEm: '2026-09-07T12:00:00',
+      }),
+    ).toEqual({
+      id: 'log-1',
+      userId: 'user-1',
+      screen: 'TERMS',
+      accessedAt: '2026-09-07T12:00:00',
     });
   });
 });

@@ -54,6 +54,8 @@ export type InputSelectFieldProps<
   disabled?: boolean;
   /** When true, empty selection fails validation with "Campo obrigatório". */
   required?: boolean;
+  /** Shows a clear control when a value is selected. Defaults to the inverse of `required`. */
+  clearable?: boolean;
   /** Shows a search field above the options. Defaults to true. */
   searchable?: boolean;
   searchPlaceholder?: string;
@@ -72,6 +74,7 @@ export function InputSelectField<
   options,
   disabled = false,
   required = false,
+  clearable,
   searchable = true,
   searchPlaceholder = 'Buscar...',
   optionsLoading = false,
@@ -80,6 +83,7 @@ export function InputSelectField<
   const { control } = useFormContext<TFieldValues>();
   const { isOpen: open, requestOpen, requestClose } = useExclusiveSelectOpen();
   const [searchQuery, setSearchQuery] = useState('');
+  const canClear = clearable ?? !required;
 
   const close = () => {
     requestClose();
@@ -110,6 +114,7 @@ export function InputSelectField<
         const selected = options.find((option) => option.value === value);
         const displayValue =
           selected?.label ?? (typeof value === 'string' ? value : '');
+        const showClear = canClear && !disabled && displayValue.length > 0;
 
         return (
           <View style={styles.container}>
@@ -140,17 +145,7 @@ export function InputSelectField<
               </>
             ) : null}
 
-            <Pressable
-              accessibilityRole="button"
-              accessibilityState={{ disabled, expanded: open }}
-              disabled={disabled}
-              onBlur={onBlur}
-              onPress={() => {
-                if (disabled) {
-                  return;
-                }
-                requestOpen();
-              }}
+            <View
               style={[
                 styles.fieldShell,
                 hasError && styles.fieldShellError,
@@ -158,25 +153,49 @@ export function InputSelectField<
               ]}>
               <GlassBackground blurPx={25} />
               <View style={styles.fieldContent}>
-                <Body1
-                  color={
-                    displayValue
-                      ? BrandColors.neutral.white
-                      : BrandColors.neutral.light
-                  }
-                  style={styles.valueText}>
-                  {displayValue || placeholder}
-                </Body1>
-                <View style={styles.iconRight}>
-                  <CaretLeftIcon
-                    color={BrandColors.neutral.light}
-                    direction="down"
-                    height={20}
-                    width={20}
-                  />
-                </View>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityState={{ disabled, expanded: open }}
+                  disabled={disabled}
+                  onBlur={onBlur}
+                  onPress={() => {
+                    if (disabled) {
+                      return;
+                    }
+                    requestOpen();
+                  }}
+                  style={styles.valuePressable}>
+                  <Body1
+                    color={
+                      displayValue
+                        ? BrandColors.neutral.white
+                        : BrandColors.neutral.light
+                    }
+                    style={styles.valueText}>
+                    {displayValue || placeholder}
+                  </Body1>
+                  {showClear ? null : (
+                    <CaretLeftIcon
+                      color={BrandColors.neutral.light}
+                      direction="down"
+                      height={20}
+                      width={20}
+                    />
+                  )}
+                </Pressable>
+                {showClear ? (
+                  <Pressable
+                    accessibilityLabel="Limpar seleção"
+                    accessibilityRole="button"
+                    hitSlop={Spacing.xxs}
+                    onPress={() => {
+                      onChange('');
+                    }}>
+                    <XIcon color={BrandColors.neutral.light} height={16} width={16} />
+                  </Pressable>
+                ) : null}
               </View>
-            </Pressable>
+            </View>
 
             {hasError ? (
               <>
@@ -381,12 +400,14 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
     padding: Spacing.sm,
   },
+  valuePressable: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xs,
+  },
   valueText: {
     flex: 1,
-  },
-  iconRight: {
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   errorRow: {
     flexDirection: 'row',

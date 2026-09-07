@@ -20,7 +20,7 @@ describe('StepPersonalDocuments', () => {
   it('shows CPF fields by default', () => {
     const screen = render(<StepHarness />);
 
-    expect(screen.getByText('Nome completo (nome social)')).toBeTruthy();
+    expect(screen.getByText('Nome Completo (Nome Social)')).toBeTruthy();
     expect(screen.getByText('RG')).toBeTruthy();
     expect(screen.getByText('Órgão Emissor e UF')).toBeTruthy();
     const rgInput = screen.getByPlaceholderText('00.000.000-00');
@@ -39,7 +39,7 @@ describe('StepPersonalDocuments', () => {
     expect(screen.getByText('Razão Social')).toBeTruthy();
     expect(screen.getByPlaceholderText('00.000.000/0000-00')).toBeTruthy();
     expect(screen.getByText('Área de atuação')).toBeTruthy();
-    expect(screen.queryByText('Nome completo (nome social)')).toBeNull();
+    expect(screen.queryByText('Nome Completo (Nome Social)')).toBeNull();
     expect(screen.queryByText('RG')).toBeNull();
     expect(screen.queryByText('Data de Nascimento')).toBeNull();
   });
@@ -50,7 +50,7 @@ describe('StepPersonalDocuments', () => {
     fireEvent.press(screen.getByRole('button', { name: 'CNPJ' }));
     fireEvent.press(screen.getByRole('button', { name: 'CPF' }));
 
-    expect(screen.getByText('Nome completo (nome social)')).toBeTruthy();
+    expect(screen.getByText('Nome Completo (Nome Social)')).toBeTruthy();
     expect(screen.getByPlaceholderText('00.000.000-00')).toBeTruthy();
     expect(screen.queryByText('Razão Social')).toBeNull();
   });

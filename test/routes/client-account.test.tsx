@@ -6,6 +6,7 @@ const mockReplace = jest.fn();
 const mockPush = jest.fn();
 const mockSignOut = jest.fn().mockResolvedValue(undefined);
 const mockPickEditedImage = jest.fn();
+const mockOpenSupportEmail = jest.fn();
 const mockUseAuth = jest.fn();
 
 jest.mock('expo-router', () => ({
@@ -43,6 +44,11 @@ jest.mock('@/hooks/use-image-edit-flow', () => ({
   }),
 }));
 
+jest.mock('@/utils/open-support-email', () => ({
+  SUPPORT_EMAIL: 'support@laweact.com',
+  openSupportEmail: () => mockOpenSupportEmail(),
+}));
+
 jest.mock('react-native-safe-area-context', () => {
   const { View } = require('react-native');
   return {
@@ -57,6 +63,7 @@ describe('ClientPerfilScreen', () => {
     mockPush.mockClear();
     mockSignOut.mockClear();
     mockPickEditedImage.mockClear();
+    mockOpenSupportEmail.mockClear();
     mockUseAuth.mockReturnValue({
       user: {
         id: 'mock-client',
@@ -119,6 +126,14 @@ describe('ClientPerfilScreen', () => {
     fireEvent.press(screen.getByLabelText('Termos e condições'));
 
     expect(mockPush).toHaveBeenCalledWith('/client/perfil/termos');
+  });
+
+  it('opens support as a mailto to support@laweact.com', () => {
+    const screen = render(<ClientPerfilScreen />);
+
+    fireEvent.press(screen.getByLabelText('Suporte'));
+
+    expect(mockOpenSupportEmail).toHaveBeenCalledTimes(1);
   });
 
   it('opens the image editor from the profile photo', () => {

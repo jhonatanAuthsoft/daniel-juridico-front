@@ -19,13 +19,18 @@ type ProfileFieldProps = {
 };
 
 function ProfileField({ icon, label, value }: ProfileFieldProps) {
+  const text = value.trim();
+  if (!text) {
+    return null;
+  }
+
   return (
     <View style={styles.field}>
       <View style={styles.fieldLabel}>
         {icon}
         <Body1 color={BrandColors.neutral.white}>{label}</Body1>
       </View>
-      <Body2 color={BrandColors.primary.light}>{value}</Body2>
+      <Body2 color={BrandColors.primary.light}>{text}</Body2>
     </View>
   );
 }

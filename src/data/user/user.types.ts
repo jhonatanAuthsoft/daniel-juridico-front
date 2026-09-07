@@ -115,3 +115,31 @@ export type DeleteAccountWireResponse = {
 export type DeleteAccountResult = {
   message: string;
 };
+
+export type ScreenAccessScreen = 'TERMS';
+
+/** App-facing params for `POST /usuarios/me/acessos-tela`. */
+export type LogScreenAccessParams = {
+  screen: ScreenAccessScreen;
+};
+
+/** Wire body for `POST /usuarios/me/acessos-tela`. */
+export type LogScreenAccessWireRequest = {
+  tela: 'TERMOS';
+};
+
+/** Wire response for `POST /usuarios/me/acessos-tela`. */
+export type LogScreenAccessWireResponse = {
+  id: string;
+  usuarioId: string;
+  tela: 'TERMOS';
+  acessadoEm: string;
+};
+
+/** Domain-friendly view of a screen-access log. */
+export type LogScreenAccessResult = {
+  id: string;
+  userId: string;
+  screen: ScreenAccessScreen;
+  accessedAt: string;
+};

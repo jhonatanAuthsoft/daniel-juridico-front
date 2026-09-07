@@ -23,6 +23,7 @@ jest.mock('@/domain/auth', () => ({
     mutateAsync: mockDeleteAccount,
     isPending: false,
   }),
+  useLogScreenAccess: jest.fn(),
 }));
 
 jest.mock('react-native-safe-area-context', () => {

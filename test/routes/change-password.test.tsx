@@ -4,10 +4,13 @@ import LawyerChangePasswordRoute from '@/app/lawyer/(tabs)/perfil/alterar-senha'
 import { ChangePasswordScreen } from '@/components/change-password';
 
 const mockBack = jest.fn();
+const mockReplace = jest.fn();
+const mockSignOut = jest.fn().mockResolvedValue(undefined);
+const mockBanner = jest.fn();
 const mockUpdatePassword = jest.fn().mockResolvedValue({});
 
 jest.mock('expo-router', () => ({
-  useRouter: () => ({ back: mockBack }),
+  useRouter: () => ({ back: mockBack, replace: mockReplace }),
 }));
 
 jest.mock('@/domain/auth', () => ({
@@ -15,6 +18,13 @@ jest.mock('@/domain/auth', () => ({
     mutateAsync: mockUpdatePassword,
     isPending: false,
   }),
+  useAuth: () => ({
+    signOut: mockSignOut,
+  }),
+}));
+
+jest.mock('@/atomic/feedback-banner', () => ({
+  useBanner: () => mockBanner,
 }));
 
 jest.mock('react-native-safe-area-context', () => {
@@ -28,6 +38,9 @@ jest.mock('react-native-safe-area-context', () => {
 describe('ChangePasswordScreen', () => {
   beforeEach(() => {
     mockBack.mockClear();
+    mockReplace.mockClear();
+    mockSignOut.mockClear();
+    mockBanner.mockClear();
     mockUpdatePassword.mockClear();
   });
 
@@ -46,7 +59,7 @@ describe('ChangePasswordScreen', () => {
     expect(screen.getAllByLabelText('Mostrar senha')).toHaveLength(2);
   });
 
-  it('saves the new password and goes back', async () => {
+  it('saves the new password, shows feedback and signs out', async () => {
     const screen = render(<ChangePasswordScreen />);
 
     fireEvent.changeText(screen.getByLabelText('Senha atual'), 'Secret12');
@@ -62,7 +75,13 @@ describe('ChangePasswordScreen', () => {
         newPassword: 'NovaSenha1',
       });
     });
-    expect(mockBack).toHaveBeenCalled();
+    expect(mockBanner).toHaveBeenCalledWith(
+      'Senha alterada com sucesso. Entre novamente com a nova senha.',
+      'success',
+    );
+    expect(mockSignOut).toHaveBeenCalledTimes(1);
+    expect(mockReplace).toHaveBeenCalledWith('/login');
+    expect(mockBack).not.toHaveBeenCalled();
   });
 
   it('saves from the lawyer route via the shared password mutation', async () => {
@@ -81,6 +100,7 @@ describe('ChangePasswordScreen', () => {
         newPassword: 'NovaSenha1',
       });
     });
-    expect(mockBack).toHaveBeenCalled();
+    expect(mockSignOut).toHaveBeenCalledTimes(1);
+    expect(mockReplace).toHaveBeenCalledWith('/login');
   });
 });

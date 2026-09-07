@@ -14,11 +14,10 @@ export function StepProfessional() {
     <View style={signupClientSharedStyles.fields}>
       <InputSelectField
         name="maritalStatus"
-        label="Estado civil"
+        label="Estado civil (opcional)"
         placeholder="Selecione o estado civil"
         options={MARITAL_STATUS_OPTIONS}
         searchable={false}
-        required
       />
       <InputTextField
         name="profession"
@@ -29,11 +28,10 @@ export function StepProfessional() {
       />
       <InputTextField
         name="monthlyIncome"
-        label="Renda mensal"
+        label="Renda mensal (opcional)"
         placeholder="Ex. 180,00"
         keyboardType="decimal-pad"
         format={InputMasks.currencyBr}
-        validate={FieldValidators.required()}
         iconLeft={<Body1 color={BrandColors.neutral.light}>$</Body1>}
       />
     </View>

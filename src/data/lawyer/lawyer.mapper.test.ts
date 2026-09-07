@@ -120,6 +120,26 @@ describe('lawyer.mapper', () => {
     ]);
   });
 
+  it('uses the oldest OAB issue date as atuacaoDesde', () => {
+    const payload = mapLawyerSignupFormToRegisterRequest({
+      ...baseForm,
+      oabIssueDate: '10/01/2018',
+      supplementalOabs: [
+        {
+          number: '654321',
+          uf: 'rj',
+          issueDate: '15/03/2016',
+          photoUris: [],
+          photoKeys: ['tmp/advogados/oab/front2.jpg', 'tmp/advogados/oab/back2.jpg'],
+        },
+      ],
+    });
+
+    expect(payload.atuacaoDesde).toBe('2016-03-15');
+    expect(payload.oabPrincipal.dataExpedicao).toBe('2018-01-10');
+    expect(payload.oabsSuplementares?.[0]?.dataExpedicao).toBe('2016-03-15');
+  });
+
   it('omits nomePai when noFatherName is checked', () => {
     const payload = mapLawyerSignupFormToRegisterRequest({
       ...baseForm,

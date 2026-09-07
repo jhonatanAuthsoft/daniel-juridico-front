@@ -12,6 +12,26 @@ Notifications.setNotificationHandler({
   }),
 });
 
+export const ANDROID_PUSH_CHANNEL_DEFAULT = 'default';
+export const ANDROID_PUSH_CHANNEL_URGENT = 'urgent';
+
+async function ensureAndroidNotificationChannels() {
+  if (Platform.OS !== 'android') {
+    return;
+  }
+
+  await Notifications.setNotificationChannelAsync(ANDROID_PUSH_CHANNEL_DEFAULT, {
+    name: 'Solicitações',
+    importance: Notifications.AndroidImportance.DEFAULT,
+  });
+  await Notifications.setNotificationChannelAsync(ANDROID_PUSH_CHANNEL_URGENT, {
+    name: 'Urgências e emergências',
+    importance: Notifications.AndroidImportance.MAX,
+    vibrationPattern: [0, 250, 250, 250],
+    sound: 'default',
+  });
+}
+
 function resolveEasProjectId(): string | undefined {
   const fromEas = Constants.easConfig?.projectId;
   if (typeof fromEas === 'string' && fromEas.trim()) {
@@ -45,10 +65,7 @@ export async function getExpoPushToken(): Promise<string | null> {
     }
 
     if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.DEFAULT,
-      });
+      await ensureAndroidNotificationChannels();
     }
 
     const projectId = resolveEasProjectId();

@@ -117,6 +117,8 @@ describe('connection-ui.mapper', () => {
     expect(details.subspecialties).toEqual(['Contratos']);
     expect(details.minimumExperienceMonths).toBe(6);
     expect(details.client.pronouns).toBe('Ela/Dela');
+    expect(details.client.maritalStatus).toBe('Solteiro(a)');
+    expect(details.client.monthlyIncome).toBe('R$ 5.000,00');
     expect(details.clientReview).toBeNull();
     expect(isEmergencyConnection(sample)).toBe(true);
     expect(
@@ -150,5 +152,26 @@ describe('connection-ui.mapper', () => {
       rating: 2.5,
       comment: '',
     });
+  });
+
+  it('omits marital status and income when the client left them blank', () => {
+    const details = mapConnectionToLawyerSolicitationDetails({
+      ...sample,
+      clienteEstadoCivil: null,
+      clienteFaixaRenda: '  ',
+    });
+
+    expect(details.client.maritalStatus).toBe('');
+    expect(details.client.monthlyIncome).toBe('');
+    expect(details.client.profession).toBe('Analista');
+  });
+
+  it('maps marital status codes to the catalog label', () => {
+    const details = mapConnectionToLawyerSolicitationDetails({
+      ...sample,
+      clienteEstadoCivil: 'casado',
+    });
+
+    expect(details.client.maritalStatus).toBe('Casado(a)');
   });
 });

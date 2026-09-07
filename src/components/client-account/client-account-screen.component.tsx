@@ -19,6 +19,7 @@ import {
   Radius,
   Spacing,
 } from '@/constants/theme';
+import { openSupportEmail } from '@/utils/open-support-email';
 
 const MENU_ITEMS = [
   'Editar Dados',
@@ -89,6 +90,10 @@ export function ClientAccountScreen() {
                 }
                 if (item === 'Termos e condições') {
                   router.push('/client/perfil/termos');
+                  return;
+                }
+                if (item === 'Suporte') {
+                  void openSupportEmail();
                 }
               }}
               style={({ pressed }) => [

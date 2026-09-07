@@ -17,6 +17,10 @@ import type {
   UpdatePasswordWireResponse,
   DeleteAccountWireResponse,
   DeleteAccountResult,
+  LogScreenAccessParams,
+  LogScreenAccessResult,
+  LogScreenAccessWireRequest,
+  LogScreenAccessWireResponse,
 } from './user.types';
 import { TERMS_VERSION } from './user.types';
 
@@ -99,5 +103,27 @@ export function mapDeleteAccountWireToResult(
   const message = response.message?.trim();
   return {
     message: message || 'Conta excluída com sucesso',
+  };
+}
+
+export function mapLogScreenAccessParamsToWire(
+  params: LogScreenAccessParams,
+): LogScreenAccessWireRequest {
+  const telaPorTela = {
+    TERMS: 'TERMOS',
+  } as const;
+  return {
+    tela: telaPorTela[params.screen],
+  };
+}
+
+export function mapLogScreenAccessWireToResult(
+  response: LogScreenAccessWireResponse,
+): LogScreenAccessResult {
+  return {
+    id: response.id,
+    userId: response.usuarioId,
+    screen: 'TERMS',
+    accessedAt: response.acessadoEm,
   };
 }

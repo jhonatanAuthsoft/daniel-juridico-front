@@ -209,7 +209,7 @@ describe('LawyerEditNameEmailScreen', () => {
     const screen = render(<LawyerEditNameEmailScreen />);
 
     expect(screen.getByText('Alterar nome e email')).toBeTruthy();
-    expect(screen.getByText('Nome')).toBeTruthy();
+    expect(screen.getByText('Nome Completo (Nome Social)')).toBeTruthy();
     expect(screen.getByText('E-mail')).toBeTruthy();
     expect(screen.getByDisplayValue('Luiza Bittencourt').props.editable).not.toBe(false);
     expect(screen.getByDisplayValue('luizabitt@gmail.com').props.editable).toBe(false);

@@ -139,7 +139,7 @@ describe('ClientEditGeneralDataScreen', () => {
     const screen = render(<ClientEditGeneralDataScreen />);
 
     expect(screen.getByText('Alterar dados gerais')).toBeTruthy();
-    expect(screen.getByText('Nome')).toBeTruthy();
+    expect(screen.getByText('Nome Completo (Nome Social)')).toBeTruthy();
     expect(screen.getByText('CPF')).toBeTruthy();
     expect(screen.getByText('RG')).toBeTruthy();
     expect(screen.getByText('E-mail')).toBeTruthy();
@@ -258,8 +258,12 @@ describe('ClientEditPersonalProfileScreen', () => {
     expect(screen.getByText('Editar perfil pessoal')).toBeTruthy();
     expect(screen.getByText('Pronomes de tratamento')).toBeTruthy();
     expect(screen.getByText('Ela/Dela')).toBeTruthy();
+    expect(screen.getByText('Profissão')).toBeTruthy();
     expect(screen.getByDisplayValue('Analista')).toBeTruthy();
+    expect(screen.getByText('Estado civil (opcional)')).toBeTruthy();
     expect(screen.getByText('Casado(a)')).toBeTruthy();
+    expect(screen.getByLabelText('Limpar seleção')).toBeTruthy();
+    expect(screen.getByText('Renda mensal (opcional)')).toBeTruthy();
     expect(screen.getByDisplayValue('1.500,00')).toBeTruthy();
     expect(
       screen.getByLabelText('Tornar essas informações públicas para os advogados'),
@@ -282,5 +286,23 @@ describe('ClientEditPersonalProfileScreen', () => {
       });
     });
     expect(mockBack).toHaveBeenCalled();
+  });
+
+  it('lets the client clear marital status and income', async () => {
+    const screen = render(<ClientEditPersonalProfileScreen />);
+
+    fireEvent.press(screen.getByLabelText('Limpar seleção'));
+    fireEvent.changeText(screen.getByDisplayValue('1.500,00'), '');
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(mockUpdatePersonalProfile).toHaveBeenCalledWith({
+        documentType: 'cpf',
+        pronouns: 'ELA',
+        profession: 'Analista',
+        maritalStatus: '',
+        monthlyIncome: '',
+      });
+    });
   });
 });

@@ -81,7 +81,7 @@ export function ClientEditGeneralDataScreen() {
         <View style={styles.fields}>
           <InputTextField
             name="fullName"
-            label="Nome"
+            label="Nome Completo (Nome Social)"
             autoCapitalize="words"
             placeholder="Digite seu nome"
             validate={FieldValidators.required()}

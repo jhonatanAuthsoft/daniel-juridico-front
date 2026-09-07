@@ -26,6 +26,7 @@ jest.mock('@/domain/auth', () => ({
     isPending: false,
   }),
   useAuth: () => mockUseAuth(),
+  useLogScreenAccess: jest.fn(),
 }));
 
 jest.mock('@/atomic/feedback-banner', () => ({

@@ -5,7 +5,11 @@ import type {
   LawyerSolicitationDecision,
   LawyerSolicitationDetails,
 } from '@/components/lawyer-solicitation-details';
-import { PRONOUN_OPTIONS, stateLabelFromValue } from '@/constants/select-options';
+import {
+  MARITAL_STATUS_OPTIONS,
+  PRONOUN_OPTIONS,
+  stateLabelFromValue,
+} from '@/constants/select-options';
 import type { ConnectionResult } from '@/data/connection';
 
 function formatConnectionTimeLabel(iso: string): string {
@@ -51,6 +55,16 @@ function formatPronouns(value: string | null): string {
     return 'Não informado';
   }
   return PRONOUN_OPTIONS.find((option) => option.value === code)?.label ?? code;
+}
+
+function formatMaritalStatus(value: string | null): string {
+  const code = (value ?? '').trim();
+  if (!code) {
+    return '';
+  }
+  return (
+    MARITAL_STATUS_OPTIONS.find((option) => option.value === code)?.label ?? code
+  );
 }
 
 function formatModalidade(value: string | null): string {
@@ -203,9 +217,9 @@ export function mapConnectionToLawyerSolicitationDetails(
       name: connection.nomeCliente?.trim() || 'Cliente',
       location: formatLocation(connection.clienteCidade, connection.clienteUf),
       pronouns: formatPronouns(connection.clientePronomes),
-      maritalStatus: connection.clienteEstadoCivil?.trim() || 'Não informado',
+      maritalStatus: formatMaritalStatus(connection.clienteEstadoCivil),
       profession: connection.clienteProfissao?.trim() || 'Não informado',
-      monthlyIncome: connection.clienteFaixaRenda?.trim() || 'Não informado',
+      monthlyIncome: connection.clienteFaixaRenda?.trim() || '',
       phone: connection.clienteTelefone?.trim() || '',
       email: connection.clienteEmail?.trim() || '',
       photoKey: connection.clienteFotoUrl?.trim() || null,

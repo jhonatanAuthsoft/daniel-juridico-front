@@ -26,7 +26,7 @@ export function StepBasicData({ showPasswordErrors = false }: StepBasicDataProps
     <View style={signupLawyerSharedStyles.fields}>
       <InputTextField
         name="fullName"
-        label="Nome completo"
+        label="Nome Completo (Nome Social)"
         placeholder="Digite seu nome completo"
         autoCapitalize="words"
         autoComplete="name"
