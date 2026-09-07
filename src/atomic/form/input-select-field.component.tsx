@@ -25,7 +25,7 @@ import {
   useExclusiveSelectOpen,
 } from '@/atomic/modal';
 import { Separator } from '@/atomic/separator';
-import { Body1, InputCaption, InputLabel } from '@/atomic/typography';
+import { Body1, InputCaption, InputLabel, InputValue } from '@/atomic/typography';
 import type { SelectOption } from '@/constants/select-options';
 import {
   BrandColors,
@@ -40,6 +40,7 @@ import {
   SelectOptionsList,
   useDeferredFilteredOptions,
 } from './select-options-list.component';
+import { FieldLabelLoading } from './field-label-loading.component';
 
 /** Figma Values-Medium — not in Radius tokens yet. */
 const OPTIONS_RADIUS = 16;
@@ -61,6 +62,8 @@ export type InputSelectFieldProps<
   searchPlaceholder?: string;
   /** When true, the empty list shows a loading message instead of "Nenhuma opção disponível". */
   optionsLoading?: boolean;
+  /** Small spinner beside the label while related data is loading. */
+  labelLoading?: boolean;
   /** Shows a help icon next to the label that calls this handler. */
   onHelpPress?: () => void;
 };
@@ -78,6 +81,7 @@ export function InputSelectField<
   searchable = true,
   searchPlaceholder = 'Buscar...',
   optionsLoading = false,
+  labelLoading = false,
   onHelpPress,
 }: InputSelectFieldProps<TFieldValues>) {
   const { control } = useFormContext<TFieldValues>();
@@ -115,6 +119,10 @@ export function InputSelectField<
         const displayValue =
           selected?.label ?? (typeof value === 'string' ? value : '');
         const showClear = canClear && !disabled && displayValue.length > 0;
+        const commitValue = (next: string) => {
+          onChange(next);
+          onBlur();
+        };
 
         return (
           <View style={styles.container}>
@@ -122,6 +130,7 @@ export function InputSelectField<
               <>
                 <View style={styles.labelRow}>
                   <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
+                  <FieldLabelLoading visible={labelLoading} />
                   {onHelpPress ? (
                     <Pressable
                       accessibilityLabel={`Ajuda sobre ${label}`}
@@ -165,7 +174,7 @@ export function InputSelectField<
                     requestOpen();
                   }}
                   style={styles.valuePressable}>
-                  <Body1
+                  <InputValue
                     color={
                       displayValue
                         ? BrandColors.neutral.white
@@ -173,13 +182,13 @@ export function InputSelectField<
                     }
                     style={styles.valueText}>
                     {displayValue || placeholder}
-                  </Body1>
+                  </InputValue>
                   {showClear ? null : (
                     <CaretLeftIcon
                       color={BrandColors.neutral.light}
                       direction="down"
-                      height={20}
-                      width={20}
+                      height={16}
+                      width={16}
                     />
                   )}
                 </Pressable>
@@ -189,7 +198,7 @@ export function InputSelectField<
                     accessibilityRole="button"
                     hitSlop={Spacing.xxs}
                     onPress={() => {
-                      onChange('');
+                      commitValue('');
                     }}>
                     <XIcon color={BrandColors.neutral.light} height={16} width={16} />
                   </Pressable>
@@ -213,7 +222,7 @@ export function InputSelectField<
               label={label ?? placeholder}
               onClose={close}
               onSelect={(optionValue) => {
-                onChange(optionValue);
+                commitValue(optionValue);
                 queueMicrotask(close);
               }}
               open={open}

@@ -75,7 +75,11 @@ export function StepPersonalDocuments() {
             name="cnpj"
             label="CNPJ"
             placeholder="00.000.000/0000-00"
-            keyboardType="number-pad"
+            keyboardType="default"
+            autoCapitalize="characters"
+            autoCorrect={false}
+            autoComplete="off"
+            spellCheck={false}
             format={InputMasks.cnpj}
             validate={FieldValidators.cnpj}
             maxLength={18}

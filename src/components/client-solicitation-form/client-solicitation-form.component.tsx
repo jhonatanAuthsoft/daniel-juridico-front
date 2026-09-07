@@ -348,6 +348,7 @@ export function ClientSolicitationForm({
           <InputSelectField
             name="city"
             label="Cidade"
+            labelLoading={isLoadingCities}
             placeholder={
               !hasValidState
                 ? 'Selecione o estado primeiro'

@@ -1,4 +1,4 @@
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 
 import { InputSelectField, InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
@@ -36,12 +36,6 @@ export function StepAddress() {
           validate={FieldValidators.cep}
           maxLength={9}
         />
-        {isFetchingCep ? (
-          <>
-            <Separator size="xxxs" />
-            <ActivityIndicator color={BrandColors.primary.light} />
-          </>
-        ) : null}
         {cepErrorMessage ? (
           <>
             <Separator size="xxxs" />
@@ -54,6 +48,7 @@ export function StepAddress() {
       <InputSelectField
         name="state"
         label="Estado"
+        labelLoading={isFetchingCep}
         placeholder="Selecione o estado"
         options={STATE_OPTIONS}
         disabled={!hasCep}
@@ -62,6 +57,7 @@ export function StepAddress() {
       <InputSelectField
         name="city"
         label="Cidade"
+        labelLoading={isFetchingCep || isLoadingCities}
         placeholder={
           !hasState
             ? 'Selecione o estado primeiro'
@@ -79,6 +75,7 @@ export function StepAddress() {
       <InputTextField
         name="neighborhood"
         label="Bairro"
+        labelLoading={isFetchingCep}
         placeholder="Digite o bairro"
         validate={FieldValidators.required()}
       />

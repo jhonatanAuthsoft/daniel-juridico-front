@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
@@ -52,12 +52,6 @@ export function AddressFields() {
           validate={FieldValidators.cep}
           maxLength={9}
         />
-        {isFetchingCep ? (
-          <>
-            <Separator size="xxxs" />
-            <ActivityIndicator color={BrandColors.primary.light} />
-          </>
-        ) : null}
         {cepErrorMessage ? (
           <>
             <Separator size="xxxs" />
@@ -70,6 +64,7 @@ export function AddressFields() {
       <InputSelectField
         name="state"
         label="Estado"
+        labelLoading={isFetchingCep}
         placeholder="Selecione o estado"
         options={STATE_OPTIONS}
         disabled={!hasCep}
@@ -78,6 +73,7 @@ export function AddressFields() {
       <InputSelectField
         name="city"
         label="Cidade"
+        labelLoading={isFetchingCep || isLoadingCities}
         placeholder={
           !hasState
             ? 'Selecione o estado primeiro'
@@ -95,6 +91,7 @@ export function AddressFields() {
       <InputTextField
         name="neighborhood"
         label="Bairro"
+        labelLoading={isFetchingCep}
         placeholder="Digite o bairro"
         validate={FieldValidators.required()}
       />

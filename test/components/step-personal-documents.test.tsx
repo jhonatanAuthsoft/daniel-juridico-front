@@ -37,7 +37,14 @@ describe('StepPersonalDocuments', () => {
     fireEvent.press(screen.getByRole('button', { name: 'CNPJ' }));
 
     expect(screen.getByText('Razão Social')).toBeTruthy();
-    expect(screen.getByPlaceholderText('00.000.000/0000-00')).toBeTruthy();
+    const cnpjInput = screen.getByPlaceholderText('00.000.000/0000-00');
+    expect(cnpjInput.props.keyboardType).toBe('default');
+    expect(cnpjInput.props.autoCapitalize).toBe('characters');
+    expect(cnpjInput.props.autoCorrect).toBe(false);
+
+    fireEvent.changeText(cnpjInput, '12abc34501de35');
+    expect(cnpjInput.props.value).toBe('12.ABC.345/01DE-35');
+
     expect(screen.getByText('Área de atuação')).toBeTruthy();
     expect(screen.queryByText('Nome Completo (Nome Social)')).toBeNull();
     expect(screen.queryByText('RG')).toBeNull();

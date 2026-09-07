@@ -21,7 +21,7 @@ import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
 import { ModalScrim, useExclusiveSelectOpen } from '@/atomic/modal';
 import { Separator } from '@/atomic/separator';
-import { Body1, Body2, InputCaption, InputLabel } from '@/atomic/typography';
+import { Body1, Body2, InputCaption, InputLabel, InputValue } from '@/atomic/typography';
 import type { SelectOption } from '@/constants/select-options';
 import {
   BrandColors,
@@ -36,6 +36,7 @@ import {
   SelectOptionsList,
   useDeferredFilteredOptions,
 } from './select-options-list.component';
+import { FieldLabelLoading } from './field-label-loading.component';
 
 const OPTIONS_RADIUS = 16;
 const VISIBLE_TAG_COUNT = 2;
@@ -52,6 +53,8 @@ export type InputMultiSelectFieldProps<
   searchable?: boolean;
   searchPlaceholder?: string;
   optionsLoading?: boolean;
+  /** Small spinner beside the label while related data is loading. */
+  labelLoading?: boolean;
 };
 
 export function overflowSelectionLabel(
@@ -89,6 +92,7 @@ export function InputMultiSelectField<
   searchable = true,
   searchPlaceholder = 'Buscar...',
   optionsLoading = false,
+  labelLoading = false,
 }: InputMultiSelectFieldProps<TFieldValues>) {
   const { control } = useFormContext<TFieldValues>();
   const { isOpen: open, requestOpen, requestClose } = useExclusiveSelectOpen();
@@ -139,6 +143,7 @@ export function InputMultiSelectField<
 
         const setSelectedValues = (next: string[]) => {
           onChange(next as PathValue<TFieldValues, FieldPath<TFieldValues>>);
+          onBlur();
         };
 
         const removeValue = (optionValue: string) => {
@@ -153,7 +158,10 @@ export function InputMultiSelectField<
           <View style={styles.container}>
             {label ? (
               <>
-                <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
+                <View style={styles.labelRow}>
+                  <InputLabel color={BrandColors.neutral.white}>{label}</InputLabel>
+                  <FieldLabelLoading visible={labelLoading} />
+                </View>
                 <Separator size="xxs" />
               </>
             ) : null}
@@ -176,7 +184,7 @@ export function InputMultiSelectField<
               ]}>
               <GlassBackground blurPx={25} />
               <View style={styles.fieldContent}>
-                <Body1
+                <InputValue
                   color={
                     selectedValues.length > 0
                       ? BrandColors.neutral.white
@@ -184,13 +192,13 @@ export function InputMultiSelectField<
                   }
                   style={styles.valueText}>
                   {summary}
-                </Body1>
+                </InputValue>
                 <View style={styles.iconRight}>
                   <CaretLeftIcon
                     color={BrandColors.neutral.light}
                     direction="down"
-                    height={20}
-                    width={20}
+                    height={16}
+                    width={16}
                   />
                 </View>
               </View>
@@ -406,6 +414,11 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     alignSelf: 'stretch',
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxxs,
   },
   fieldShell: {
     alignSelf: 'stretch',

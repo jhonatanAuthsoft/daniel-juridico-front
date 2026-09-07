@@ -1,3 +1,4 @@
+import { useWatch } from 'react-hook-form';
 import { View } from 'react-native';
 
 import { InputSelectField, InputTextField } from '@/atomic/form';
@@ -8,8 +9,14 @@ import { MARITAL_STATUS_OPTIONS } from '@/constants/select-options';
 import { BrandColors } from '@/constants/theme';
 
 import { signupClientSharedStyles } from '../shared.styles';
+import type { ClientSignupFormValues } from '../types';
 
 export function StepProfessional() {
+  const personType = useWatch<ClientSignupFormValues, 'personType'>({
+    name: 'personType',
+  });
+  const isCnpj = personType === 'cnpj';
+
   return (
     <View style={signupClientSharedStyles.fields}>
       <InputSelectField
@@ -19,13 +26,15 @@ export function StepProfessional() {
         options={MARITAL_STATUS_OPTIONS}
         searchable={false}
       />
-      <InputTextField
-        name="profession"
-        label="Profissão"
-        placeholder="Digite sua profissão"
-        autoCapitalize="sentences"
-        validate={FieldValidators.required()}
-      />
+      {isCnpj ? null : (
+        <InputTextField
+          name="profession"
+          label="Profissão"
+          placeholder="Digite sua profissão"
+          autoCapitalize="sentences"
+          validate={FieldValidators.required()}
+        />
+      )}
       <InputTextField
         name="monthlyIncome"
         label="Renda mensal (opcional)"

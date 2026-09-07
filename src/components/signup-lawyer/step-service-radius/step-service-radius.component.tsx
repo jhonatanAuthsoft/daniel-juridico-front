@@ -200,6 +200,7 @@ export function StepServiceRadius() {
         <InputMultiSelectField
           name="serviceDraftCities"
           label="Cidade"
+          labelLoading={isFetching}
           placeholder={
             !hasValidState
               ? 'Selecione o estado primeiro'
