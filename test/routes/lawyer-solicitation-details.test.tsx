@@ -7,6 +7,7 @@ const mockBack = jest.fn();
 const mockAccept = jest.fn();
 const mockReject = jest.fn();
 const mockMarkViewed = jest.fn();
+const mockMarkNotificationsReadBySolicitation = jest.fn();
 const mockUseConnections = jest.fn();
 
 const pendingConnection: ConnectionResult = {
@@ -100,6 +101,13 @@ jest.mock('@/domain/connection', () => {
   };
 });
 
+jest.mock('@/domain/notification', () => ({
+  useMarkNotificationsReadBySolicitation: () => ({
+    mutateAsync: mockMarkNotificationsReadBySolicitation,
+    isPending: false,
+  }),
+}));
+
 function stubConnections(connection: ConnectionResult) {
   mockUseConnections.mockReturnValue({
     data: [connection],
@@ -115,10 +123,20 @@ describe('LawyerSolicitationDetailsScreen', () => {
     mockAccept.mockReset();
     mockReject.mockReset();
     mockMarkViewed.mockReset();
+    mockMarkNotificationsReadBySolicitation.mockReset();
     stubConnections({ ...pendingConnection });
     mockAccept.mockResolvedValue(undefined);
     mockReject.mockResolvedValue(undefined);
     mockMarkViewed.mockResolvedValue(undefined);
+    mockMarkNotificationsReadBySolicitation.mockResolvedValue(undefined);
+  });
+
+  it('marks notifications of the solicitation as read when it is opened', async () => {
+    render(<LawyerSolicitationDetailsScreen />);
+
+    await waitFor(() => {
+      expect(mockMarkNotificationsReadBySolicitation).toHaveBeenCalledWith('sol-1');
+    });
   });
 
   it('marks the solicitation as viewed when it is opened for the first time', async () => {

@@ -6,6 +6,7 @@ import { MOCK_CLIENT_SOLICITATION_DETAILS } from '@/components/client-solicitati
 const mockBack = jest.fn();
 const mockPush = jest.fn();
 const mockMutateAsync = jest.fn().mockResolvedValue(undefined);
+const mockMarkNotificationsReadBySolicitation = jest.fn();
 const mockUseClientSolicitationDetails = jest.fn();
 
 const awaitingDetails = MOCK_CLIENT_SOLICITATION_DETAILS.find(
@@ -47,17 +48,34 @@ jest.mock('@/domain/arquivo', () => ({
   useObjectReadUrl: () => ({ data: undefined }),
 }));
 
+jest.mock('@/domain/notification', () => ({
+  useMarkNotificationsReadBySolicitation: () => ({
+    mutateAsync: mockMarkNotificationsReadBySolicitation,
+    isPending: false,
+  }),
+}));
+
 describe('ClientSolicitationDetailsScreen', () => {
   beforeEach(() => {
     mockBack.mockClear();
     mockPush.mockClear();
     mockMutateAsync.mockClear();
+    mockMarkNotificationsReadBySolicitation.mockReset();
+    mockMarkNotificationsReadBySolicitation.mockResolvedValue(undefined);
     mockUseClientSolicitationDetails.mockReturnValue({
       solicitation: awaitingDetails,
       isLoading: false,
       isError: false,
       error: null,
       refetch: jest.fn(),
+    });
+  });
+
+  it('marks notifications of the solicitation as read when it is opened', async () => {
+    render(<ClientSolicitationDetailsScreen />);
+
+    await waitFor(() => {
+      expect(mockMarkNotificationsReadBySolicitation).toHaveBeenCalledWith('sol-1');
     });
   });
 

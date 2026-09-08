@@ -47,6 +47,17 @@ describe('LawyerSolicitationCard', () => {
     );
   });
 
+  it('rounds the inner panel so the accent follows the card corner', () => {
+    const screen = render(<LawyerSolicitationCard {...cardData()} />);
+    const innerStyle = StyleSheet.flatten(
+      screen.getByTestId('solicitation-card-panel').props.style,
+    );
+
+    expect(innerStyle.marginLeft).toBe(8);
+    expect(innerStyle.borderTopLeftRadius).toBe(16);
+    expect(innerStyle.borderBottomLeftRadius).toBe(16);
+  });
+
   it('drops the accent once the solicitation has been opened', () => {
     const screen = render(
       <LawyerSolicitationCard {...cardData({ isUnviewed: false })} />,

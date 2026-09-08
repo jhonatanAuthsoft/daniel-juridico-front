@@ -6,6 +6,7 @@ import { notificationKeys } from './notification.keys';
 import {
   markAllNotificationsReadUseCase,
   markNotificationReadUseCase,
+  markNotificationsReadBySolicitationUseCase,
 } from './notification.use-cases';
 
 async function invalidateNotificationQueries(
@@ -87,11 +88,19 @@ export function useMarkAllNotificationsRead() {
 
       return { previous };
     },
-    onError: (_error, _vars, context) => {
-      context?.previous?.forEach(([key, data]) => {
-        queryClient.setQueryData(key, data);
-      });
+    onSettled: async () => {
+      await invalidateNotificationQueries(queryClient);
     },
+  });
+}
+
+/** `POST /notificacoes/ler-por-solicitacao/{solicitacaoId}` */
+export function useMarkNotificationsReadBySolicitation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (solicitationId: string) =>
+      markNotificationsReadBySolicitationUseCase(solicitationId),
     onSettled: async () => {
       await invalidateNotificationQueries(queryClient);
     },

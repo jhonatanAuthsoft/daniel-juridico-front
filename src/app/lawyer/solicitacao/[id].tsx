@@ -34,6 +34,7 @@ import {
   useMarkConnectionViewed,
   useRejectConnection,
 } from '@/domain/connection';
+import { useMarkNotificationsReadBySolicitation } from '@/domain/notification';
 
 export default function LawyerSolicitationDetailsScreen() {
   const router = useRouter();
@@ -53,6 +54,8 @@ export default function LawyerSolicitationDetailsScreen() {
   const acceptConnection = useAcceptConnection();
   const rejectConnection = useRejectConnection();
   const markConnectionViewed = useMarkConnectionViewed();
+  const markNotificationsReadBySolicitation =
+    useMarkNotificationsReadBySolicitation();
   const [rejectModalVisible, setRejectModalVisible] = useState(false);
 
   const connection = useMemo(
@@ -72,6 +75,19 @@ export default function LawyerSolicitationDetailsScreen() {
     markedViewedId.current = connection.id;
     markConnectionViewed.mutateAsync(connection.id).catch(() => {});
   }, [connection, markConnectionViewed]);
+
+  const markedNotificationsSolicitationId = useRef<string | null>(null);
+  useEffect(() => {
+    const solicitationId = connection?.solicitacaoId?.trim();
+    if (!solicitationId) {
+      return;
+    }
+    if (markedNotificationsSolicitationId.current === solicitationId) {
+      return;
+    }
+    markedNotificationsSolicitationId.current = solicitationId;
+    markNotificationsReadBySolicitation.mutateAsync(solicitationId).catch(() => {});
+  }, [connection, markNotificationsReadBySolicitation]);
 
   const details = useMemo(() => {
     if (!connection) {

@@ -4,6 +4,7 @@ export {
   listNotificationsUseCase,
   markAllNotificationsReadUseCase,
   markNotificationReadUseCase,
+  markNotificationsReadBySolicitationUseCase,
 } from './notification.use-cases';
 export { resolveNotificationHref } from './resolve-notification-href';
 export { resolveNotificationHrefUseCase } from './resolve-notification-href.use-case';
@@ -12,6 +13,7 @@ export { OpenFromNotification } from './open-from-notification';
 export {
   useMarkAllNotificationsRead,
   useMarkNotificationRead,
+  useMarkNotificationsReadBySolicitation,
 } from './use-notification-mutations';
 export {
   useNotifications,
