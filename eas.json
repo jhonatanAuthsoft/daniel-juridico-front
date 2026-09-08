@@ -34,10 +34,22 @@
       "env": {
         "APP_ENV": "staging",
         "EXPO_PUBLIC_APP_ENV": "staging",
-        "EXPO_PUBLIC_API_BASE_URL": "https://api-stg-laweact.authsoftsolutions.org"
+        "EXPO_PUBLIC_API_BASE_URL": "https://api-stg-laweact.authsoftsolutions.org",
+        "EXPO_PUBLIC_IAP_PROVIDER": "fake"
       },
       "android": {
         "buildType": "apk"
+      }
+    },
+    "homolog": {
+      "extends": "staging",
+      "distribution": "store",
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_IAP_PROVIDER": "expo-iap"
+      },
+      "android": {
+        "buildType": "app-bundle"
       }
     },
     "production": {
@@ -53,6 +65,15 @@
   "submit": {
     "staging": {
       "android": {
+        "track": "internal"
+      }
+    },
+    "homolog": {
+      "ios": {
+        "bundleIdentifier": "com.laweact.app.staging"
+      },
+      "android": {
+        "applicationId": "com.laweact.app.staging",
         "track": "internal"
       }
     },

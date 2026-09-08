@@ -1,14 +1,11 @@
 import { mapSubscriptionWireToResult } from './subscription.mapper';
 
 describe('mapSubscriptionWireToResult', () => {
-  it('maps wire payload to domain result', () => {
+  it('maps the pending paywall payload without local trial fields', () => {
     expect(
       mapSubscriptionWireToResult({
-        status: 'TRIAL',
-        acessoLiberado: true,
-        emTrial: true,
-        trialFimEm: '2026-10-01T00:00:00',
-        diasRestantesTrial: 12,
+        status: 'PENDENTE',
+        acessoLiberado: false,
         periodoFimEm: null,
         plataforma: null,
         ambiente: null,
@@ -16,15 +13,33 @@ describe('mapSubscriptionWireToResult', () => {
         autoRenovacao: false,
       }),
     ).toEqual({
-      status: 'TRIAL',
-      accessGranted: true,
-      inTrial: true,
-      trialEndsAt: '2026-10-01T00:00:00',
-      trialDaysRemaining: 12,
+      status: 'PENDENTE',
+      accessGranted: false,
       periodEndsAt: null,
       platform: null,
       productId: 'laweact_basic_mensal',
       autoRenewing: false,
+    });
+  });
+
+  it('maps an active store subscription', () => {
+    expect(
+      mapSubscriptionWireToResult({
+        status: 'ATIVA',
+        acessoLiberado: true,
+        periodoFimEm: '2026-10-08T12:00:00',
+        plataforma: 'IOS',
+        ambiente: 'SANDBOX',
+        productId: 'laweact_basic_mensal',
+        autoRenovacao: true,
+      }),
+    ).toEqual({
+      status: 'ATIVA',
+      accessGranted: true,
+      periodEndsAt: '2026-10-08T12:00:00',
+      platform: 'IOS',
+      productId: 'laweact_basic_mensal',
+      autoRenewing: true,
     });
   });
 });

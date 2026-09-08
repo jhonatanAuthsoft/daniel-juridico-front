@@ -6,10 +6,6 @@ export function mapSubscriptionWireToResult(wire: SubscriptionWire): Subscriptio
   return {
     status: wire.status,
     accessGranted: wire.acessoLiberado,
-    inTrial: wire.emTrial,
-    trialEndsAt: wire.trialFimEm?.trim() || null,
-    trialDaysRemaining:
-      typeof wire.diasRestantesTrial === 'number' ? wire.diasRestantesTrial : null,
     periodEndsAt: wire.periodoFimEm?.trim() || null,
     platform: wire.plataforma ?? null,
     productId: wire.productId?.trim() || DEFAULT_PRODUCT_ID,

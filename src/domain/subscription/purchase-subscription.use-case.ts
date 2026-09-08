@@ -5,9 +5,14 @@ import { writeCachedSubscription } from './subscription-cache';
 export async function purchaseSubscriptionUseCase(params: {
   productId: string;
   accountId?: string;
+  offerToken?: string | null;
 }): Promise<void> {
   const provider = getIapProvider();
-  const purchase = await provider.requestPurchase(params.productId, params.accountId);
+  const purchase = await provider.requestPurchase(
+    params.productId,
+    params.accountId,
+    params.offerToken,
+  );
 
   const validated = await validateSubscriptionUseCase({
     platform: purchase.platform,

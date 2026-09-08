@@ -60,6 +60,7 @@ const cachedMe: MeResult = {
     monthlyIncome: '1.500,00',
   },
   lawyerProfile: null,
+  subscription: null,
 };
 
 const patchedDetalhe: MeDetalheWire = {
@@ -157,6 +158,7 @@ describe('client edit-data cache', () => {
           monthlyIncome: '2500',
         },
         lawyerProfile: null,
+        subscription: null,
       });
     });
     expect(mockUpdateAuthUser).toHaveBeenCalledWith({

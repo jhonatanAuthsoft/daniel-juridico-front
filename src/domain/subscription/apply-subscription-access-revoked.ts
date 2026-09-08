@@ -10,11 +10,8 @@ import { writeCachedSubscription } from './subscription-cache';
 const SUBSCRIPTION_REQUIRED = 'SUBSCRIPTION_REQUIRED';
 
 const BLOCKED_SUBSCRIPTION: SubscriptionResult = {
-  status: 'EXPIRADA',
+  status: 'PENDENTE',
   accessGranted: false,
-  inTrial: false,
-  trialEndsAt: null,
-  trialDaysRemaining: null,
   periodEndsAt: null,
   platform: null,
   productId: 'laweact_basic_mensal',
@@ -43,7 +40,6 @@ export function applySubscriptionAccessRevoked(queryClient: QueryClient): void {
         ? {
             ...current.subscription,
             accessGranted: false,
-            inTrial: false,
           }
         : BLOCKED_SUBSCRIPTION,
     };

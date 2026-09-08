@@ -10,7 +10,7 @@ import { Body1, Body2, Display, Heading1 } from '@/atomic/typography';
 import { BrandColors, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
 import { authKeys, useAuth, useMe } from '@/domain/auth';
 import {
-  formatPaywallTrialMessage,
+  formatPaywallOfferMessage,
   getIapProvider,
   purchaseSubscriptionUseCase,
   restoreSubscriptionUseCase,
@@ -29,18 +29,16 @@ export default function SignupSubscriptionScreen() {
 
   const productId = subscription?.productId ?? 'laweact_basic_mensal';
   const [localizedPrice, setLocalizedPrice] = useState('R$ 35,00');
+  const [hasFreeTrial, setHasFreeTrial] = useState(true);
+  const [offerToken, setOfferToken] = useState<string | null>(null);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const trialCopy = useMemo(
-    () =>
-      formatPaywallTrialMessage(
-        subscription?.inTrial ?? false,
-        subscription?.trialDaysRemaining ?? null,
-      ),
-    [subscription?.inTrial, subscription?.trialDaysRemaining],
+  const offerCopy = useMemo(
+    () => formatPaywallOfferMessage({ hasFreeTrial, localizedPrice }),
+    [hasFreeTrial, localizedPrice],
   );
 
   useEffect(() => {
@@ -55,6 +53,10 @@ export default function SignupSubscriptionScreen() {
         const product = products.find((item) => item.productId === productId) ?? products[0];
         if (product?.localizedPrice) {
           setLocalizedPrice(product.localizedPrice);
+        }
+        if (product) {
+          setHasFreeTrial(product.hasFreeTrial);
+          setOfferToken(product.offerToken);
         }
       } catch {
         // Keep fallback price when store is unavailable (e.g. fake provider in tests).
@@ -81,6 +83,7 @@ export default function SignupSubscriptionScreen() {
       await purchaseSubscriptionUseCase({
         productId,
         accountId: user?.id,
+        offerToken,
       });
       await invalidateSubscription();
       router.replace('/signup/subscription-confirmed');
@@ -136,7 +139,9 @@ export default function SignupSubscriptionScreen() {
         <View style={styles.content}>
           <View style={styles.main}>
             <Display color={BrandColors.neutral.white} style={styles.centeredText}>
-              Um plano completo para atender suas necessidades
+              {hasFreeTrial
+                ? 'Comece com o 1º mês grátis'
+                : 'Um plano completo para atender suas necessidades'}
             </Display>
 
             <Separator size="sm" />
@@ -159,7 +164,7 @@ export default function SignupSubscriptionScreen() {
                       <Body1 color={BrandColors.neutral.white}>{localizedPrice}</Body1>
                     )}
                   </View>
-                  <Body1 color={BrandColors.neutral.white}>{trialCopy}</Body1>
+                  <Body1 color={BrandColors.neutral.white}>{offerCopy}</Body1>
                   <Separator size="sm" />
                   <Body2 color={BrandColors.neutral.white}>Assinatura mensal automática</Body2>
                 </View>

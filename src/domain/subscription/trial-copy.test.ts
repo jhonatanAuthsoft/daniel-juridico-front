@@ -1,36 +1,23 @@
-import {
-  formatPaywallTrialMessage,
-  formatTrialRemainingMessage,
-} from './trial-copy';
+import { formatPaywallOfferMessage } from './trial-copy';
 
-describe('formatTrialRemainingMessage', () => {
-  it('returns null when the lawyer is not in trial', () => {
-    expect(formatTrialRemainingMessage(false, 12)).toBeNull();
-  });
-
-  it('uses the plural form for more than one remaining day', () => {
-    expect(formatTrialRemainingMessage(true, 12)).toBe(
-      'Você tem 12 dias restantes no período de testes.',
+describe('formatPaywallOfferMessage', () => {
+  it('advertises the first free month when the store offer is available', () => {
+    expect(
+      formatPaywallOfferMessage({
+        hasFreeTrial: true,
+        localizedPrice: 'R$ 35,00',
+      }),
+    ).toBe(
+      '1º mês grátis, depois R$ 35,00/mês. Renova automaticamente. Cancele quando quiser.',
     );
   });
 
-  it('uses the singular form for one remaining day', () => {
-    expect(formatTrialRemainingMessage(true, 1)).toBe(
-      'Você tem 1 dia restante no período de testes.',
-    );
-  });
-
-  it('covers a same-day local trial with zero remaining days', () => {
-    expect(formatTrialRemainingMessage(true, 0)).toBe(
-      'Menos de 1 dia restante no período de testes.',
-    );
-  });
-});
-
-describe('formatPaywallTrialMessage', () => {
-  it('asks to subscribe when the trial has ended', () => {
-    expect(formatPaywallTrialMessage(false, null)).toBe(
-      'Seu período de testes terminou. Assine para continuar usando o app.',
-    );
+  it('shows only the recurring price when the user is not eligible for a trial', () => {
+    expect(
+      formatPaywallOfferMessage({
+        hasFreeTrial: false,
+        localizedPrice: 'R$ 35,00',
+      }),
+    ).toBe('R$ 35,00/mês. Renova automaticamente.');
   });
 });

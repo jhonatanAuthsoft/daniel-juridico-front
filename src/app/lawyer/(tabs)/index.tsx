@@ -31,8 +31,6 @@ import {
   Radius,
   Spacing,
 } from '@/constants/theme';
-import { useMe } from '@/domain/auth';
-import { formatTrialRemainingMessage } from '@/domain/subscription/trial-copy';
 import {
   emptyConnectionUrgencyCounts,
   type UrgenciaConexaoApi,
@@ -58,11 +56,6 @@ const URGENCY_FILTERS: { id: UrgencyFilterId; label: string }[] = [
 export default function LawyerHomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { data: me } = useMe();
-  const trialMessage = formatTrialRemainingMessage(
-    me?.subscription?.inTrial ?? false,
-    me?.subscription?.trialDaysRemaining,
-  );
   const [activeUrgency, setActiveUrgency] = useState<UrgencyFilterId>('all');
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -184,9 +177,6 @@ export default function LawyerHomeScreen() {
                 <Display color={BrandColors.neutral.white}>
                   Solicitações de Clientes
                 </Display>
-                {trialMessage ? (
-                  <Body2 color={BrandColors.primary.light}>{trialMessage}</Body2>
-                ) : null}
               </View>
               <Pressable
                 accessibilityRole="button"

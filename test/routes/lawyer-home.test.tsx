@@ -140,10 +140,13 @@ describe('LawyerHomeScreen', () => {
     });
   });
 
-  it('shows remaining trial days under the home title', () => {
+  it('does not remind the lawyer how many trial days are left', () => {
     mockUseMe.mockReturnValue({
       data: {
         subscription: {
+          status: 'ATIVA',
+          accessGranted: true,
+          autoRenewing: true,
           inTrial: true,
           trialDaysRemaining: 12,
         },
@@ -153,9 +156,7 @@ describe('LawyerHomeScreen', () => {
 
     const screen = render(<LawyerHomeScreen />);
 
-    expect(
-      screen.getByText('Você tem 12 dias restantes no período de testes.'),
-    ).toBeTruthy();
+    expect(screen.queryByText(/dias restantes no período de testes/)).toBeNull();
   });
 
   it('shows the no-data state when there is no pending connection at all', () => {

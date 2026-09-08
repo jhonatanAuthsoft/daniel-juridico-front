@@ -14,7 +14,4 @@ export {
   readCachedSubscription,
   writeCachedSubscription,
 } from './subscription-cache';
-export {
-  formatPaywallTrialMessage,
-  formatTrialRemainingMessage,
-} from './trial-copy';
+export { formatPaywallOfferMessage } from './trial-copy';

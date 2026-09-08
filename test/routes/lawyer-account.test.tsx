@@ -91,13 +91,16 @@ describe('LawyerPerfilScreen', () => {
     });
   });
 
-  it('shows remaining trial days under the account identity', () => {
+  it('does not remind the lawyer how many trial days are left', () => {
     mockUseMe.mockReturnValue({
       data: {
         photoKey: null,
         pushNotificationsEnabled: true,
         profileUnavailable: false,
         subscription: {
+          status: 'ATIVA',
+          accessGranted: true,
+          autoRenewing: true,
           inTrial: true,
           trialDaysRemaining: 12,
         },
@@ -107,9 +110,7 @@ describe('LawyerPerfilScreen', () => {
 
     const screen = render(<LawyerPerfilScreen />);
 
-    expect(
-      screen.getByText('Você tem 12 dias restantes no período de testes.'),
-    ).toBeTruthy();
+    expect(screen.queryByText(/dias restantes no período de testes/)).toBeNull();
   });
 
   it('shows the account identity and edit photo control', () => {

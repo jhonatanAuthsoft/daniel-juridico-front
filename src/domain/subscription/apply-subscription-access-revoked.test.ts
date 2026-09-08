@@ -21,11 +21,8 @@ function meWithAccess(accessGranted: boolean): MeResult {
     clientProfile: null,
     lawyerProfile: null,
     subscription: {
-      status: accessGranted ? 'TRIAL' : 'EXPIRADA',
+      status: accessGranted ? 'ATIVA' : 'PENDENTE',
       accessGranted,
-      inTrial: accessGranted,
-      trialEndsAt: null,
-      trialDaysRemaining: accessGranted ? 0 : null,
       periodEndsAt: null,
       platform: null,
       productId: 'laweact_basic_mensal',
@@ -64,6 +61,5 @@ describe('applySubscriptionAccessRevoked', () => {
     expect(queryClient.getQueryData<MeResult>(authKeys.me())?.subscription?.accessGranted).toBe(
       false,
     );
-    expect(queryClient.getQueryData<MeResult>(authKeys.me())?.subscription?.inTrial).toBe(false);
   });
 });

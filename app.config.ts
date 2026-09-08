@@ -2,9 +2,18 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
 
 type AppEnv = 'development' | 'staging' | 'production';
 
-const APP_ENV = (process.env.APP_ENV ??
-  process.env.EXPO_PUBLIC_APP_ENV ??
-  'development') as AppEnv;
+function resolveAppEnv(): AppEnv {
+  const raw = process.env.APP_ENV ?? process.env.EXPO_PUBLIC_APP_ENV ?? 'development';
+  if (raw === 'homolog') {
+    return 'staging';
+  }
+  if (raw === 'staging' || raw === 'production' || raw === 'development') {
+    return raw;
+  }
+  return 'development';
+}
+
+const APP_ENV = resolveAppEnv();
 
 const ENV = {
   development: {
@@ -142,7 +151,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   extra: {
     router: {},
-    appEnv: APP_ENV in ENV ? APP_ENV : 'development',
+    appEnv: APP_ENV,
     eas: {
       projectId: '51eb8600-97f3-40bc-93cf-e493dd496d90',
     },

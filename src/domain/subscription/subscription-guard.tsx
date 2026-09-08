@@ -12,7 +12,7 @@ type SubscriptionGuardProps = {
 };
 
 /**
- * Blocks lawyer shell until subscription access is granted (trial or active plan).
+ * Blocks lawyer shell until a store subscription grants access.
  */
 export function SubscriptionGuard({ children }: SubscriptionGuardProps) {
   const { user, isAuthenticated, isHydrating } = useAuth();

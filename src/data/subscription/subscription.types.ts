@@ -1,5 +1,5 @@
 export type SubscriptionStatus =
-  | 'TRIAL'
+  | 'PENDENTE'
   | 'ATIVA'
   | 'EM_ATRASO'
   | 'EXPIRADA'
@@ -10,9 +10,6 @@ export type SubscriptionPlatform = 'IOS' | 'ANDROID' | 'FAKE';
 export type SubscriptionWire = {
   status: SubscriptionStatus;
   acessoLiberado: boolean;
-  emTrial: boolean;
-  trialFimEm?: string | null;
-  diasRestantesTrial?: number | null;
   periodoFimEm?: string | null;
   plataforma?: SubscriptionPlatform | null;
   ambiente?: string | null;
@@ -23,9 +20,6 @@ export type SubscriptionWire = {
 export type SubscriptionResult = {
   status: SubscriptionStatus;
   accessGranted: boolean;
-  inTrial: boolean;
-  trialEndsAt: string | null;
-  trialDaysRemaining: number | null;
   periodEndsAt: string | null;
   platform: SubscriptionPlatform | null;
   productId: string;
@@ -44,6 +38,9 @@ export type IapProduct = {
   description: string;
   localizedPrice: string;
   currency: string;
+  hasFreeTrial: boolean;
+  freeTrialLabel: string | null;
+  offerToken: string | null;
 };
 
 export type IapPurchaseResult = {

@@ -16,7 +16,6 @@ import { Body1, Body2, Display, Link } from '@/atomic/typography';
 import { AccountProfilePhoto } from '@/components/profile-avatar';
 import { useAuth, useMe, useUpdatePreferences } from '@/domain/auth';
 import { useUpdateLawyerAvailability } from '@/domain/lawyer';
-import { formatTrialRemainingMessage } from '@/domain/subscription/trial-copy';
 import {
   BrandColors,
   MaxContentWidth,
@@ -83,10 +82,6 @@ export function LawyerAccountScreen() {
   const updateAvailability = useUpdateLawyerAvailability();
   const notificationsEnabled = me?.pushNotificationsEnabled ?? true;
   const profileUnavailable = me?.profileUnavailable ?? false;
-  const trialMessage = formatTrialRemainingMessage(
-    me?.subscription?.inTrial ?? false,
-    me?.subscription?.trialDaysRemaining,
-  );
   const contentPaddingBottom =
     TAB_BAR_CONTENT_HEIGHT + insets.bottom + LIST_GAP_ABOVE_TAB;
 
@@ -132,11 +127,6 @@ export function LawyerAccountScreen() {
           <Body2 color={BrandColors.neutral.light}>
             {user?.email}
           </Body2>
-          {trialMessage ? (
-            <Body2 color={BrandColors.primary.light} style={styles.trialHint}>
-              {trialMessage}
-            </Body2>
-          ) : null}
         </View>
 
         <View style={styles.menu}>
@@ -245,9 +235,6 @@ const styles = StyleSheet.create({
     gap: Spacing.xxs,
   },
   name: {
-    textAlign: 'center',
-  },
-  trialHint: {
     textAlign: 'center',
   },
   menu: {

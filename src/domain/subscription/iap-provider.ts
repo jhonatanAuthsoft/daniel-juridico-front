@@ -2,9 +2,15 @@ import { Platform } from 'react-native';
 
 import type { IapProduct, IapPurchaseResult, SubscriptionPlatform } from '@/data/subscription';
 
+import { mapStoreProductToIapProduct } from './iap-product.mapper';
+
 export type IapProvider = {
   fetchProducts: (productIds: string[]) => Promise<IapProduct[]>;
-  requestPurchase: (productId: string, accountId?: string) => Promise<IapPurchaseResult>;
+  requestPurchase: (
+    productId: string,
+    accountId?: string,
+    offerToken?: string | null,
+  ) => Promise<IapPurchaseResult>;
   restorePurchases: () => Promise<IapPurchaseResult[]>;
   finishTransaction: (purchaseToken: string) => Promise<void>;
 };
@@ -29,6 +35,9 @@ function createFakeProvider(): IapProvider {
         description: 'Assinatura mensal do Laweact',
         localizedPrice: 'R$ 35,00',
         currency: 'BRL',
+        hasFreeTrial: true,
+        freeTrialLabel: '1 mês',
+        offerToken: null,
       }));
     },
     async requestPurchase(productId) {
@@ -67,7 +76,15 @@ export function createExpoIapProviderFromHook(
   hook: {
     fetchProducts: (params: { skus: string[]; type: 'subs' }) => Promise<unknown[] | undefined>;
     requestPurchase: (params: {
-      request: { ios?: { sku: string }; android?: { skus: string[]; obfuscatedAccountId?: string } };
+      type: 'subs';
+      request: {
+        ios?: { sku: string };
+        android?: {
+          skus: string[];
+          obfuscatedAccountId?: string;
+          subscriptionOffers?: { sku: string; offerToken: string }[];
+        };
+      };
     }) => Promise<unknown>;
     getAvailablePurchases: () => Promise<unknown[] | undefined>;
     finishTransaction: (params: { purchase: unknown; isConsumable: boolean }) => Promise<void>;
@@ -78,31 +95,26 @@ export function createExpoIapProviderFromHook(
   return {
     async fetchProducts(productIds) {
       const products = (await hook.fetchProducts({ skus: productIds, type: 'subs' })) ?? [];
-      return products.map((product, index) => {
-        const item = product as {
-          id?: string;
-          productId?: string;
-          title?: string;
-          description?: string;
-          displayPrice?: string;
-          localizedPrice?: string;
-          currency?: string;
-        };
-        return {
-          productId: String(item.id ?? item.productId ?? productIds[index] ?? productIds[0]),
-          title: String(item.title ?? 'Plano Basic'),
-          description: String(item.description ?? ''),
-          localizedPrice: String(item.displayPrice ?? item.localizedPrice ?? ''),
-          currency: String(item.currency ?? 'BRL'),
-        };
-      });
+      return products.map((product, index) =>
+        mapStoreProductToIapProduct(
+          product as Parameters<typeof mapStoreProductToIapProduct>[0],
+          productIds[index] ?? productIds[0],
+        ),
+      );
     },
-    async requestPurchase(productId, accountId) {
+    async requestPurchase(productId, accountId, offerToken) {
       const purchase = await hook.requestPurchase({
+        type: 'subs',
         request:
           platform === 'IOS'
             ? { ios: { sku: productId } }
-            : { android: { skus: [productId], obfuscatedAccountId: accountId } },
+            : {
+                android: {
+                  skus: [productId],
+                  obfuscatedAccountId: accountId,
+                  subscriptionOffers: offerToken ? [{ sku: productId, offerToken }] : [],
+                },
+              },
       });
       const item = purchase as {
         purchaseToken?: string;

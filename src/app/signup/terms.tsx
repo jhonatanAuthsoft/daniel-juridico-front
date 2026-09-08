@@ -104,7 +104,7 @@ export default function SignupTermsScreen() {
       return;
     }
 
-    router.replace(homeHref);
+    router.replace(user?.role === 'LAWYER' ? '/signup/subscription' : homeHref);
   };
 
   return (
