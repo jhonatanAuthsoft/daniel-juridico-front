@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, View } from 'react-native';
 import {
   KeyboardAwareScrollView,
   type KeyboardAwareScrollViewRef,
@@ -35,7 +35,16 @@ export function SignupMultiStepShell({
   const scrollRef = useRef<KeyboardAwareScrollViewRef>(null);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ y: 0, animated: false });
+    if (step < 1) {
+      return undefined;
+    }
+
+    Keyboard.dismiss();
+    const frame = requestAnimationFrame(() => {
+      scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+    });
+
+    return () => cancelAnimationFrame(frame);
   }, [step]);
 
   return (
@@ -55,6 +64,7 @@ export function SignupMultiStepShell({
           </View>
 
           <KeyboardAwareScrollView
+            key={step}
             ref={scrollRef}
             bottomOffset={Spacing.md}
             contentContainerStyle={styles.scrollContent}

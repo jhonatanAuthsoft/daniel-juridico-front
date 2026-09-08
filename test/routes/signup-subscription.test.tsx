@@ -97,12 +97,13 @@ describe('SignupSubscriptionScreen', () => {
     const screen = wrap(<SignupSubscriptionScreen />);
 
     await waitFor(() => {
-      expect(
-        screen.getByText(
-          '1º mês grátis, depois R$ 35,00/mês. Renova automaticamente. Cancele quando quiser.',
-        ),
-      ).toBeTruthy();
+      expect(screen.getByText('1º mês gratuito')).toBeTruthy();
     });
+    expect(screen.getByText('Plano Basic')).toBeTruthy();
+    expect(screen.getByText('Assinatura mensal automática')).toBeTruthy();
+    expect(
+      screen.getByText('Um plano completo para atender suas necessidades'),
+    ).toBeTruthy();
   });
 
   it('hides the free month when the store user is not eligible', async () => {
@@ -113,9 +114,9 @@ describe('SignupSubscriptionScreen', () => {
     const screen = wrap(<SignupSubscriptionScreen />);
 
     await waitFor(() => {
-      expect(screen.getByText('R$ 35,00/mês. Renova automaticamente.')).toBeTruthy();
+      expect(screen.getByText('Assinatura mensal automática')).toBeTruthy();
     });
-    expect(screen.queryByText(/1º mês grátis/)).toBeNull();
+    expect(screen.queryByText('1º mês gratuito')).toBeNull();
   });
 
   it('sends the Android offer token when the lawyer subscribes', async () => {

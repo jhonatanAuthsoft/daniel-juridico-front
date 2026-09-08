@@ -1,16 +1,25 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { Redirect, useRouter } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
+import { ActivityIndicator, Linking, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/atomic/button';
+import { GlassBackground } from '@/atomic/glass';
 import { Separator } from '@/atomic/separator';
 import { Body1, Body2, Display, Heading1 } from '@/atomic/typography';
-import { BrandColors, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
+import {
+  angleToPoints,
+  BrandColors,
+  BrandGradients,
+  MaxContentWidth,
+  Radius,
+  Spacing,
+  toGradientLocations,
+} from '@/constants/theme';
 import { authKeys, useAuth, useMe } from '@/domain/auth';
 import {
-  formatPaywallOfferMessage,
   getIapProvider,
   purchaseSubscriptionUseCase,
   restoreSubscriptionUseCase,
@@ -19,6 +28,12 @@ import {
 
 const TERMS_URL = 'https://laweact.com/termos';
 const PRIVACY_URL = 'https://laweact.com/privacidade';
+
+const PLAN_CARD_GRADIENT = BrandGradients.gradient;
+const PLAN_CARD_GRADIENT_POINTS = angleToPoints(PLAN_CARD_GRADIENT.angleDeg);
+const PLAN_CARD_GRADIENT_LOCATIONS = toGradientLocations(
+  PLAN_CARD_GRADIENT.locationsPercent,
+);
 
 export default function SignupSubscriptionScreen() {
   const router = useRouter();
@@ -35,11 +50,6 @@ export default function SignupSubscriptionScreen() {
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const offerCopy = useMemo(
-    () => formatPaywallOfferMessage({ hasFreeTrial, localizedPrice }),
-    [hasFreeTrial, localizedPrice],
-  );
 
   useEffect(() => {
     let active = true;
@@ -139,9 +149,7 @@ export default function SignupSubscriptionScreen() {
         <View style={styles.content}>
           <View style={styles.main}>
             <Display color={BrandColors.neutral.white} style={styles.centeredText}>
-              {hasFreeTrial
-                ? 'Comece com o 1º mês grátis'
-                : 'Um plano completo para atender suas necessidades'}
+              Um plano completo para atender suas necessidades
             </Display>
 
             <Separator size="sm" />
@@ -153,22 +161,31 @@ export default function SignupSubscriptionScreen() {
 
             <Separator size="lg" />
 
-            <View style={styles.planCardShell}>
-              <View style={styles.planCard}>
-                <View style={styles.planBody}>
-                  <View style={styles.planHeader}>
-                    <Heading1 color={BrandColors.primary.light}>Plano Basic</Heading1>
-                    {isLoadingProducts ? (
-                      <ActivityIndicator color={BrandColors.neutral.white} />
-                    ) : (
-                      <Body1 color={BrandColors.neutral.white}>{localizedPrice}</Body1>
-                    )}
+            <View style={styles.planCardAccent}>
+              <LinearGradient
+                colors={[...PLAN_CARD_GRADIENT.colors]}
+                end={PLAN_CARD_GRADIENT_POINTS.end}
+                locations={PLAN_CARD_GRADIENT_LOCATIONS}
+                start={PLAN_CARD_GRADIENT_POINTS.start}
+                style={styles.planCardBorder}>
+                <View style={styles.planCard}>
+                  <GlassBackground blurPx={25} gradient={PLAN_CARD_GRADIENT} />
+                  <View style={styles.planBody}>
+                    <View style={styles.planHeader}>
+                      <Heading1 color={BrandColors.primary.light}>Plano Basic</Heading1>
+                      {isLoadingProducts ? (
+                        <ActivityIndicator color={BrandColors.neutral.white} />
+                      ) : (
+                        <Body1 color={BrandColors.neutral.white}>{localizedPrice}</Body1>
+                      )}
+                    </View>
+                    {hasFreeTrial ? (
+                      <Body1 color={BrandColors.neutral.white}>1º mês gratuito</Body1>
+                    ) : null}
+                    <Body2 color={BrandColors.neutral.white}>Assinatura mensal automática</Body2>
                   </View>
-                  <Body1 color={BrandColors.neutral.white}>{offerCopy}</Body1>
-                  <Separator size="sm" />
-                  <Body2 color={BrandColors.neutral.white}>Assinatura mensal automática</Body2>
                 </View>
-              </View>
+              </LinearGradient>
             </View>
 
             {errorMessage ? (
@@ -226,6 +243,24 @@ export default function SignupSubscriptionScreen() {
   );
 }
 
+const glassShadow = Platform.select({
+  ios: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 16,
+  },
+  android: {
+    elevation: 0,
+  },
+  default: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 16,
+  },
+});
+
 const styles = StyleSheet.create({
   root: {
     flex: 1,
@@ -251,29 +286,33 @@ const styles = StyleSheet.create({
   centeredText: {
     textAlign: 'center',
   },
-  planCardShell: {
+  planCardAccent: {
     borderRadius: Radius.large,
     backgroundColor: BrandColors.primary.light,
     paddingTop: Spacing.xxs,
     overflow: 'hidden',
   },
-  planCard: {
+  planCardBorder: {
     borderRadius: Radius.large,
-    backgroundColor: BrandColors.neutral.dark,
+    padding: 1,
+  },
+  planCard: {
+    borderRadius: Radius.large - 1,
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: BrandColors.neutral.xdark,
+    ...glassShadow,
   },
   planBody: {
+    zIndex: 1,
     paddingHorizontal: Spacing.sm,
     paddingTop: Spacing.sm,
     paddingBottom: Spacing.sm,
+    gap: Spacing.xxxs,
   },
   planHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: Spacing.xxxs,
   },
   footer: {
     width: '100%',
