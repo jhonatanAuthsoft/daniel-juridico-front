@@ -59,6 +59,7 @@ export const defaultValues: LawyerSignupFormValues = {
   password: '',
   motherName: '',
   fatherName: '',
+  birthDate: '',
   noFatherName: false,
   rg: '',
   issuingAuthority: '',

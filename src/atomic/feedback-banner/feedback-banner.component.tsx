@@ -5,8 +5,8 @@ import { XIcon } from '@/assets/icon/x';
 import { Body2 } from '@/atomic/typography';
 import { BrandColors, Spacing } from '@/constants/theme';
 
-export const BANNER_ENTER_MS = 220;
-export const BANNER_EXIT_MS = 160;
+export const BANNER_ENTER_MS = 280;
+export const BANNER_EXIT_MS = 220;
 
 export type FeedbackBannerVariant = 'error' | 'success' | 'warning';
 

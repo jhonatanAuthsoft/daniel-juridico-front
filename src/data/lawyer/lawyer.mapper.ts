@@ -1,3 +1,4 @@
+import { isCompleteSupplementalOab } from '@/components/signup-lawyer/step-oab-registration/supplemental-oab';
 import type {
   LawyerSignupFormValues,
   SupplementalOabEntry,
@@ -29,6 +30,8 @@ import type {
   UpdateLawyerGraduationWireRequest,
   UpdateLawyerAvailabilityParams,
   UpdateLawyerAvailabilityWireRequest,
+  UpdateLawyerServiceAreasParams,
+  UpdateLawyerServiceAreasWireRequest,
 } from './lawyer.types';
 
 function onlyDigits(value: string) {
@@ -115,7 +118,7 @@ function mapOab(
 
 function mapSupplementalOabs(entries: SupplementalOabEntry[]): OabWireRequest[] {
   return entries
-    .filter((entry) => entry.number.trim())
+    .filter(isCompleteSupplementalOab)
     .map((entry) =>
       mapOab(entry.number, entry.uf, entry.issueDate, entry.photoKeys ?? []),
     );
@@ -123,7 +126,7 @@ function mapSupplementalOabs(entries: SupplementalOabEntry[]): OabWireRequest[] 
 
 /** Flattens the per-state city groups into one `{estado, cidade}` pair per city. */
 function mapServiceAreas(
-  entries: LawyerSignupFormValues['serviceAreas'],
+  entries: readonly { state: string; cities: string[] }[],
 ): PracticeAreaWireRequest[] {
   return entries.flatMap((entry) => {
     const estado = entry.state.trim().toUpperCase();
@@ -140,12 +143,12 @@ function mapServiceAreas(
 
 function oldestOabIsoDate(
   primaryIssueDate: string,
-  supplemental: readonly { issueDate: string; number: string }[],
+  supplemental: readonly Pick<SupplementalOabEntry, 'number' | 'uf' | 'issueDate'>[],
 ): string | undefined {
   const dates = [
     toIsoDate(primaryIssueDate),
     ...supplemental
-      .filter((entry) => entry.number.trim())
+      .filter(isCompleteSupplementalOab)
       .map((entry) => toIsoDate(entry.issueDate)),
   ].filter((value): value is string => Boolean(value));
 
@@ -160,7 +163,10 @@ function mapPostgraduates(
   entries: LawyerSignupFormValues['postgraduates'],
 ): PostgraduateWireRequest[] {
   return entries
-    .filter((entry) => entry.course.trim())
+    .filter(
+      (entry) =>
+        entry.course.trim() && entry.university.trim() && toYear(entry.year) != null,
+    )
     .map((entry) => ({
       nomeCurso: entry.course.trim(),
       instituicao: entry.university.trim(),
@@ -195,6 +201,7 @@ export function mapLawyerSignupFormToRegisterRequest(
     cpf: onlyDigits(form.cpf),
     nomePai: fatherName || undefined,
     nomeMae: form.motherName.trim(),
+    dataNascimento: toIsoDate(form.birthDate) ?? '',
     pronomeTratamento: mapTreatmentPronounToApi(form.pronouns),
     telefone: onlyDigits(form.phone),
     fotoUrl: form.profileImageKey.trim(),
@@ -243,7 +250,11 @@ export function mapRegisterLawyerWireToResult(
 export function mapUpdateLawyerGeneralDataToWire(
   params: UpdateLawyerGeneralDataParams,
 ): UpdateLawyerGeneralDataWireRequest {
-  return { nomeCompleto: params.fullName.trim() };
+  const dataNascimento = toIsoDate(params.birthDate);
+  return {
+    nomeCompleto: params.fullName.trim(),
+    ...(dataNascimento ? { dataNascimento } : {}),
+  };
 }
 
 export function mapUpdateLawyerAddressToWire(
@@ -283,7 +294,7 @@ export function mapUpdateLawyerDocumentationToWire(
   params: UpdateLawyerDocumentationParams,
 ): UpdateLawyerDocumentationWireRequest {
   const oabsSuplementares = params.supplementalOabs
-    .filter((entry) => entry.number.trim())
+    .filter(isCompleteSupplementalOab)
     .map((entry) => mapOab(entry.number, entry.uf, entry.issueDate, entry.photoKeys ?? []));
 
   return {
@@ -304,6 +315,7 @@ export function mapUpdateLawyerGraduationToWire(
     universidade: params.university.trim(),
     curso: params.course.trim(),
     anoFormacao: toYear(params.graduationYear) ?? 0,
+    posGraduacoes: mapPostgraduates(params.postgraduates ?? []),
   };
 }
 
@@ -312,5 +324,13 @@ export function mapUpdateLawyerAvailabilityToWire(
 ): UpdateLawyerAvailabilityWireRequest {
   return {
     disponibilidade: params.profileUnavailable ? 'INDISPONIVEL' : 'DISPONIVEL',
+  };
+}
+
+export function mapUpdateLawyerServiceAreasToWire(
+  params: UpdateLawyerServiceAreasParams,
+): UpdateLawyerServiceAreasWireRequest {
+  return {
+    areasAtuacao: mapServiceAreas(params.serviceAreas),
   };
 }

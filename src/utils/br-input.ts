@@ -91,24 +91,19 @@ export function maskAlphanumericOnly(value: string, maxLength?: number): string 
   return maxLength !== undefined ? cleaned.slice(0, maxLength) : cleaned;
 }
 
-/** Progressive RG mask: 00.000.000-00 — até 10 dígitos. */
-export function maskRg(value: string): string {
-  const digits = onlyDigits(value).slice(0, 10);
-  if (digits.length <= 2) {
-    return digits;
-  }
-  if (digits.length <= 5) {
-    return `${digits.slice(0, 2)}.${digits.slice(2)}`;
-  }
-  if (digits.length <= 8) {
-    return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5)}`;
-  }
-  return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}-${digits.slice(8)}`;
-}
+/**
+ * Longest practical RG as people type it (state number + punctuation).
+ * State IDs go up to ~14 characters; formatted values stay within 20.
+ */
+export const RG_MAX_LENGTH = 20;
 
-/** RG completo: exatamente 10 dígitos. */
+/** RG without a national format: non-empty, within `RG_MAX_LENGTH`, has a letter or digit. */
 export function isValidRg(value: string): boolean {
-  return onlyDigits(value).length === 10;
+  const trimmed = value.trim();
+  if (trimmed.length === 0 || trimmed.length > RG_MAX_LENGTH) {
+    return false;
+  }
+  return /[a-zA-Z0-9]/.test(trimmed);
 }
 
 /** Simple BRL-ish amount: digits + optional decimal comma (2 places). */

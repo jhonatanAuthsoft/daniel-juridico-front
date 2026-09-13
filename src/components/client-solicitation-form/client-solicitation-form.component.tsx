@@ -119,20 +119,20 @@ function AdvancedFiltersSection({
     <View style={styles.advancedFields}>
       <InputSelectField
         name="subspecialty"
-        label="Subespecialidade"
+        label="Subespecialidade (opcional)"
         placeholder="Selecione a subespecialidade"
         options={subspecialtyOptions}
       />
       <InputSelectField
         name="billingMethod"
-        label="Formas de cobrança"
+        label="Formas de cobrança (opcional)"
         placeholder="Selecione o método"
         options={BILLING_OPTIONS}
         searchable={false}
       />
       <InputTextField
         name="minimumExperienceMonths"
-        label="Tempo mínimo de experiência (meses)"
+        label="Tempo mínimo de experiência em meses (opcional)"
         placeholder="Ex. 6"
         keyboardType="number-pad"
         maxLength={3}

@@ -12,6 +12,7 @@ const mockFetchProducts = jest.fn();
 const mockUseMe = jest.fn();
 const mockUseAuth = jest.fn();
 const mockSignOut = jest.fn();
+const mockBanner = jest.fn();
 
 jest.mock('expo-router', () => ({
   Redirect: ({ href }: { href: string }) => {
@@ -41,6 +42,10 @@ jest.mock('@/domain/subscription', () => {
     restoreSubscriptionUseCase: (...args: unknown[]) => mockRestore(...args),
   };
 });
+
+jest.mock('@/atomic/feedback-banner', () => ({
+  useBanner: () => mockBanner,
+}));
 
 jest.mock('react-native-safe-area-context', () => {
   const { View } = require('react-native');
@@ -76,6 +81,7 @@ describe('SignupSubscriptionScreen', () => {
     mockReplace.mockClear();
     mockPurchase.mockClear();
     mockRestore.mockClear();
+    mockBanner.mockClear();
     mockFetchProducts.mockReset();
     mockFetchProducts.mockResolvedValue([product()]);
     mockUseAuth.mockReturnValue({
@@ -119,6 +125,25 @@ describe('SignupSubscriptionScreen', () => {
     expect(screen.queryByText('1º mês gratuito')).toBeNull();
   });
 
+  it('sends a lawyer with access to the lawyer home', async () => {
+    mockUseMe.mockReturnValue({
+      data: {
+        subscription: {
+          accessGranted: true,
+          productId: 'laweact_basic_mensal',
+        },
+      },
+      isPending: false,
+    });
+
+    const screen = wrap(<SignupSubscriptionScreen />);
+
+    expect(screen.getByText('redirect:/lawyer')).toBeTruthy();
+    await waitFor(() => {
+      expect(mockFetchProducts).toHaveBeenCalled();
+    });
+  });
+
   it('sends the Android offer token when the lawyer subscribes', async () => {
     const screen = wrap(<SignupSubscriptionScreen />);
 
@@ -135,5 +160,44 @@ describe('SignupSubscriptionScreen', () => {
         offerToken: 'trial-token',
       });
     });
+  });
+
+  it('shows a flash message when restore finds no previous subscription', async () => {
+    mockRestore.mockResolvedValueOnce(false);
+    const screen = wrap(<SignupSubscriptionScreen />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Restaurar compras')).toBeTruthy();
+    });
+
+    fireEvent.press(screen.getByText('Restaurar compras'));
+
+    await waitFor(() => {
+      expect(mockBanner).toHaveBeenCalledWith(
+        'Nenhuma assinatura anterior foi encontrada.',
+        'error',
+      );
+    });
+    expect(
+      screen.queryByText('Nenhuma assinatura anterior foi encontrada.'),
+    ).toBeNull();
+    expect(mockReplace).not.toHaveBeenCalled();
+  });
+
+  it('shows a flash message when restore fails', async () => {
+    mockRestore.mockRejectedValueOnce(new Error('Loja indisponível'));
+    const screen = wrap(<SignupSubscriptionScreen />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Restaurar compras')).toBeTruthy();
+    });
+
+    fireEvent.press(screen.getByText('Restaurar compras'));
+
+    await waitFor(() => {
+      expect(mockBanner).toHaveBeenCalledWith('Loja indisponível', 'error');
+    });
+    expect(screen.queryByText('Loja indisponível')).toBeNull();
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 });

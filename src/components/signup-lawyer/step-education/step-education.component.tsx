@@ -1,5 +1,5 @@
 import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
@@ -12,6 +12,8 @@ import { FieldValidators } from '@/constants/field-validators';
 import { InputMasks } from '@/constants/input-masks';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
+import { useRegisterUnsavedDraft } from '@/components/unsaved-draft-guard';
+
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues, PostgraduateEntry } from '../types';
 
@@ -23,8 +25,23 @@ function createEmptyPostgraduate(): PostgraduateEntry {
   };
 }
 
+function isCompletePostgraduate(entry: PostgraduateEntry): boolean {
+  return (
+    entry.university.trim().length > 0 &&
+    entry.course.trim().length > 0 &&
+    FieldValidators.year(entry.year) === true
+  );
+}
+
+function hasFilledPostgraduateDraft(entry: PostgraduateEntry): boolean {
+  return Boolean(
+    entry.university.trim() || entry.course.trim() || entry.year.trim(),
+  );
+}
+
 export function StepEducation() {
-  const { control } = useFormContext<LawyerSignupFormValues>();
+  const { control, getValues, setValue, trigger } =
+    useFormContext<LawyerSignupFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'postgraduates',
@@ -33,16 +50,76 @@ export function StepEducation() {
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const snapshotRef = useRef<PostgraduateEntry | null>(null);
 
   const canAddMore = editingIndex === null;
 
+  useRegisterUnsavedDraft({
+    itemLabel: 'pós-graduação',
+    hasUnsavedDraft: () => {
+      if (editingIndex == null) {
+        return false;
+      }
+      const entry = getValues(`postgraduates.${editingIndex}`);
+      if (!entry) {
+        return false;
+      }
+      if (isCreating) {
+        return hasFilledPostgraduateDraft(entry);
+      }
+      return JSON.stringify(entry) !== JSON.stringify(snapshotRef.current);
+    },
+    discardUnsavedDraft: () => {
+      if (editingIndex == null) {
+        const entries = getValues('postgraduates');
+        const kept = entries.filter(isCompletePostgraduate);
+        if (kept.length !== entries.length) {
+          setValue('postgraduates', kept, {
+            shouldDirty: true,
+            shouldValidate: false,
+          });
+        }
+        return;
+      }
+      if (isCreating) {
+        remove(editingIndex);
+      } else if (snapshotRef.current) {
+        setValue(`postgraduates.${editingIndex}`, snapshotRef.current, {
+          shouldDirty: true,
+          shouldValidate: false,
+        });
+      }
+      setIsCreating(false);
+      setEditingIndex(null);
+      snapshotRef.current = null;
+    },
+  });
+
+  useEffect(() => {
+    return () => {
+      const entries = getValues('postgraduates');
+      const kept = entries.filter(isCompletePostgraduate);
+      if (kept.length === entries.length) {
+        return;
+      }
+      setValue('postgraduates', kept, {
+        shouldDirty: true,
+        shouldValidate: false,
+      });
+    };
+  }, [getValues, setValue]);
+
   const startCreate = () => {
-    append(createEmptyPostgraduate());
+    const draft = createEmptyPostgraduate();
+    snapshotRef.current = draft;
+    append(draft);
     setIsCreating(true);
     setEditingIndex(fields.length);
   };
 
   const startEdit = (index: number) => {
+    const entry = getValues(`postgraduates.${index}`);
+    snapshotRef.current = entry ? { ...entry } : null;
     setIsCreating(false);
     setEditingIndex(index);
   };
@@ -58,11 +135,24 @@ export function StepEducation() {
 
     setIsCreating(false);
     setEditingIndex(null);
+    snapshotRef.current = null;
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
+    if (editingIndex == null) {
+      return;
+    }
+    const valid = await trigger([
+      `postgraduates.${editingIndex}.university`,
+      `postgraduates.${editingIndex}.course`,
+      `postgraduates.${editingIndex}.year`,
+    ]);
+    if (!valid) {
+      return;
+    }
     setIsCreating(false);
     setEditingIndex(null);
+    snapshotRef.current = null;
   };
 
   const deleteAt = (index: number) => {
@@ -128,12 +218,14 @@ export function StepEducation() {
                 label="Universidade de Formação"
                 placeholder="Digite o nome da universidade"
                 autoCapitalize="words"
+                validate={FieldValidators.required()}
               />
               <InputTextField
                 name={`postgraduates.${index}.course`}
                 label="Curso"
                 placeholder="Digite o curso"
                 autoCapitalize="sentences"
+                validate={FieldValidators.required()}
               />
               <InputTextField
                 name={`postgraduates.${index}.year`}
@@ -141,10 +233,11 @@ export function StepEducation() {
                 placeholder="Digite o ano de formação"
                 keyboardType="number-pad"
                 format={InputMasks.digitsMax(4)}
+                validate={FieldValidators.year}
                 maxLength={4}
               />
 
-              <Button variant="primary" onPress={saveEdit}>
+              <Button variant="primary" onPress={() => void saveEdit()}>
                 Salvar
               </Button>
             </View>

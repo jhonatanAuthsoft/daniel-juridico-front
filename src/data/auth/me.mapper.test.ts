@@ -149,7 +149,7 @@ describe('mapMeWireToResult', () => {
         email: 'maria@laweact.com',
         documentType: 'cpf',
         documentNumber: '111.444.777-35',
-        rg: '12.345.67',
+        rg: '1234567',
         cep: '01310-100',
         state: 'SP',
         city: 'São Paulo',
@@ -277,7 +277,7 @@ describe('mapMeWireToResult', () => {
         email: 'maria@laweact.com',
         documentType: 'cpf',
         documentNumber: '111.444.777-35',
-        rg: '12.345.67',
+        rg: '1234567',
         cep: '01311-100',
         state: 'SP',
         city: 'São Paulo',
@@ -330,6 +330,7 @@ describe('mapMeWireToResult', () => {
             universidade: 'USP',
             curso: 'Direito',
             anoFormacao: 2015,
+            dataNascimento: '1990-05-20',
           },
           endereco: {
             cep: '01310100',
@@ -361,6 +362,19 @@ describe('mapMeWireToResult', () => {
             { codigo: 'HONORARIOS_PERCENTUAIS', nome: 'Honorários Percentuais' },
             { codigo: 'HONORARIOS_ARBITRADOS', nome: 'Honorários arbitrados' },
           ],
+          areasAtuacao: [
+            { id: 'a1', estado: 'sp', cidade: 'Avaré' },
+            { id: 'a2', estado: 'SP', cidade: 'Adamantina' },
+            { id: 'a3', estado: 'BA', cidade: 'Salvador' },
+          ],
+          posGraduacoes: [
+            {
+              id: 'pg1',
+              nomeCurso: 'LLM Direito Digital',
+              instituicao: 'FGV',
+              anoFormacao: 2020,
+            },
+          ],
         },
       }),
     ).toEqual({
@@ -372,6 +386,7 @@ describe('mapMeWireToResult', () => {
       lawyerProfile: {
         fullName: 'João Advogado',
         email: 'joao@laweact.com',
+        birthDate: '20/05/1990',
         cep: '01310-100',
         state: 'SP',
         city: 'São Paulo',
@@ -399,6 +414,13 @@ describe('mapMeWireToResult', () => {
         university: 'USP',
         course: 'Direito',
         graduationYear: '2015',
+        postgraduates: [
+          { university: 'FGV', course: 'LLM Direito Digital', year: '2020' },
+        ],
+        serviceAreas: [
+          { state: 'SP', cities: ['Adamantina', 'Avaré'] },
+          { state: 'BA', cities: ['Salvador'] },
+        ],
       },
     });
   });
@@ -472,6 +494,7 @@ describe('mapMeWireToResult', () => {
           pronouns: 'DOUTORA',
           university: 'PUC-SP',
           graduationYear: '2018',
+          postgraduates: [],
         }),
       }),
     );

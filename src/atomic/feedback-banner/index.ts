@@ -8,7 +8,10 @@ export {
 export {
   BannerProvider,
   useBanner,
+  useReportTabBarHeight,
   showBanner,
   BANNER_AUTO_DISMISS_MS,
+  FLASH_BANNER_BOTTOM_GAP,
+  getFlashBannerBottomOffset,
   type ShowBanner,
 } from './banner-provider';

@@ -182,6 +182,7 @@ describe('StepServiceRadius', () => {
     await waitFor(() => {
       expect(screen.getByText('Selecione ao menos uma cidade de atuação')).toBeTruthy();
     });
+    expect(screen.queryByText('Campo obrigatório')).toBeNull();
   });
 
   it('asks to save when cities are selected but not saved', async () => {

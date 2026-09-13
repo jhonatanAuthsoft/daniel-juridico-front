@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { useRouter } from 'expo-router';
 
@@ -8,9 +8,19 @@ import { useBanner } from '@/atomic/feedback-banner';
 import { Form, useForm } from '@/atomic/form';
 import { Link } from '@/atomic/typography';
 import { AccountStackScreen } from '@/components/client-edit-data';
+import {
+  UnsavedDraftProvider,
+  useRegisterUnsavedDraft,
+  useUnsavedDraftLeave,
+} from '@/components/unsaved-draft-guard';
 import { BrandColors, Spacing } from '@/constants/theme';
+import type { LawyerEditOabEntry } from '@/data/auth';
 import { getErrorMessage } from '@/data/http';
 import { useUpdateLawyerDocumentation } from '@/domain/lawyer';
+
+import {
+  hasFilledSupplementalOabDraft,
+} from '@/components/signup-lawyer/step-oab-registration/supplemental-oab';
 
 import {
   createEmptySupplementalOab,
@@ -24,8 +34,25 @@ type ExpandedId = 'primary' | number | null;
 type EditingId = 'primary' | number | null;
 
 export function LawyerEditDocumentationScreen() {
+  return (
+    <UnsavedDraftProvider>
+      <LawyerEditDocumentationContent />
+    </UnsavedDraftProvider>
+  );
+}
+
+function cloneOabEntry(entry: LawyerEditOabEntry): LawyerEditOabEntry {
+  return {
+    ...entry,
+    photoUris: [...(entry.photoUris ?? [])],
+    photoKeys: [...(entry.photoKeys ?? [])],
+  };
+}
+
+function LawyerEditDocumentationContent() {
   const router = useRouter();
   const banner = useBanner();
+  const requestLeave = useUnsavedDraftLeave();
   const { profile, fromMe } = useLawyerEditProfile();
   const updateDocumentation = useUpdateLawyerDocumentation();
   const form = useForm<DocumentationForm>({
@@ -62,6 +89,7 @@ export function LawyerEditDocumentationScreen() {
   );
   const [editingId, setEditingId] = useState<EditingId>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const snapshotRef = useRef<LawyerEditOabEntry | null>(null);
 
   const oabNumber = useWatch({ control: form.control, name: 'oabNumber' }) ?? '';
   const oabUf = useWatch({ control: form.control, name: 'oabUf' }) ?? '';
@@ -72,6 +100,40 @@ export function LawyerEditDocumentationScreen() {
   const canAddMore =
     editingId === null && fields.length < MAX_SUPPLEMENTAL_OABS;
 
+  useRegisterUnsavedDraft({
+    itemLabel: 'OAB suplementar',
+    hasUnsavedDraft: () => {
+      if (typeof editingId !== 'number') {
+        return false;
+      }
+      const entry = form.getValues(`supplementalOabs.${editingId}`);
+      if (!entry) {
+        return false;
+      }
+      if (isCreating) {
+        return hasFilledSupplementalOabDraft(entry);
+      }
+      return JSON.stringify(entry) !== JSON.stringify(snapshotRef.current);
+    },
+    discardUnsavedDraft: () => {
+      if (typeof editingId !== 'number') {
+        return;
+      }
+      if (isCreating) {
+        remove(editingId);
+        setExpandedId(null);
+      } else if (snapshotRef.current) {
+        form.setValue(`supplementalOabs.${editingId}`, snapshotRef.current, {
+          shouldDirty: true,
+          shouldValidate: false,
+        });
+      }
+      setIsCreating(false);
+      setEditingId(null);
+      snapshotRef.current = null;
+    },
+  });
+
   const toggle = (id: ExpandedId) => {
     if (editingId != null) {
       return;
@@ -80,6 +142,12 @@ export function LawyerEditDocumentationScreen() {
   };
 
   const startEdit = (id: Exclude<EditingId, null>) => {
+    if (typeof id === 'number') {
+      const entry = form.getValues(`supplementalOabs.${id}`);
+      snapshotRef.current = entry ? cloneOabEntry(entry) : null;
+    } else {
+      snapshotRef.current = null;
+    }
     setIsCreating(false);
     setExpandedId(id);
     setEditingId(id);
@@ -95,13 +163,38 @@ export function LawyerEditDocumentationScreen() {
     }
     setIsCreating(false);
     setEditingId(null);
+    snapshotRef.current = null;
+  };
+
+  const saveCard = async () => {
+    if (editingId == null) {
+      return;
+    }
+    const fieldsToValidate =
+      editingId === 'primary'
+        ? (['oabNumber', 'oabUf', 'oabIssueDate', 'oabPhotoUris'] as const)
+        : ([
+            `supplementalOabs.${editingId}.number`,
+            `supplementalOabs.${editingId}.uf`,
+            `supplementalOabs.${editingId}.issueDate`,
+            `supplementalOabs.${editingId}.photoUris`,
+          ] as const);
+    const valid = await form.trigger(fieldsToValidate);
+    if (!valid) {
+      return;
+    }
+    setIsCreating(false);
+    setEditingId(null);
+    snapshotRef.current = null;
   };
 
   const startCreate = () => {
     if (fields.length >= MAX_SUPPLEMENTAL_OABS) {
       return;
     }
-    append(createEmptySupplementalOab());
+    const draft = createEmptySupplementalOab();
+    snapshotRef.current = cloneOabEntry(draft);
+    append(draft);
     setIsCreating(true);
     setExpandedId(fields.length);
     setEditingId(fields.length);
@@ -112,6 +205,7 @@ export function LawyerEditDocumentationScreen() {
     if (editingId === index) {
       setEditingId(null);
       setIsCreating(false);
+      snapshotRef.current = null;
     } else if (typeof editingId === 'number' && editingId > index) {
       setEditingId(editingId - 1);
     }
@@ -159,7 +253,9 @@ export function LawyerEditDocumentationScreen() {
   });
 
   return (
-    <AccountStackScreen title="Alterar documentação">
+    <AccountStackScreen
+      onBack={() => requestLeave(() => router.back())}
+      title="Alterar documentação">
       <Form {...form}>
         <View style={styles.list}>
           <OabEntryCard
@@ -177,6 +273,7 @@ export function LawyerEditDocumentationScreen() {
             onToggle={() => toggle('primary')}
             onEdit={() => startEdit('primary')}
             onCloseEdit={closeEdit}
+            onSave={() => void saveCard()}
             photosRequired
           />
 
@@ -200,6 +297,7 @@ export function LawyerEditDocumentationScreen() {
                 onToggle={() => toggle(index)}
                 onEdit={() => startEdit(index)}
                 onCloseEdit={closeEdit}
+                onSave={() => void saveCard()}
                 onDelete={() => deleteSupplemental(index)}
               />
             );
@@ -219,7 +317,11 @@ export function LawyerEditDocumentationScreen() {
       <Button
         disabled={updateDocumentation.isPending}
         isLoading={updateDocumentation.isPending}
-        onPress={() => void onSubmit()}
+        onPress={() => {
+          requestLeave(() => {
+            void onSubmit();
+          });
+        }}
         variant="cta">
         Salvar alterações
       </Button>

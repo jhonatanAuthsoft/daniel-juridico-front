@@ -13,6 +13,7 @@ import {
   formatOabHubLabel,
   formatTreatmentPronounChip,
 } from './lawyer-edit-profile';
+import { formatServiceAreaHubSummary } from './service-area';
 import { useLawyerEditProfile } from './use-lawyer-edit-profile';
 
 export function LawyerEditDataHubScreen() {
@@ -20,6 +21,9 @@ export function LawyerEditDataHubScreen() {
   const { profile, fromMe } = useLawyerEditProfile();
   const name = profile.fullName || 'Advogada';
   const pronounChip = fromMe ? formatTreatmentPronounChip(profile.pronouns) : '';
+  const serviceAreaSummary = fromMe
+    ? formatServiceAreaHubSummary(fromMe.serviceAreas)
+    : '';
 
   return (
     <AccountStackScreen title="Editar Dados Básicos">
@@ -35,6 +39,13 @@ export function LawyerEditDataHubScreen() {
         onPress={() => router.push('/lawyer/perfil/endereco')}
         subtitle={fromMe ? formatLawyerAddressSummary(profile) : ''}
         title="Endereço"
+        titleBold
+      />
+      <EditDataNavCard
+        accessibilityLabel="Editar raio de atuação"
+        onPress={() => router.push('/lawyer/perfil/raio-atuacao')}
+        subtitle={serviceAreaSummary}
+        title="Raio de atuação"
         titleBold
       />
       <EditDataNavCard
@@ -61,10 +72,10 @@ export function LawyerEditDataHubScreen() {
         titleBold
       />
       <EditDataNavCard
-        accessibilityLabel="Editar graduação"
+        accessibilityLabel="Editar formação"
         onPress={() => router.push('/lawyer/perfil/graduacao')}
         subtitle={fromMe ? profile.university : ''}
-        title="Graduação"
+        title="Formação"
         titleBold
       />
 

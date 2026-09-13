@@ -10,6 +10,7 @@ import { GlassBackground } from '@/atomic/glass';
 import { Separator } from '@/atomic/separator';
 import { Display, Heading2 } from '@/atomic/typography';
 import { BrandColors, MaxContentWidth, Radius, Spacing } from '@/constants/theme';
+import { GuestGuard } from '@/domain/auth';
 
 const PROFILE_OPTION_HEIGHT = 72;
 
@@ -38,7 +39,8 @@ export default function SelectProfileScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.root}>
+    <GuestGuard>
+      <View style={styles.root}>
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
         <ScrollView
           contentContainerStyle={styles.content}
@@ -75,7 +77,8 @@ export default function SelectProfileScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </View>
+      </View>
+    </GuestGuard>
   );
 }
 

@@ -20,6 +20,7 @@ export function getLawyerSignupStepFields(
         'issuingAuthority',
         'uf',
         'cpf',
+        'birthDate',
       ];
       if (!values.noFatherName) {
         fields.splice(1, 0, 'fatherName');

@@ -23,9 +23,9 @@ describe('StepPersonalDocuments', () => {
     expect(screen.getByText('Nome Completo (Nome Social)')).toBeTruthy();
     expect(screen.getByText('RG')).toBeTruthy();
     expect(screen.getByText('Órgão Emissor e UF')).toBeTruthy();
-    const rgInput = screen.getByPlaceholderText('00.000.000-00');
+    const rgInput = screen.getByPlaceholderText('Digite o RG');
     expect(rgInput).toBeTruthy();
-    expect(rgInput.props.maxLength).toBe(13);
+    expect(rgInput.props.maxLength).toBe(20);
     expect(screen.getByText('Data de Nascimento')).toBeTruthy();
     expect(screen.queryByText('Razão Social')).toBeNull();
     expect(screen.queryByPlaceholderText('00.000.000/0000-00')).toBeNull();
@@ -58,7 +58,7 @@ describe('StepPersonalDocuments', () => {
     fireEvent.press(screen.getByRole('button', { name: 'CPF' }));
 
     expect(screen.getByText('Nome Completo (Nome Social)')).toBeTruthy();
-    expect(screen.getByPlaceholderText('00.000.000-00')).toBeTruthy();
+    expect(screen.getByPlaceholderText('Digite o RG')).toBeTruthy();
     expect(screen.queryByText('Razão Social')).toBeNull();
   });
 });

@@ -30,7 +30,7 @@ import { AuthProvider, BannerProvider, QueryProvider } from '@/providers';
 SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
-  initialRouteName: 'login',
+  initialRouteName: 'index',
 };
 
 export default function RootLayout() {
@@ -58,8 +58,7 @@ export default function RootLayout() {
             <SplashGuard>
               <BannerProvider>
                 <Stack
-                  initialRouteName="login"
-                  detachInactiveScreens={false}
+                  initialRouteName="index"
                   screenOptions={{
                     headerShown: false,
                     contentStyle: { backgroundColor: BrandColors.neutral.xdark },

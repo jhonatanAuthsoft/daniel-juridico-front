@@ -14,6 +14,7 @@ type AccountStackScreenProps = {
   title: string;
   children: ReactNode;
   headerAction?: 'back' | 'close';
+  onBack?: () => void;
 };
 
 /**
@@ -23,11 +24,18 @@ export function AccountStackScreen({
   title,
   children,
   headerAction = 'back',
+  onBack,
 }: AccountStackScreenProps) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const paddingBottom = getTabBarTotalHeight(insets.bottom) + Spacing.md;
-  const goBack = () => router.back();
+  const goBack = () => {
+    if (onBack) {
+      onBack();
+      return;
+    }
+    router.back();
+  };
 
   return (
     <View style={styles.root}>

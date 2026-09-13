@@ -94,7 +94,11 @@ export function StepAddress() {
         validate={FieldValidators.digitsMin(1, 'Número inválido')}
         maxLength={10}
       />
-      <InputTextField name="complement" label="Complemento" placeholder="Ex. Casa" />
+      <InputTextField
+        name="complement"
+        label="Complemento (opcional)"
+        placeholder="Ex. Casa"
+      />
     </View>
   );
 }

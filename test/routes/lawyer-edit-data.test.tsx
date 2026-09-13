@@ -8,6 +8,7 @@ import { LawyerEditDataHubScreen } from '@/components/lawyer-edit-data/lawyer-ed
 import { LawyerEditDocumentationScreen } from '@/components/lawyer-edit-data/lawyer-edit-documentation-screen.component';
 import { LawyerEditEducationScreen } from '@/components/lawyer-edit-data/lawyer-edit-education-screen.component';
 import { LawyerEditNameEmailScreen } from '@/components/lawyer-edit-data/lawyer-edit-name-email-screen.component';
+import { LawyerEditServiceRadiusScreen } from '@/components/lawyer-edit-data/lawyer-edit-service-radius-screen.component';
 import type { LawyerEditProfile } from '@/data/auth';
 
 const mockPush = jest.fn();
@@ -19,10 +20,12 @@ const mockUpdateBilling = jest.fn().mockResolvedValue({});
 const mockUpdateBiography = jest.fn().mockResolvedValue({});
 const mockUpdateDocumentation = jest.fn().mockResolvedValue({});
 const mockUpdateGraduation = jest.fn().mockResolvedValue({});
+const mockUpdateServiceAreas = jest.fn().mockResolvedValue({});
 
 const lawyerProfile: LawyerEditProfile = {
   fullName: 'Luiza Bittencourt',
   email: 'luizabitt@gmail.com',
+  birthDate: '20/05/1990',
   cep: '01310-100',
   state: 'SP',
   city: 'São Paulo',
@@ -44,6 +47,8 @@ const lawyerProfile: LawyerEditProfile = {
   university: 'Faculdade Gétulio Vargas',
   course: 'Direito',
   graduationYear: '2015',
+  postgraduates: [{ university: 'FGV', course: 'LLM Direito Digital', year: '2020' }],
+  serviceAreas: [{ state: 'SP', cities: ['Adamantina', 'Avaré'] }],
 };
 
 jest.mock('expo-router', () => ({
@@ -104,6 +109,27 @@ jest.mock('@/domain/lawyer', () => ({
     mutateAsync: mockUpdateGraduation,
     isPending: false,
   }),
+  useUpdateLawyerServiceAreas: () => ({
+    mutateAsync: mockUpdateServiceAreas,
+    isPending: false,
+  }),
+}));
+
+jest.mock('@/domain/address', () => ({
+  useCitiesByUf: (uf: string) => ({
+    data:
+      uf === 'SP'
+        ? [
+            { value: 'Adamantina', label: 'Adamantina' },
+            { value: 'Avaré', label: 'Avaré' },
+            { value: 'Campinas', label: 'Campinas' },
+          ]
+        : uf === 'BA'
+          ? [{ value: 'Salvador', label: 'Salvador' }]
+          : [],
+    isFetching: false,
+    isError: false,
+  }),
 }));
 
 jest.mock('@/hooks/use-address-cep-autofill', () => ({
@@ -119,10 +145,13 @@ jest.mock('@/hooks/use-address-cep-autofill', () => ({
 }));
 
 jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
   const { View } = require('react-native');
+  const insets = { top: 0, right: 0, bottom: 0, left: 0 };
   return {
     SafeAreaView: View,
-    useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+    SafeAreaInsetsContext: React.createContext(insets),
+    useSafeAreaInsets: () => insets,
   };
 });
 
@@ -163,8 +192,10 @@ describe('LawyerEditDataHubScreen', () => {
     expect(screen.getByText('Doutora/(Dra)')).toBeTruthy();
     expect(screen.getByText('Documentação')).toBeTruthy();
     expect(screen.getByText('OAB/BA 127.583')).toBeTruthy();
-    expect(screen.getByText('Graduação')).toBeTruthy();
+    expect(screen.getByText('Formação')).toBeTruthy();
     expect(screen.getByText('Faculdade Gétulio Vargas')).toBeTruthy();
+    expect(screen.getByText('Raio de atuação')).toBeTruthy();
+    expect(screen.getByText('SP: Adamantina; Avaré')).toBeTruthy();
     expect(screen.getByLabelText('Apagar conta')).toBeTruthy();
   });
 
@@ -186,8 +217,11 @@ describe('LawyerEditDataHubScreen', () => {
     fireEvent.press(screen.getByLabelText('Editar documentação'));
     expect(mockPush).toHaveBeenCalledWith('/lawyer/perfil/documentacao');
 
-    fireEvent.press(screen.getByLabelText('Editar graduação'));
+    fireEvent.press(screen.getByLabelText('Editar formação'));
     expect(mockPush).toHaveBeenCalledWith('/lawyer/perfil/graduacao');
+
+    fireEvent.press(screen.getByLabelText('Editar raio de atuação'));
+    expect(mockPush).toHaveBeenCalledWith('/lawyer/perfil/raio-atuacao');
   });
 
   it('opens delete account from the hub footer', () => {
@@ -205,18 +239,20 @@ describe('LawyerEditNameEmailScreen', () => {
     mockUpdateGeneralData.mockClear();
   });
 
-  it('lets the lawyer edit only the name', () => {
+  it('lets the lawyer edit the name and birth date', () => {
     const screen = render(<LawyerEditNameEmailScreen />);
 
     expect(screen.getByText('Alterar nome e email')).toBeTruthy();
     expect(screen.getByText('Nome Completo (Nome Social)')).toBeTruthy();
     expect(screen.getByText('E-mail')).toBeTruthy();
+    expect(screen.getByText('Data de Nascimento')).toBeTruthy();
     expect(screen.getByDisplayValue('Luiza Bittencourt').props.editable).not.toBe(false);
     expect(screen.getByDisplayValue('luizabitt@gmail.com').props.editable).toBe(false);
+    expect(screen.getByDisplayValue('20/05/1990').props.editable).not.toBe(false);
     expect(screen.getByText('Salvar alterações')).toBeTruthy();
   });
 
-  it('saves the name and goes back', async () => {
+  it('saves the name and birth date and goes back', async () => {
     const screen = render(<LawyerEditNameEmailScreen />);
 
     fireEvent.press(screen.getByText('Salvar alterações'));
@@ -224,6 +260,7 @@ describe('LawyerEditNameEmailScreen', () => {
     await waitFor(() => {
       expect(mockUpdateGeneralData).toHaveBeenCalledWith({
         fullName: 'Luiza Bittencourt',
+        birthDate: '20/05/1990',
       });
     });
     expect(mockBack).toHaveBeenCalled();
@@ -251,7 +288,7 @@ describe('LawyerEditAddressScreen', () => {
     expect(screen.getByDisplayValue('Rua Flamingos')).toBeTruthy();
     expect(screen.getByText('Número')).toBeTruthy();
     expect(screen.getByPlaceholderText('Ex 12')).toBeTruthy();
-    expect(screen.getByText('Complemento')).toBeTruthy();
+    expect(screen.getByText('Complemento (opcional)')).toBeTruthy();
     expect(screen.getByPlaceholderText('Ex. Casa')).toBeTruthy();
     expect(screen.getByText('Salvar alterações')).toBeTruthy();
   });
@@ -358,18 +395,46 @@ describe('LawyerEditEducationScreen', () => {
     mockUpdateGraduation.mockClear();
   });
 
-  it('shows graduation fields', () => {
+  it('shows graduation fields and saved postgraduates', () => {
     const screen = render(<LawyerEditEducationScreen />);
 
-    expect(screen.getByText('Alterar graduação')).toBeTruthy();
+    expect(screen.getByText('Formação')).toBeTruthy();
     expect(screen.getByText('Universidade de Formação')).toBeTruthy();
     expect(screen.getByDisplayValue('Faculdade Gétulio Vargas')).toBeTruthy();
     expect(screen.getByText('Curso')).toBeTruthy();
     expect(screen.getByText('Ano de formação')).toBeTruthy();
+    expect(screen.getByText('Pós-graduação')).toBeTruthy();
+    expect(screen.getByText('LLM Direito Digital')).toBeTruthy();
+    expect(screen.getByText('FGV - 2020')).toBeTruthy();
+    expect(screen.getByText('+ Adicionar Pós-Graduação')).toBeTruthy();
     expect(screen.getByText('Salvar alterações')).toBeTruthy();
   });
 
-  it('saves graduation and goes back', async () => {
+  it('adds a postgraduate to the list', async () => {
+    const screen = render(<LawyerEditEducationScreen />);
+
+    fireEvent.press(screen.getByText('+ Adicionar Pós-Graduação'));
+    fireEvent.changeText(screen.getAllByPlaceholderText('Digite o nome da universidade')[1], 'USP');
+    fireEvent.changeText(screen.getAllByPlaceholderText('Digite o curso')[1], 'Mestrado em Direito');
+    fireEvent.changeText(screen.getAllByPlaceholderText('Digite o ano de formação')[1], '2022');
+    fireEvent.press(screen.getByText('Salvar'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Mestrado em Direito')).toBeTruthy();
+    });
+    expect(screen.getByText('USP - 2022')).toBeTruthy();
+  });
+
+  it('deletes a saved postgraduate', () => {
+    const screen = render(<LawyerEditEducationScreen />);
+
+    fireEvent.press(screen.getByLabelText('Excluir pós-graduação'));
+
+    expect(screen.queryByText('LLM Direito Digital')).toBeNull();
+    expect(screen.queryByText('FGV - 2020')).toBeNull();
+  });
+
+  it('saves graduation with postgraduates and goes back', async () => {
     const screen = render(<LawyerEditEducationScreen />);
 
     fireEvent.press(screen.getByText('Salvar alterações'));
@@ -379,6 +444,7 @@ describe('LawyerEditEducationScreen', () => {
         university: 'Faculdade Gétulio Vargas',
         course: 'Direito',
         graduationYear: '2015',
+        postgraduates: [{ university: 'FGV', course: 'LLM Direito Digital', year: '2020' }],
       });
     });
     expect(mockBack).toHaveBeenCalled();
@@ -500,5 +566,96 @@ describe('LawyerEditDocumentationScreen', () => {
       });
     });
     expect(mockBack).toHaveBeenCalled();
+  });
+});
+
+type EditScreen = ReturnType<typeof render>;
+
+function selectOption(screen: EditScreen, placeholder: string, optionLabel: string) {
+  fireEvent.press(screen.getByText(placeholder));
+  fireEvent.changeText(screen.getByLabelText('Buscar...'), optionLabel);
+  fireEvent.press(screen.getByRole('button', { name: optionLabel }));
+}
+
+describe('LawyerEditServiceRadiusScreen', () => {
+  beforeEach(() => {
+    mockBack.mockClear();
+    mockUpdateServiceAreas.mockClear();
+  });
+
+  it('shows the editor, the seeded state card and the save action', () => {
+    const screen = render(<LawyerEditServiceRadiusScreen />);
+
+    expect(screen.getByText('Raio de atuação')).toBeTruthy();
+    expect(screen.getByText('Estado')).toBeTruthy();
+    expect(screen.getByText('Cidade')).toBeTruthy();
+    expect(screen.getByText('Selecione o estado')).toBeTruthy();
+    expect(screen.getByText('Selecione a cidade')).toBeTruthy();
+    expect(screen.getByText('+ Adicionar nova cidade')).toBeTruthy();
+    expect(screen.getByText('São Paulo')).toBeTruthy();
+    expect(screen.getByText('Adamantina; Avaré')).toBeTruthy();
+    expect(screen.getByText('Salvar alterações')).toBeTruthy();
+  });
+
+  it('adds a city to the selected state', async () => {
+    const screen = render(<LawyerEditServiceRadiusScreen />);
+
+    selectOption(screen, 'Selecione o estado', 'São Paulo');
+    selectOption(screen, 'Selecione a cidade', 'Campinas');
+    fireEvent.press(screen.getByText('+ Adicionar nova cidade'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Adamantina; Avaré; Campinas')).toBeTruthy();
+    });
+    expect(screen.getAllByText('São Paulo')).toHaveLength(1);
+    expect(screen.getByText('Selecione a cidade')).toBeTruthy();
+  });
+
+  it('loads a saved state into the editor', () => {
+    const screen = render(<LawyerEditServiceRadiusScreen />);
+
+    fireEvent.press(screen.getByLabelText('Editar cidades de São Paulo'));
+
+    expect(screen.getAllByText('São Paulo').length).toBeGreaterThan(1);
+  });
+
+  it('deletes a saved state', () => {
+    const screen = render(<LawyerEditServiceRadiusScreen />);
+
+    fireEvent.press(screen.getByLabelText('Excluir São Paulo'));
+
+    expect(screen.queryByText('Adamantina; Avaré')).toBeNull();
+    expect(screen.queryByText('São Paulo')).toBeNull();
+  });
+
+  it('saves the service areas and goes back', async () => {
+    const screen = render(<LawyerEditServiceRadiusScreen />);
+
+    fireEvent.press(screen.getByLabelText('Excluir São Paulo'));
+    selectOption(screen, 'Selecione o estado', 'Bahia');
+    selectOption(screen, 'Selecione a cidade', 'Salvador');
+    fireEvent.press(screen.getByText('+ Adicionar nova cidade'));
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(mockUpdateServiceAreas).toHaveBeenCalledWith({
+        serviceAreas: [{ state: 'BA', cities: ['Salvador'] }],
+      });
+    });
+    expect(mockBack).toHaveBeenCalled();
+  });
+
+  it('does not save when every state was removed', async () => {
+    const screen = render(<LawyerEditServiceRadiusScreen />);
+
+    fireEvent.press(screen.getByLabelText('Excluir São Paulo'));
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Selecione ao menos uma cidade de atuação')).toBeTruthy();
+    });
+    expect(screen.queryByText('Campo obrigatório')).toBeNull();
+    expect(mockUpdateServiceAreas).not.toHaveBeenCalled();
+    expect(mockBack).not.toHaveBeenCalled();
   });
 });

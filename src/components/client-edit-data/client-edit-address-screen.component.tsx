@@ -110,7 +110,11 @@ export function AddressFields() {
         maxLength={10}
         validate={FieldValidators.required()}
       />
-      <InputTextField name="complement" label="Complemento" placeholder="Ex. Casa" />
+      <InputTextField
+        name="complement"
+        label="Complemento (opcional)"
+        placeholder="Ex. Casa"
+      />
     </View>
   );
 }

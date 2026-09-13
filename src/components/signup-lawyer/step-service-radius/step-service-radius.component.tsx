@@ -22,6 +22,8 @@ import { resolveUfFromStateValue, STATE_OPTIONS, stateLabelFromValue } from '@/c
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { useCitiesByUf } from '@/domain/address';
 
+import { useRegisterUnsavedDraft } from '@/components/unsaved-draft-guard';
+
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues, ServiceAreaEntry } from '../types';
 
@@ -82,7 +84,8 @@ function mergeByState(entries: ServiceAreaEntry[]): ServiceAreaEntry[] {
 }
 
 export function StepServiceRadius() {
-  const { control, getValues, setValue } = useFormContext<LawyerSignupFormValues>();
+  const { clearErrors, control, getValues, setValue } =
+    useFormContext<LawyerSignupFormValues>();
   const { fields, remove, replace } = useFieldArray({
     control,
     name: 'serviceAreas',
@@ -121,6 +124,41 @@ export function StepServiceRadius() {
   /** Index being edited; `null` means the editor creates a new state group. */
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
+  const resetDraft = () => {
+    previousStateRef.current = '';
+    setValue('serviceDraftState', '');
+    setValue('serviceDraftCities', []);
+    clearErrors('serviceAreas');
+    setEditingIndex(null);
+  };
+
+  useRegisterUnsavedDraft({
+    itemLabel: 'cidade de atuação',
+    hasUnsavedDraft: () => {
+      const hasDraft =
+        resolveUfFromStateValue(getValues('serviceDraftState')).length === 2 ||
+        normalizeCities(getValues('serviceDraftCities') ?? []).length > 0;
+      if (!hasDraft) {
+        return false;
+      }
+      if (editingIndex == null) {
+        return true;
+      }
+      const saved = getValues('serviceAreas')[editingIndex];
+      if (!saved) {
+        return true;
+      }
+      return (
+        saved.state !== resolveUfFromStateValue(getValues('serviceDraftState')) ||
+        JSON.stringify(normalizeCities(saved.cities ?? [])) !==
+          JSON.stringify(normalizeCities(getValues('serviceDraftCities') ?? []))
+      );
+    },
+    discardUnsavedDraft: () => {
+      resetDraft();
+    },
+  });
+
   useEffect(() => {
     if (previousStateRef.current === normalizedState) {
       return;
@@ -128,13 +166,6 @@ export function StepServiceRadius() {
     previousStateRef.current = normalizedState;
     setValue('serviceDraftCities', []);
   }, [normalizedState, setValue]);
-
-  const resetDraft = () => {
-    previousStateRef.current = '';
-    setValue('serviceDraftState', '');
-    setValue('serviceDraftCities', []);
-    setEditingIndex(null);
-  };
 
   const saveDraft = () => {
     const cities = normalizeCities(draftCities);
@@ -190,7 +221,7 @@ export function StepServiceRadius() {
 
   return (
     <View style={signupLawyerSharedStyles.fields}>
-      <View style={styles.editorCard}>
+      <View style={[styles.editorCard, errorMessage ? styles.editorCardError : null]}>
         <InputSelectField
           name="serviceDraftState"
           label="Estado"
@@ -311,6 +342,10 @@ const styles = StyleSheet.create({
     borderColor: BrandColors.neutral.dark,
     padding: Spacing.sm,
     gap: Spacing.sm,
+  },
+  editorCardError: {
+    borderWidth: 1.8,
+    borderColor: BrandColors.feedback.error.medium,
   },
   cancelLink: {
     alignSelf: 'center',

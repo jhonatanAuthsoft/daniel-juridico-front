@@ -6,8 +6,8 @@ import {
   maskCnpj,
   maskCpf,
   maskPhone,
-  maskRg,
   normalizeSearchText,
+  RG_MAX_LENGTH,
 } from '@/utils/br-input';
 
 describe('br-input', () => {
@@ -22,19 +22,15 @@ describe('br-input', () => {
     expect(maskPhone('1133334444')).toBe('(11) 3333-4444');
   });
 
-  it('masks RG with up to 10 digits', () => {
-    expect(maskRg('1234567890')).toBe('12.345.678-90');
-    expect(maskRg('123456789')).toBe('12.345.678-9');
-    expect(maskRg('12345678')).toBe('12.345.678');
-    expect(maskRg('12345')).toBe('12.345');
-    expect(maskRg('12345678901')).toBe('12.345.678-90');
-  });
-
-  it('validates RG requires exactly 10 digits', () => {
-    expect(isValidRg('12.345.678-90')).toBe(true);
-    expect(isValidRg('12.345.678-9')).toBe(false);
-    expect(isValidRg('12.345.678')).toBe(false);
-    expect(isValidRg('1234')).toBe(false);
+  it('accepts RG in any state format up to the national max length', () => {
+    expect(isValidRg('1234')).toBe(true);
+    expect(isValidRg('12.345.678')).toBe(true);
+    expect(isValidRg('12.345.678-9')).toBe(true);
+    expect(isValidRg('MG-10.533.222')).toBe(true);
+    expect(isValidRg('')).toBe(false);
+    expect(isValidRg('---')).toBe(false);
+    expect(isValidRg('1'.repeat(RG_MAX_LENGTH))).toBe(true);
+    expect(isValidRg('1'.repeat(RG_MAX_LENGTH + 1))).toBe(false);
   });
 
   it('validates CPF check digits', () => {

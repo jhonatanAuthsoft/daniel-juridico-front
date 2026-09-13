@@ -109,10 +109,14 @@ describe('ClientSolicitationForm', () => {
       'accessibilityState',
       expect.objectContaining({ expanded: true }),
     );
-    expect(screen.getAllByText('Subespecialidade').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Formas de cobrança').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Subespecialidade (opcional)').length).toBeGreaterThan(
+      0,
+    );
     expect(
-      screen.getAllByText('Tempo mínimo de experiência (meses)').length,
+      screen.getAllByText('Formas de cobrança (opcional)').length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText('Tempo mínimo de experiência em meses (opcional)').length,
     ).toBeGreaterThan(0);
 
     fireEvent.press(toggle);

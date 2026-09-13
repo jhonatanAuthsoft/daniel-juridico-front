@@ -15,6 +15,7 @@ export type MePerfilWire = {
   faixaRenda?: string | null;
   estadoCivil?: string | null;
   pronomeTratamento?: string | null;
+  dataNascimento?: string | null;
   biografia?: string | null;
   disponibilidade?: string | null;
   universidade?: string | null;
@@ -45,11 +46,26 @@ export type MeCatalogItemWire = {
   nome?: string | null;
 };
 
+export type MeAreaAtuacaoWire = {
+  id?: string | null;
+  estado?: string | null;
+  cidade?: string | null;
+};
+
+export type MePosGraduacaoWire = {
+  id?: string | null;
+  nomeCurso?: string | null;
+  instituicao?: string | null;
+  anoFormacao?: number | string | null;
+};
+
 export type MeDetalheWire = {
   perfil?: MePerfilWire | null;
   endereco?: MeEnderecoWire | null;
   oabs?: MeOabWire[] | null;
+  areasAtuacao?: MeAreaAtuacaoWire[] | null;
   formasCobranca?: MeCatalogItemWire[] | null;
+  posGraduacoes?: MePosGraduacaoWire[] | null;
 };
 
 export type MeWireResponse = {
@@ -95,10 +111,24 @@ export type LawyerEditOabEntry = {
   photoKeys: string[];
 };
 
+/** Cities served within a single UF; one entry per state. */
+export type LawyerServiceArea = {
+  state: string;
+  cities: string[];
+};
+
+/** Postgraduate entry ready for the lawyer education editor. */
+export type LawyerEditPostgraduate = {
+  university: string;
+  course: string;
+  year: string;
+};
+
 /** Lawyer cadastral fields ready for the edit-data screens. */
 export type LawyerEditProfile = {
   fullName: string;
   email: string;
+  birthDate: string;
   cep: string;
   state: string;
   city: string;
@@ -118,6 +148,8 @@ export type LawyerEditProfile = {
   university: string;
   course: string;
   graduationYear: string;
+  postgraduates: LawyerEditPostgraduate[];
+  serviceAreas: LawyerServiceArea[];
 };
 
 export type MeResult = {

@@ -1,5 +1,4 @@
 import { Stack } from 'expo-router';
-import { Platform } from 'react-native';
 
 import { BrandColors } from '@/constants/theme';
 import { RoleGuard, TermsGuard } from '@/domain/auth';
@@ -11,7 +10,6 @@ export default function LawyerShellLayout() {
       <TermsGuard>
         <SubscriptionGuard>
           <Stack
-          detachInactiveScreens={Platform.OS !== 'android'}
           screenOptions={{
             headerShown: false,
             animation: 'none',

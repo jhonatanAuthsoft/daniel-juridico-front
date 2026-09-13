@@ -1,6 +1,7 @@
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useReportTabBarHeight } from '@/atomic/feedback-banner';
 import { GlassBackground } from '@/atomic/glass';
 import { InputCaption } from '@/atomic/typography';
 import { BrandColors, BrandGradients, Radius, Spacing } from '@/constants/theme';
@@ -54,6 +55,7 @@ export function AppTabBar({
   visuals = CLIENT_TAB_VISUALS,
 }: TabBarProps) {
   const insets = useSafeAreaInsets();
+  useReportTabBarHeight(getTabBarTotalHeight(insets.bottom));
   const { data: unread } = useUnreadNotificationsExist();
   const hasUnread = Boolean(unread?.exists);
 

@@ -29,6 +29,7 @@ export type LawyerSignupFormValues = {
   password: string;
   motherName: string;
   fatherName: string;
+  birthDate: string;
   noFatherName: boolean;
   rg: string;
   issuingAuthority: string;

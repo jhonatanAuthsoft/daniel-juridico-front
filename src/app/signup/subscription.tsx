@@ -6,6 +6,7 @@ import { ActivityIndicator, Linking, Platform, StyleSheet, View } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/atomic/button';
+import { useBanner } from '@/atomic/feedback-banner';
 import { GlassBackground } from '@/atomic/glass';
 import { Separator } from '@/atomic/separator';
 import { Body1, Body2, Display, Heading1 } from '@/atomic/typography';
@@ -38,6 +39,7 @@ const PLAN_CARD_GRADIENT_LOCATIONS = toGradientLocations(
 export default function SignupSubscriptionScreen() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const banner = useBanner();
   const { user, signOut } = useAuth();
   const { data: me, isPending } = useMe();
   const subscription = me?.subscription;
@@ -112,7 +114,7 @@ export default function SignupSubscriptionScreen() {
     try {
       const restored = await restoreSubscriptionUseCase();
       if (!restored) {
-        setErrorMessage('Nenhuma assinatura anterior foi encontrada.');
+        banner('Nenhuma assinatura anterior foi encontrada.', 'error');
         return;
       }
       await invalidateSubscription();
@@ -120,7 +122,7 @@ export default function SignupSubscriptionScreen() {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Não foi possível restaurar a assinatura.';
-      setErrorMessage(message);
+      banner(message, 'error');
     } finally {
       setIsRestoring(false);
     }
@@ -131,7 +133,7 @@ export default function SignupSubscriptionScreen() {
     router.replace('/login');
   };
 
-  if (isPending) {
+  if (isPending && Boolean(user)) {
     return (
       <View style={styles.root}>
         <ActivityIndicator color={BrandColors.primary.light} style={styles.loading} />
