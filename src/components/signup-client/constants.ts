@@ -29,6 +29,19 @@ export const STEP_COPY: Record<number, { title: string; subtitle: string }> = {
   },
 };
 
+export function getClientSignupStepCopy(
+  step: number,
+  personType: ClientSignupFormValues['personType'],
+): { title: string; subtitle: string } {
+  if (step === 4 && personType === 'cnpj') {
+    return {
+      title: 'Sobre a Empresa',
+      subtitle: 'Personalize seu perfil público e facilite conexão',
+    };
+  }
+  return STEP_COPY[step] ?? STEP_COPY[1];
+}
+
 export const defaultValues: ClientSignupFormValues = {
   email: '',
   phone: '',

@@ -72,6 +72,31 @@ describe('ClientLawyerReviews', () => {
     expect(onLoadMore).toHaveBeenCalledTimes(1);
   });
 
+  it('shows the reviews section with total and average stars', () => {
+    render(
+      <ClientLawyerReviews
+        averageRating={4.5}
+        reviews={[otherReview]}
+        total={12}
+      />,
+    );
+
+    expect(screen.getByText('Avaliações')).toBeTruthy();
+    expect(screen.getByText('(12)')).toBeTruthy();
+    expect(screen.getByLabelText('4,5 estrelas em média')).toBeTruthy();
+    expect(screen.getByText('4,5')).toBeTruthy();
+  });
+
+  it('keeps the empty reviews section visible when forced', () => {
+    render(
+      <ClientLawyerReviews alwaysVisible reviews={[]} total={0} />,
+    );
+
+    expect(screen.getByText('Avaliações')).toBeTruthy();
+    expect(screen.getByText('(0)')).toBeTruthy();
+    expect(screen.getByText('Nenhuma avaliação ainda.')).toBeTruthy();
+  });
+
   it('hides Ver mais when there is no further page', () => {
     render(
       <ClientLawyerReviews

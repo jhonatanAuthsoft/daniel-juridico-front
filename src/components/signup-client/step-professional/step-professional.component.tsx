@@ -19,25 +19,27 @@ export function StepProfessional() {
 
   return (
     <View style={signupClientSharedStyles.fields}>
-      <InputSelectField
-        name="maritalStatus"
-        label="Estado civil (opcional)"
-        placeholder="Selecione o estado civil"
-        options={MARITAL_STATUS_OPTIONS}
-        searchable={false}
-      />
       {isCnpj ? null : (
-        <InputTextField
-          name="profession"
-          label="Profissão"
-          placeholder="Digite sua profissão"
-          autoCapitalize="sentences"
-          validate={FieldValidators.required()}
-        />
+        <>
+          <InputSelectField
+            name="maritalStatus"
+            label="Estado civil (opcional)"
+            placeholder="Selecione o estado civil"
+            options={MARITAL_STATUS_OPTIONS}
+            searchable={false}
+          />
+          <InputTextField
+            name="profession"
+            label="Profissão"
+            placeholder="Digite sua profissão"
+            autoCapitalize="sentences"
+            validate={FieldValidators.required()}
+          />
+        </>
       )}
       <InputTextField
         name="monthlyIncome"
-        label="Renda mensal (opcional)"
+        label={isCnpj ? 'Faturamento mensal (opcional)' : 'Renda mensal (opcional)'}
         placeholder="Ex. 180,00"
         keyboardType="decimal-pad"
         format={InputMasks.currencyBr}

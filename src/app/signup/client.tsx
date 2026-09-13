@@ -8,7 +8,7 @@ import { Form, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import {
   defaultValues,
-  STEP_COPY,
+  getClientSignupStepCopy,
   StepAddress,
   StepCredentials,
   StepPersonalDocuments,
@@ -32,7 +32,8 @@ export default function ClientSignupScreen() {
   });
   const registerClient = useRegisterClient();
 
-  const stepCopy = STEP_COPY[step];
+  const personType = form.watch('personType');
+  const stepCopy = getClientSignupStepCopy(step, personType);
   const isLastStep = step >= TOTAL_STEPS;
   const isSubmitting = registerClient.isPending;
 

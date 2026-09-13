@@ -1,5 +1,6 @@
 export {
   defaultValues,
+  getClientSignupStepCopy,
   PASSWORD_REQUIREMENTS,
   STEP_COPY,
   TOTAL_STEPS,

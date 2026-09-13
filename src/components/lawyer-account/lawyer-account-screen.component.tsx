@@ -26,6 +26,7 @@ import { openSupportEmail } from '@/utils/open-support-email';
 
 const MENU_ITEMS = [
   'Editar Dados',
+  'Visualizar perfil',
   'Alterar Senha',
   'Assinatura e plano',
   'Termos e condições',
@@ -138,6 +139,10 @@ export function LawyerAccountScreen() {
               onPress={() => {
                 if (item === 'Editar Dados') {
                   router.push('/lawyer/perfil/editar-dados');
+                  return;
+                }
+                if (item === 'Visualizar perfil') {
+                  router.push('/lawyer/perfil/visualizar-perfil');
                   return;
                 }
                 if (item === 'Alterar Senha') {

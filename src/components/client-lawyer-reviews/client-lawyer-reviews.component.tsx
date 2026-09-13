@@ -23,7 +23,13 @@ export type ClientLawyerReview = {
 type ClientLawyerReviewsProps = {
   reviews: ClientLawyerReview[];
   total: number;
+  averageRating?: number | null;
   canReview?: boolean;
+  /** Show the Avaliações block even when there are no comments yet. */
+  alwaysVisible?: boolean;
+  isLoading?: boolean;
+  isError?: boolean;
+  onRetry?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
   onLoadMore?: () => void;
@@ -44,10 +50,19 @@ function formatRatingLabel(rating: number): string {
   return `${formatted} ${rating === 1 ? 'estrela' : 'estrelas'}`;
 }
 
+function formatAverageRating(rating: number): string {
+  return rating.toFixed(1).replace('.', ',');
+}
+
 export function ClientLawyerReviews({
   reviews,
   total,
+  averageRating = null,
   canReview = false,
+  alwaysVisible = false,
+  isLoading = false,
+  isError = false,
+  onRetry,
   hasNextPage = false,
   isFetchingNextPage = false,
   onLoadMore,
@@ -61,8 +76,12 @@ export function ClientLawyerReviews({
 
   const canDeleteOwn = typeof onDeleteOwnReview === 'function';
   const hasReviews = reviews.length > 0 || total > 0;
+  const showAverage =
+    averageRating != null && (total > 0 || averageRating > 0);
+  const averageLabel =
+    averageRating != null ? formatAverageRating(averageRating) : '';
 
-  if (!hasReviews && !canReview) {
+  if (!hasReviews && !canReview && !alwaysVisible && !isLoading && !isError) {
     return null;
   }
 
@@ -95,6 +114,17 @@ export function ClientLawyerReviews({
         <Heading1 color={BrandColors.neutral.white}>({total})</Heading1>
       </View>
 
+      {showAverage && averageRating != null ? (
+        <View style={styles.summary}>
+          <StarRating
+            accessibilityLabel={`${averageLabel} ${averageRating === 1 ? 'estrela' : 'estrelas'} em média`}
+            rating={averageRating}
+            size={20}
+          />
+          <Body1 color={BrandColors.neutral.white}>{averageLabel}</Body1>
+        </View>
+      ) : null}
+
       {canReview ? (
         <Button
           accessibilityLabel="Deixar uma avaliação"
@@ -102,6 +132,30 @@ export function ClientLawyerReviews({
           variant="secondary">
           Deixar uma avaliação
         </Button>
+      ) : null}
+
+      {isLoading && reviews.length === 0 ? (
+        <ActivityIndicator color={BrandColors.primary.light} />
+      ) : null}
+
+      {isError && reviews.length === 0 ? (
+        <View style={styles.errorBlock}>
+          <Body2 color={BrandColors.neutral.light}>
+            Não foi possível carregar as avaliações
+          </Body2>
+          {onRetry ? (
+            <Pressable
+              accessibilityLabel="Tentar novamente"
+              accessibilityRole="button"
+              onPress={onRetry}>
+              <Link color={BrandColors.primary.light}>Tentar novamente</Link>
+            </Pressable>
+          ) : null}
+        </View>
+      ) : null}
+
+      {!isLoading && !isError && reviews.length === 0 && total === 0 ? (
+        <Body2 color={BrandColors.neutral.light}>Nenhuma avaliação ainda.</Body2>
       ) : null}
 
       <View style={styles.list}>
@@ -216,6 +270,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  summary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxs,
+  },
+  errorBlock: {
+    gap: Spacing.xxs,
   },
   list: {
     gap: Spacing.xs,
