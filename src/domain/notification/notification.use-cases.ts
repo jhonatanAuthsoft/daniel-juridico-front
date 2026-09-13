@@ -3,6 +3,7 @@ import {
   listNotifications,
   markAllNotificationsRead,
   markNotificationRead,
+  markNotificationsReadBySolicitation,
   type ListNotificationsParams,
 } from '@/data/notification';
 
@@ -26,4 +27,11 @@ export function markNotificationReadUseCase(
 
 export function markAllNotificationsReadUseCase(signal?: AbortSignal) {
   return markAllNotificationsRead(signal);
+}
+
+export function markNotificationsReadBySolicitationUseCase(
+  solicitationId: string,
+  signal?: AbortSignal,
+) {
+  return markNotificationsReadBySolicitation(solicitationId, signal);
 }

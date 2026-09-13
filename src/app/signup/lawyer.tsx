@@ -27,11 +27,24 @@ import {
 } from '@/components/signup-lawyer';
 import { getLawyerSignupStepFields } from '@/components/signup-lawyer/step-fields';
 import { SignupMultiStepShell } from '@/components/signup-shell';
+import {
+  UnsavedDraftProvider,
+  useUnsavedDraftLeave,
+} from '@/components/unsaved-draft-guard';
 import { useRegisterLawyer } from '@/domain/lawyer';
 
 export default function LawyerSignupScreen() {
+  return (
+    <UnsavedDraftProvider>
+      <LawyerSignupContent />
+    </UnsavedDraftProvider>
+  );
+}
+
+function LawyerSignupContent() {
   const router = useRouter();
   const banner = useBanner();
+  const requestLeave = useUnsavedDraftLeave();
   const [step, setStep] = useState(1);
   const [showPasswordErrors, setShowPasswordErrors] = useState(false);
   const form = useForm<LawyerSignupFormValues>({
@@ -129,14 +142,16 @@ export default function LawyerSignupScreen() {
         disabled={isSubmitting}
         isLoading={isSubmitting}
         onPress={() => {
-          void goNext();
+          requestLeave(() => {
+            void goNext();
+          });
         }}>
         {step === TOTAL_STEPS ? 'Começar' : 'Continuar'}
       </Button>
 
       <Separator size="sm" />
 
-      <BackLink onPress={goBack} />
+      <BackLink onPress={() => requestLeave(goBack)} />
     </SignupMultiStepShell>
   );
 }

@@ -23,13 +23,26 @@ export function maskCpf(value: string): string {
     .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 }
 
+/** CNPJ alfanumérico: 14 caracteres A–Z/0–9, sem pontuação, em maiúsculas. */
+export function normalizeCnpj(value: string): string {
+  return value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 14);
+}
+
 export function maskCnpj(value: string): string {
-  const digits = onlyDigits(value).slice(0, 14);
-  return digits
-    .replace(/(\d{2})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1.$2')
-    .replace(/(\d{3})(\d)/, '$1/$2')
-    .replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+  const chars = normalizeCnpj(value);
+  if (chars.length <= 2) {
+    return chars;
+  }
+  if (chars.length <= 5) {
+    return `${chars.slice(0, 2)}.${chars.slice(2)}`;
+  }
+  if (chars.length <= 8) {
+    return `${chars.slice(0, 2)}.${chars.slice(2, 5)}.${chars.slice(5)}`;
+  }
+  if (chars.length <= 12) {
+    return `${chars.slice(0, 2)}.${chars.slice(2, 5)}.${chars.slice(5, 8)}/${chars.slice(8)}`;
+  }
+  return `${chars.slice(0, 2)}.${chars.slice(2, 5)}.${chars.slice(5, 8)}/${chars.slice(8, 12)}-${chars.slice(12)}`;
 }
 
 /** BR mobile/landline: (11) 99999-9999 or (11) 9999-9999 */
@@ -78,24 +91,19 @@ export function maskAlphanumericOnly(value: string, maxLength?: number): string 
   return maxLength !== undefined ? cleaned.slice(0, maxLength) : cleaned;
 }
 
-/** Progressive RG mask: 00.000.000-00 — até 10 dígitos. */
-export function maskRg(value: string): string {
-  const digits = onlyDigits(value).slice(0, 10);
-  if (digits.length <= 2) {
-    return digits;
-  }
-  if (digits.length <= 5) {
-    return `${digits.slice(0, 2)}.${digits.slice(2)}`;
-  }
-  if (digits.length <= 8) {
-    return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5)}`;
-  }
-  return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}-${digits.slice(8)}`;
-}
+/**
+ * Longest practical RG as people type it (state number + punctuation).
+ * State IDs go up to ~14 characters; formatted values stay within 20.
+ */
+export const RG_MAX_LENGTH = 20;
 
-/** RG completo: exatamente 10 dígitos. */
+/** RG without a national format: non-empty, within `RG_MAX_LENGTH`, has a letter or digit. */
 export function isValidRg(value: string): boolean {
-  return onlyDigits(value).length === 10;
+  const trimmed = value.trim();
+  if (trimmed.length === 0 || trimmed.length > RG_MAX_LENGTH) {
+    return false;
+  }
+  return /[a-zA-Z0-9]/.test(trimmed);
 }
 
 /** Simple BRL-ish amount: digits + optional decimal comma (2 places). */
@@ -133,9 +141,14 @@ export function isValidCpf(value: string): boolean {
   return d1 === Number(digits[9]) && d2 === Number(digits[10]);
 }
 
-function cnpjCheckDigit(digits: string, weights: number[]): number {
+function allSameChars(value: string): boolean {
+  return /^(.)\1+$/.test(value);
+}
+
+/** Receita Federal: valor do caractere = ASCII − 48 (dígitos e A–Z). */
+function cnpjCheckDigit(chars: string, weights: number[]): number {
   const sum = weights.reduce(
-    (acc, weight, index) => acc + Number(digits[index]) * weight,
+    (acc, weight, index) => acc + (chars.charCodeAt(index) - 48) * weight,
     0,
   );
   const mod = sum % 11;
@@ -143,15 +156,18 @@ function cnpjCheckDigit(digits: string, weights: number[]): number {
 }
 
 export function isValidCnpj(value: string): boolean {
-  const digits = onlyDigits(value);
-  if (digits.length !== 14 || allSameDigits(digits)) {
+  const chars = normalizeCnpj(value);
+  if (chars.length !== 14 || allSameChars(chars)) {
+    return false;
+  }
+  if (!/^\d$/.test(chars[12] ?? '') || !/^\d$/.test(chars[13] ?? '')) {
     return false;
   }
   const w1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
   const w2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-  const d1 = cnpjCheckDigit(digits, w1);
-  const d2 = cnpjCheckDigit(digits, w2);
-  return d1 === Number(digits[12]) && d2 === Number(digits[13]);
+  const d1 = cnpjCheckDigit(chars, w1);
+  const d2 = cnpjCheckDigit(chars, w2);
+  return d1 === Number(chars[12]) && d2 === Number(chars[13]);
 }
 
 export function isValidPhone(value: string): boolean {

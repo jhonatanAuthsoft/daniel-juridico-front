@@ -1,15 +1,15 @@
 import { Stack } from 'expo-router';
-import { Platform } from 'react-native';
 
 import { BrandColors } from '@/constants/theme';
 import { RoleGuard, TermsGuard } from '@/domain/auth';
+import { SubscriptionGuard } from '@/domain/subscription';
 
 export default function LawyerShellLayout() {
   return (
     <RoleGuard allowedRole="LAWYER">
       <TermsGuard>
-        <Stack
-          detachInactiveScreens={Platform.OS !== 'android'}
+        <SubscriptionGuard>
+          <Stack
           screenOptions={{
             headerShown: false,
             animation: 'none',
@@ -17,6 +17,7 @@ export default function LawyerShellLayout() {
             contentStyle: { backgroundColor: BrandColors.neutral.xdark },
           }}
         />
+        </SubscriptionGuard>
       </TermsGuard>
     </RoleGuard>
   );

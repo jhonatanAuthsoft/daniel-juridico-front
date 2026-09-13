@@ -1,6 +1,7 @@
 import type { ClientSignupFormValues } from '@/components/signup-client';
 import { cityLabelFromValue } from '@/constants/select-options';
 import { toIsoDate } from '@/data/shared';
+import { normalizeCnpj } from '@/utils/br-input';
 
 import type {
   DocumentTypeApi,
@@ -72,7 +73,7 @@ export function mapClientSignupFormToRegisterRequest(
     email: form.email.trim(),
     senha: form.password,
     tipoDocumento: documentType,
-    numeroDocumento: onlyDigits(isCnpj ? form.cnpj : form.cpf),
+    numeroDocumento: isCnpj ? normalizeCnpj(form.cnpj) : onlyDigits(form.cpf),
     pronomes: mapPronounsToApi(form.pronouns),
     telefone: onlyDigits(form.phone),
     cep: formatCep(form.cep),

@@ -11,6 +11,7 @@ import {
   mapUpdateLawyerGeneralDataToWire,
   mapUpdateLawyerAvailabilityToWire,
   mapUpdateLawyerGraduationToWire,
+  mapUpdateLawyerServiceAreasToWire,
 } from './lawyer.mapper';
 import type { LawyerSignupFormValues } from '@/components/signup-lawyer/types';
 
@@ -21,6 +22,7 @@ const baseForm: LawyerSignupFormValues = {
   password: 'Secret12',
   motherName: 'Ana Advogada',
   fatherName: 'José Advogado',
+  birthDate: '20/05/1990',
   noFatherName: false,
   rg: '7654321',
   issuingAuthority: 'SSP',
@@ -80,6 +82,7 @@ describe('lawyer.mapper', () => {
       cpf: '39053344705',
       nomePai: 'José Advogado',
       nomeMae: 'Ana Advogada',
+      dataNascimento: '1990-05-20',
       pronomeTratamento: 'DOUTOR',
       telefone: '11988887777',
       universidade: 'USP',
@@ -140,6 +143,47 @@ describe('lawyer.mapper', () => {
     expect(payload.oabsSuplementares?.[0]?.dataExpedicao).toBe('2016-03-15');
   });
 
+  it('omits supplemental OABs without both wallet photos from the register payload', () => {
+    const payload = mapLawyerSignupFormToRegisterRequest({
+      ...baseForm,
+      supplementalOabs: [
+        {
+          number: '654321',
+          uf: 'RJ',
+          issueDate: '10/01/2018',
+          photoUris: [],
+          photoKeys: [],
+        },
+      ],
+    });
+
+    expect(payload.oabsSuplementares).toBeUndefined();
+  });
+
+  it('omits empty and partial supplemental OABs from the register payload', () => {
+    const payload = mapLawyerSignupFormToRegisterRequest({
+      ...baseForm,
+      supplementalOabs: [
+        {
+          number: '',
+          uf: '',
+          issueDate: '',
+          photoUris: [],
+          photoKeys: [],
+        },
+        {
+          number: 'IDUNQWIDUN',
+          uf: 'SP',
+          issueDate: '',
+          photoUris: [],
+          photoKeys: [],
+        },
+      ],
+    });
+
+    expect(payload.oabsSuplementares).toBeUndefined();
+  });
+
   it('omits nomePai when noFatherName is checked', () => {
     const payload = mapLawyerSignupFormToRegisterRequest({
       ...baseForm,
@@ -180,8 +224,14 @@ describe('lawyer.mapper', () => {
   });
 
   it('maps general data name to the PATCH wire body', () => {
-    expect(mapUpdateLawyerGeneralDataToWire({ fullName: '  João Advogado Lima  ' })).toEqual({
+    expect(
+      mapUpdateLawyerGeneralDataToWire({
+        fullName: '  João Advogado Lima  ',
+        birthDate: '12/03/1988',
+      }),
+    ).toEqual({
       nomeCompleto: 'João Advogado Lima',
+      dataNascimento: '1988-03-12',
     });
   });
 
@@ -241,7 +291,7 @@ describe('lawyer.mapper', () => {
             number: '654321',
             uf: 'rj',
             issueDate: '10/01/2018',
-            photoKeys: [],
+            photoKeys: ['tmp/advogados/oab/front2.jpg', 'tmp/advogados/oab/back2.jpg'],
           },
           { number: '  ', uf: 'BA', issueDate: '', photoKeys: [] },
         ],
@@ -258,7 +308,7 @@ describe('lawyer.mapper', () => {
           numero: '654321',
           uf: 'RJ',
           dataExpedicao: '2018-01-10',
-          fotosUrls: undefined,
+          fotosUrls: ['tmp/advogados/oab/front2.jpg', 'tmp/advogados/oab/back2.jpg'],
         },
       ],
     });
@@ -273,17 +323,44 @@ describe('lawyer.mapper', () => {
     });
   });
 
+  it('maps service areas to the PATCH wire body', () => {
+    expect(
+      mapUpdateLawyerServiceAreasToWire({
+        serviceAreas: [
+          { state: 'sp', cities: ['Adamantina', 'Avaré'] },
+          { state: 'BA', cities: ['Salvador'] },
+        ],
+      }),
+    ).toEqual({
+      areasAtuacao: [
+        { estado: 'SP', cidade: 'Adamantina' },
+        { estado: 'SP', cidade: 'Avaré' },
+        { estado: 'BA', cidade: 'Salvador' },
+      ],
+    });
+  });
+
   it('maps graduation to the PATCH wire body', () => {
     expect(
       mapUpdateLawyerGraduationToWire({
         university: ' PUC-SP ',
         course: ' Direito ',
         graduationYear: '2018',
+        postgraduates: [
+          { university: ' FGV ', course: ' LLM Direito Digital ', year: '2020' },
+        ],
       }),
     ).toEqual({
       universidade: 'PUC-SP',
       curso: 'Direito',
       anoFormacao: 2018,
+      posGraduacoes: [
+        {
+          nomeCurso: 'LLM Direito Digital',
+          instituicao: 'FGV',
+          anoFormacao: 2020,
+        },
+      ],
     });
   });
 });

@@ -2,6 +2,7 @@ export type { AuthUser, AuthSessionState, UserRole } from './auth.types';
 export { homeHrefForRole, mapApiProfileToRole, roleLabel } from './auth.types';
 export { AuthProvider, useAuth } from './auth-provider';
 export { RoleGuard } from './role-guard';
+export { GuestGuard } from './guest-guard';
 export { TermsGuard } from './terms-guard';
 export { createEmailAvailableValidator } from './create-email-available-validator';
 export { authKeys } from './auth.keys';
@@ -11,7 +12,9 @@ export type {
   ClientDocumentType,
   ClientEditProfile,
   LawyerEditOabEntry,
+  LawyerEditPostgraduate,
   LawyerEditProfile,
+  LawyerServiceArea,
   MeResult,
 } from '@/data/auth';
 export { useUpdatePreferences } from './use-update-preferences';

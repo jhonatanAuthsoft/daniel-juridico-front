@@ -91,6 +91,28 @@ describe('LawyerPerfilScreen', () => {
     });
   });
 
+  it('does not remind the lawyer how many trial days are left', () => {
+    mockUseMe.mockReturnValue({
+      data: {
+        photoKey: null,
+        pushNotificationsEnabled: true,
+        profileUnavailable: false,
+        subscription: {
+          status: 'ATIVA',
+          accessGranted: true,
+          autoRenewing: true,
+          inTrial: true,
+          trialDaysRemaining: 12,
+        },
+      },
+      isLoading: false,
+    });
+
+    const screen = render(<LawyerPerfilScreen />);
+
+    expect(screen.queryByText(/dias restantes no período de testes/)).toBeNull();
+  });
+
   it('shows the account identity and edit photo control', () => {
     const screen = render(<LawyerPerfilScreen />);
 
@@ -99,6 +121,7 @@ describe('LawyerPerfilScreen', () => {
     expect(screen.getByText('luizabitt@gmail.com')).toBeTruthy();
     expect(screen.getByLabelText('Editar foto de perfil')).toBeTruthy();
     expect(screen.getByText('Editar Dados')).toBeTruthy();
+    expect(screen.getByText('Visualizar perfil')).toBeTruthy();
     expect(screen.getByText('Alterar Senha')).toBeTruthy();
     expect(screen.getByText('Assinatura e plano')).toBeTruthy();
     expect(screen.getByText('Termos e condições')).toBeTruthy();
@@ -117,6 +140,14 @@ describe('LawyerPerfilScreen', () => {
 
     expect(screen.queryByText('Luiza Bittencourt')).toBeNull();
     expect(screen.queryByText('luizabitt@gmail.com')).toBeNull();
+  });
+
+  it('opens the public profile preview from the account menu', () => {
+    const screen = render(<LawyerPerfilScreen />);
+
+    fireEvent.press(screen.getByLabelText('Visualizar perfil'));
+
+    expect(mockPush).toHaveBeenCalledWith('/lawyer/perfil/visualizar-perfil');
   });
 
   it('opens edit data from the account menu', () => {

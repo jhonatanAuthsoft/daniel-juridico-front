@@ -7,6 +7,7 @@ import {
   isValidPhone,
   isValidRg,
   isValidYear,
+  RG_MAX_LENGTH,
   onlyDigits,
 } from '@/utils/br-input';
 
@@ -101,6 +102,9 @@ export const FieldValidators = {
   rg: (value: string) => {
     if (!value.trim()) {
       return 'Campo obrigatório';
+    }
+    if (value.trim().length > RG_MAX_LENGTH) {
+      return `RG deve ter no máximo ${RG_MAX_LENGTH} caracteres`;
     }
     return isValidRg(value) ? true : 'RG inválido';
   },

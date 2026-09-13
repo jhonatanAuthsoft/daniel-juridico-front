@@ -7,6 +7,7 @@ import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { AccountStackScreen } from '@/components/client-edit-data';
 import { FieldValidators } from '@/constants/field-validators';
+import { InputMasks } from '@/constants/input-masks';
 import { Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import { useUpdateLawyerGeneralData } from '@/domain/lawyer';
@@ -16,6 +17,7 @@ import { useLawyerEditProfile } from './use-lawyer-edit-profile';
 type NameEmailForm = {
   fullName: string;
   email: string;
+  birthDate: string;
 };
 
 export function LawyerEditNameEmailScreen() {
@@ -27,6 +29,7 @@ export function LawyerEditNameEmailScreen() {
     defaultValues: {
       fullName: profile.fullName,
       email: profile.email,
+      birthDate: profile.birthDate,
     },
   });
 
@@ -37,12 +40,16 @@ export function LawyerEditNameEmailScreen() {
     form.reset({
       fullName: fromMe.fullName,
       email: fromMe.email,
+      birthDate: fromMe.birthDate,
     });
   }, [form, fromMe]);
 
   const onSubmit = form.handleSubmit(async (formValues) => {
     try {
-      await updateGeneralData.mutateAsync({ fullName: formValues.fullName });
+      await updateGeneralData.mutateAsync({
+        fullName: formValues.fullName,
+        birthDate: formValues.birthDate,
+      });
       router.back();
     } catch (error) {
       banner(
@@ -64,6 +71,15 @@ export function LawyerEditNameEmailScreen() {
             validate={FieldValidators.required()}
           />
           <InputTextField editable={false} name="email" label="E-mail" />
+          <InputTextField
+            name="birthDate"
+            label="Data de Nascimento"
+            placeholder="00/00/0000"
+            keyboardType="number-pad"
+            format={InputMasks.dateBr}
+            validate={FieldValidators.dateBrBirth}
+            maxLength={10}
+          />
         </View>
       </Form>
       <Button

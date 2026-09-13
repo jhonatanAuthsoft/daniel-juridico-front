@@ -38,6 +38,7 @@ type OabEntryCardProps = {
   onToggle: () => void;
   onEdit: () => void;
   onCloseEdit: () => void;
+  onSave?: () => void;
   onDelete?: () => void;
   photosRequired?: boolean;
 };
@@ -58,8 +59,9 @@ export function OabEntryCard({
   onToggle,
   onEdit,
   onCloseEdit,
+  onSave,
   onDelete,
-  photosRequired = false,
+  photosRequired = true,
 }: OabEntryCardProps) {
   const summary = formatOabSummary(number, uf) || '—';
   const displayFront = useResolvedImageUri(photoUris[0]);
@@ -123,6 +125,11 @@ export function OabEntryCard({
           required={photosRequired}
           displayUris={displayUris}
         />
+        {onSave ? (
+          <Button variant="primary" onPress={onSave}>
+            Salvar
+          </Button>
+        ) : null}
       </View>
     );
   }

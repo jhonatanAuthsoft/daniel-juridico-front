@@ -1,14 +1,16 @@
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { Button } from '@/atomic/button';
 import { useBanner } from '@/atomic/feedback-banner';
-import { Form, InputTextField, useForm } from '@/atomic/form';
+import { Form, useForm } from '@/atomic/form';
 import { AccountStackScreen } from '@/components/client-edit-data';
-import { FieldValidators } from '@/constants/field-validators';
-import { InputMasks } from '@/constants/input-masks';
-import { Spacing } from '@/constants/theme';
+import { StepEducation } from '@/components/signup-lawyer/step-education';
+import type { PostgraduateEntry } from '@/components/signup-lawyer/types';
+import {
+  UnsavedDraftProvider,
+  useUnsavedDraftLeave,
+} from '@/components/unsaved-draft-guard';
 import { getErrorMessage } from '@/data/http';
 import { useUpdateLawyerGraduation } from '@/domain/lawyer';
 
@@ -18,11 +20,21 @@ type EducationForm = {
   university: string;
   course: string;
   graduationYear: string;
+  postgraduates: PostgraduateEntry[];
 };
 
 export function LawyerEditEducationScreen() {
+  return (
+    <UnsavedDraftProvider>
+      <LawyerEditEducationContent />
+    </UnsavedDraftProvider>
+  );
+}
+
+function LawyerEditEducationContent() {
   const router = useRouter();
   const banner = useBanner();
+  const requestLeave = useUnsavedDraftLeave();
   const { profile, fromMe } = useLawyerEditProfile();
   const updateGraduation = useUpdateLawyerGraduation();
   const form = useForm<EducationForm>({
@@ -30,6 +42,7 @@ export function LawyerEditEducationScreen() {
       university: profile.university,
       course: profile.course,
       graduationYear: profile.graduationYear,
+      postgraduates: profile.postgraduates,
     },
   });
 
@@ -41,6 +54,7 @@ export function LawyerEditEducationScreen() {
       university: fromMe.university,
       course: fromMe.course,
       graduationYear: fromMe.graduationYear,
+      postgraduates: fromMe.postgraduates,
     });
   }, [form, fromMe]);
 
@@ -50,6 +64,7 @@ export function LawyerEditEducationScreen() {
         university: formValues.university,
         course: formValues.course,
         graduationYear: formValues.graduationYear,
+        postgraduates: formValues.postgraduates,
       });
       router.back();
     } catch (error) {
@@ -61,48 +76,23 @@ export function LawyerEditEducationScreen() {
   });
 
   return (
-    <AccountStackScreen title="Alterar graduação">
+    <AccountStackScreen
+      onBack={() => requestLeave(() => router.back())}
+      title="Formação">
       <Form {...form}>
-        <View style={styles.fields}>
-          <InputTextField
-            name="university"
-            label="Universidade de Formação"
-            placeholder="Digite o nome da universidade"
-            autoCapitalize="words"
-            validate={FieldValidators.required()}
-          />
-          <InputTextField
-            name="course"
-            label="Curso"
-            placeholder="Digite o curso"
-            autoCapitalize="sentences"
-            validate={FieldValidators.required()}
-          />
-          <InputTextField
-            name="graduationYear"
-            label="Ano de formação"
-            placeholder="Digite o ano de formação"
-            keyboardType="number-pad"
-            format={InputMasks.digitsMax(4)}
-            maxLength={4}
-            validate={FieldValidators.year}
-          />
-        </View>
+        <StepEducation />
       </Form>
       <Button
         disabled={updateGraduation.isPending}
         isLoading={updateGraduation.isPending}
-        onPress={() => void onSubmit()}
+        onPress={() => {
+          requestLeave(() => {
+            void onSubmit();
+          });
+        }}
         variant="cta">
         Salvar alterações
       </Button>
     </AccountStackScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  fields: {
-    gap: Spacing.sm,
-    width: '100%',
-  },
-});

@@ -1,5 +1,5 @@
 import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
@@ -13,8 +13,14 @@ import { InputMasks } from '@/constants/input-masks';
 import { UF_OPTIONS } from '@/constants/select-options';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
+import { useRegisterUnsavedDraft } from '@/components/unsaved-draft-guard';
+
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues, SupplementalOabEntry } from '../types';
+import {
+  hasFilledSupplementalOabDraft,
+  keepCompleteSupplementalOabs,
+} from './supplemental-oab';
 
 const MAX_SUPPLEMENTAL_OABS = 5;
 const OAB_PHOTO_MAX = 2;
@@ -32,7 +38,8 @@ function createEmptySupplementalOab(): SupplementalOabEntry {
 }
 
 export function StepOabRegistration() {
-  const { control, trigger } = useFormContext<LawyerSignupFormValues>();
+  const { control, getValues, setValue, trigger } =
+    useFormContext<LawyerSignupFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'supplementalOabs',
@@ -44,20 +51,86 @@ export function StepOabRegistration() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   /** When true, cancel/close removes the draft entry instead of keeping it. */
   const [isCreating, setIsCreating] = useState(false);
+  const snapshotRef = useRef<SupplementalOabEntry | null>(null);
 
   const canAddMore =
     editingIndex === null && fields.length < MAX_SUPPLEMENTAL_OABS;
+
+  useRegisterUnsavedDraft({
+    itemLabel: 'OAB suplementar',
+    hasUnsavedDraft: () => {
+      if (editingIndex == null) {
+        return false;
+      }
+      const entry = getValues(`supplementalOabs.${editingIndex}`);
+      if (!entry) {
+        return false;
+      }
+      if (isCreating) {
+        return hasFilledSupplementalOabDraft(entry);
+      }
+      return JSON.stringify(entry) !== JSON.stringify(snapshotRef.current);
+    },
+    discardUnsavedDraft: () => {
+      if (editingIndex == null) {
+        const entries = getValues('supplementalOabs');
+        const kept = keepCompleteSupplementalOabs(entries);
+        if (kept.length !== entries.length) {
+          setValue('supplementalOabs', kept, {
+            shouldDirty: true,
+            shouldValidate: false,
+          });
+        }
+        return;
+      }
+      if (isCreating) {
+        remove(editingIndex);
+      } else if (snapshotRef.current) {
+        setValue(`supplementalOabs.${editingIndex}`, snapshotRef.current, {
+          shouldDirty: true,
+          shouldValidate: false,
+        });
+      }
+      setIsCreating(false);
+      setEditingIndex(null);
+      snapshotRef.current = null;
+    },
+  });
+
+  useEffect(() => {
+    return () => {
+      const entries = getValues('supplementalOabs');
+      const kept = keepCompleteSupplementalOabs(entries);
+      if (kept.length === entries.length) {
+        return;
+      }
+      setValue('supplementalOabs', kept, {
+        shouldDirty: true,
+        shouldValidate: false,
+      });
+    };
+  }, [getValues, setValue]);
 
   const startCreate = () => {
     if (fields.length >= MAX_SUPPLEMENTAL_OABS) {
       return;
     }
-    append(createEmptySupplementalOab());
+    const draft = createEmptySupplementalOab();
+    snapshotRef.current = draft;
+    append(draft);
     setIsCreating(true);
     setEditingIndex(fields.length);
   };
 
   const startEdit = (index: number) => {
+    const entry = getValues(`supplementalOabs.${index}`);
+    snapshotRef.current = entry
+      ? {
+          ...entry,
+          photoUris: [...(entry.photoUris ?? [])],
+          photoKeys: [...(entry.photoKeys ?? [])],
+        }
+      : null;
     setIsCreating(false);
     setEditingIndex(index);
   };
@@ -73,6 +146,7 @@ export function StepOabRegistration() {
 
     setIsCreating(false);
     setEditingIndex(null);
+    snapshotRef.current = null;
   };
 
   const saveEdit = async () => {
@@ -92,6 +166,7 @@ export function StepOabRegistration() {
 
     setIsCreating(false);
     setEditingIndex(null);
+    snapshotRef.current = null;
   };
 
   const deleteAt = (index: number) => {
@@ -182,6 +257,7 @@ export function StepOabRegistration() {
                 label="UF da OAB Suplementar"
                 placeholder="Selecione o estado"
                 options={UF_OPTIONS}
+                required
               />
               <InputTextField
                 name={`supplementalOabs.${index}.issueDate`}
@@ -199,10 +275,11 @@ export function StepOabRegistration() {
                 uploadFinalidade="OAB"
                 label="Foto da Carteira"
                 emptyTitle="Anexe as fotos de frente e verso"
-                emptyCaption="Opcional: envie frente e verso, ou nenhuma"
+                emptyCaption="Formato: .jpeg, .png"
                 aspect={OAB_PHOTO_ASPECT}
                 maxCount={OAB_PHOTO_MAX}
                 minCount={2}
+                required
               />
 
               <Button variant="primary" onPress={() => void saveEdit()}>

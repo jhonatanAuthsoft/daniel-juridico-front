@@ -18,6 +18,8 @@ import type { FieldValidateFn } from '@/constants/field-validators';
 import type { InputValidatorPattern } from '@/constants/input-validators';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
+import { FieldLabelLoading } from './field-label-loading.component';
+
 export type InputTextFieldProps<TFieldValues extends FieldValues = FieldValues> = {
   name: FieldPath<TFieldValues>;
   label?: string;
@@ -31,6 +33,8 @@ export type InputTextFieldProps<TFieldValues extends FieldValues = FieldValues> 
   placeholder?: string;
   iconLeft?: ReactNode;
   iconRight?: ReactNode;
+  /** Small spinner beside the label while related data is loading. */
+  labelLoading?: boolean;
 } & Omit<TextInputProps, 'value' | 'onChangeText' | 'onBlur'>;
 
 function runRegexValidators(value: string, validators: InputValidatorPattern[] = []) {
@@ -74,6 +78,7 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
   placeholder,
   iconLeft,
   iconRight,
+  labelLoading = false,
   ...textInputProps
 }: InputTextFieldProps<TFieldValues>) {
   const { control } = useFormContext<TFieldValues>();
@@ -109,6 +114,7 @@ export function InputTextField<TFieldValues extends FieldValues = FieldValues>({
                     }>
                     {label}
                   </InputLabel>
+                  <FieldLabelLoading visible={labelLoading} />
                   {tooltipText ? (
                     <View style={styles.tooltipAnchor}>
                       <Pressable

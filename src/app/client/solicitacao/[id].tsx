@@ -1,6 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -23,6 +23,7 @@ import { BrandColors, Spacing } from '@/constants/theme';
 import type { ConnectionResult } from '@/data/connection';
 import { getErrorMessage } from '@/data/http';
 import { useSolicitationConnections } from '@/domain/connection';
+import { useMarkNotificationsReadBySolicitation } from '@/domain/notification';
 import {
   useCancelClientSolicitation,
   useClientSolicitationDetails,
@@ -45,6 +46,21 @@ export default function ClientSolicitationDetailsScreen() {
 
   const { data: connections = [] } = useSolicitationConnections(solicitationId);
   const cancelSolicitation = useCancelClientSolicitation();
+  const markNotificationsReadBySolicitation =
+    useMarkNotificationsReadBySolicitation();
+
+  const markedNotificationsSolicitationId = useRef<string | null>(null);
+  useEffect(() => {
+    const idToMark = solicitationId?.trim();
+    if (!idToMark) {
+      return;
+    }
+    if (markedNotificationsSolicitationId.current === idToMark) {
+      return;
+    }
+    markedNotificationsSolicitationId.current = idToMark;
+    markNotificationsReadBySolicitation.mutateAsync(idToMark).catch(() => {});
+  }, [solicitationId, markNotificationsReadBySolicitation]);
 
   const connectionsByLawyerId = useMemo(() => {
     const map: Record<string, ConnectionResult> = {};

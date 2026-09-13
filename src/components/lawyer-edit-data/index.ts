@@ -5,3 +5,4 @@ export { LawyerEditDataHubScreen } from './lawyer-edit-data-hub.component';
 export { LawyerEditDocumentationScreen } from './lawyer-edit-documentation-screen.component';
 export { LawyerEditEducationScreen } from './lawyer-edit-education-screen.component';
 export { LawyerEditNameEmailScreen } from './lawyer-edit-name-email-screen.component';
+export { LawyerEditServiceRadiusScreen } from './lawyer-edit-service-radius-screen.component';

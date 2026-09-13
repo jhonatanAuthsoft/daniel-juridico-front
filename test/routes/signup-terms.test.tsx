@@ -106,6 +106,7 @@ describe('SignupTermsScreen', () => {
       });
     });
     expect(mockSignInAs).not.toHaveBeenCalled();
-    expect(mockPush).toHaveBeenCalledWith('/signup/subscription');
+    expect(mockReplace).toHaveBeenCalledWith('/signup/subscription');
+    expect(mockPush).not.toHaveBeenCalled();
   });
 });

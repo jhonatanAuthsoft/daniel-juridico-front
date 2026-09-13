@@ -41,6 +41,7 @@ export type RegisterLawyerRequest = {
   cpf: string;
   nomePai?: string;
   nomeMae: string;
+  dataNascimento: string;
   pronomeTratamento: TreatmentPronounApi;
   telefone: string;
   /** S3 object key (`ADVOGADO_PERFIL`). Required on signup. */
@@ -110,11 +111,13 @@ export type RegisterLawyerResult = {
 /** App params for `PATCH /advogados/me/dados-gerais`. */
 export type UpdateLawyerGeneralDataParams = {
   fullName: string;
+  birthDate: string;
 };
 
 /** Wire body for `PATCH /advogados/me/dados-gerais`. */
 export type UpdateLawyerGeneralDataWireRequest = {
   nomeCompleto: string;
+  dataNascimento?: string;
 };
 
 /** App params for `PATCH /advogados/me/endereco`. */
@@ -189,6 +192,7 @@ export type UpdateLawyerGraduationParams = {
   university: string;
   course: string;
   graduationYear: string;
+  postgraduates: { university: string; course: string; year: string }[];
 };
 
 /** Wire body for `PATCH /advogados/me/graduacao`. */
@@ -196,6 +200,17 @@ export type UpdateLawyerGraduationWireRequest = {
   universidade: string;
   curso: string;
   anoFormacao: number;
+  posGraduacoes: PostgraduateWireRequest[];
+};
+
+/** App params for `PATCH /advogados/me/areas-atuacao`. */
+export type UpdateLawyerServiceAreasParams = {
+  serviceAreas: { state: string; cities: string[] }[];
+};
+
+/** Wire body for `PATCH /advogados/me/areas-atuacao`. */
+export type UpdateLawyerServiceAreasWireRequest = {
+  areasAtuacao: PracticeAreaWireRequest[];
 };
 
 /** App params for `PATCH /advogados/me/disponibilidade`. */

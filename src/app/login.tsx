@@ -15,7 +15,7 @@ import { useSplashGate } from '@/components/splash-guard';
 import { FieldValidators } from '@/constants/field-validators';
 import { BrandColors, MaxContentWidth, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
-import { homeHrefForRole, useLogin } from '@/domain/auth';
+import { GuestGuard, homeHrefForRole, useLogin } from '@/domain/auth';
 
 const LOGO_WIDTH = 176;
 const LOGO_HEIGHT = 74;
@@ -71,7 +71,8 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.root}>
+    <GuestGuard>
+      <View style={styles.root}>
       <SafeAreaView style={styles.safeArea} edges={['top', 'bottom', 'left', 'right']}>
         <KeyboardAwareScrollView
           bottomOffset={Spacing.md}
@@ -180,7 +181,8 @@ export default function LoginScreen() {
           </View>
         </KeyboardAwareScrollView>
       </SafeAreaView>
-    </View>
+      </View>
+    </GuestGuard>
   );
 }
 

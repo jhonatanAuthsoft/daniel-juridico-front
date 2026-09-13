@@ -1,6 +1,8 @@
 import { SymbolView } from 'expo-symbols';
 import { useRouter } from 'expo-router';
 import {
+  Linking,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -24,6 +26,7 @@ import { openSupportEmail } from '@/utils/open-support-email';
 
 const MENU_ITEMS = [
   'Editar Dados',
+  'Visualizar perfil',
   'Alterar Senha',
   'Assinatura e plano',
   'Termos e condições',
@@ -96,6 +99,14 @@ export function LawyerAccountScreen() {
     updateAvailability.mutate({ profileUnavailable: value });
   };
 
+  const openSubscriptionManagement = () => {
+    const url =
+      Platform.OS === 'ios'
+        ? 'https://apps.apple.com/account/subscriptions'
+        : 'https://play.google.com/store/account/subscriptions';
+    void Linking.openURL(url);
+  };
+
   return (
     <View style={styles.root}>
       <ScrollView
@@ -130,8 +141,16 @@ export function LawyerAccountScreen() {
                   router.push('/lawyer/perfil/editar-dados');
                   return;
                 }
+                if (item === 'Visualizar perfil') {
+                  router.push('/lawyer/perfil/visualizar-perfil');
+                  return;
+                }
                 if (item === 'Alterar Senha') {
                   router.push('/lawyer/perfil/alterar-senha');
+                  return;
+                }
+                if (item === 'Assinatura e plano') {
+                  openSubscriptionManagement();
                   return;
                 }
                 if (item === 'Termos e condições') {

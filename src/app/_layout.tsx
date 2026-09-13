@@ -24,12 +24,13 @@ import { SplashGuard } from '@/components/splash-guard';
 import { BrandColors } from '@/constants/theme';
 import { OpenFromNotification } from '@/domain/notification';
 import { PushDeviceSync } from '@/domain/push-device';
+import { IapRuntimeProvider } from '@/domain/subscription';
 import { AuthProvider, BannerProvider, QueryProvider } from '@/providers';
 
 SplashScreen.preventAutoHideAsync();
 
 export const unstable_settings = {
-  initialRouteName: 'login',
+  initialRouteName: 'index',
 };
 
 export default function RootLayout() {
@@ -50,14 +51,14 @@ export default function RootLayout() {
     <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
       <QueryProvider>
         <AuthProvider>
-          <PushDeviceSync />
-          <OpenFromNotification />
+          <IapRuntimeProvider>
+            <PushDeviceSync />
+            <OpenFromNotification />
           <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
             <SplashGuard>
               <BannerProvider>
                 <Stack
-                  initialRouteName="login"
-                  detachInactiveScreens={false}
+                  initialRouteName="index"
                   screenOptions={{
                     headerShown: false,
                     contentStyle: { backgroundColor: BrandColors.neutral.xdark },
@@ -75,6 +76,7 @@ export default function RootLayout() {
               </BannerProvider>
             </SplashGuard>
           </ThemeProvider>
+          </IapRuntimeProvider>
         </AuthProvider>
       </QueryProvider>
     </KeyboardProvider>

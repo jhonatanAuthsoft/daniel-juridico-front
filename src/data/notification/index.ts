@@ -20,4 +20,5 @@ export {
   listNotifications,
   markAllNotificationsRead,
   markNotificationRead,
+  markNotificationsReadBySolicitation,
 } from './notification.api';

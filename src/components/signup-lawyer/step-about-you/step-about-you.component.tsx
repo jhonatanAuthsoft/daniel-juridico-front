@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { ActivityIndicator, Image, Platform, Pressable, StyleSheet, View } from 'react-native';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
+import { XIcon } from '@/assets/icon/x';
 import { GlassBackground } from '@/atomic/glass';
 import { InputSelectField, InputTextField } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
@@ -75,79 +76,89 @@ export function StepAboutYou() {
               ? true
               : 'Adicione e envie uma imagem de perfil',
         }}
-        render={({ fieldState: { error } }) => (
-          <View>
-            {profileImageUri ? (
-              <View style={styles.profileImageFilled}>
-                <Image
-                  source={{ uri: profileImageUri }}
-                  style={styles.profilePreview}
-                  resizeMode="contain"
-                />
-                <View style={styles.profileActions}>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel="Remover imagem de perfil"
-                    onPress={clearProfileImage}
-                    style={styles.profileActionButton}>
-                    <Body1 color={BrandColors.primary.light}>Remover</Body1>
-                  </Pressable>
-                  <Pressable
-                    accessibilityRole="button"
-                    accessibilityLabel="Trocar imagem de perfil"
-                    disabled={isUploading}
-                    onPress={handlePickProfileImage}
-                    style={styles.profileActionButton}>
-                    <Body1 color={BrandColors.primary.light}>Trocar</Body1>
-                  </Pressable>
+        render={({ fieldState: { error } }) => {
+          const hasError = Boolean(error?.message);
+
+          return (
+            <View>
+              {profileImageUri ? (
+                <View style={styles.profileImageFilled}>
+                  <Image
+                    source={{ uri: profileImageUri }}
+                    style={styles.profilePreview}
+                    resizeMode="contain"
+                  />
+                  <View style={styles.profileActions}>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Remover imagem de perfil"
+                      onPress={clearProfileImage}
+                      style={styles.profileActionButton}>
+                      <Body1 color={BrandColors.primary.light}>Remover</Body1>
+                    </Pressable>
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityLabel="Trocar imagem de perfil"
+                      disabled={isUploading}
+                      onPress={handlePickProfileImage}
+                      style={styles.profileActionButton}>
+                      <Body1 color={BrandColors.primary.light}>Trocar</Body1>
+                    </Pressable>
+                  </View>
                 </View>
-              </View>
-            ) : (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel="Adicionar imagem de perfil"
-                disabled={isUploading}
-                style={styles.profileImagePlaceholder}
-                onPress={handlePickProfileImage}>
-                <GlassBackground blurPx={25} />
-                <View style={styles.uploadContent}>
-                  {isUploading ? (
-                    <ActivityIndicator color={BrandColors.primary.light} />
-                  ) : (
-                    <>
-                      <SymbolView
-                        name={{
-                          ios: 'square.and.arrow.up',
-                          android: 'upload',
-                          web: 'upload',
-                        }}
-                        size={28}
-                        tintColor={BrandColors.neutral.xlight}
-                      />
-                      <Separator size="xxs" />
-                      <Body1 color={BrandColors.primary.light}>Adicione uma imagem</Body1>
-                      <Separator size="xxxs" />
-                      <InputCaption color={BrandColors.neutral.light}>
-                        Formato: .jpeg, .png
-                      </InputCaption>
-                      <InputCaption color={BrandColors.neutral.light}>
-                        Tamanho máximo: 25 MB
-                      </InputCaption>
-                    </>
-                  )}
-                </View>
-              </Pressable>
-            )}
-            {error?.message ? (
-              <>
-                <Separator size="xxxs" />
-                <InputCaption color={BrandColors.feedback.error.light}>
-                  {error.message}
-                </InputCaption>
-              </>
-            ) : null}
-          </View>
-        )}
+              ) : (
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Adicionar imagem de perfil"
+                  disabled={isUploading}
+                  style={[
+                    styles.profileImagePlaceholder,
+                    hasError && styles.profileImageError,
+                  ]}
+                  onPress={handlePickProfileImage}>
+                  <GlassBackground blurPx={25} />
+                  <View style={styles.uploadContent}>
+                    {isUploading ? (
+                      <ActivityIndicator color={BrandColors.primary.light} />
+                    ) : (
+                      <>
+                        <SymbolView
+                          name={{
+                            ios: 'square.and.arrow.up',
+                            android: 'upload',
+                            web: 'upload',
+                          }}
+                          size={28}
+                          tintColor={BrandColors.neutral.xlight}
+                        />
+                        <Separator size="xxs" />
+                        <Body1 color={BrandColors.primary.light}>Adicione uma imagem</Body1>
+                        <Separator size="xxxs" />
+                        <InputCaption color={BrandColors.neutral.light}>
+                          Formato: .jpeg, .png
+                        </InputCaption>
+                        <InputCaption color={BrandColors.neutral.light}>
+                          Tamanho máximo: 25 MB
+                        </InputCaption>
+                      </>
+                    )}
+                  </View>
+                </Pressable>
+              )}
+              {hasError ? (
+                <>
+                  <Separator size="xxxs" />
+                  <View style={styles.errorRow}>
+                    <XIcon color={BrandColors.feedback.error.medium} />
+                    <InputCaption color={BrandColors.feedback.error.light}>
+                      {error?.message}
+                    </InputCaption>
+                  </View>
+                </>
+              ) : null}
+            </View>
+          );
+        }}
       />
 
       <View>
@@ -201,6 +212,10 @@ const styles = StyleSheet.create({
     backgroundColor: BrandColors.neutral.xdark,
     ...glassShadow,
   },
+  profileImageError: {
+    borderWidth: 1.8,
+    borderColor: BrandColors.feedback.error.medium,
+  },
   profileImageFilled: {
     gap: Spacing.xxs,
     width: '100%',
@@ -226,5 +241,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.sm,
+  },
+  errorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxxs,
   },
 });

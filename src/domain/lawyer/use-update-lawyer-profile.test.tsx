@@ -12,6 +12,7 @@ import { useUpdateLawyerDocumentation } from './use-update-lawyer-documentation'
 import { useUpdateLawyerGeneralData } from './use-update-lawyer-general-data';
 import { useUpdateLawyerAvailability } from './use-update-lawyer-availability';
 import { useUpdateLawyerGraduation } from './use-update-lawyer-graduation';
+import { useUpdateLawyerServiceAreas } from './use-update-lawyer-service-areas';
 
 const mockUpdateGeneralData = jest.fn();
 const mockUpdateAddress = jest.fn();
@@ -20,6 +21,7 @@ const mockUpdateBiography = jest.fn();
 const mockUpdateDocumentation = jest.fn();
 const mockUpdateGraduation = jest.fn();
 const mockUpdateAvailability = jest.fn();
+const mockUpdateServiceAreas = jest.fn();
 const mockUpdateAuthUser = jest.fn();
 const mockGetAuthSessionMemory = jest.fn();
 
@@ -53,6 +55,11 @@ jest.mock('./update-lawyer-availability.use-case', () => ({
     mockUpdateAvailability(params),
 }));
 
+jest.mock('./update-lawyer-service-areas.use-case', () => ({
+  updateLawyerServiceAreasUseCase: (params: unknown) =>
+    mockUpdateServiceAreas(params),
+}));
+
 jest.mock('@/data/auth', () => {
   const actual = jest.requireActual<typeof import('@/data/auth')>('@/data/auth');
   return {
@@ -70,6 +77,7 @@ const cachedMe: MeResult = {
   lawyerProfile: {
     fullName: 'João Advogado',
     email: 'joao@laweact.com',
+    birthDate: '20/05/1990',
     cep: '01310-100',
     state: 'SP',
     city: 'São Paulo',
@@ -89,6 +97,8 @@ const cachedMe: MeResult = {
     university: 'USP',
     course: 'Direito',
     graduationYear: '2015',
+    postgraduates: [],
+    serviceAreas: [{ state: 'SP', cities: ['São Paulo'] }],
   },
 };
 
@@ -113,6 +123,18 @@ const patchedDetalhe: MeDetalheWire = {
   },
   formasCobranca: [
     { codigo: 'HONORARIOS_PERCENTUAIS', nome: 'Honorários percentuais' },
+  ],
+  areasAtuacao: [
+    { id: 'a1', estado: 'SP', cidade: 'Adamantina' },
+    { id: 'a2', estado: 'SP', cidade: 'Avaré' },
+  ],
+  posGraduacoes: [
+    {
+      id: 'pg1',
+      nomeCurso: 'LLM Direito Digital',
+      instituicao: 'FGV',
+      anoFormacao: 2020,
+    },
   ],
 };
 
@@ -141,6 +163,7 @@ describe('lawyer edit-data cache', () => {
     mockUpdateDocumentation.mockReset();
     mockUpdateGraduation.mockReset();
     mockUpdateAvailability.mockReset();
+    mockUpdateServiceAreas.mockReset();
     mockUpdateAuthUser.mockReset();
     mockGetAuthSessionMemory.mockReset();
     mockUpdateGeneralData.mockResolvedValue(patchedDetalhe);
@@ -149,6 +172,7 @@ describe('lawyer edit-data cache', () => {
     mockUpdateBiography.mockResolvedValue(patchedDetalhe);
     mockUpdateDocumentation.mockResolvedValue(patchedDetalhe);
     mockUpdateGraduation.mockResolvedValue(patchedDetalhe);
+    mockUpdateServiceAreas.mockResolvedValue(patchedDetalhe);
     mockUpdateAvailability.mockResolvedValue({
       ...patchedDetalhe,
       perfil: {
@@ -176,7 +200,10 @@ describe('lawyer edit-data cache', () => {
       wrapper: Wrapper,
     });
 
-    await result.current.mutateAsync({ fullName: 'João Advogado Lima' });
+    await result.current.mutateAsync({
+      fullName: 'João Advogado Lima',
+      birthDate: '12/03/1988',
+    });
 
     await waitFor(() => {
       expect(
@@ -312,13 +339,37 @@ describe('lawyer edit-data cache', () => {
       university: 'PUC-SP',
       course: 'Direito',
       graduationYear: '2018',
+      postgraduates: [{ university: 'FGV', course: 'LLM Direito Digital', year: '2020' }],
+    });
+
+    await waitFor(() => {
+      const profile = queryClient.getQueryData<MeResult>(authKeys.me())?.lawyerProfile;
+      expect(profile?.university).toBe('PUC-SP');
+      expect(profile?.postgraduates).toEqual([
+        { university: 'FGV', course: 'LLM Direito Digital', year: '2020' },
+      ]);
+    });
+    unmount();
+    queryClient.clear();
+  });
+
+  it('writes PATCH areas-atuacao into /me cache without refetching', async () => {
+    const { queryClient, Wrapper } = createWrapper();
+    const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
+    const { result, unmount } = renderHook(() => useUpdateLawyerServiceAreas(), {
+      wrapper: Wrapper,
+    });
+
+    await result.current.mutateAsync({
+      serviceAreas: [{ state: 'SP', cities: ['Adamantina', 'Avaré'] }],
     });
 
     await waitFor(() => {
       expect(
-        queryClient.getQueryData<MeResult>(authKeys.me())?.lawyerProfile?.university,
-      ).toBe('PUC-SP');
+        queryClient.getQueryData<MeResult>(authKeys.me())?.lawyerProfile?.serviceAreas,
+      ).toEqual([{ state: 'SP', cities: ['Adamantina', 'Avaré'] }]);
     });
+    expect(invalidateSpy).not.toHaveBeenCalled();
     unmount();
     queryClient.clear();
   });

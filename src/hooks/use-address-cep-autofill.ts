@@ -18,7 +18,6 @@ type AddressFieldNames<T extends FieldValues> = {
   city: Path<T>;
   neighborhood: Path<T>;
   street: Path<T>;
-  complement?: Path<T>;
 };
 
 const DEFAULT_FIELDS = {
@@ -27,7 +26,6 @@ const DEFAULT_FIELDS = {
   city: 'city',
   neighborhood: 'neighborhood',
   street: 'street',
-  complement: 'complement',
 } as const;
 
 function withDynamicOption(
@@ -60,8 +58,9 @@ function resolveCityValue(cities: SelectOption[], cityName: string): string {
 }
 
 /**
- * Autofills address fields from CEP (ViaCEP) and loads cities by UF (BrasilAPI).
- * Neighborhood stays free text; city is a searchable select cascaded from state.
+ * Autofills state, city, neighborhood and street from CEP (ViaCEP) and loads
+ * cities by UF (BrasilAPI). Number and complement stay manual — ViaCEP
+ * `complemento` is usually a street range, not apartment/house extra.
  */
 export function useAddressCepAutofill<T extends FieldValues>(
   fields: AddressFieldNames<T> = DEFAULT_FIELDS as AddressFieldNames<T>,
@@ -139,13 +138,6 @@ export function useAddressCepAutofill<T extends FieldValues>(
       shouldDirty: true,
       shouldValidate: true,
     });
-    if (fields.complement && data.complement) {
-      setValue(
-        fields.complement,
-        data.complement as PathValue<T, Path<T>>,
-        { shouldDirty: true, shouldValidate: true },
-      );
-    }
   }, [cities, data, fields, isSuccess, setValue]);
 
   useEffect(() => {

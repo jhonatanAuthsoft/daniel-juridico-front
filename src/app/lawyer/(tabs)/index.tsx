@@ -173,9 +173,11 @@ export default function LawyerHomeScreen() {
             </View>
           ) : (
             <View style={styles.titleRow}>
-              <Display color={BrandColors.neutral.white} style={styles.title}>
-                Solicitações de Clientes
-              </Display>
+              <View style={styles.title}>
+                <Display color={BrandColors.neutral.white}>
+                  Solicitações de Clientes
+                </Display>
+              </View>
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel="Pesquisar"
@@ -255,7 +257,7 @@ export default function LawyerHomeScreen() {
                   void refetch();
                 }}>
                 <Body2 color={BrandColors.primary.light}>
-                  Não foi possível carregar. Toque para tentar novamente.
+                  Não foi possível carregar. Recarregue para tentar novamente.
                 </Body2>
               </Pressable>
             </>
@@ -373,12 +375,13 @@ const styles = StyleSheet.create({
   },
   titleRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     gap: Spacing.sm,
   },
   title: {
     flex: 1,
+    gap: Spacing.xxxs,
   },
   searchButton: {
     padding: Spacing.xxxs,

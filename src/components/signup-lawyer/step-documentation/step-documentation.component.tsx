@@ -7,6 +7,7 @@ import { Body2, InputLabel } from '@/atomic/typography';
 import { FieldValidators } from '@/constants/field-validators';
 import { InputMasks } from '@/constants/input-masks';
 import { ISSUING_AUTHORITY_OPTIONS, UF_OPTIONS } from '@/constants/select-options';
+import { RG_MAX_LENGTH } from '@/utils/br-input';
 import { BrandColors, Spacing } from '@/constants/theme';
 
 import { OptionCheckbox } from '../selectable-option';
@@ -70,11 +71,11 @@ export function StepDocumentation() {
       <InputTextField
         name="rg"
         label="RG"
-        placeholder="00.000.000-00"
-        keyboardType="number-pad"
-        format={InputMasks.rg}
+        placeholder="Digite o RG"
+        autoCapitalize="characters"
+        autoCorrect={false}
         validate={FieldValidators.rg}
-        maxLength={13}
+        maxLength={RG_MAX_LENGTH}
       />
 
       <View>
@@ -104,6 +105,15 @@ export function StepDocumentation() {
         format={InputMasks.cpf}
         validate={FieldValidators.cpf}
         maxLength={14}
+      />
+      <InputTextField
+        name="birthDate"
+        label="Data de Nascimento"
+        placeholder="00/00/0000"
+        keyboardType="number-pad"
+        format={InputMasks.dateBr}
+        validate={FieldValidators.dateBrBirth}
+        maxLength={10}
       />
     </View>
   );

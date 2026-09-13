@@ -8,6 +8,7 @@ import { Body1, InputLabel } from '@/atomic/typography';
 import { FieldValidators } from '@/constants/field-validators';
 import { InputMasks } from '@/constants/input-masks';
 import { ISSUING_AUTHORITY_OPTIONS, UF_OPTIONS } from '@/constants/select-options';
+import { RG_MAX_LENGTH } from '@/utils/br-input';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
 import { signupClientSharedStyles } from '../shared.styles';
@@ -75,7 +76,11 @@ export function StepPersonalDocuments() {
             name="cnpj"
             label="CNPJ"
             placeholder="00.000.000/0000-00"
-            keyboardType="number-pad"
+            keyboardType="default"
+            autoCapitalize="characters"
+            autoCorrect={false}
+            autoComplete="off"
+            spellCheck={false}
             format={InputMasks.cnpj}
             validate={FieldValidators.cnpj}
             maxLength={18}
@@ -102,11 +107,11 @@ export function StepPersonalDocuments() {
           <InputTextField
             name="rg"
             label="RG"
-            placeholder="00.000.000-00"
-            keyboardType="number-pad"
-            format={InputMasks.rg}
+            placeholder="Digite o RG"
+            autoCapitalize="characters"
+            autoCorrect={false}
             validate={FieldValidators.rg}
-            maxLength={13}
+            maxLength={RG_MAX_LENGTH}
           />
           <View>
             <InputLabel color={BrandColors.neutral.white}>

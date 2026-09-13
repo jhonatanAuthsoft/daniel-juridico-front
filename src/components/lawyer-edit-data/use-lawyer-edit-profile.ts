@@ -4,6 +4,7 @@ import { useAuth, useMe } from '@/domain/auth';
 const EMPTY_LAWYER_EDIT_PROFILE: LawyerEditProfile = {
   fullName: '',
   email: '',
+  birthDate: '',
   cep: '',
   state: '',
   city: '',
@@ -23,6 +24,8 @@ const EMPTY_LAWYER_EDIT_PROFILE: LawyerEditProfile = {
   university: '',
   course: '',
   graduationYear: '',
+  postgraduates: [],
+  serviceAreas: [],
 };
 
 /**

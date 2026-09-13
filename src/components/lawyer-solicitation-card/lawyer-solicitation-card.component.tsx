@@ -37,70 +37,75 @@ export function LawyerSolicitationCard({
       accessibilityRole="button"
       disabled={!onPress}
       onPress={onPress}
-      style={({ pressed }) => [styles.card, pressed && onPress ? styles.cardPressed : null]}>
-      {isUnviewed ? (
+      style={({ pressed }) => [pressed && onPress ? styles.cardPressed : null]}>
+      <View
+        collapsable={false}
+        style={[
+          styles.clip,
+          isUnviewed ? { backgroundColor: statusMeta.accentColor } : null,
+        ]}
+        testID={isUnviewed ? 'solicitation-card-accent' : undefined}>
         <View
-          style={[styles.accent, { backgroundColor: statusMeta.accentColor }]}
-          testID="solicitation-card-accent"
-        />
-      ) : null}
-
-      <View style={styles.content}>
-        <View style={styles.topRow}>
-          <View style={styles.nameStatus}>
-            <Heading2 color={BrandColors.neutral.white} numberOfLines={1} style={styles.name}>
-              {clientName}
-            </Heading2>
-            <View style={styles.statusRow}>
-              <View style={[styles.statusDot, { backgroundColor: statusMeta.accentColor }]} />
-              <Body2 color={statusMeta.labelColor} numberOfLines={1}>
-                {statusMeta.label}
-              </Body2>
+          style={[styles.content, isUnviewed ? styles.contentAccented : null]}
+          testID="solicitation-card-panel">
+          <View style={styles.topRow}>
+            <View style={styles.nameStatus}>
+              <Heading2 color={BrandColors.neutral.white} numberOfLines={1} style={styles.name}>
+                {clientName}
+              </Heading2>
+              <View style={styles.statusRow}>
+                <View style={[styles.statusDot, { backgroundColor: statusMeta.accentColor }]} />
+                <Body2 color={statusMeta.labelColor} numberOfLines={1}>
+                  {statusMeta.label}
+                </Body2>
+              </View>
             </View>
+            <CaretLeftIcon
+              color={BrandColors.neutral.white}
+              direction="right"
+              width={20}
+              height={20}
+            />
           </View>
-          <CaretLeftIcon
-            color={BrandColors.neutral.white}
-            direction="right"
-            width={20}
-            height={20}
-          />
-        </View>
 
-        <Body1 color={BrandColors.neutral.white} numberOfLines={2}>
-          {description}
-        </Body1>
+          <Body1 color={BrandColors.neutral.white} numberOfLines={2}>
+            {description}
+          </Body1>
 
-        <View style={styles.metaBlock}>
-          <View style={styles.metaRow}>
-            <View style={styles.metaItem}>
-              <TimeIcon color={BrandColors.neutral.white} width={16} height={16} />
-              <Body2 color={BrandColors.neutral.white}>{timeLabel}</Body2>
+          <View style={styles.metaBlock}>
+            <View style={styles.metaRow}>
+              <View style={styles.metaItem}>
+                <TimeIcon color={BrandColors.neutral.white} width={16} height={16} />
+                <Body2 color={BrandColors.neutral.white}>{timeLabel}</Body2>
+              </View>
+              <View style={styles.metaItem}>
+                <MapPinIcon color={BrandColors.neutral.white} width={16} height={16} />
+                <Body2 color={BrandColors.neutral.white} numberOfLines={1} style={styles.location}>
+                  {location}
+                </Body2>
+              </View>
             </View>
-            <View style={styles.metaItem}>
-              <MapPinIcon color={BrandColors.neutral.white} width={16} height={16} />
-              <Body2 color={BrandColors.neutral.white} numberOfLines={1} style={styles.location}>
-                {location}
-              </Body2>
-            </View>
+            {specialty ? (
+              <View style={styles.metaItem}>
+                <HammerIcon color={BrandColors.neutral.white} width={16} height={16} />
+                <Body2 color={BrandColors.neutral.white} numberOfLines={1} style={styles.specialty}>
+                  {specialty}
+                </Body2>
+              </View>
+            ) : null}
           </View>
-          {specialty ? (
-            <View style={styles.metaItem}>
-              <HammerIcon color={BrandColors.neutral.white} width={16} height={16} />
-              <Body2 color={BrandColors.neutral.white} numberOfLines={1} style={styles.specialty}>
-                {specialty}
-              </Body2>
-            </View>
-          ) : null}
         </View>
       </View>
     </Pressable>
   );
 }
 
+const ACCENT_WIDTH = 8;
+const INNER_ACCENT_RADIUS = Radius.large - ACCENT_WIDTH;
+
 const styles = StyleSheet.create({
-  card: {
+  clip: {
     width: '100%',
-    flexDirection: 'row',
     overflow: 'hidden',
     borderRadius: Radius.large,
     backgroundColor: BrandColors.accessory.darkGray,
@@ -108,13 +113,15 @@ const styles = StyleSheet.create({
   cardPressed: {
     opacity: 0.88,
   },
-  accent: {
-    width: 8,
-  },
   content: {
-    flex: 1,
     gap: Spacing.xs,
     padding: Spacing.sm,
+    backgroundColor: BrandColors.accessory.darkGray,
+  },
+  contentAccented: {
+    marginLeft: ACCENT_WIDTH,
+    borderTopLeftRadius: INNER_ACCENT_RADIUS,
+    borderBottomLeftRadius: INNER_ACCENT_RADIUS,
   },
   topRow: {
     flexDirection: 'row',

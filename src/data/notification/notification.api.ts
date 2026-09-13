@@ -96,3 +96,21 @@ export async function markAllNotificationsRead(
 
   assertApiSuccess(response, 'Não foi possível marcar as notificações como lidas.');
 }
+
+/** `POST /notificacoes/ler-por-solicitacao/{solicitacaoId}` */
+export async function markNotificationsReadBySolicitation(
+  solicitationId: string,
+  signal?: AbortSignal,
+): Promise<void> {
+  const id = requireId(solicitationId, 'Identificador da solicitação');
+
+  const response = await authenticatedHttpRequest<ApiResponse<boolean>>(
+    apiUrl(`/notificacoes/ler-por-solicitacao/${encodeURIComponent(id)}`),
+    { method: 'POST', body: {}, signal },
+  );
+
+  assertApiSuccess(
+    response,
+    'Não foi possível marcar as notificações da solicitação como lidas.',
+  );
+}

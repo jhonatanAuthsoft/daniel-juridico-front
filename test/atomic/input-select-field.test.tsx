@@ -1,4 +1,5 @@
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { Pressable, Text } from 'react-native';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { InputSelectField } from '@/atomic/form';
@@ -109,6 +110,73 @@ describe('InputSelectField', () => {
 
     expect(screen.queryByLabelText('Buscar...')).toBeNull();
     expect(screen.getByText('Acre')).toBeTruthy();
+  });
+
+  it('clears a required error after a value is selected', async () => {
+    function RequiredHarness() {
+      const form = useForm({
+        defaultValues: { state: '' },
+        mode: 'onBlur',
+      });
+
+      return (
+        <FormProvider {...form}>
+          <InputSelectField
+            name="state"
+            options={STATE_OPTIONS}
+            placeholder="Selecione o estado"
+            required
+            searchable={false}
+          />
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => {
+              void form.trigger('state');
+            }}>
+            <Text>Continuar</Text>
+          </Pressable>
+        </FormProvider>
+      );
+    }
+
+    const screen = render(<RequiredHarness />);
+
+    fireEvent.press(screen.getByText('Continuar'));
+    await waitFor(() => {
+      expect(screen.getByText('Campo obrigatório')).toBeTruthy();
+    });
+
+    fireEvent.press(screen.getByText('Selecione o estado'));
+    fireEvent.press(screen.getByText('Acre'));
+
+    await waitFor(() => {
+      expect(screen.queryByText('Campo obrigatório')).toBeNull();
+    });
+  });
+
+  it('shows a loading indicator beside the label', () => {
+    function LoadingHarness({ labelLoading }: { labelLoading: boolean }) {
+      const form = useForm({ defaultValues: { city: '' } });
+      return (
+        <FormProvider {...form}>
+          <InputSelectField
+            name="city"
+            label="Cidade"
+            labelLoading={labelLoading}
+            options={[{ value: 'São Paulo', label: 'São Paulo' }]}
+            placeholder="Selecione a cidade"
+          />
+        </FormProvider>
+      );
+    }
+
+    const screen = render(<LoadingHarness labelLoading />);
+
+    expect(screen.getByText('Cidade')).toBeTruthy();
+    expect(screen.getByLabelText('Carregando')).toBeTruthy();
+
+    screen.rerender(<LoadingHarness labelLoading={false} />);
+    expect(screen.queryByLabelText('Carregando')).toBeNull();
   });
 });
 

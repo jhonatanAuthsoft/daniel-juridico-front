@@ -3,12 +3,18 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
-import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { Spacing } from '@/constants/theme';
 
@@ -18,9 +24,11 @@ import {
   FeedbackBanner,
   type FeedbackBannerVariant,
 } from './feedback-banner.component';
+import { getFlashBannerBottomOffset } from './flash-banner-offset';
 
 export const BANNER_AUTO_DISMISS_MS = 5000;
 export { BANNER_ENTER_MS, BANNER_EXIT_MS };
+export { FLASH_BANNER_BOTTOM_GAP, getFlashBannerBottomOffset } from './flash-banner-offset';
 
 const ZERO_INSETS = { top: 0, right: 0, bottom: 0, left: 0 };
 
@@ -36,6 +44,9 @@ type BannerState = {
 };
 
 const BannerContext = createContext<ShowBanner | null>(null);
+const SetTabBarHeightContext = createContext<((height: number) => void) | null>(
+  null,
+);
 
 let nextBannerId = 0;
 let emitBanner: ((state: BannerState | null) => void) | null = null;
@@ -65,11 +76,13 @@ type BannerProviderProps = {
  * App-level host for toast banners. Use `useBanner()` to show one:
  * `banner('msg de sucesso', 'success')`.
  *
- * Fade uses Reanimated entering/exiting. An in-flow spacer keeps the screen
- * laid out during the fade, then collapses after the banner is gone.
+ * Flash messages sit at the bottom: 16px above the screen edge, or 16px
+ * above the tab bar when it is mounted. They fade in and stay mounted
+ * through fade-out so the exit is visible.
  */
 export function BannerProvider({ children }: BannerProviderProps) {
   const [banner, setBanner] = useState<BannerState | null>(null);
+  const [tabBarHeight, setTabBarHeight] = useState(0);
   const show = useCallback<ShowBanner>((message, variant) => {
     showBanner(message, variant);
   }, []);
@@ -83,9 +96,14 @@ export function BannerProvider({ children }: BannerProviderProps) {
 
   return (
     <BannerContext.Provider value={show}>
-      <BannerHost banner={banner} onDismiss={hideBanner}>
-        {children}
-      </BannerHost>
+      <SetTabBarHeightContext.Provider value={setTabBarHeight}>
+        <BannerHost
+          banner={banner}
+          onDismiss={hideBanner}
+          tabBarHeight={tabBarHeight}>
+          {children}
+        </BannerHost>
+      </SetTabBarHeightContext.Provider>
     </BannerContext.Provider>
   );
 }
@@ -98,15 +116,45 @@ export function useBanner(): ShowBanner {
   return useContext(BannerContext) ?? showBanner;
 }
 
+/**
+ * Reports the visible tab bar height so flash messages sit 16px above it.
+ * No-ops when `BannerProvider` is not mounted.
+ */
+export function useReportTabBarHeight(height: number): void {
+  const setTabBarHeight = useContext(SetTabBarHeightContext);
+
+  useEffect(() => {
+    if (!setTabBarHeight) {
+      return;
+    }
+
+    setTabBarHeight(height);
+    return () => {
+      setTabBarHeight(0);
+    };
+  }, [height, setTabBarHeight]);
+}
+
 type BannerHostProps = {
   banner: BannerState | null;
   onDismiss: () => void;
+  tabBarHeight: number;
   children: ReactNode;
 };
 
-function BannerHost({ banner, onDismiss, children }: BannerHostProps) {
+function BannerHost({
+  banner,
+  onDismiss,
+  tabBarHeight,
+  children,
+}: BannerHostProps) {
   const insets = useContext(SafeAreaInsetsContext) ?? ZERO_INSETS;
-  const [spacerHeight, setSpacerHeight] = useState(0);
+  const [displayed, setDisplayed] = useState<BannerState | null>(null);
+  const hasShownRef = useRef(false);
+  const opacity = useSharedValue(0);
+  const fadeStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
 
   useEffect(() => {
     if (!banner) {
@@ -119,52 +167,50 @@ function BannerHost({ banner, onDismiss, children }: BannerHostProps) {
 
   useEffect(() => {
     if (banner) {
+      hasShownRef.current = true;
+      setDisplayed(banner);
+      opacity.value = 0;
+      opacity.value = withTiming(1, {
+        duration: BANNER_ENTER_MS,
+        easing: Easing.out(Easing.quad),
+      });
       return;
     }
 
+    if (!hasShownRef.current) {
+      return;
+    }
+
+    opacity.value = withTiming(0, {
+      duration: BANNER_EXIT_MS,
+      easing: Easing.in(Easing.quad),
+    });
     const timeoutId = setTimeout(() => {
-      setSpacerHeight(0);
+      setDisplayed(null);
+      hasShownRef.current = false;
     }, BANNER_EXIT_MS);
     return () => clearTimeout(timeoutId);
-  }, [banner]);
+  }, [banner, opacity]);
+
+  const bottomOffset = getFlashBannerBottomOffset(tabBarHeight, insets.bottom);
 
   return (
     <View style={styles.root}>
-      <View
-        pointerEvents="none"
-        style={{ height: spacerHeight }}
-        testID="feedback-banner-spacer"
-      />
       <View style={styles.screen}>{children}</View>
       <View
         pointerEvents="box-none"
         style={styles.overlay}
         testID="feedback-banner-overlay">
-        {banner ? (
+        {displayed ? (
           <Animated.View
-            key={banner.id}
-            entering={FadeIn.duration(BANNER_ENTER_MS).easing(
-              Easing.out(Easing.quad),
-            )}
-            exiting={FadeOut.duration(BANNER_EXIT_MS).easing(
-              Easing.in(Easing.quad),
-            )}
-            onLayout={(event) => {
-              setSpacerHeight(
-                Math.max(0, event.nativeEvent.layout.height - insets.top),
-              );
-            }}
             pointerEvents="box-none"
-            style={[
-              styles.slot,
-              { paddingTop: insets.top + Spacing.sm },
-            ]}
+            style={[styles.slot, { paddingBottom: bottomOffset }, fadeStyle]}
             testID="feedback-banner-slot">
             <FeedbackBanner
               animated={false}
-              message={banner.message}
+              message={displayed.message}
               onDismiss={onDismiss}
-              variant={banner.variant}
+              variant={displayed.variant}
             />
           </Animated.View>
         ) : null}
@@ -182,14 +228,13 @@ const styles = StyleSheet.create({
   },
   overlay: {
     position: 'absolute',
-    top: 0,
     left: 0,
     right: 0,
+    bottom: 0,
     zIndex: 1000,
     elevation: 1000,
   },
   slot: {
     paddingHorizontal: Spacing.sm,
-    paddingBottom: Spacing.sm,
   },
 });

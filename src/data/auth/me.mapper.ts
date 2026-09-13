@@ -1,15 +1,20 @@
-import { maskCep, maskCnpj, maskCpf, maskRg } from '@/utils/br-input';
+import { mapSubscriptionWireToResultOrNull } from '@/data/subscription';
+import { maskCep, maskCnpj, maskCpf } from '@/utils/br-input';
 
 import type {
   ClientDocumentType,
   ClientEditProfile,
   LawyerEditOabEntry,
+  LawyerEditPostgraduate,
   LawyerEditProfile,
+  LawyerServiceArea,
+  MeAreaAtuacaoWire,
   MeCatalogItemWire,
   MeDetalheWire,
   MeEnderecoWire,
   MeOabWire,
   MePerfilWire,
+  MePosGraduacaoWire,
   MeResult,
   MeWireResponse,
 } from './me.types';
@@ -115,7 +120,7 @@ function mapClienteDetalheToProfile(
     documentNumber: isCnpj
       ? maskCnpj(asText(perfil.numeroDocumento))
       : maskCpf(asText(perfil.numeroDocumento)),
-    rg: isCnpj ? '' : maskRg(asText(perfil.rg)),
+    rg: isCnpj ? '' : asText(perfil.rg),
     ...mapAddress(endereco),
     pronouns: asText(perfil.pronomes).toUpperCase(),
     profession: asText(perfil.profissao) || asText(perfil.areaAtuacao),
@@ -150,6 +155,7 @@ function mapAdvogadoDetalheToProfile(
   return {
     fullName: asText(perfil.nomeCompleto),
     email: asText(email),
+    birthDate: toBrDate(perfil.dataNascimento),
     ...mapAddress(endereco),
     billingMethods: mapBillingMethods(detalhe.formasCobranca),
     biography: asText(perfil.biografia),
@@ -163,7 +169,48 @@ function mapAdvogadoDetalheToProfile(
     university: asText(perfil.universidade),
     course: asText(perfil.curso),
     graduationYear: asYear(perfil.anoFormacao),
+    postgraduates: mapPostgraduatesFromWire(detalhe.posGraduacoes),
+    serviceAreas: mapServiceAreasFromWire(detalhe.areasAtuacao),
   };
+}
+
+function mapPostgraduatesFromWire(
+  items: MePosGraduacaoWire[] | null | undefined,
+): LawyerEditPostgraduate[] {
+  return (items ?? [])
+    .map((item) => ({
+      university: asText(item.instituicao),
+      course: asText(item.nomeCurso),
+      year: asYear(item.anoFormacao),
+    }))
+    .filter((entry) => entry.university.length > 0 || entry.course.length > 0);
+}
+
+function mapServiceAreasFromWire(
+  areas: MeAreaAtuacaoWire[] | null | undefined,
+): LawyerServiceArea[] {
+  const byState = new Map<string, string[]>();
+
+  for (const area of areas ?? []) {
+    const state = asText(area.estado).toUpperCase();
+    const city = asText(area.cidade);
+    if (state.length !== 2 || !city) {
+      continue;
+    }
+
+    const current = byState.get(state) ?? [];
+    const key = city.toLocaleLowerCase('pt-BR');
+    if (current.some((item) => item.toLocaleLowerCase('pt-BR') === key)) {
+      continue;
+    }
+    current.push(city);
+    byState.set(state, current);
+  }
+
+  return [...byState.entries()].map(([state, cities]) => ({
+    state,
+    cities: [...cities].sort((a, b) => a.localeCompare(b, 'pt-BR')),
+  }));
 }
 
 function mapLawyerProfile(wire: MeWireResponse): LawyerEditProfile | null {
@@ -194,6 +241,7 @@ export function mapMeWireToResult(wire: MeWireResponse): MeResult {
     pushNotificationsEnabled:
       wire.usuario?.notificacoesPushHabilitadas !== false,
     profileUnavailable: isProfileUnavailable(wire.advogado?.perfil),
+    subscription: mapSubscriptionWireToResultOrNull(wire.assinatura),
     clientProfile: mapClientProfile(wire),
     lawyerProfile: mapLawyerProfile(wire),
   };
@@ -214,6 +262,7 @@ export function mergeClienteDetalheIntoMe(
     photoKey,
     pushNotificationsEnabled: current?.pushNotificationsEnabled ?? true,
     profileUnavailable: false,
+    subscription: current?.subscription ?? null,
     clientProfile: mapClienteDetalheToProfile(detalhe, email),
     lawyerProfile: current?.lawyerProfile ?? null,
   };
@@ -238,6 +287,7 @@ export function mergeAdvogadoDetalheIntoMe(
     photoKey,
     pushNotificationsEnabled: current?.pushNotificationsEnabled ?? true,
     profileUnavailable,
+    subscription: current?.subscription ?? null,
     clientProfile: current?.clientProfile ?? null,
     lawyerProfile: mapAdvogadoDetalheToProfile(detalhe, email),
   };

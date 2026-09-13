@@ -77,6 +77,22 @@ describe('client.mapper', () => {
     expect(payload.rgUf).toBeUndefined();
   });
 
+  it('keeps alphanumeric CNPJ characters when mapping the signup payload', () => {
+    const payload = mapClientSignupFormToRegisterRequest({
+      ...baseForm,
+      personType: 'cnpj',
+      fullName: 'Empresa Alfanumerica LTDA',
+      cnpj: '12.ABC.345/01DE-35',
+      businessArea: 'Tecnologia',
+      cpf: '',
+      rg: '',
+      birthDate: '',
+      profession: '',
+    });
+
+    expect(payload.numeroDocumento).toBe('12ABC34501DE35');
+  });
+
   it('omits fotoUrl when the client does not upload a profile photo', () => {
     const payload = mapClientSignupFormToRegisterRequest({
       ...baseForm,

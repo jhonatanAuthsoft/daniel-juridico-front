@@ -28,7 +28,6 @@ async function ensureAndroidNotificationChannels() {
     name: 'Urgências e emergências',
     importance: Notifications.AndroidImportance.MAX,
     vibrationPattern: [0, 250, 250, 250],
-    sound: 'default',
   });
 }
 

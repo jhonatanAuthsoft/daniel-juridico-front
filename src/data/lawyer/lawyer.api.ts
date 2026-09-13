@@ -16,6 +16,7 @@ import {
   mapUpdateLawyerGeneralDataToWire,
   mapUpdateLawyerGraduationToWire,
   mapUpdateLawyerAvailabilityToWire,
+  mapUpdateLawyerServiceAreasToWire,
 } from './lawyer.mapper';
 import type {
   RegisterLawyerRequest,
@@ -28,6 +29,7 @@ import type {
   UpdateLawyerGeneralDataParams,
   UpdateLawyerGraduationParams,
   UpdateLawyerAvailabilityParams,
+  UpdateLawyerServiceAreasParams,
 } from './lawyer.types';
 
 /**
@@ -150,7 +152,7 @@ export async function updateLawyerDocumentation(
 }
 
 /**
- * Updates the authenticated lawyer's graduation.
+ * Updates the authenticated lawyer's graduation and postgraduates.
  * `PATCH /advogados/me/graduacao`
  */
 export async function updateLawyerGraduation(
@@ -165,7 +167,7 @@ export async function updateLawyerGraduation(
       signal,
     },
   );
-  return assertApiSuccess(response, 'Não foi possível atualizar a graduação.');
+  return assertApiSuccess(response, 'Não foi possível atualizar a formação.');
 }
 
 /**
@@ -187,5 +189,27 @@ export async function updateLawyerAvailability(
   return assertApiSuccess(
     response,
     'Não foi possível atualizar a disponibilidade do perfil.',
+  );
+}
+
+/**
+ * Replaces the authenticated lawyer's service areas.
+ * `PATCH /advogados/me/areas-atuacao`
+ */
+export async function updateLawyerServiceAreas(
+  params: UpdateLawyerServiceAreasParams,
+  signal?: AbortSignal,
+): Promise<MeDetalheWire> {
+  const response = await authenticatedHttpRequest<ApiResponse<MeDetalheWire>>(
+    apiUrl('/advogados/me/areas-atuacao'),
+    {
+      method: 'PATCH',
+      body: mapUpdateLawyerServiceAreasToWire(params),
+      signal,
+    },
+  );
+  return assertApiSuccess(
+    response,
+    'Não foi possível atualizar as áreas de atuação.',
   );
 }
