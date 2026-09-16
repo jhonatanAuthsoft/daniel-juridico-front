@@ -39,10 +39,11 @@ export function StepProfessional() {
       )}
       <InputTextField
         name="monthlyIncome"
-        label={isCnpj ? 'Faturamento mensal (opcional)' : 'Renda mensal (opcional)'}
+        label={isCnpj ? 'Faturamento mensal' : 'Renda mensal'}
         placeholder="Ex. 180,00"
         keyboardType="decimal-pad"
         format={InputMasks.currencyBr}
+        validate={FieldValidators.required()}
         iconLeft={<Body1 color={BrandColors.neutral.light}>$</Body1>}
       />
     </View>

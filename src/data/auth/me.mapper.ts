@@ -1,5 +1,5 @@
 import { mapSubscriptionWireToResultOrNull } from '@/data/subscription';
-import { maskCep, maskCnpj, maskCpf } from '@/utils/br-input';
+import { maskCep, maskCnpj, maskCpf, maskPhone } from '@/utils/br-input';
 
 import type {
   ClientDocumentType,
@@ -102,6 +102,7 @@ function mapAddress(endereco: MeEnderecoWire) {
 function mapClienteDetalheToProfile(
   detalhe: MeDetalheWire,
   email: string,
+  phone: string,
 ): ClientEditProfile {
   const perfil: MePerfilWire = detalhe.perfil ?? {};
   const endereco: MeEnderecoWire = detalhe.endereco ?? {};
@@ -116,6 +117,7 @@ function mapClienteDetalheToProfile(
   return {
     fullName,
     email: asText(email),
+    phone: maskPhone(asText(phone)),
     documentType,
     documentNumber: isCnpj
       ? maskCnpj(asText(perfil.numeroDocumento))
@@ -134,7 +136,11 @@ function mapClientProfile(wire: MeWireResponse): ClientEditProfile | null {
     return null;
   }
 
-  const profile = mapClienteDetalheToProfile(wire.cliente, wire.usuario?.email ?? '');
+  const profile = mapClienteDetalheToProfile(
+    wire.cliente,
+    wire.usuario?.email ?? '',
+    wire.usuario?.telefone ?? '',
+  );
   if (!profile.fullName) {
     profile.fullName = asText(wire.usuario?.nomeCompleto);
   }
@@ -144,6 +150,7 @@ function mapClientProfile(wire: MeWireResponse): ClientEditProfile | null {
 function mapAdvogadoDetalheToProfile(
   detalhe: MeDetalheWire,
   email: string,
+  phone: string,
 ): LawyerEditProfile {
   const perfil: MePerfilWire = detalhe.perfil ?? {};
   const endereco: MeEnderecoWire = detalhe.endereco ?? {};
@@ -155,6 +162,7 @@ function mapAdvogadoDetalheToProfile(
   return {
     fullName: asText(perfil.nomeCompleto),
     email: asText(email),
+    phone: maskPhone(asText(phone)),
     birthDate: toBrDate(perfil.dataNascimento),
     ...mapAddress(endereco),
     billingMethods: mapBillingMethods(detalhe.formasCobranca),
@@ -221,6 +229,7 @@ function mapLawyerProfile(wire: MeWireResponse): LawyerEditProfile | null {
   const profile = mapAdvogadoDetalheToProfile(
     wire.advogado,
     wire.usuario?.email ?? '',
+    wire.usuario?.telefone ?? '',
   );
   if (!profile.fullName) {
     profile.fullName = asText(wire.usuario?.nomeCompleto);
@@ -253,17 +262,19 @@ export function mapMeWireToResult(wire: MeWireResponse): MeResult {
 export function mergeClienteDetalheIntoMe(
   current: MeResult | undefined,
   detalhe: MeDetalheWire,
+  overlay?: { phone?: string },
 ): MeResult {
   const email = current?.clientProfile?.email ?? '';
   const photoKey =
     normalizePhotoKey(detalhe.perfil?.fotoUrl) ?? current?.photoKey ?? null;
+  const phone = overlay?.phone ?? current?.clientProfile?.phone ?? '';
 
   return {
     photoKey,
     pushNotificationsEnabled: current?.pushNotificationsEnabled ?? true,
     profileUnavailable: false,
     subscription: current?.subscription ?? null,
-    clientProfile: mapClienteDetalheToProfile(detalhe, email),
+    clientProfile: mapClienteDetalheToProfile(detalhe, email, phone),
     lawyerProfile: current?.lawyerProfile ?? null,
   };
 }
@@ -274,10 +285,12 @@ export function mergeClienteDetalheIntoMe(
 export function mergeAdvogadoDetalheIntoMe(
   current: MeResult | undefined,
   detalhe: MeDetalheWire,
+  overlay?: { phone?: string },
 ): MeResult {
   const email = current?.lawyerProfile?.email ?? '';
   const photoKey =
     normalizePhotoKey(detalhe.perfil?.fotoUrl) ?? current?.photoKey ?? null;
+  const phone = overlay?.phone ?? current?.lawyerProfile?.phone ?? '';
   const profileUnavailable =
     asText(detalhe.perfil?.disponibilidade).length > 0
       ? isProfileUnavailable(detalhe.perfil)
@@ -289,6 +302,6 @@ export function mergeAdvogadoDetalheIntoMe(
     profileUnavailable,
     subscription: current?.subscription ?? null,
     clientProfile: current?.clientProfile ?? null,
-    lawyerProfile: mapAdvogadoDetalheToProfile(detalhe, email),
+    lawyerProfile: mapAdvogadoDetalheToProfile(detalhe, email, phone),
   };
 }

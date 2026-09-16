@@ -8,6 +8,7 @@ import { useBanner } from '@/atomic/feedback-banner';
 import { Form, InputTextField, useForm } from '@/atomic/form';
 import { Link } from '@/atomic/typography';
 import { FieldValidators } from '@/constants/field-validators';
+import { InputMasks } from '@/constants/input-masks';
 import { BrandColors, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import { useUpdateClientGeneralData } from '@/domain/client';
@@ -17,6 +18,7 @@ import { useClientEditProfile } from './use-client-edit-profile';
 
 type GeneralDataForm = {
   fullName: string;
+  phone: string;
   documentNumber: string;
   rg: string;
   email: string;
@@ -24,11 +26,12 @@ type GeneralDataForm = {
 
 function toGeneralValues(
   fullName: string,
+  phone: string,
   documentNumber: string,
   rg: string,
   email: string,
 ): GeneralDataForm {
-  return { fullName, documentNumber, rg, email };
+  return { fullName, phone, documentNumber, rg, email };
 }
 
 export function ClientEditGeneralDataScreen() {
@@ -40,6 +43,7 @@ export function ClientEditGeneralDataScreen() {
   const documentLabel = isCnpj ? 'CNPJ' : 'CPF';
   const values = toGeneralValues(
     profile.fullName,
+    profile.phone,
     profile.documentNumber,
     profile.rg,
     profile.email,
@@ -56,6 +60,7 @@ export function ClientEditGeneralDataScreen() {
     form.reset(
       toGeneralValues(
         fromMe.fullName,
+        fromMe.phone,
         fromMe.documentNumber,
         fromMe.rg,
         fromMe.email,
@@ -65,7 +70,10 @@ export function ClientEditGeneralDataScreen() {
 
   const onSubmit = form.handleSubmit(async (formValues) => {
     try {
-      await updateGeneralData.mutateAsync({ fullName: formValues.fullName });
+      await updateGeneralData.mutateAsync({
+        fullName: formValues.fullName,
+        phone: formValues.phone,
+      });
       router.back();
     } catch (error) {
       banner(
@@ -86,6 +94,17 @@ export function ClientEditGeneralDataScreen() {
             placeholder="Digite seu nome"
             validate={FieldValidators.required()}
           />
+          <InputTextField editable={false} name="email" label="E-mail" />
+          <InputTextField
+            name="phone"
+            label="Telefone"
+            placeholder="(11) 2222-1214"
+            keyboardType="phone-pad"
+            autoComplete="tel"
+            textContentType="telephoneNumber"
+            format={InputMasks.phone}
+            validate={FieldValidators.phone}
+          />
           <InputTextField
             editable={false}
             name="documentNumber"
@@ -94,7 +113,6 @@ export function ClientEditGeneralDataScreen() {
           {isCnpj ? null : (
             <InputTextField editable={false} name="rg" label="RG" />
           )}
-          <InputTextField editable={false} name="email" label="E-mail" />
         </View>
       </Form>
 

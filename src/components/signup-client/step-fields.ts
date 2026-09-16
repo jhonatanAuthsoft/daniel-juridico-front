@@ -24,7 +24,7 @@ export function getClientSignupStepFields(
     case 3:
       return ['cep', 'state', 'city', 'neighborhood', 'street', 'number'];
     case 4:
-      return personType === 'cnpj' ? [] : ['profession'];
+      return personType === 'cnpj' ? ['monthlyIncome'] : ['profession', 'monthlyIncome'];
     case 5:
       return ['pronouns'];
     default:

@@ -77,6 +77,7 @@ const cachedMe: MeResult = {
   lawyerProfile: {
     fullName: 'João Advogado',
     email: 'joao@laweact.com',
+    phone: '(11) 98888-7777',
     birthDate: '20/05/1990',
     cep: '01310-100',
     state: 'SP',
@@ -202,6 +203,7 @@ describe('lawyer edit-data cache', () => {
 
     await result.current.mutateAsync({
       fullName: 'João Advogado Lima',
+      phone: '(11) 97777-6666',
       birthDate: '12/03/1988',
     });
 
@@ -216,6 +218,7 @@ describe('lawyer edit-data cache', () => {
       name: 'João Advogado Lima',
       role: 'LAWYER',
       termsAccepted: true,
+      phone: '11977776666',
     });
     unmount();
     queryClient.clear();

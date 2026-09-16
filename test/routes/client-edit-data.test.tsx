@@ -16,6 +16,7 @@ const mockUpdatePersonalProfile = jest.fn().mockResolvedValue({});
 const clientProfile: ClientEditProfile = {
   fullName: 'Maria Silva Lima',
   email: 'maria_silvalima@gmail.com',
+  phone: '(11) 99999-9999',
   documentType: 'cpf',
   documentNumber: '111.444.777-35',
   rg: '12.345.67',
@@ -143,6 +144,7 @@ describe('ClientEditGeneralDataScreen', () => {
     expect(screen.getByText('CPF')).toBeTruthy();
     expect(screen.getByText('RG')).toBeTruthy();
     expect(screen.getByText('E-mail')).toBeTruthy();
+    expect(screen.getByText('Telefone')).toBeTruthy();
     expect(screen.getByText('Salvar alterações')).toBeTruthy();
     expect(screen.getByLabelText('Apagar conta')).toBeTruthy();
 
@@ -152,6 +154,7 @@ describe('ClientEditGeneralDataScreen', () => {
     expect(screen.getByDisplayValue('maria_silvalima@gmail.com').props.editable).toBe(
       false,
     );
+    expect(screen.getByDisplayValue('(11) 99999-9999').props.editable).not.toBe(false);
   });
 
   it('saves the name and goes back', async () => {
@@ -162,6 +165,7 @@ describe('ClientEditGeneralDataScreen', () => {
     await waitFor(() => {
       expect(mockUpdateGeneralData).toHaveBeenCalledWith({
         fullName: 'Maria Silva Lima',
+        phone: '(11) 99999-9999',
       });
     });
     expect(mockBack).toHaveBeenCalled();
@@ -263,7 +267,7 @@ describe('ClientEditPersonalProfileScreen', () => {
     expect(screen.getByText('Estado civil (opcional)')).toBeTruthy();
     expect(screen.getByText('Casado(a)')).toBeTruthy();
     expect(screen.getByLabelText('Limpar seleção')).toBeTruthy();
-    expect(screen.getByText('Renda mensal (opcional)')).toBeTruthy();
+    expect(screen.getByText('Renda mensal')).toBeTruthy();
     expect(screen.getByDisplayValue('1.500,00')).toBeTruthy();
     expect(
       screen.queryByLabelText('Tornar essas informações públicas para os advogados'),
@@ -288,11 +292,10 @@ describe('ClientEditPersonalProfileScreen', () => {
     expect(mockBack).toHaveBeenCalled();
   });
 
-  it('lets the client clear marital status and income', async () => {
+  it('lets the client clear marital status', async () => {
     const screen = render(<ClientEditPersonalProfileScreen />);
 
     fireEvent.press(screen.getByLabelText('Limpar seleção'));
-    fireEvent.changeText(screen.getByDisplayValue('1.500,00'), '');
     fireEvent.press(screen.getByText('Salvar alterações'));
 
     await waitFor(() => {
@@ -301,8 +304,20 @@ describe('ClientEditPersonalProfileScreen', () => {
         pronouns: 'ELA',
         profession: 'Analista',
         maritalStatus: '',
-        monthlyIncome: '',
+        monthlyIncome: '1.500,00',
       });
     });
+  });
+
+  it('does not save personal profile without monthly income', async () => {
+    const screen = render(<ClientEditPersonalProfileScreen />);
+
+    fireEvent.changeText(screen.getByDisplayValue('1.500,00'), '');
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Campo obrigatório')).toBeTruthy();
+    });
+    expect(mockUpdatePersonalProfile).not.toHaveBeenCalled();
   });
 });

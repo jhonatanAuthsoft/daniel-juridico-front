@@ -25,6 +25,7 @@ const mockUpdateServiceAreas = jest.fn().mockResolvedValue({});
 const lawyerProfile: LawyerEditProfile = {
   fullName: 'Luiza Bittencourt',
   email: 'luizabitt@gmail.com',
+  phone: '(11) 98888-7777',
   birthDate: '20/05/1990',
   cep: '01310-100',
   state: 'SP',
@@ -245,9 +246,11 @@ describe('LawyerEditNameEmailScreen', () => {
     expect(screen.getByText('Alterar nome e email')).toBeTruthy();
     expect(screen.getByText('Nome Completo (Nome Social)')).toBeTruthy();
     expect(screen.getByText('E-mail')).toBeTruthy();
+    expect(screen.getByText('Telefone')).toBeTruthy();
     expect(screen.getByText('Data de Nascimento')).toBeTruthy();
     expect(screen.getByDisplayValue('Luiza Bittencourt').props.editable).not.toBe(false);
     expect(screen.getByDisplayValue('luizabitt@gmail.com').props.editable).toBe(false);
+    expect(screen.getByDisplayValue('(11) 98888-7777').props.editable).not.toBe(false);
     expect(screen.getByDisplayValue('20/05/1990').props.editable).not.toBe(false);
     expect(screen.getByText('Salvar alterações')).toBeTruthy();
   });
@@ -260,6 +263,7 @@ describe('LawyerEditNameEmailScreen', () => {
     await waitFor(() => {
       expect(mockUpdateGeneralData).toHaveBeenCalledWith({
         fullName: 'Luiza Bittencourt',
+        phone: '(11) 98888-7777',
         birthDate: '20/05/1990',
       });
     });

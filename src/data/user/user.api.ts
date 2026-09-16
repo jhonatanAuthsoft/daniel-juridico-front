@@ -10,6 +10,7 @@ import {
 import {
   mapAcceptTermsParamsToWire,
   mapAcceptTermsWireToResult,
+  mapDeleteAccountParamsToWire,
   mapDeleteAccountWireToResult,
   mapLogScreenAccessParamsToWire,
   mapLogScreenAccessWireToResult,
@@ -24,6 +25,7 @@ import type {
   AcceptTermsParams,
   AcceptTermsResult,
   AcceptTermsWireResponse,
+  DeleteAccountParams,
   DeleteAccountResult,
   LogScreenAccessParams,
   LogScreenAccessResult,
@@ -132,12 +134,14 @@ export async function updatePassword(
  * `DELETE /usuarios/me`
  */
 export async function deleteAccount(
+  params: DeleteAccountParams,
   signal?: AbortSignal,
 ): Promise<DeleteAccountResult> {
   const response = await authenticatedHttpRequest<ApiResponse<null>>(
     apiUrl('/usuarios/me'),
     {
       method: 'DELETE',
+      body: mapDeleteAccountParamsToWire(params),
       signal,
     },
   );

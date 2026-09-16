@@ -15,6 +15,7 @@ type AccountStackScreenProps = {
   children: ReactNode;
   headerAction?: 'back' | 'close';
   onBack?: () => void;
+  footer?: ReactNode;
 };
 
 /**
@@ -25,10 +26,11 @@ export function AccountStackScreen({
   children,
   headerAction = 'back',
   onBack,
+  footer,
 }: AccountStackScreenProps) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const paddingBottom = getTabBarTotalHeight(insets.bottom) + Spacing.md;
+  const tabBarPadding = getTabBarTotalHeight(insets.bottom) + Spacing.md;
   const goBack = () => {
     if (onBack) {
       onBack();
@@ -72,13 +74,19 @@ export function AccountStackScreen({
       </View>
       <KeyboardAwareScrollView
         bottomOffset={Spacing.md}
-        contentContainerStyle={[styles.content, { paddingBottom }]}
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: footer ? Spacing.sm : tabBarPadding },
+        ]}
         keyboardDismissMode="interactive"
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         style={styles.flex}>
         {children}
       </KeyboardAwareScrollView>
+      {footer ? (
+        <View style={[styles.footer, { paddingBottom: tabBarPadding }]}>{footer}</View>
+      ) : null}
     </View>
   );
 }
@@ -111,6 +119,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     paddingHorizontal: Spacing.sm,
     gap: Spacing.sm,
+  },
+  footer: {
+    width: '100%',
+    maxWidth: MaxContentWidth,
+    alignSelf: 'center',
+    paddingHorizontal: Spacing.sm,
   },
   pressed: {
     opacity: 0.75,

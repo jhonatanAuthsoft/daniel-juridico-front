@@ -69,11 +69,13 @@ export type RegisterClientResult = {
 /** App params for `PATCH /clientes/me/dados-gerais`. */
 export type UpdateClientGeneralDataParams = {
   fullName: string;
+  phone: string;
 };
 
 /** Wire body for `PATCH /clientes/me/dados-gerais`. */
 export type UpdateClientGeneralDataWireRequest = {
   nomeCompleto: string;
+  telefone: string;
 };
 
 /** App params for `PATCH /clientes/me/endereco`. */

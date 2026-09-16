@@ -2,9 +2,9 @@ import { getClientSignupStepCopy } from './constants';
 import { getClientSignupStepFields } from './step-fields';
 
 describe('getClientSignupStepFields', () => {
-  it('requires profession on the about-you step only for CPF', () => {
-    expect(getClientSignupStepFields(4, 'cpf')).toEqual(['profession']);
-    expect(getClientSignupStepFields(4, 'cnpj')).toEqual([]);
+  it('requires profession for CPF and monthly income for CPF and CNPJ', () => {
+    expect(getClientSignupStepFields(4, 'cpf')).toEqual(['profession', 'monthlyIncome']);
+    expect(getClientSignupStepFields(4, 'cnpj')).toEqual(['monthlyIncome']);
   });
 });
 

@@ -74,6 +74,7 @@ export type MeWireResponse = {
     email: string;
     nomeCompleto: string;
     perfil: string;
+    telefone?: string | null;
     notificacoesPushHabilitadas?: boolean | null;
   };
   cliente?: MeDetalheWire | null;
@@ -87,6 +88,7 @@ export type ClientDocumentType = 'cpf' | 'cnpj';
 export type ClientEditProfile = {
   fullName: string;
   email: string;
+  phone: string;
   documentType: ClientDocumentType;
   documentNumber: string;
   rg: string;
@@ -128,6 +130,7 @@ export type LawyerEditPostgraduate = {
 export type LawyerEditProfile = {
   fullName: string;
   email: string;
+  phone: string;
   birthDate: string;
   cep: string;
   state: string;

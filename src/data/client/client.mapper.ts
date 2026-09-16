@@ -129,7 +129,10 @@ export function mapRegisterClientWireToResult(
 export function mapUpdateClientGeneralDataToWire(
   params: UpdateClientGeneralDataParams,
 ): UpdateClientGeneralDataWireRequest {
-  return { nomeCompleto: params.fullName.trim() };
+  return {
+    nomeCompleto: params.fullName.trim(),
+    telefone: onlyDigits(params.phone),
+  };
 }
 
 export function mapUpdateClientAddressToWire(

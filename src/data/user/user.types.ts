@@ -106,6 +106,16 @@ export type UpdatePasswordResult = {
   message: string;
 };
 
+/** App-facing params for `DELETE /usuarios/me`. */
+export type DeleteAccountParams = {
+  password: string;
+};
+
+/** Wire body for `DELETE /usuarios/me`. */
+export type DeleteAccountWireRequest = {
+  senha: string;
+};
+
 /** Wire envelope for `DELETE /usuarios/me` (data is omitted on success). */
 export type DeleteAccountWireResponse = {
   message?: string | null;

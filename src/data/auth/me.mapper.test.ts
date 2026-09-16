@@ -114,6 +114,7 @@ describe('mapMeWireToResult', () => {
           email: 'maria@laweact.com',
           nomeCompleto: 'Maria Silva',
           perfil: 'CLIENTE',
+          telefone: '11999999999',
           notificacoesPushHabilitadas: true,
         },
         cliente: {
@@ -147,6 +148,7 @@ describe('mapMeWireToResult', () => {
       clientProfile: {
         fullName: 'Maria Silva',
         email: 'maria@laweact.com',
+        phone: '(11) 99999-9999',
         documentType: 'cpf',
         documentNumber: '111.444.777-35',
         rg: '1234567',
@@ -197,6 +199,7 @@ describe('mapMeWireToResult', () => {
     ).toEqual({
       fullName: 'Empresa Exemplo LTDA',
       email: 'empresa@laweact.com',
+      phone: '',
       documentType: 'cnpj',
       documentNumber: '11.222.333/0001-81',
       rg: '',
@@ -275,6 +278,7 @@ describe('mapMeWireToResult', () => {
       clientProfile: {
         fullName: 'Maria Silva Lima',
         email: 'maria@laweact.com',
+        phone: '',
         documentType: 'cpf',
         documentNumber: '111.444.777-35',
         rg: '1234567',
@@ -319,6 +323,7 @@ describe('mapMeWireToResult', () => {
           email: 'joao@laweact.com',
           nomeCompleto: 'João Advogado',
           perfil: 'ADVOGADO',
+          telefone: '11988887777',
           notificacoesPushHabilitadas: true,
         },
         advogado: {
@@ -386,6 +391,7 @@ describe('mapMeWireToResult', () => {
       lawyerProfile: {
         fullName: 'João Advogado',
         email: 'joao@laweact.com',
+        phone: '(11) 98888-7777',
         birthDate: '20/05/1990',
         cep: '01310-100',
         state: 'SP',

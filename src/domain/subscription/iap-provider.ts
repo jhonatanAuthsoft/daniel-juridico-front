@@ -33,7 +33,7 @@ function createFakeProvider(): IapProvider {
         productId,
         title: 'Plano Basic',
         description: 'Assinatura mensal do Laweact',
-        localizedPrice: 'R$ 35,00',
+        localizedPrice: 'R$ 50,00',
         currency: 'BRL',
         hasFreeTrial: true,
         freeTrialLabel: '1 mês',

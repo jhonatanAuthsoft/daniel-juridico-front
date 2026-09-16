@@ -110,9 +110,15 @@ describe('client.mapper', () => {
     expect(mapPronounsToApi('NEUTRO')).toBe('NEUTRO');
   });
 
-  it('maps general data name to the PATCH wire body', () => {
-    expect(mapUpdateClientGeneralDataToWire({ fullName: '  Maria Silva Lima  ' })).toEqual({
+  it('maps general data name and phone to the PATCH wire body', () => {
+    expect(
+      mapUpdateClientGeneralDataToWire({
+        fullName: '  Maria Silva Lima  ',
+        phone: '(11) 98888-0000',
+      }),
+    ).toEqual({
       nomeCompleto: 'Maria Silva Lima',
+      telefone: '11988880000',
     });
   });
 

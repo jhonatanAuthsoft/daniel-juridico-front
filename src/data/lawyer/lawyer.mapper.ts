@@ -253,6 +253,7 @@ export function mapUpdateLawyerGeneralDataToWire(
   const dataNascimento = toIsoDate(params.birthDate);
   return {
     nomeCompleto: params.fullName.trim(),
+    telefone: onlyDigits(params.phone),
     ...(dataNascimento ? { dataNascimento } : {}),
   };
 }

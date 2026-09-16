@@ -33,7 +33,7 @@ const ENV = {
     iosGoogleServicesFile: './files/ios/GoogleService-Info-stg.plist',
   },
   production: {
-    name: 'laweact',
+    name: 'Laweact',
     scheme: 'laweact',
     bundleIdentifier: 'com.laweact.app',
     androidPackage: 'com.laweact.app',

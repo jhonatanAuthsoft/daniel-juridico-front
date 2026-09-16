@@ -15,6 +15,8 @@ import type {
   UpdatePasswordResult,
   UpdatePasswordWireRequest,
   UpdatePasswordWireResponse,
+  DeleteAccountParams,
+  DeleteAccountWireRequest,
   DeleteAccountWireResponse,
   DeleteAccountResult,
   LogScreenAccessParams,
@@ -94,6 +96,14 @@ export function mapUpdatePasswordWireToResult(
 ): UpdatePasswordResult {
   return {
     message: response.mensagem,
+  };
+}
+
+export function mapDeleteAccountParamsToWire(
+  params: DeleteAccountParams,
+): DeleteAccountWireRequest {
+  return {
+    senha: params.password,
   };
 }
 

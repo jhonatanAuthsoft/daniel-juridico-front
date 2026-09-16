@@ -1,5 +1,8 @@
-import { deleteAccount } from '@/data/user';
+import { deleteAccount, type DeleteAccountParams } from '@/data/user';
 
-export function deleteAccountUseCase(signal?: AbortSignal) {
-  return deleteAccount(signal);
+export function deleteAccountUseCase(
+  params: DeleteAccountParams,
+  signal?: AbortSignal,
+) {
+  return deleteAccount(params, signal);
 }

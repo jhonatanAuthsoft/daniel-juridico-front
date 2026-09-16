@@ -111,12 +111,14 @@ export type RegisterLawyerResult = {
 /** App params for `PATCH /advogados/me/dados-gerais`. */
 export type UpdateLawyerGeneralDataParams = {
   fullName: string;
+  phone: string;
   birthDate: string;
 };
 
 /** Wire body for `PATCH /advogados/me/dados-gerais`. */
 export type UpdateLawyerGeneralDataWireRequest = {
   nomeCompleto: string;
+  telefone: string;
   dataNascimento?: string;
 };
 

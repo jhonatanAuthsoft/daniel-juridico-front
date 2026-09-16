@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import type { DeleteAccountParams } from '@/data/user';
+
 import { deleteAccountUseCase } from './delete-account.use-case';
 
 /**
@@ -10,7 +12,7 @@ export function useDeleteAccount() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => deleteAccountUseCase(),
+    mutationFn: (params: DeleteAccountParams) => deleteAccountUseCase(params),
     onSuccess: () => {
       queryClient.clear();
     },

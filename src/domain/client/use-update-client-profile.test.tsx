@@ -44,6 +44,7 @@ const cachedMe: MeResult = {
   clientProfile: {
     fullName: 'Maria Silva',
     email: 'maria@laweact.com',
+    phone: '(11) 99999-9999',
     documentType: 'cpf',
     documentNumber: '111.444.777-35',
     rg: '12.345.67',
@@ -132,7 +133,10 @@ describe('client edit-data cache', () => {
       wrapper: Wrapper,
     });
 
-    await result.current.mutateAsync({ fullName: 'Maria Silva Lima' });
+    await result.current.mutateAsync({
+      fullName: 'Maria Silva Lima',
+      phone: '(11) 98888-0000',
+    });
 
     await waitFor(() => {
       expect(queryClient.getQueryData(authKeys.me())).toEqual({
@@ -142,9 +146,10 @@ describe('client edit-data cache', () => {
         clientProfile: {
           fullName: 'Maria Silva Lima',
           email: 'maria@laweact.com',
+          phone: '(11) 98888-0000',
           documentType: 'cpf',
           documentNumber: '111.444.777-35',
-          rg: '12.345.67',
+          rg: '1234567',
           cep: '01311-100',
           state: 'SP',
           city: 'São Paulo',
@@ -167,6 +172,7 @@ describe('client edit-data cache', () => {
       name: 'Maria Silva Lima',
       role: 'CLIENT',
       termsAccepted: true,
+      phone: '11988880000',
     });
     unmount();
     queryClient.clear();

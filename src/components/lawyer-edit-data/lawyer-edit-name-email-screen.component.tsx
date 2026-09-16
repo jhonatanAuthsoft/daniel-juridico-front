@@ -17,6 +17,7 @@ import { useLawyerEditProfile } from './use-lawyer-edit-profile';
 type NameEmailForm = {
   fullName: string;
   email: string;
+  phone: string;
   birthDate: string;
 };
 
@@ -29,6 +30,7 @@ export function LawyerEditNameEmailScreen() {
     defaultValues: {
       fullName: profile.fullName,
       email: profile.email,
+      phone: profile.phone,
       birthDate: profile.birthDate,
     },
   });
@@ -40,6 +42,7 @@ export function LawyerEditNameEmailScreen() {
     form.reset({
       fullName: fromMe.fullName,
       email: fromMe.email,
+      phone: fromMe.phone,
       birthDate: fromMe.birthDate,
     });
   }, [form, fromMe]);
@@ -48,6 +51,7 @@ export function LawyerEditNameEmailScreen() {
     try {
       await updateGeneralData.mutateAsync({
         fullName: formValues.fullName,
+        phone: formValues.phone,
         birthDate: formValues.birthDate,
       });
       router.back();
@@ -71,6 +75,16 @@ export function LawyerEditNameEmailScreen() {
             validate={FieldValidators.required()}
           />
           <InputTextField editable={false} name="email" label="E-mail" />
+          <InputTextField
+            name="phone"
+            label="Telefone"
+            placeholder="(11) 2222-1214"
+            keyboardType="phone-pad"
+            autoComplete="tel"
+            textContentType="telephoneNumber"
+            format={InputMasks.phone}
+            validate={FieldValidators.phone}
+          />
           <InputTextField
             name="birthDate"
             label="Data de Nascimento"

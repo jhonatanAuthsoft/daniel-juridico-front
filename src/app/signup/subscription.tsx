@@ -45,7 +45,7 @@ export default function SignupSubscriptionScreen() {
   const subscription = me?.subscription;
 
   const productId = subscription?.productId ?? 'laweact_basic_mensal';
-  const [localizedPrice, setLocalizedPrice] = useState('R$ 35,00');
+  const [localizedPrice, setLocalizedPrice] = useState('R$ 50,00');
   const [hasFreeTrial, setHasFreeTrial] = useState(true);
   const [offerToken, setOfferToken] = useState<string | null>(null);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);

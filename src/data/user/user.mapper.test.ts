@@ -1,4 +1,5 @@
 import {
+  mapDeleteAccountParamsToWire,
   mapDeleteAccountWireToResult,
   mapLogScreenAccessParamsToWire,
   mapLogScreenAccessWireToResult,
@@ -55,6 +56,12 @@ describe('mapUpdatePassword', () => {
 });
 
 describe('mapDeleteAccount', () => {
+  it('maps the password to the DELETE wire body', () => {
+    expect(mapDeleteAccountParamsToWire({ password: 'Secret12' })).toEqual({
+      senha: 'Secret12',
+    });
+  });
+
   it('maps the envelope message to the domain result', () => {
     expect(
       mapDeleteAccountWireToResult({

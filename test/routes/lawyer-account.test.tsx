@@ -166,6 +166,14 @@ describe('LawyerPerfilScreen', () => {
     expect(mockPush).toHaveBeenCalledWith('/lawyer/perfil/alterar-senha');
   });
 
+  it('opens the subscription plan screen from the account menu', () => {
+    const screen = render(<LawyerPerfilScreen />);
+
+    fireEvent.press(screen.getByLabelText('Assinatura e plano'));
+
+    expect(mockPush).toHaveBeenCalledWith('/lawyer/perfil/assinatura');
+  });
+
   it('opens terms from the account menu', () => {
     const screen = render(<LawyerPerfilScreen />);
 

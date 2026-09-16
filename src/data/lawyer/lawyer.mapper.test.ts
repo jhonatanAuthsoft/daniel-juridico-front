@@ -223,14 +223,16 @@ describe('lawyer.mapper', () => {
     ]);
   });
 
-  it('maps general data name to the PATCH wire body', () => {
+  it('maps general data name and phone to the PATCH wire body', () => {
     expect(
       mapUpdateLawyerGeneralDataToWire({
         fullName: '  João Advogado Lima  ',
+        phone: '(11) 97777-6666',
         birthDate: '12/03/1988',
       }),
     ).toEqual({
       nomeCompleto: 'João Advogado Lima',
+      telefone: '11977776666',
       dataNascimento: '1988-03-12',
     });
   });

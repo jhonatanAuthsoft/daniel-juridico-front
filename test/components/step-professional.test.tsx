@@ -27,15 +27,15 @@ describe('StepProfessional', () => {
 
     expect(screen.getByText('Profissão')).toBeTruthy();
     expect(screen.getByText('Estado civil (opcional)')).toBeTruthy();
-    expect(screen.getByText('Renda mensal (opcional)')).toBeTruthy();
+    expect(screen.getByText('Renda mensal')).toBeTruthy();
   });
 
-  it('shows only optional monthly revenue for CNPJ', () => {
+  it('shows only required monthly revenue for CNPJ', () => {
     const screen = render(<StepHarness personType="cnpj" />);
 
     expect(screen.queryByText('Profissão')).toBeNull();
     expect(screen.queryByText('Estado civil (opcional)')).toBeNull();
-    expect(screen.queryByText('Renda mensal (opcional)')).toBeNull();
-    expect(screen.getByText('Faturamento mensal (opcional)')).toBeTruthy();
+    expect(screen.queryByText('Renda mensal')).toBeNull();
+    expect(screen.getByText('Faturamento mensal')).toBeTruthy();
   });
 });

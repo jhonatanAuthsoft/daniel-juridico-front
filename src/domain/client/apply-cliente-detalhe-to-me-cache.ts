@@ -10,8 +10,9 @@ import { authKeys } from '@/domain/auth/auth.keys';
 export function applyClienteDetalheToMeCache(
   queryClient: QueryClient,
   detalhe: MeDetalheWire,
+  overlay?: { phone?: string },
 ) {
   queryClient.setQueryData<MeResult>(authKeys.me(), (current) =>
-    mergeClienteDetalheIntoMe(current, detalhe),
+    mergeClienteDetalheIntoMe(current, detalhe, overlay),
   );
 }

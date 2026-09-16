@@ -1,9 +1,11 @@
 import type { LawyerEditProfile } from '@/data/auth';
 import { useAuth, useMe } from '@/domain/auth';
+import { maskPhone } from '@/utils/br-input';
 
 const EMPTY_LAWYER_EDIT_PROFILE: LawyerEditProfile = {
   fullName: '',
   email: '',
+  phone: '',
   birthDate: '',
   cep: '',
   state: '',
@@ -38,17 +40,20 @@ export function useLawyerEditProfile() {
   const fromMe = me?.lawyerProfile ?? null;
   const sessionName = user?.name?.trim() || '';
   const sessionEmail = user?.email?.trim() || '';
+  const sessionPhone = user?.phone?.trim() ? maskPhone(user.phone) : '';
 
   const profile: LawyerEditProfile = fromMe
     ? {
         ...fromMe,
         fullName: fromMe.fullName || sessionName,
         email: fromMe.email || sessionEmail,
+        phone: fromMe.phone || sessionPhone,
       }
     : {
         ...EMPTY_LAWYER_EDIT_PROFILE,
         fullName: sessionName,
         email: sessionEmail,
+        phone: sessionPhone,
       };
 
   return { profile, fromMe, isLoading };

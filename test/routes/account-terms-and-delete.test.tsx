@@ -12,6 +12,7 @@ const mockSignOut = jest.fn().mockResolvedValue(undefined);
 const mockDeleteAccount = jest.fn().mockResolvedValue({
   message: 'Conta excluída com sucesso',
 });
+const mockBanner = jest.fn();
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ back: mockBack, replace: mockReplace }),
@@ -24,6 +25,10 @@ jest.mock('@/domain/auth', () => ({
     isPending: false,
   }),
   useLogScreenAccess: jest.fn(),
+}));
+
+jest.mock('@/atomic/feedback-banner', () => ({
+  useBanner: () => mockBanner,
 }));
 
 jest.mock('react-native-safe-area-context', () => {
@@ -54,12 +59,27 @@ describe('AccountTermsScreen', () => {
   });
 });
 
+async function goToPasswordStep(
+  screen: ReturnType<typeof render>,
+  phrase = 'EXCLUIR MINHA CONTA',
+) {
+  fireEvent.changeText(
+    screen.getByPlaceholderText('Digite a confirmação'),
+    phrase,
+  );
+  fireEvent.press(screen.getByLabelText('Apagar conta'));
+  await waitFor(() => {
+    expect(screen.getByText('Confirme sua senha')).toBeTruthy();
+  });
+}
+
 describe('DeleteAccountScreen', () => {
   beforeEach(() => {
     mockBack.mockClear();
     mockReplace.mockClear();
     mockSignOut.mockClear();
     mockDeleteAccount.mockClear();
+    mockBanner.mockClear();
   });
 
   it('shows the confirmation copy, input and actions', () => {
@@ -82,7 +102,7 @@ describe('DeleteAccountScreen', () => {
     expect(mockBack).toHaveBeenCalled();
   });
 
-  it('does not delete the account when the confirmation phrase is wrong', async () => {
+  it('does not call the server when the confirmation phrase is wrong', async () => {
     const screen = render(<DeleteAccountScreen />);
 
     fireEvent.changeText(
@@ -96,23 +116,57 @@ describe('DeleteAccountScreen', () => {
         screen.getByText('Digite EXCLUIR MINHA CONTA para confirmar.'),
       ).toBeTruthy();
     });
+    expect(screen.queryByText('Confirme sua senha')).toBeNull();
     expect(mockDeleteAccount).not.toHaveBeenCalled();
     expect(mockSignOut).not.toHaveBeenCalled();
     expect(mockReplace).not.toHaveBeenCalled();
   });
 
-  it('deletes the account, signs out and goes to login', async () => {
+  it('asks for the password after the confirmation phrase, without calling the server', async () => {
     const screen = render(<DeleteAccountScreen />);
 
+    await goToPasswordStep(screen);
+
+    expect(screen.getByText(/digite sua senha para concluir a exclusão/i)).toBeTruthy();
+    expect(screen.getByPlaceholderText('Digite sua senha')).toBeTruthy();
+    expect(screen.getByText('Continuar')).toBeTruthy();
+    expect(mockDeleteAccount).not.toHaveBeenCalled();
+    expect(mockSignOut).not.toHaveBeenCalled();
+  });
+
+  it('shows an error and keeps the account when the password is wrong', async () => {
+    mockDeleteAccount.mockRejectedValueOnce(new Error('A senha está incorreta'));
+    const screen = render(<DeleteAccountScreen />);
+
+    await goToPasswordStep(screen);
     fireEvent.changeText(
-      screen.getByPlaceholderText('Digite a confirmação'),
-      'EXCLUIR MINHA CONTA',
+      screen.getByPlaceholderText('Digite sua senha'),
+      'SenhaErrada1',
     );
-    fireEvent.press(screen.getByLabelText('Apagar conta'));
+    fireEvent.press(screen.getByText('Continuar'));
 
     await waitFor(() => {
-      expect(mockDeleteAccount).toHaveBeenCalled();
+      expect(screen.getByText('A senha está incorreta')).toBeTruthy();
     });
+    expect(mockDeleteAccount).toHaveBeenCalledWith({ password: 'SenhaErrada1' });
+    expect(mockSignOut).not.toHaveBeenCalled();
+    expect(mockReplace).not.toHaveBeenCalled();
+  });
+
+  it('deletes the account, signs out and goes to login after the correct password', async () => {
+    const screen = render(<DeleteAccountScreen />);
+
+    await goToPasswordStep(screen);
+    fireEvent.changeText(
+      screen.getByPlaceholderText('Digite sua senha'),
+      'Secret12',
+    );
+    fireEvent.press(screen.getByText('Continuar'));
+
+    await waitFor(() => {
+      expect(mockDeleteAccount).toHaveBeenCalledWith({ password: 'Secret12' });
+    });
+    expect(mockBanner).toHaveBeenCalledWith('Conta deletada com sucesso.', 'success');
     expect(mockSignOut).toHaveBeenCalled();
     expect(mockReplace).toHaveBeenCalledWith('/login');
   });
@@ -120,15 +174,17 @@ describe('DeleteAccountScreen', () => {
   it('deletes from the lawyer route via the shared mutation', async () => {
     const screen = render(<LawyerDeleteAccountRoute />);
 
+    await goToPasswordStep(screen, 'Excluir minha conta');
     fireEvent.changeText(
-      screen.getByPlaceholderText('Digite a confirmação'),
-      'Excluir minha conta',
+      screen.getByPlaceholderText('Digite sua senha'),
+      'Secret12',
     );
-    fireEvent.press(screen.getByLabelText('Apagar conta'));
+    fireEvent.press(screen.getByText('Continuar'));
 
     await waitFor(() => {
-      expect(mockDeleteAccount).toHaveBeenCalled();
+      expect(mockDeleteAccount).toHaveBeenCalledWith({ password: 'Secret12' });
     });
+    expect(mockBanner).toHaveBeenCalledWith('Conta deletada com sucesso.', 'success');
     expect(mockSignOut).toHaveBeenCalled();
     expect(mockReplace).toHaveBeenCalledWith('/login');
   });

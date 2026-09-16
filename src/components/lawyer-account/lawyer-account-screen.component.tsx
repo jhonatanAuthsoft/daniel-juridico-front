@@ -1,14 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { useRouter } from 'expo-router';
-import {
-  Linking,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Switch,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CaretLeftIcon } from '@/assets/icon/caret-left';
@@ -99,14 +91,6 @@ export function LawyerAccountScreen() {
     updateAvailability.mutate({ profileUnavailable: value });
   };
 
-  const openSubscriptionManagement = () => {
-    const url =
-      Platform.OS === 'ios'
-        ? 'https://apps.apple.com/account/subscriptions'
-        : 'https://play.google.com/store/account/subscriptions';
-    void Linking.openURL(url);
-  };
-
   return (
     <View style={styles.root}>
       <ScrollView
@@ -150,7 +134,7 @@ export function LawyerAccountScreen() {
                   return;
                 }
                 if (item === 'Assinatura e plano') {
-                  openSubscriptionManagement();
+                  router.push('/lawyer/perfil/assinatura');
                   return;
                 }
                 if (item === 'Termos e condições') {
