@@ -5,12 +5,14 @@ import { SymbolView } from 'expo-symbols';
 import { Link } from '@/atomic/typography';
 import { AccountStackScreen } from '@/components/client-edit-data';
 import { EditDataNavCard } from '@/components/client-edit-data/edit-data-nav-card.component';
+import { formatPracticeAreasSummary } from '@/components/signup-lawyer/practice-areas.data';
 import { BrandColors, Spacing } from '@/constants/theme';
 
 import {
   formatBillingSummary,
   formatLawyerAddressSummary,
   formatOabHubLabel,
+  formatSpecialtiesSummary,
   formatTreatmentPronounChip,
 } from './lawyer-edit-profile';
 import { formatServiceAreaHubSummary } from './service-area';
@@ -46,6 +48,20 @@ export function LawyerEditDataHubScreen() {
         onPress={() => router.push('/lawyer/perfil/raio-atuacao')}
         subtitle={serviceAreaSummary}
         title="Raio de atuação"
+        titleBold
+      />
+      <EditDataNavCard
+        accessibilityLabel="Editar atuação"
+        onPress={() => router.push('/lawyer/perfil/atuacao')}
+        subtitle={fromMe ? formatPracticeAreasSummary(profile.practiceAreas) : ''}
+        title="Atuação"
+        titleBold
+      />
+      <EditDataNavCard
+        accessibilityLabel="Editar especialização"
+        onPress={() => router.push('/lawyer/perfil/especializacao')}
+        subtitle={fromMe ? formatSpecialtiesSummary(profile.specialtyLabels) : ''}
+        title="Especialização"
         titleBold
       />
       <EditDataNavCard

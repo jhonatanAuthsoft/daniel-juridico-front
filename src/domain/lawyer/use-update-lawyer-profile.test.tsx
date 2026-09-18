@@ -13,6 +13,8 @@ import { useUpdateLawyerGeneralData } from './use-update-lawyer-general-data';
 import { useUpdateLawyerAvailability } from './use-update-lawyer-availability';
 import { useUpdateLawyerGraduation } from './use-update-lawyer-graduation';
 import { useUpdateLawyerServiceAreas } from './use-update-lawyer-service-areas';
+import { useUpdateLawyerPracticeAreas } from './use-update-lawyer-practice-areas';
+import { useUpdateLawyerSpecialties } from './use-update-lawyer-specialties';
 
 const mockUpdateGeneralData = jest.fn();
 const mockUpdateAddress = jest.fn();
@@ -22,6 +24,8 @@ const mockUpdateDocumentation = jest.fn();
 const mockUpdateGraduation = jest.fn();
 const mockUpdateAvailability = jest.fn();
 const mockUpdateServiceAreas = jest.fn();
+const mockUpdatePracticeAreas = jest.fn();
+const mockUpdateSpecialties = jest.fn();
 const mockUpdateAuthUser = jest.fn();
 const mockGetAuthSessionMemory = jest.fn();
 
@@ -58,6 +62,16 @@ jest.mock('./update-lawyer-availability.use-case', () => ({
 jest.mock('./update-lawyer-service-areas.use-case', () => ({
   updateLawyerServiceAreasUseCase: (params: unknown) =>
     mockUpdateServiceAreas(params),
+}));
+
+jest.mock('./update-lawyer-practice-areas.use-case', () => ({
+  updateLawyerPracticeAreasUseCase: (params: unknown) =>
+    mockUpdatePracticeAreas(params),
+}));
+
+jest.mock('./update-lawyer-specialties.use-case', () => ({
+  updateLawyerSpecialtiesUseCase: (params: unknown) =>
+    mockUpdateSpecialties(params),
 }));
 
 jest.mock('@/data/auth', () => {
@@ -100,6 +114,9 @@ const cachedMe: MeResult = {
     graduationYear: '2015',
     postgraduates: [],
     serviceAreas: [{ state: 'SP', cities: ['São Paulo'] }],
+    practiceAreas: [],
+    specialties: [],
+    specialtyLabels: [],
   },
 };
 
@@ -165,6 +182,8 @@ describe('lawyer edit-data cache', () => {
     mockUpdateGraduation.mockReset();
     mockUpdateAvailability.mockReset();
     mockUpdateServiceAreas.mockReset();
+    mockUpdatePracticeAreas.mockReset();
+    mockUpdateSpecialties.mockReset();
     mockUpdateAuthUser.mockReset();
     mockGetAuthSessionMemory.mockReset();
     mockUpdateGeneralData.mockResolvedValue(patchedDetalhe);
@@ -174,6 +193,21 @@ describe('lawyer edit-data cache', () => {
     mockUpdateDocumentation.mockResolvedValue(patchedDetalhe);
     mockUpdateGraduation.mockResolvedValue(patchedDetalhe);
     mockUpdateServiceAreas.mockResolvedValue(patchedDetalhe);
+    mockUpdatePracticeAreas.mockResolvedValue({
+      ...patchedDetalhe,
+      modalidades: [{ codigo: 'CONSULTOR', nome: 'Consultor' }],
+    });
+    mockUpdateSpecialties.mockResolvedValue({
+      ...patchedDetalhe,
+      especialidades: [
+        {
+          especialidadeCodigo: 'CIVIL',
+          especialidadeNome: 'Direito Civil',
+          subespecialidadeCodigo: 'CONTRATOS',
+          subespecialidadeNome: 'Contratos',
+        },
+      ],
+    });
     mockUpdateAvailability.mockResolvedValue({
       ...patchedDetalhe,
       perfil: {
@@ -371,6 +405,44 @@ describe('lawyer edit-data cache', () => {
       expect(
         queryClient.getQueryData<MeResult>(authKeys.me())?.lawyerProfile?.serviceAreas,
       ).toEqual([{ state: 'SP', cities: ['Adamantina', 'Avaré'] }]);
+    });
+    expect(invalidateSpy).not.toHaveBeenCalled();
+    unmount();
+    queryClient.clear();
+  });
+
+  it('writes PATCH modalidades into /me cache without refetching', async () => {
+    const { queryClient, Wrapper } = createWrapper();
+    const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
+    const { result, unmount } = renderHook(() => useUpdateLawyerPracticeAreas(), {
+      wrapper: Wrapper,
+    });
+
+    await result.current.mutateAsync({ practiceAreas: ['consultor'] });
+
+    await waitFor(() => {
+      expect(
+        queryClient.getQueryData<MeResult>(authKeys.me())?.lawyerProfile?.practiceAreas,
+      ).toEqual(['consultor']);
+    });
+    expect(invalidateSpy).not.toHaveBeenCalled();
+    unmount();
+    queryClient.clear();
+  });
+
+  it('writes PATCH especialidades into /me cache without refetching', async () => {
+    const { queryClient, Wrapper } = createWrapper();
+    const invalidateSpy = jest.spyOn(queryClient, 'invalidateQueries');
+    const { result, unmount } = renderHook(() => useUpdateLawyerSpecialties(), {
+      wrapper: Wrapper,
+    });
+
+    await result.current.mutateAsync({ specialties: ['CIVIL:CONTRATOS'] });
+
+    await waitFor(() => {
+      expect(
+        queryClient.getQueryData<MeResult>(authKeys.me())?.lawyerProfile?.specialties,
+      ).toEqual(['CIVIL:CONTRATOS']);
     });
     expect(invalidateSpy).not.toHaveBeenCalled();
     unmount();

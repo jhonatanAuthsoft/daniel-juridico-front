@@ -16,6 +16,8 @@ import {
   mapUpdateLawyerGeneralDataToWire,
   mapUpdateLawyerGraduationToWire,
   mapUpdateLawyerAvailabilityToWire,
+  mapUpdateLawyerPracticeAreasToWire,
+  mapUpdateLawyerSpecialtiesToWire,
   mapUpdateLawyerServiceAreasToWire,
 } from './lawyer.mapper';
 import type {
@@ -29,6 +31,8 @@ import type {
   UpdateLawyerGeneralDataParams,
   UpdateLawyerGraduationParams,
   UpdateLawyerAvailabilityParams,
+  UpdateLawyerPracticeAreasParams,
+  UpdateLawyerSpecialtiesParams,
   UpdateLawyerServiceAreasParams,
 } from './lawyer.types';
 
@@ -211,5 +215,49 @@ export async function updateLawyerServiceAreas(
   return assertApiSuccess(
     response,
     'Não foi possível atualizar as áreas de atuação.',
+  );
+}
+
+/**
+ * Replaces the authenticated lawyer's practice modalities.
+ * `PATCH /advogados/me/modalidades`
+ */
+export async function updateLawyerPracticeAreas(
+  params: UpdateLawyerPracticeAreasParams,
+  signal?: AbortSignal,
+): Promise<MeDetalheWire> {
+  const response = await authenticatedHttpRequest<ApiResponse<MeDetalheWire>>(
+    apiUrl('/advogados/me/modalidades'),
+    {
+      method: 'PATCH',
+      body: mapUpdateLawyerPracticeAreasToWire(params),
+      signal,
+    },
+  );
+  return assertApiSuccess(
+    response,
+    'Não foi possível atualizar a atuação.',
+  );
+}
+
+/**
+ * Replaces the authenticated lawyer's specialties.
+ * `PATCH /advogados/me/especialidades`
+ */
+export async function updateLawyerSpecialties(
+  params: UpdateLawyerSpecialtiesParams,
+  signal?: AbortSignal,
+): Promise<MeDetalheWire> {
+  const response = await authenticatedHttpRequest<ApiResponse<MeDetalheWire>>(
+    apiUrl('/advogados/me/especialidades'),
+    {
+      method: 'PATCH',
+      body: mapUpdateLawyerSpecialtiesToWire(params),
+      signal,
+    },
+  );
+  return assertApiSuccess(
+    response,
+    'Não foi possível atualizar a especialização.',
   );
 }

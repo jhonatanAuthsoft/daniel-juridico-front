@@ -8,7 +8,9 @@ import { LawyerEditDataHubScreen } from '@/components/lawyer-edit-data/lawyer-ed
 import { LawyerEditDocumentationScreen } from '@/components/lawyer-edit-data/lawyer-edit-documentation-screen.component';
 import { LawyerEditEducationScreen } from '@/components/lawyer-edit-data/lawyer-edit-education-screen.component';
 import { LawyerEditNameEmailScreen } from '@/components/lawyer-edit-data/lawyer-edit-name-email-screen.component';
+import { LawyerEditPracticeAreasScreen } from '@/components/lawyer-edit-data/lawyer-edit-practice-areas-screen.component';
 import { LawyerEditServiceRadiusScreen } from '@/components/lawyer-edit-data/lawyer-edit-service-radius-screen.component';
+import { LawyerEditSpecialtiesScreen } from '@/components/lawyer-edit-data/lawyer-edit-specialties-screen.component';
 import type { LawyerEditProfile } from '@/data/auth';
 
 const mockPush = jest.fn();
@@ -21,6 +23,8 @@ const mockUpdateBiography = jest.fn().mockResolvedValue({});
 const mockUpdateDocumentation = jest.fn().mockResolvedValue({});
 const mockUpdateGraduation = jest.fn().mockResolvedValue({});
 const mockUpdateServiceAreas = jest.fn().mockResolvedValue({});
+const mockUpdatePracticeAreas = jest.fn().mockResolvedValue({});
+const mockUpdateSpecialties = jest.fn().mockResolvedValue({});
 
 const lawyerProfile: LawyerEditProfile = {
   fullName: 'Luiza Bittencourt',
@@ -50,6 +54,9 @@ const lawyerProfile: LawyerEditProfile = {
   graduationYear: '2015',
   postgraduates: [{ university: 'FGV', course: 'LLM Direito Digital', year: '2020' }],
   serviceAreas: [{ state: 'SP', cities: ['Adamantina', 'Avaré'] }],
+  practiceAreas: ['generalista', 'consultor'],
+  specialties: ['CIVIL:CONTRATOS'],
+  specialtyLabels: ['Contratos'],
 };
 
 jest.mock('expo-router', () => ({
@@ -113,6 +120,35 @@ jest.mock('@/domain/lawyer', () => ({
   useUpdateLawyerServiceAreas: () => ({
     mutateAsync: mockUpdateServiceAreas,
     isPending: false,
+  }),
+  useUpdateLawyerPracticeAreas: () => ({
+    mutateAsync: mockUpdatePracticeAreas,
+    isPending: false,
+  }),
+  useUpdateLawyerSpecialties: () => ({
+    mutateAsync: mockUpdateSpecialties,
+    isPending: false,
+  }),
+}));
+
+jest.mock('@/domain/catalog', () => ({
+  useSpecialtiesCatalog: () => ({
+    data: {
+      categories: [
+        {
+          id: 'CIVIL',
+          code: 'CIVIL',
+          label: 'Direito Civil',
+          children: [
+            { id: 'CIVIL:CONTRATOS', code: 'CONTRATOS', label: 'Contratos' },
+            { id: 'CIVIL:FAMILIA', code: 'FAMILIA', label: 'Família' },
+          ],
+        },
+      ],
+    },
+    isLoading: false,
+    isError: false,
+    refetch: jest.fn(),
   }),
 }));
 
@@ -197,6 +233,10 @@ describe('LawyerEditDataHubScreen', () => {
     expect(screen.getByText('Faculdade Gétulio Vargas')).toBeTruthy();
     expect(screen.getByText('Raio de atuação')).toBeTruthy();
     expect(screen.getByText('SP: Adamantina; Avaré')).toBeTruthy();
+    expect(screen.getByText('Atuação')).toBeTruthy();
+    expect(screen.getByText('Generalista, Consultor')).toBeTruthy();
+    expect(screen.getByText('Especialização')).toBeTruthy();
+    expect(screen.getByText('Contratos')).toBeTruthy();
     expect(screen.getByLabelText('Apagar conta')).toBeTruthy();
   });
 
@@ -223,6 +263,12 @@ describe('LawyerEditDataHubScreen', () => {
 
     fireEvent.press(screen.getByLabelText('Editar raio de atuação'));
     expect(mockPush).toHaveBeenCalledWith('/lawyer/perfil/raio-atuacao');
+
+    fireEvent.press(screen.getByLabelText('Editar atuação'));
+    expect(mockPush).toHaveBeenCalledWith('/lawyer/perfil/atuacao');
+
+    fireEvent.press(screen.getByLabelText('Editar especialização'));
+    expect(mockPush).toHaveBeenCalledWith('/lawyer/perfil/especializacao');
   });
 
   it('opens delete account from the hub footer', () => {
@@ -661,5 +707,89 @@ describe('LawyerEditServiceRadiusScreen', () => {
     expect(screen.queryByText('Campo obrigatório')).toBeNull();
     expect(mockUpdateServiceAreas).not.toHaveBeenCalled();
     expect(mockBack).not.toHaveBeenCalled();
+  });
+});
+
+describe('LawyerEditPracticeAreasScreen', () => {
+  beforeEach(() => {
+    mockBack.mockClear();
+    mockUpdatePracticeAreas.mockClear();
+  });
+
+  it('shows the practice-area checklist seeded from the profile', () => {
+    const screen = render(<LawyerEditPracticeAreasScreen />);
+
+    expect(screen.getByText('Alterar atuação')).toBeTruthy();
+    expect(
+      screen.getByText(
+        'Selecione sua área de atuação para receber solicitações alinhadas ao seu perfil profissional.',
+      ),
+    ).toBeTruthy();
+    expect(screen.getByText('Pautista')).toBeTruthy();
+    expect(screen.getByText('Generalista')).toBeTruthy();
+    expect(screen.getByText('Consultor')).toBeTruthy();
+    expect(screen.getByText('Correspondente / Outras atividades')).toBeTruthy();
+    expect(screen.getByText('Nenhuma das anteriores')).toBeTruthy();
+    expect(screen.getByText('Salvar alterações')).toBeTruthy();
+
+    const options = screen.getAllByRole('checkbox');
+    expect(options).toHaveLength(5);
+    expect(options[0].props.accessibilityState).toEqual({ checked: false });
+    expect(options[1].props.accessibilityState).toEqual({ checked: true });
+    expect(options[2].props.accessibilityState).toEqual({ checked: true });
+    expect(options[3].props.accessibilityState).toEqual({ checked: false });
+    expect(options[4].props.accessibilityState).toEqual({ checked: false });
+  });
+
+  it('saves practice areas and goes back', async () => {
+    const screen = render(<LawyerEditPracticeAreasScreen />);
+
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(mockUpdatePracticeAreas).toHaveBeenCalledWith({
+        practiceAreas: ['generalista', 'consultor'],
+      });
+    });
+    expect(mockBack).toHaveBeenCalled();
+  });
+});
+
+describe('LawyerEditSpecialtiesScreen', () => {
+  beforeEach(() => {
+    mockBack.mockClear();
+    mockUpdateSpecialties.mockClear();
+  });
+
+  it('shows the specialties catalog seeded from the profile', () => {
+    const screen = render(<LawyerEditSpecialtiesScreen />);
+
+    expect(screen.getByText('Alterar especialização')).toBeTruthy();
+    expect(
+      screen.getByText('Escolha suas especialidades para receber demandas compatíveis.'),
+    ).toBeTruthy();
+    expect(screen.getByPlaceholderText('Buscar...')).toBeTruthy();
+    expect(screen.getByText('Direito Civil')).toBeTruthy();
+    expect(screen.getAllByText('Contratos').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Família').length).toBeGreaterThan(0);
+    expect(screen.getByText('Salvar alterações')).toBeTruthy();
+
+    const contratos = screen.getAllByRole('checkbox', { name: 'Contratos' });
+    const familia = screen.getAllByRole('checkbox', { name: 'Família' });
+    expect(contratos.some((node) => node.props.accessibilityState?.checked)).toBe(true);
+    expect(familia.every((node) => !node.props.accessibilityState?.checked)).toBe(true);
+  });
+
+  it('saves specialties and goes back', async () => {
+    const screen = render(<LawyerEditSpecialtiesScreen />);
+
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(mockUpdateSpecialties).toHaveBeenCalledWith({
+        specialties: ['CIVIL:CONTRATOS'],
+      });
+    });
+    expect(mockBack).toHaveBeenCalled();
   });
 });

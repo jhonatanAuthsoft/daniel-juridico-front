@@ -41,6 +41,10 @@ export function formatLawyerAddressSummary(
   return formatAddressSummary(profile);
 }
 
+export function formatSpecialtiesSummary(labels: readonly string[]): string {
+  return labels.map((label) => label.trim()).filter(Boolean).join(', ');
+}
+
 export function formatBillingSummary(methodIds: readonly string[]): string {
   return methodIds
     .map((id, index) => {

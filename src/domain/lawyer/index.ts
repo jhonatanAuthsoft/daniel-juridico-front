@@ -25,6 +25,8 @@ export { updateLawyerBiographyUseCase } from './update-lawyer-biography.use-case
 export { updateLawyerDocumentationUseCase } from './update-lawyer-documentation.use-case';
 export { updateLawyerGraduationUseCase } from './update-lawyer-graduation.use-case';
 export { updateLawyerAvailabilityUseCase } from './update-lawyer-availability.use-case';
+export { updateLawyerPracticeAreasUseCase } from './update-lawyer-practice-areas.use-case';
+export { updateLawyerSpecialtiesUseCase } from './update-lawyer-specialties.use-case';
 export { updateLawyerServiceAreasUseCase } from './update-lawyer-service-areas.use-case';
 export { useUpdateLawyerGeneralData } from './use-update-lawyer-general-data';
 export { useUpdateLawyerAddress } from './use-update-lawyer-address';
@@ -33,4 +35,6 @@ export { useUpdateLawyerBiography } from './use-update-lawyer-biography';
 export { useUpdateLawyerDocumentation } from './use-update-lawyer-documentation';
 export { useUpdateLawyerGraduation } from './use-update-lawyer-graduation';
 export { useUpdateLawyerAvailability } from './use-update-lawyer-availability';
+export { useUpdateLawyerPracticeAreas } from './use-update-lawyer-practice-areas';
+export { useUpdateLawyerSpecialties } from './use-update-lawyer-specialties';
 export { useUpdateLawyerServiceAreas } from './use-update-lawyer-service-areas';

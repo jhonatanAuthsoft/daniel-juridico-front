@@ -40,14 +40,32 @@ jest.mock('react-native-safe-area-context', () => {
 });
 
 describe('AccountTermsScreen', () => {
-  it('shows the terms headline and placeholder copy', () => {
+  it('shows the terms headline and the 13 legal sections', () => {
     const screen = render(<AccountTermsScreen />);
 
     expect(screen.getByText('Termos e condições')).toBeTruthy();
     expect(
       screen.getByText('Termos de uso e Política de Privacidade'),
     ).toBeTruthy();
-    expect(screen.getAllByText(/Lorem Ipsum is simply dummy text/).length).toBeGreaterThan(0);
+    expect(screen.getByText('1. Partes, objeto e definições')).toBeTruthy();
+    expect(screen.getByText('2. Formação e prova do contrato eletrônico')).toBeTruthy();
+    expect(screen.getByText('3. Licença de uso e propriedade intelectual')).toBeTruthy();
+    expect(screen.getByText('4. Solicitações de conexão e contratação externa')).toBeTruthy();
+    expect(screen.getByText('5. Deveres profissionais e regras da OAB')).toBeTruthy();
+    expect(screen.getByText('6. Deveres de todos os USUÁRIOs')).toBeTruthy();
+    expect(screen.getByText('7. Comentários, moderação e denúncias')).toBeTruthy();
+    expect(screen.getByText('8. Segurança, privacidade e confidencialidade')).toBeTruthy();
+    expect(screen.getByText('9. Suspensão e encerramento')).toBeTruthy();
+    expect(screen.getByText('10. Responsabilidades')).toBeTruthy();
+    expect(
+      screen.getByText('11. Comunicações, alterações, vigência e prevalência'),
+    ).toBeTruthy();
+    expect(screen.getByText('12. Lei aplicável e solução de controvérsias')).toBeTruthy();
+    expect(screen.getByText('13. Disposições finais')).toBeTruthy();
+    expect(
+      screen.getByText(/A LAWEACT não é escritório de advocacia/),
+    ).toBeTruthy();
+    expect(screen.queryByText(/Lorem Ipsum/)).toBeNull();
   });
 
   it('uses the same copy for client and lawyer profile routes', () => {

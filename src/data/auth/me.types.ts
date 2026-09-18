@@ -46,6 +46,15 @@ export type MeCatalogItemWire = {
   nome?: string | null;
 };
 
+export type MeEspecialidadeWire = {
+  especialidadeCodigo?: string | null;
+  especialidadeNome?: string | null;
+  especialidadeLivre?: string | null;
+  subespecialidadeCodigo?: string | null;
+  subespecialidadeNome?: string | null;
+  subespecialidadeLivre?: string | null;
+};
+
 export type MeAreaAtuacaoWire = {
   id?: string | null;
   estado?: string | null;
@@ -64,6 +73,8 @@ export type MeDetalheWire = {
   endereco?: MeEnderecoWire | null;
   oabs?: MeOabWire[] | null;
   areasAtuacao?: MeAreaAtuacaoWire[] | null;
+  modalidades?: MeCatalogItemWire[] | null;
+  especialidades?: MeEspecialidadeWire[] | null;
   formasCobranca?: MeCatalogItemWire[] | null;
   posGraduacoes?: MePosGraduacaoWire[] | null;
 };
@@ -153,6 +164,9 @@ export type LawyerEditProfile = {
   graduationYear: string;
   postgraduates: LawyerEditPostgraduate[];
   serviceAreas: LawyerServiceArea[];
+  practiceAreas: string[];
+  specialties: string[];
+  specialtyLabels: string[];
 };
 
 export type MeResult = {

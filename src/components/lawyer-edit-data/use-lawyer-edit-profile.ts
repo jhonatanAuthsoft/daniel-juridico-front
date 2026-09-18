@@ -28,6 +28,9 @@ const EMPTY_LAWYER_EDIT_PROFILE: LawyerEditProfile = {
   graduationYear: '',
   postgraduates: [],
   serviceAreas: [],
+  practiceAreas: [],
+  specialties: [],
+  specialtyLabels: [],
 };
 
 /**

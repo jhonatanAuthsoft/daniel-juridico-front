@@ -57,6 +57,23 @@ describe('SignupTermsScreen', () => {
     });
   });
 
+  it('shows the 13 legal sections instead of placeholder copy', () => {
+    const screen = render(<SignupTermsScreen />);
+
+    expect(
+      screen.getByText(
+        'Você aceita a Política de Privacidade e os Termos de Uso do aplicativo?',
+      ),
+    ).toBeTruthy();
+    expect(screen.getByText('1. Partes, objeto e definições')).toBeTruthy();
+    expect(screen.getByText('13. Disposições finais')).toBeTruthy();
+    expect(
+      screen.getByText(/A LAWEACT não é escritório de advocacia/),
+    ).toBeTruthy();
+    expect(screen.queryByText(/Lorem Ipsum/)).toBeNull();
+    expect(screen.queryByText('1. Introdução')).toBeNull();
+  });
+
   it('does not sign in as a mock client when the session is missing', () => {
     const screen = render(<SignupTermsScreen />);
 

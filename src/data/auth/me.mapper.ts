@@ -1,3 +1,5 @@
+import { buildSpecialtyId } from '@/components/signup-lawyer/specialties.data';
+import { mapModalidadeCodeToPracticeAreaId } from '@/components/signup-lawyer/practice-areas.data';
 import { mapSubscriptionWireToResultOrNull } from '@/data/subscription';
 import { maskCep, maskCnpj, maskCpf, maskPhone } from '@/utils/br-input';
 
@@ -12,6 +14,7 @@ import type {
   MeCatalogItemWire,
   MeDetalheWire,
   MeEnderecoWire,
+  MeEspecialidadeWire,
   MeOabWire,
   MePerfilWire,
   MePosGraduacaoWire,
@@ -179,7 +182,41 @@ function mapAdvogadoDetalheToProfile(
     graduationYear: asYear(perfil.anoFormacao),
     postgraduates: mapPostgraduatesFromWire(detalhe.posGraduacoes),
     serviceAreas: mapServiceAreasFromWire(detalhe.areasAtuacao),
+    ...mapPracticeAndSpecialtiesFromWire(detalhe.modalidades, detalhe.especialidades),
   };
+}
+
+function mapPracticeAndSpecialtiesFromWire(
+  modalidades: MeCatalogItemWire[] | null | undefined,
+  especialidades: MeEspecialidadeWire[] | null | undefined,
+): Pick<LawyerEditProfile, 'practiceAreas' | 'specialties' | 'specialtyLabels'> {
+  const practiceAreas = (modalidades ?? [])
+    .map((item) => mapModalidadeCodeToPracticeAreaId(asText(item?.codigo)))
+    .filter((id): id is string => Boolean(id));
+
+  const specialties: string[] = [];
+  const specialtyLabels: string[] = [];
+
+  for (const item of especialidades ?? []) {
+    const specialtyCode = asText(item.especialidadeCodigo).toUpperCase();
+    const subspecialtyCode = asText(item.subespecialidadeCodigo).toUpperCase();
+    const label =
+      asText(item.subespecialidadeNome) ||
+      asText(item.especialidadeLivre) ||
+      asText(item.subespecialidadeLivre) ||
+      asText(item.especialidadeNome);
+
+    if (label) {
+      specialtyLabels.push(label);
+    }
+    if (specialtyCode && subspecialtyCode) {
+      specialties.push(buildSpecialtyId(specialtyCode, subspecialtyCode));
+    } else if (specialtyCode) {
+      specialties.push(specialtyCode);
+    }
+  }
+
+  return { practiceAreas, specialties, specialtyLabels };
 }
 
 function mapPostgraduatesFromWire(

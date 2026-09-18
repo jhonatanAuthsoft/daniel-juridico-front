@@ -5,6 +5,7 @@ import { Separator } from '@/atomic/separator';
 import { InputCaption } from '@/atomic/typography';
 import { BrandColors } from '@/constants/theme';
 
+import { PRACTICE_AREA_OPTIONS } from '../practice-areas.data';
 import {
   SelectableOption,
   SelectableOptionList,
@@ -12,31 +13,6 @@ import {
 import { signupLawyerSharedStyles } from '../shared.styles';
 import { PRACTICE_AREA_NONE_ID } from '../signup-step-navigation';
 import type { LawyerSignupFormValues } from '../types';
-
-const PRACTICE_OPTIONS = [
-  {
-    id: 'pautista',
-    label: 'Pautista',
-  },
-  {
-    id: 'generalista',
-    label: 'Generalista',
-    description: 'Todas as especialidades do direito',
-  },
-  {
-    id: 'consultor',
-    label: 'Consultor',
-  },
-  {
-    id: 'correspondente',
-    label: 'Correspondente / Outras atividades',
-  },
-  {
-    id: PRACTICE_AREA_NONE_ID,
-    label: 'Nenhuma das anteriores',
-    description: 'Selecione as especialidades a seguir.',
-  },
-] as const;
 
 export function StepPracticeAreas() {
   const { control } = useFormContext<LawyerSignupFormValues>();
@@ -74,7 +50,7 @@ export function StepPracticeAreas() {
           return (
             <View>
               <SelectableOptionList>
-                {PRACTICE_OPTIONS.map((option) => (
+                {PRACTICE_AREA_OPTIONS.map((option) => (
                   <SelectableOption
                     key={option.id}
                     checked={selected.includes(option.id)}

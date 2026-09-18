@@ -367,6 +367,18 @@ describe('mapMeWireToResult', () => {
             { codigo: 'HONORARIOS_PERCENTUAIS', nome: 'Honorários Percentuais' },
             { codigo: 'HONORARIOS_ARBITRADOS', nome: 'Honorários arbitrados' },
           ],
+          modalidades: [
+            { codigo: 'GENERALISTA', nome: 'Generalista' },
+            { codigo: 'CONSULTOR', nome: 'Consultor' },
+          ],
+          especialidades: [
+            {
+              especialidadeCodigo: 'CIVIL',
+              especialidadeNome: 'Direito Civil',
+              subespecialidadeCodigo: 'CONTRATOS',
+              subespecialidadeNome: 'Contratos',
+            },
+          ],
           areasAtuacao: [
             { id: 'a1', estado: 'sp', cidade: 'Avaré' },
             { id: 'a2', estado: 'SP', cidade: 'Adamantina' },
@@ -427,8 +439,39 @@ describe('mapMeWireToResult', () => {
           { state: 'SP', cities: ['Adamantina', 'Avaré'] },
           { state: 'BA', cities: ['Salvador'] },
         ],
+        practiceAreas: ['generalista', 'consultor'],
+        specialties: ['CIVIL:CONTRATOS'],
+        specialtyLabels: ['Contratos'],
       },
     });
+  });
+
+  it('maps especialidade without subespecialidade to the category code', () => {
+    expect(
+      mapMeWireToResult({
+        usuario: {
+          id: '2',
+          email: 'adv@b.com',
+          nomeCompleto: 'B',
+          perfil: 'ADVOGADO',
+        },
+        advogado: {
+          modalidades: [{ codigo: 'GENERALISTA', nome: 'Generalista' }],
+          especialidades: [
+            {
+              especialidadeCodigo: 'CIVIL',
+              especialidadeNome: 'Direito Civil',
+            },
+          ],
+        },
+      }).lawyerProfile,
+    ).toEqual(
+      expect.objectContaining({
+        practiceAreas: ['generalista'],
+        specialties: ['CIVIL'],
+        specialtyLabels: ['Direito Civil'],
+      }),
+    );
   });
 
   it('merges PATCH /advogados/me response into the cached /me profile', () => {

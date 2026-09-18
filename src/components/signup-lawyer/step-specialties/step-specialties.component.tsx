@@ -25,7 +25,10 @@ import { BrandColors, Radius, Spacing } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import { useSpecialtiesCatalog } from '@/domain/catalog';
 
-import type { SpecialtyCategory } from '../specialties.data';
+import {
+  SPECIALTY_ID_SEPARATOR,
+  type SpecialtyCategory,
+} from '../specialties.data';
 import { OptionCheckbox } from '../selectable-option';
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues } from '../types';
@@ -56,8 +59,11 @@ function CategoryPanel({
 }: CategoryPanelProps) {
   const childIds = category.children.map((child) => child.id);
   const selectedCount = childIds.filter((id) => selected.includes(id)).length;
-  const allSelected = selectedCount === childIds.length && childIds.length > 0;
-  const someSelected = selectedCount > 0;
+  const parentOnly =
+    selected.includes(category.code) || selected.includes(category.id);
+  const allSelected =
+    parentOnly || (selectedCount === childIds.length && childIds.length > 0);
+  const someSelected = selectedCount > 0 && !allSelected;
   const panelSelected = allSelected || someSelected;
   const progress = useSharedValue(expanded ? 1 : 0);
   const height = useSharedValue(0);
@@ -152,6 +158,8 @@ function CategoryPanel({
       <View style={styles.bodySlot}>
         <View
           pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
           style={styles.measure}
           onLayout={(event) => {
             const nextHeight = event.nativeEvent.layout.height;
@@ -286,21 +294,29 @@ export function StepSpecialties() {
           const selected = value ?? [];
 
           const toggleChild = (id: string) => {
-            if (selected.includes(id)) {
-              onChange(selected.filter((item) => item !== id));
+            const withoutParents = selected.filter((item) =>
+              item.includes(SPECIALTY_ID_SEPARATOR),
+            );
+            if (withoutParents.includes(id)) {
+              onChange(withoutParents.filter((item) => item !== id));
               return;
             }
-            onChange([...selected, id]);
+            onChange([...withoutParents, id]);
           };
 
           const toggleAll = (category: SpecialtyCategory) => {
             const ids = category.children.map((child) => child.id);
-            const allSelected = ids.every((id) => selected.includes(id));
-            if (allSelected) {
-              onChange(selected.filter((id) => !ids.includes(id)));
+            const withoutParents = selected.filter((item) =>
+              item.includes(SPECIALTY_ID_SEPARATOR),
+            );
+            const allSelected = ids.length > 0 && ids.every((id) => withoutParents.includes(id));
+            const parentOnly =
+              selected.includes(category.code) || selected.includes(category.id);
+            if (allSelected || parentOnly) {
+              onChange(withoutParents.filter((id) => !ids.includes(id)));
               return;
             }
-            const merged = new Set([...selected, ...ids]);
+            const merged = new Set([...withoutParents, ...ids]);
             onChange([...merged]);
           };
 

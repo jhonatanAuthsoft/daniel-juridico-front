@@ -11,6 +11,8 @@ import {
   mapUpdateLawyerGeneralDataToWire,
   mapUpdateLawyerAvailabilityToWire,
   mapUpdateLawyerGraduationToWire,
+  mapUpdateLawyerPracticeAreasToWire,
+  mapUpdateLawyerSpecialtiesToWire,
   mapUpdateLawyerServiceAreasToWire,
 } from './lawyer.mapper';
 import type { LawyerSignupFormValues } from '@/components/signup-lawyer/types';
@@ -221,6 +223,9 @@ describe('lawyer.mapper', () => {
     expect(mapSpecialtiesToApi(['CIVIL:CONTRATOS'])).toEqual([
       { especialidadeCodigo: 'CIVIL', subespecialidadeCodigo: 'CONTRATOS' },
     ]);
+    expect(mapSpecialtiesToApi(['CIVIL'])).toEqual([
+      { especialidadeCodigo: 'CIVIL' },
+    ]);
   });
 
   it('maps general data name and phone to the PATCH wire body', () => {
@@ -362,6 +367,29 @@ describe('lawyer.mapper', () => {
           instituicao: 'FGV',
           anoFormacao: 2020,
         },
+      ],
+    });
+  });
+
+  it('maps practice areas to modalidade codes', () => {
+    expect(
+      mapUpdateLawyerPracticeAreasToWire({
+        practiceAreas: ['consultor', 'pautista'],
+      }),
+    ).toEqual({
+      modalidades: ['CONSULTOR', 'PAUTISTA'],
+    });
+  });
+
+  it('maps specialties to the PATCH wire body', () => {
+    expect(
+      mapUpdateLawyerSpecialtiesToWire({
+        specialties: ['CIVIL:CONTRATOS', 'TRABALHISTA'],
+      }),
+    ).toEqual({
+      especialidades: [
+        { especialidadeCodigo: 'CIVIL', subespecialidadeCodigo: 'CONTRATOS' },
+        { especialidadeCodigo: 'TRABALHISTA' },
       ],
     });
   });

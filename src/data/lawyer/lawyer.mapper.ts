@@ -30,6 +30,10 @@ import type {
   UpdateLawyerGraduationWireRequest,
   UpdateLawyerAvailabilityParams,
   UpdateLawyerAvailabilityWireRequest,
+  UpdateLawyerPracticeAreasParams,
+  UpdateLawyerPracticeAreasWireRequest,
+  UpdateLawyerSpecialtiesParams,
+  UpdateLawyerSpecialtiesWireRequest,
   UpdateLawyerServiceAreasParams,
   UpdateLawyerServiceAreasWireRequest,
 } from './lawyer.types';
@@ -87,12 +91,21 @@ export function mapBillingMethodToApi(id: string): string {
 
 export function mapSpecialtiesToApi(specialtyIds: string[]): SpecialtyWireRequest[] {
   return specialtyIds
-    .map((id) => parseSpecialtyId(id))
-    .filter((parsed): parsed is NonNullable<typeof parsed> => parsed != null)
-    .map((parsed) => ({
-      especialidadeCodigo: parsed.specialtyCode,
-      subespecialidadeCodigo: parsed.subspecialtyCode,
-    }));
+    .map((id) => {
+      const parsed = parseSpecialtyId(id);
+      if (parsed) {
+        return {
+          especialidadeCodigo: parsed.specialtyCode,
+          subespecialidadeCodigo: parsed.subspecialtyCode,
+        };
+      }
+      const code = id.trim().toUpperCase();
+      if (!code) {
+        return null;
+      }
+      return { especialidadeCodigo: code };
+    })
+    .filter((item): item is SpecialtyWireRequest => item != null);
 }
 
 function mapOab(
@@ -333,5 +346,21 @@ export function mapUpdateLawyerServiceAreasToWire(
 ): UpdateLawyerServiceAreasWireRequest {
   return {
     areasAtuacao: mapServiceAreas(params.serviceAreas),
+  };
+}
+
+export function mapUpdateLawyerPracticeAreasToWire(
+  params: UpdateLawyerPracticeAreasParams,
+): UpdateLawyerPracticeAreasWireRequest {
+  return {
+    modalidades: params.practiceAreas.map(mapPracticeAreaToModalidade),
+  };
+}
+
+export function mapUpdateLawyerSpecialtiesToWire(
+  params: UpdateLawyerSpecialtiesParams,
+): UpdateLawyerSpecialtiesWireRequest {
+  return {
+    especialidades: mapSpecialtiesToApi(params.specialties),
   };
 }

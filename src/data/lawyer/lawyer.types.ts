@@ -224,3 +224,23 @@ export type UpdateLawyerAvailabilityParams = {
 export type UpdateLawyerAvailabilityWireRequest = {
   disponibilidade: 'DISPONIVEL' | 'INDISPONIVEL';
 };
+
+/** App params for `PATCH /advogados/me/modalidades`. */
+export type UpdateLawyerPracticeAreasParams = {
+  practiceAreas: string[];
+};
+
+/** Wire body for `PATCH /advogados/me/modalidades`. */
+export type UpdateLawyerPracticeAreasWireRequest = {
+  modalidades: string[];
+};
+
+/** App params for `PATCH /advogados/me/especialidades`. */
+export type UpdateLawyerSpecialtiesParams = {
+  specialties: string[];
+};
+
+/** Wire body for `PATCH /advogados/me/especialidades`. */
+export type UpdateLawyerSpecialtiesWireRequest = {
+  especialidades: SpecialtyWireRequest[];
+};
