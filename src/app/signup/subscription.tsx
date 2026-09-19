@@ -27,8 +27,7 @@ import {
   subscriptionKeys,
 } from '@/domain/subscription';
 
-const TERMS_URL = 'https://laweact.com/termos';
-const PRIVACY_URL = 'https://laweact.com/privacidade';
+const LEGAL_DOCUMENT_URL = 'https://laweact.web.app/termos';
 
 const PLAN_CARD_GRADIENT = BrandGradients.gradient;
 const PLAN_CARD_GRADIENT_POINTS = angleToPoints(PLAN_CARD_GRADIENT.angleDeg);
@@ -222,11 +221,11 @@ export default function SignupSubscriptionScreen() {
             <Separator size="xs" />
 
             <View style={styles.legalLinks}>
-              <Button variant="link" onPress={() => void Linking.openURL(TERMS_URL)}>
+              <Button variant="link" onPress={() => void Linking.openURL(LEGAL_DOCUMENT_URL)}>
                 Termos de uso
               </Button>
               <Body2 color={BrandColors.neutral.light}>•</Body2>
-              <Button variant="link" onPress={() => void Linking.openURL(PRIVACY_URL)}>
+              <Button variant="link" onPress={() => void Linking.openURL(LEGAL_DOCUMENT_URL)}>
                 Política de privacidade
               </Button>
             </View>

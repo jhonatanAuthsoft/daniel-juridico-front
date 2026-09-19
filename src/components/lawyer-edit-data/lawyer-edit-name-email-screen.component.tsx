@@ -64,7 +64,7 @@ export function LawyerEditNameEmailScreen() {
   });
 
   return (
-    <AccountStackScreen title="Alterar nome e email">
+    <AccountStackScreen title="Alterar dados pessoais">
       <Form {...form}>
         <View style={styles.fields}>
           <InputTextField

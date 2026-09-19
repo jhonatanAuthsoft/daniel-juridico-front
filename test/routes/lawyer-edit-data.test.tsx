@@ -15,6 +15,8 @@ import type { LawyerEditProfile } from '@/data/auth';
 
 const mockPush = jest.fn();
 const mockBack = jest.fn();
+const mockDismissTo = jest.fn();
+const mockSearchParams: { pendingPracticeAreas?: string } = {};
 const mockUseMe = jest.fn();
 const mockUpdateGeneralData = jest.fn().mockResolvedValue({});
 const mockUpdateAddress = jest.fn().mockResolvedValue({});
@@ -60,7 +62,12 @@ const lawyerProfile: LawyerEditProfile = {
 };
 
 jest.mock('expo-router', () => ({
-  useRouter: () => ({ push: mockPush, back: mockBack }),
+  useRouter: () => ({
+    push: mockPush,
+    back: mockBack,
+    dismissTo: mockDismissTo,
+  }),
+  useLocalSearchParams: () => mockSearchParams,
 }));
 
 jest.mock('@/domain/arquivo', () => ({
@@ -208,6 +215,7 @@ describe('LawyerEditDataHubScreen', () => {
   beforeEach(() => {
     mockPush.mockClear();
     mockBack.mockClear();
+    mockDismissTo.mockClear();
   });
 
   it('lists the lawyer edit sections matching the hub', () => {
@@ -289,7 +297,7 @@ describe('LawyerEditNameEmailScreen', () => {
   it('lets the lawyer edit the name and birth date', () => {
     const screen = render(<LawyerEditNameEmailScreen />);
 
-    expect(screen.getByText('Alterar nome e email')).toBeTruthy();
+    expect(screen.getByText('Alterar dados pessoais')).toBeTruthy();
     expect(screen.getByText('Nome Completo (Nome Social)')).toBeTruthy();
     expect(screen.getByText('E-mail')).toBeTruthy();
     expect(screen.getByText('Telefone')).toBeTruthy();
@@ -627,6 +635,20 @@ function selectOption(screen: EditScreen, placeholder: string, optionLabel: stri
   fireEvent.press(screen.getByRole('button', { name: optionLabel }));
 }
 
+function selectCities(screen: EditScreen, cityLabels: string[]) {
+  fireEvent.press(screen.getByText('Selecione a cidade'));
+  for (const cityLabel of cityLabels) {
+    fireEvent.press(screen.getByRole('checkbox', { name: cityLabel }));
+  }
+  fireEvent.press(screen.getByLabelText('Fechar'));
+}
+
+async function waitForDraftCities(screen: EditScreen, firstCity: string) {
+  await waitFor(() => {
+    expect(screen.getByLabelText(`Remover ${firstCity}`)).toBeTruthy();
+  });
+}
+
 describe('LawyerEditServiceRadiusScreen', () => {
   beforeEach(() => {
     mockBack.mockClear();
@@ -638,27 +660,62 @@ describe('LawyerEditServiceRadiusScreen', () => {
 
     expect(screen.getByText('Raio de atuação')).toBeTruthy();
     expect(screen.getByText('Estado')).toBeTruthy();
+    expect(screen.getByText('Atuo em todo o estado')).toBeTruthy();
     expect(screen.getByText('Cidade')).toBeTruthy();
     expect(screen.getByText('Selecione o estado')).toBeTruthy();
-    expect(screen.getByText('Selecione a cidade')).toBeTruthy();
-    expect(screen.getByText('+ Adicionar nova cidade')).toBeTruthy();
+    expect(screen.getByText('Selecione o estado primeiro')).toBeTruthy();
+    expect(screen.getByText('Adicionar')).toBeTruthy();
     expect(screen.getByText('São Paulo')).toBeTruthy();
     expect(screen.getByText('Adamantina; Avaré')).toBeTruthy();
     expect(screen.getByText('Salvar alterações')).toBeTruthy();
+  });
+
+  it('adds the whole state without opening the city select', async () => {
+    const screen = render(<LawyerEditServiceRadiusScreen />);
+
+    fireEvent.press(screen.getByLabelText('Excluir São Paulo'));
+    selectOption(screen, 'Selecione o estado', 'Bahia');
+    fireEvent.press(screen.getByText('Atuo em todo o estado'));
+
+    expect(screen.queryByText('Cidade')).toBeNull();
+    expect(screen.getByText('Adicionar')).toBeTruthy();
+
+    fireEvent.press(screen.getByText('Adicionar'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Todo o estado')).toBeTruthy();
+    });
+    expect(screen.getByText('Bahia')).toBeTruthy();
+    expect(screen.getByText('Selecione o estado')).toBeTruthy();
   });
 
   it('adds a city to the selected state', async () => {
     const screen = render(<LawyerEditServiceRadiusScreen />);
 
     selectOption(screen, 'Selecione o estado', 'São Paulo');
-    selectOption(screen, 'Selecione a cidade', 'Campinas');
-    fireEvent.press(screen.getByText('+ Adicionar nova cidade'));
+    selectCities(screen, ['Campinas']);
+    await waitForDraftCities(screen, 'Campinas');
+    fireEvent.press(screen.getByText('Adicionar'));
 
     await waitFor(() => {
       expect(screen.getByText('Adamantina; Avaré; Campinas')).toBeTruthy();
     });
     expect(screen.getAllByText('São Paulo')).toHaveLength(1);
-    expect(screen.getByText('Selecione a cidade')).toBeTruthy();
+    expect(screen.getByText('Selecione o estado primeiro')).toBeTruthy();
+  });
+
+  it('adds several cities in one selection', async () => {
+    const screen = render(<LawyerEditServiceRadiusScreen />);
+
+    fireEvent.press(screen.getByLabelText('Excluir São Paulo'));
+    selectOption(screen, 'Selecione o estado', 'São Paulo');
+    selectCities(screen, ['Adamantina', 'Avaré', 'Campinas']);
+    await waitForDraftCities(screen, 'Adamantina');
+    fireEvent.press(screen.getByText('Adicionar'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Adamantina; Avaré; Campinas')).toBeTruthy();
+    });
   });
 
   it('loads a saved state into the editor', () => {
@@ -667,6 +724,8 @@ describe('LawyerEditServiceRadiusScreen', () => {
     fireEvent.press(screen.getByLabelText('Editar cidades de São Paulo'));
 
     expect(screen.getAllByText('São Paulo').length).toBeGreaterThan(1);
+    expect(screen.getByLabelText('Remover Adamantina')).toBeTruthy();
+    expect(screen.getByLabelText('Remover Avaré')).toBeTruthy();
   });
 
   it('deletes a saved state', () => {
@@ -683,13 +742,31 @@ describe('LawyerEditServiceRadiusScreen', () => {
 
     fireEvent.press(screen.getByLabelText('Excluir São Paulo'));
     selectOption(screen, 'Selecione o estado', 'Bahia');
-    selectOption(screen, 'Selecione a cidade', 'Salvador');
-    fireEvent.press(screen.getByText('+ Adicionar nova cidade'));
+    selectCities(screen, ['Salvador']);
+    await waitForDraftCities(screen, 'Salvador');
+    fireEvent.press(screen.getByText('Adicionar'));
     fireEvent.press(screen.getByText('Salvar alterações'));
 
     await waitFor(() => {
       expect(mockUpdateServiceAreas).toHaveBeenCalledWith({
         serviceAreas: [{ state: 'BA', cities: ['Salvador'] }],
+      });
+    });
+    expect(mockBack).toHaveBeenCalled();
+  });
+
+  it('saves entire-state coverage without cities', async () => {
+    const screen = render(<LawyerEditServiceRadiusScreen />);
+
+    fireEvent.press(screen.getByLabelText('Excluir São Paulo'));
+    selectOption(screen, 'Selecione o estado', 'Bahia');
+    fireEvent.press(screen.getByText('Atuo em todo o estado'));
+    fireEvent.press(screen.getByText('Adicionar'));
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(mockUpdateServiceAreas).toHaveBeenCalledWith({
+        serviceAreas: [{ state: 'BA', cities: [], entireState: true }],
       });
     });
     expect(mockBack).toHaveBeenCalled();
@@ -712,7 +789,9 @@ describe('LawyerEditServiceRadiusScreen', () => {
 
 describe('LawyerEditPracticeAreasScreen', () => {
   beforeEach(() => {
+    mockPush.mockClear();
     mockBack.mockClear();
+    mockDismissTo.mockClear();
     mockUpdatePracticeAreas.mockClear();
   });
 
@@ -753,12 +832,62 @@ describe('LawyerEditPracticeAreasScreen', () => {
     });
     expect(mockBack).toHaveBeenCalled();
   });
+
+  it('saves none immediately when specialties already exist', async () => {
+    const screen = render(<LawyerEditPracticeAreasScreen />);
+
+    fireEvent.press(screen.getByText('Nenhuma das anteriores'));
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(mockUpdatePracticeAreas).toHaveBeenCalledWith({
+        practiceAreas: ['none'],
+      });
+    });
+    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockBack).toHaveBeenCalled();
+  });
+
+  it('opens specialties instead of saving none when the profile has no specialties', async () => {
+    mockUseMe.mockReturnValue({
+      data: {
+        photoKey: null,
+        pushNotificationsEnabled: true,
+        clientProfile: null,
+        lawyerProfile: {
+          ...lawyerProfile,
+          practiceAreas: ['pautista'],
+          specialties: [],
+          specialtyLabels: [],
+        },
+      },
+      isLoading: false,
+    });
+
+    const screen = render(<LawyerEditPracticeAreasScreen />);
+
+    fireEvent.press(screen.getByText('Nenhuma das anteriores'));
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith({
+        pathname: '/lawyer/perfil/especializacao',
+        params: { pendingPracticeAreas: 'none' },
+      });
+    });
+    expect(mockUpdatePracticeAreas).not.toHaveBeenCalled();
+    expect(mockBack).not.toHaveBeenCalled();
+  });
 });
 
 describe('LawyerEditSpecialtiesScreen', () => {
   beforeEach(() => {
+    mockPush.mockClear();
     mockBack.mockClear();
+    mockDismissTo.mockClear();
     mockUpdateSpecialties.mockClear();
+    mockUpdatePracticeAreas.mockClear();
+    delete mockSearchParams.pendingPracticeAreas;
   });
 
   it('shows the specialties catalog seeded from the profile', () => {
@@ -790,6 +919,33 @@ describe('LawyerEditSpecialtiesScreen', () => {
         specialties: ['CIVIL:CONTRATOS'],
       });
     });
+    expect(mockUpdatePracticeAreas).not.toHaveBeenCalled();
     expect(mockBack).toHaveBeenCalled();
+    expect(mockDismissTo).not.toHaveBeenCalled();
+  });
+
+  it('saves specialties then pending practice areas and returns to the hub', async () => {
+    mockSearchParams.pendingPracticeAreas = 'none';
+
+    const screen = render(<LawyerEditSpecialtiesScreen />);
+
+    expect(
+      screen.getByText(
+        'Para concluir a atuação, escolha ao menos uma especialidade.',
+      ),
+    ).toBeTruthy();
+
+    fireEvent.press(screen.getByText('Salvar alterações'));
+
+    await waitFor(() => {
+      expect(mockUpdateSpecialties).toHaveBeenCalledWith({
+        specialties: ['CIVIL:CONTRATOS'],
+      });
+    });
+    expect(mockUpdatePracticeAreas).toHaveBeenCalledWith({
+      practiceAreas: ['none'],
+    });
+    expect(mockDismissTo).toHaveBeenCalledWith('/lawyer/perfil/editar-dados');
+    expect(mockBack).not.toHaveBeenCalled();
   });
 });

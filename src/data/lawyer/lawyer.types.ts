@@ -13,7 +13,8 @@ export type OabWireRequest = {
 
 export type PracticeAreaWireRequest = {
   estado: string;
-  cidade: string;
+  cidade?: string;
+  todoEstado?: boolean;
 };
 
 export type SpecialtyWireRequest = {
@@ -207,7 +208,7 @@ export type UpdateLawyerGraduationWireRequest = {
 
 /** App params for `PATCH /advogados/me/areas-atuacao`. */
 export type UpdateLawyerServiceAreasParams = {
-  serviceAreas: { state: string; cities: string[] }[];
+  serviceAreas: { state: string; cities: string[]; entireState?: boolean }[];
 };
 
 /** Wire body for `PATCH /advogados/me/areas-atuacao`. */

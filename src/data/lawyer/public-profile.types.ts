@@ -20,7 +20,8 @@ export type PublicLawyerOabWire = {
 export type PublicLawyerAreaWire = {
   id: string;
   estado: string;
-  cidade: string;
+  cidade?: string | null;
+  todoEstado?: boolean;
 };
 
 export type PublicLawyerPostgraduateWire = {

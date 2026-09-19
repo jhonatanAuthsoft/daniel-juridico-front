@@ -28,6 +28,11 @@ export function mergeServiceAreasByState(entries: ServiceAreaEntry[]): ServiceAr
     }
 
     const existing = byState.get(state);
+    if (entry.entireState || existing?.entireState) {
+      byState.set(state, { state, cities: [], entireState: true });
+      continue;
+    }
+
     if (existing) {
       existing.cities = normalizeCities([...existing.cities, ...entry.cities]);
       continue;
@@ -39,7 +44,23 @@ export function mergeServiceAreasByState(entries: ServiceAreaEntry[]): ServiceAr
     });
   }
 
-  return [...byState.values()].filter((entry) => entry.cities.length > 0);
+  return [...byState.values()].filter(
+    (entry) => entry.entireState || entry.cities.length > 0,
+  );
+}
+
+export function addCitiesToServiceAreas(
+  entries: ServiceAreaEntry[],
+  state: string,
+  cities: string[],
+): ServiceAreaEntry[] {
+  const uf = resolveUfFromStateValue(state);
+  const withoutEntireState = entries.map((entry) =>
+    resolveUfFromStateValue(entry.state) === uf
+      ? { ...entry, entireState: false }
+      : entry,
+  );
+  return mergeServiceAreasByState([...withoutEntireState, { state, cities }]);
 }
 
 export function addCityToServiceAreas(
@@ -47,15 +68,49 @@ export function addCityToServiceAreas(
   state: string,
   city: string,
 ): ServiceAreaEntry[] {
-  return mergeServiceAreasByState([...entries, { state, cities: [city] }]);
+  return addCitiesToServiceAreas(entries, state, [city]);
+}
+
+export function replaceServiceAreaCities(
+  entries: ServiceAreaEntry[],
+  state: string,
+  cities: string[],
+): ServiceAreaEntry[] {
+  const uf = resolveUfFromStateValue(state);
+  return mergeServiceAreasByState([
+    ...entries.filter((entry) => resolveUfFromStateValue(entry.state) !== uf),
+    { state, cities },
+  ]);
+}
+
+export function setEntireStateServiceArea(
+  entries: ServiceAreaEntry[],
+  state: string,
+): ServiceAreaEntry[] {
+  const uf = resolveUfFromStateValue(state);
+  return mergeServiceAreasByState([
+    ...entries.filter((entry) => resolveUfFromStateValue(entry.state) !== uf),
+    { state, cities: [], entireState: true },
+  ]);
 }
 
 export function formatServiceAreaCities(cities: string[]): string {
   return normalizeCities(cities).join('; ');
 }
 
+export function formatServiceAreaSummary(entry: ServiceAreaEntry): string {
+  if (entry.entireState) {
+    return 'Todo o estado';
+  }
+  return formatServiceAreaCities(entry.cities);
+}
+
 export function formatServiceAreaHubSummary(entries: ServiceAreaEntry[]): string {
   return mergeServiceAreasByState(entries)
-    .map((entry) => `${entry.state}: ${formatServiceAreaCities(entry.cities)}`)
+    .map((entry) =>
+      entry.entireState
+        ? `${entry.state}: todo o estado`
+        : `${entry.state}: ${formatServiceAreaCities(entry.cities)}`,
+    )
     .join(' · ');
 }

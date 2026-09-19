@@ -61,7 +61,7 @@ export function EditDataNavCard({
   onPress,
   badge,
   titleBold,
-  subtitleNumberOfLines,
+  subtitleNumberOfLines = 2,
 }: EditDataNavCardProps) {
   if (!onPress) {
     return (

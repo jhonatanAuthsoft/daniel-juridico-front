@@ -76,7 +76,6 @@ export function LawyerEditDataHubScreen() {
         badge={pronounChip || undefined}
         onPress={() => router.push('/lawyer/perfil/biografia')}
         subtitle={fromMe ? profile.biography : ''}
-        subtitleNumberOfLines={3}
         title="Biografia"
         titleBold
       />

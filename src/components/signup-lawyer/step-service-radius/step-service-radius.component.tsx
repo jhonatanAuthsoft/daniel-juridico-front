@@ -24,6 +24,7 @@ import { useCitiesByUf } from '@/domain/address';
 
 import { useRegisterUnsavedDraft } from '@/components/unsaved-draft-guard';
 
+import { OptionCheckbox } from '../selectable-option';
 import { signupLawyerSharedStyles } from '../shared.styles';
 import type { LawyerSignupFormValues, ServiceAreaEntry } from '../types';
 
@@ -48,17 +49,23 @@ export function validateServiceAreas(
   serviceAreas: ServiceAreaEntry[] | undefined,
   draftState: string,
   draftCities: string[],
+  draftEntireState = false,
 ): true | string {
-  if ((serviceAreas ?? []).length > 0) {
+  const saved = (serviceAreas ?? []).filter(
+    (area) => area.entireState || (area.cities ?? []).length > 0,
+  );
+  if (saved.length > 0) {
     return true;
   }
 
+  const hasValidState = resolveUfFromStateValue(draftState).length === 2;
   const hasUnsavedDraft =
-    resolveUfFromStateValue(draftState).length === 2 &&
-    normalizeCities(draftCities).length > 0;
+    hasValidState && (draftEntireState || normalizeCities(draftCities).length > 0);
 
   if (hasUnsavedDraft) {
-    return 'Salve as cidades selecionadas para continuar';
+    return draftEntireState
+      ? 'Salve o estado selecionado para continuar'
+      : 'Salve as cidades selecionadas para continuar';
   }
 
   return 'Selecione ao menos uma cidade de atuação';
@@ -70,6 +77,14 @@ function mergeByState(entries: ServiceAreaEntry[]): ServiceAreaEntry[] {
 
   for (const entry of entries) {
     const existing = byState.get(entry.state);
+    if (entry.entireState || existing?.entireState) {
+      byState.set(entry.state, {
+        state: entry.state,
+        cities: [],
+        entireState: true,
+      });
+      continue;
+    }
     if (existing) {
       existing.cities = normalizeCities([...existing.cities, ...entry.cities]);
       continue;
@@ -95,6 +110,7 @@ export function StepServiceRadius() {
           value,
           getValues('serviceDraftState'),
           getValues('serviceDraftCities'),
+          getValues('serviceDraftEntireState'),
         ),
     },
   });
@@ -102,6 +118,8 @@ export function StepServiceRadius() {
   const serviceAreas = useWatch({ control, name: 'serviceAreas' }) ?? [];
   const draftState = useWatch({ control, name: 'serviceDraftState' }) ?? '';
   const draftCities = useWatch({ control, name: 'serviceDraftCities' }) ?? [];
+  const draftEntireState =
+    useWatch({ control, name: 'serviceDraftEntireState' }) ?? false;
 
   const normalizedState = resolveUfFromStateValue(draftState);
   const hasValidState = normalizedState.length === 2;
@@ -109,7 +127,7 @@ export function StepServiceRadius() {
     data: cityOptions = [],
     isFetching,
     isError: isCitiesError,
-  } = useCitiesByUf(normalizedState);
+  } = useCitiesByUf(draftEntireState ? '' : normalizedState);
   const previousStateRef = useRef(normalizedState);
 
   useEffect(() => {
@@ -128,6 +146,7 @@ export function StepServiceRadius() {
     previousStateRef.current = '';
     setValue('serviceDraftState', '');
     setValue('serviceDraftCities', []);
+    setValue('serviceDraftEntireState', false);
     clearErrors('serviceAreas');
     setEditingIndex(null);
   };
@@ -135,9 +154,11 @@ export function StepServiceRadius() {
   useRegisterUnsavedDraft({
     itemLabel: 'cidade de atuação',
     hasUnsavedDraft: () => {
+      const entireState = Boolean(getValues('serviceDraftEntireState'));
       const hasDraft =
         resolveUfFromStateValue(getValues('serviceDraftState')).length === 2 ||
-        normalizeCities(getValues('serviceDraftCities') ?? []).length > 0;
+        normalizeCities(getValues('serviceDraftCities') ?? []).length > 0 ||
+        entireState;
       if (!hasDraft) {
         return false;
       }
@@ -150,6 +171,7 @@ export function StepServiceRadius() {
       }
       return (
         saved.state !== resolveUfFromStateValue(getValues('serviceDraftState')) ||
+        Boolean(saved.entireState) !== entireState ||
         JSON.stringify(normalizeCities(saved.cities ?? [])) !==
           JSON.stringify(normalizeCities(getValues('serviceDraftCities') ?? []))
       );
@@ -168,16 +190,21 @@ export function StepServiceRadius() {
   }, [normalizedState, setValue]);
 
   const saveDraft = () => {
-    const cities = normalizeCities(draftCities);
-    if (!hasValidState || cities.length === 0) {
+    if (!hasValidState) {
+      return;
+    }
+    if (!draftEntireState && normalizeCities(draftCities).length === 0) {
       return;
     }
 
     const entries: ServiceAreaEntry[] = serviceAreas.map((area) => ({
       state: area.state,
       cities: area.cities ?? [],
+      entireState: Boolean(area.entireState),
     }));
-    const draft: ServiceAreaEntry = { state: normalizedState, cities };
+    const draft: ServiceAreaEntry = draftEntireState
+      ? { state: normalizedState, cities: [], entireState: true }
+      : { state: normalizedState, cities: normalizeCities(draftCities) };
 
     if (editingIndex != null && editingIndex < entries.length) {
       entries[editingIndex] = draft;
@@ -197,7 +224,8 @@ export function StepServiceRadius() {
     // Keeps the state-change effect from clearing the cities we are loading.
     previousStateRef.current = entry.state;
     setValue('serviceDraftState', entry.state);
-    setValue('serviceDraftCities', entry.cities ?? []);
+    setValue('serviceDraftEntireState', Boolean(entry.entireState));
+    setValue('serviceDraftCities', entry.entireState ? [] : (entry.cities ?? []));
     setEditingIndex(index);
   };
 
@@ -215,7 +243,9 @@ export function StepServiceRadius() {
     }
   };
 
-  const canSave = hasValidState && normalizeCities(draftCities).length > 0;
+  const canSave =
+    hasValidState &&
+    (draftEntireState || normalizeCities(draftCities).length > 0);
   const errorMessage =
     errors.serviceAreas?.root?.message ?? errors.serviceAreas?.message;
 
@@ -228,23 +258,47 @@ export function StepServiceRadius() {
           placeholder="Selecione o estado"
           options={STATE_OPTIONS}
         />
-        <InputMultiSelectField
-          name="serviceDraftCities"
-          label="Cidade"
-          labelLoading={isFetching}
-          placeholder={
-            !hasValidState
-              ? 'Selecione o estado primeiro'
-              : isFetching
-                ? 'Carregando cidades...'
-                : isCitiesError
-                  ? 'Não foi possível carregar as cidades'
-                  : 'Selecione a cidade'
-          }
-          options={cityOptions}
-          optionsLoading={isFetching}
-          disabled={!hasValidState}
-        />
+        <Pressable
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: draftEntireState }}
+          hitSlop={Spacing.xxs}
+          onPress={() => {
+            const next = !draftEntireState;
+            setValue('serviceDraftEntireState', next);
+            if (next) {
+              setValue('serviceDraftCities', []);
+            }
+          }}
+          style={styles.checkboxRow}>
+          <OptionCheckbox checked={draftEntireState} />
+          <InputCaption
+            color={
+              draftEntireState
+                ? BrandColors.primary.light
+                : BrandColors.neutral.light
+            }>
+            Atuo em todo o estado
+          </InputCaption>
+        </Pressable>
+        {draftEntireState ? null : (
+          <InputMultiSelectField
+            name="serviceDraftCities"
+            label="Cidade"
+            labelLoading={isFetching}
+            placeholder={
+              !hasValidState
+                ? 'Selecione o estado primeiro'
+                : isFetching
+                  ? 'Carregando cidades...'
+                  : isCitiesError
+                    ? 'Não foi possível carregar as cidades'
+                    : 'Selecione a cidade'
+            }
+            options={cityOptions}
+            optionsLoading={isFetching}
+            disabled={!hasValidState}
+          />
+        )}
 
         <Button variant="primary" disabled={!canSave} onPress={saveDraft}>
           Salvar
@@ -301,7 +355,11 @@ export function StepServiceRadius() {
 
             <Separator size="xxs" />
 
-            <SavedCitiesSummary cities={cities} />
+            {entry.entireState ? (
+              <Body1 color={BrandColors.primary.light}>Todo o estado</Body1>
+            ) : (
+              <SavedCitiesSummary cities={cities} />
+            )}
           </View>
         );
       })}
@@ -349,6 +407,11 @@ const styles = StyleSheet.create({
   },
   cancelLink: {
     alignSelf: 'center',
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxs,
   },
   savedCard: {
     width: '100%',

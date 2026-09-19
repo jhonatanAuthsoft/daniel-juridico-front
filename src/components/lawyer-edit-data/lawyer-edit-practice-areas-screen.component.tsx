@@ -11,6 +11,10 @@ import { BrandColors } from '@/constants/theme';
 import { getErrorMessage } from '@/data/http';
 import { useUpdateLawyerPracticeAreas } from '@/domain/lawyer';
 
+import {
+  needsSpecialtiesBeforeSavingPracticeAreas,
+  specialtiesEditHref,
+} from './lawyer-edit-practice-specialties-flow';
 import { useLawyerEditProfile } from './use-lawyer-edit-profile';
 
 type PracticeAreasForm = {
@@ -39,6 +43,16 @@ export function LawyerEditPracticeAreasScreen() {
 
   const onSubmit = form.handleSubmit(async (formValues) => {
     try {
+      if (
+        needsSpecialtiesBeforeSavingPracticeAreas(
+          formValues.practiceAreas,
+          fromMe?.specialties ?? profile.specialties,
+        )
+      ) {
+        router.push(specialtiesEditHref(formValues.practiceAreas));
+        return;
+      }
+
       await updatePracticeAreas.mutateAsync({
         practiceAreas: formValues.practiceAreas,
       });

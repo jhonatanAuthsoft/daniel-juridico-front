@@ -63,6 +63,7 @@ const baseForm: LawyerSignupFormValues = {
   ],
   serviceDraftState: '',
   serviceDraftCities: [],
+  serviceDraftEntireState: false,
   billingMethods: ['contractual', 'to_be_agreed'],
   pronouns: 'DOUTOR',
   profileImageUri: 'file://profile.jpg',
@@ -123,6 +124,15 @@ describe('lawyer.mapper', () => {
     expect(payload.posGraduacoes).toEqual([
       { nomeCurso: 'LLM Direito Digital', instituicao: 'FGV', anoFormacao: 2020 },
     ]);
+  });
+
+  it('maps entire-state coverage on register without cities', () => {
+    const payload = mapLawyerSignupFormToRegisterRequest({
+      ...baseForm,
+      serviceAreas: [{ state: 'SP', cities: [], entireState: true }],
+    });
+
+    expect(payload.areasAtuacao).toEqual([{ estado: 'SP', todoEstado: true }]);
   });
 
   it('uses the oldest OAB issue date as atuacaoDesde', () => {
@@ -344,6 +354,16 @@ describe('lawyer.mapper', () => {
         { estado: 'SP', cidade: 'Avaré' },
         { estado: 'BA', cidade: 'Salvador' },
       ],
+    });
+  });
+
+  it('maps entire-state coverage without cities', () => {
+    expect(
+      mapUpdateLawyerServiceAreasToWire({
+        serviceAreas: [{ state: 'sp', cities: ['Campinas'], entireState: true }],
+      }),
+    ).toEqual({
+      areasAtuacao: [{ estado: 'SP', todoEstado: true }],
     });
   });
 

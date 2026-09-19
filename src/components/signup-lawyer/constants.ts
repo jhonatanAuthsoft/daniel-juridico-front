@@ -87,6 +87,7 @@ export const defaultValues: LawyerSignupFormValues = {
   serviceAreas: [],
   serviceDraftState: '',
   serviceDraftCities: [],
+  serviceDraftEntireState: false,
   billingMethods: [],
   pronouns: '',
   profileImageUri: '',

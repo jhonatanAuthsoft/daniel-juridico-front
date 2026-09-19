@@ -446,6 +446,29 @@ describe('mapMeWireToResult', () => {
     });
   });
 
+  it('maps entire-state service area without requiring a city', () => {
+    expect(
+      mapMeWireToResult({
+        usuario: {
+          id: '3',
+          email: 'adv@c.com',
+          nomeCompleto: 'C',
+          perfil: 'ADVOGADO',
+        },
+        advogado: {
+          areasAtuacao: [
+            { id: 'a1', estado: 'SP', todoEstado: true },
+            { id: 'a2', estado: 'SP', cidade: 'Campinas' },
+            { id: 'a3', estado: 'BA', cidade: 'Salvador' },
+          ],
+        },
+      }).lawyerProfile?.serviceAreas,
+    ).toEqual([
+      { state: 'SP', cities: [], entireState: true },
+      { state: 'BA', cities: ['Salvador'] },
+    ]);
+  });
+
   it('maps especialidade without subespecialidade to the category code', () => {
     expect(
       mapMeWireToResult({

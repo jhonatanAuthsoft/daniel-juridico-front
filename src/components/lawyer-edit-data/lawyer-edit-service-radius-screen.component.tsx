@@ -6,7 +6,7 @@ import { useRouter } from 'expo-router';
 import { XIcon } from '@/assets/icon/x';
 import { Button } from '@/atomic/button';
 import { useBanner } from '@/atomic/feedback-banner';
-import { Form, InputSelectField, useForm } from '@/atomic/form';
+import { Form, InputMultiSelectField, InputSelectField, useForm } from '@/atomic/form';
 import { Separator } from '@/atomic/separator';
 import { Body1, InputCaption } from '@/atomic/typography';
 import { AccountStackScreen } from '@/components/client-edit-data';
@@ -16,6 +16,7 @@ import {
   useUnsavedDraftLeave,
 } from '@/components/unsaved-draft-guard';
 import { validateServiceAreas } from '@/components/signup-lawyer/step-service-radius/step-service-radius.component';
+import { OptionCheckbox } from '@/components/signup-lawyer/selectable-option';
 import type { ServiceAreaEntry } from '@/components/signup-lawyer/types';
 import {
   resolveUfFromStateValue,
@@ -28,14 +29,18 @@ import { useCitiesByUf } from '@/domain/address';
 import { useUpdateLawyerServiceAreas } from '@/domain/lawyer';
 
 import {
-  addCityToServiceAreas,
-  formatServiceAreaCities,
+  addCitiesToServiceAreas,
+  formatServiceAreaSummary,
+  normalizeCities,
+  replaceServiceAreaCities,
+  setEntireStateServiceArea,
 } from './service-area';
 import { useLawyerEditProfile } from './use-lawyer-edit-profile';
 
 type DraftForm = {
   draftState: string;
-  draftCity: string;
+  draftCities: string[];
+  draftEntireState: boolean;
 };
 
 export function LawyerEditServiceRadiusScreen() {
@@ -53,16 +58,19 @@ function LawyerEditServiceRadiusContent() {
   const { profile, fromMe } = useLawyerEditProfile();
   const updateServiceAreas = useUpdateLawyerServiceAreas();
   const [areas, setAreas] = useState<ServiceAreaEntry[]>(profile.serviceAreas);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const form = useForm<DraftForm>({
     defaultValues: {
       draftState: '',
-      draftCity: '',
+      draftCities: [],
+      draftEntireState: false,
     },
   });
 
   const draftState = form.watch('draftState');
-  const draftCity = form.watch('draftCity');
+  const draftCities = form.watch('draftCities') ?? [];
+  const draftEntireState = form.watch('draftEntireState');
   const normalizedState = resolveUfFromStateValue(draftState);
   const hasValidState = normalizedState.length === 2;
   const previousStateRef = useRef(normalizedState);
@@ -70,7 +78,7 @@ function LawyerEditServiceRadiusContent() {
     data: cityOptions = [],
     isFetching,
     isError: isCitiesError,
-  } = useCitiesByUf(normalizedState);
+  } = useCitiesByUf(draftEntireState ? '' : normalizedState);
 
   useEffect(() => {
     if (!fromMe) {
@@ -88,39 +96,68 @@ function LawyerEditServiceRadiusContent() {
     form.setValue('draftState', resolved);
   }, [draftState, form]);
 
+  const resetDraft = () => {
+    previousStateRef.current = '';
+    form.setValue('draftState', '');
+    form.setValue('draftCities', []);
+    form.setValue('draftEntireState', false);
+    setEditingIndex(null);
+  };
+
+  const addEntireState = (state: string) => {
+    setAreas((current) => setEntireStateServiceArea(current, state));
+    setErrorMessage(null);
+    resetDraft();
+  };
+
   useEffect(() => {
     if (previousStateRef.current === normalizedState) {
       return;
     }
     previousStateRef.current = normalizedState;
-    form.setValue('draftCity', '');
+    form.setValue('draftCities', []);
   }, [form, normalizedState]);
-
-  const resetDraft = () => {
-    previousStateRef.current = '';
-    form.setValue('draftState', '');
-    form.setValue('draftCity', '');
-  };
 
   useRegisterUnsavedDraft({
     itemLabel: 'cidade de atuação',
     hasUnsavedDraft: () =>
       resolveUfFromStateValue(form.getValues('draftState')).length === 2 ||
-      form.getValues('draftCity').trim().length > 0,
+      normalizeCities(form.getValues('draftCities') ?? []).length > 0 ||
+      Boolean(form.getValues('draftEntireState')),
     discardUnsavedDraft: () => {
       resetDraft();
     },
   });
 
-  const addCity = () => {
-    const city = draftCity.trim();
-    if (!hasValidState || !city) {
+  const addDraft = () => {
+    if (!hasValidState) {
+      return;
+    }
+    if (draftEntireState) {
+      addEntireState(normalizedState);
       return;
     }
 
-    setAreas((current) => addCityToServiceAreas(current, normalizedState, city));
+    const cities = normalizeCities(draftCities);
+    if (cities.length === 0) {
+      return;
+    }
+
+    setAreas((current) =>
+      editingIndex != null && editingIndex < current.length
+        ? replaceServiceAreaCities(current, normalizedState, cities)
+        : addCitiesToServiceAreas(current, normalizedState, cities),
+    );
     setErrorMessage(null);
     resetDraft();
+  };
+
+  const toggleEntireState = () => {
+    const next = !draftEntireState;
+    form.setValue('draftEntireState', next);
+    if (next) {
+      form.setValue('draftCities', []);
+    }
   };
 
   const startEdit = (index: number) => {
@@ -130,25 +167,41 @@ function LawyerEditServiceRadiusContent() {
     }
     previousStateRef.current = entry.state;
     form.setValue('draftState', entry.state);
-    form.setValue('draftCity', '');
+    form.setValue('draftEntireState', Boolean(entry.entireState));
+    form.setValue('draftCities', entry.entireState ? [] : (entry.cities ?? []));
+    setEditingIndex(index);
   };
 
   const deleteAt = (index: number) => {
     setAreas((current) => current.filter((_, areaIndex) => areaIndex !== index));
     setErrorMessage(null);
+    if (editingIndex == null) {
+      return;
+    }
+    if (editingIndex === index) {
+      resetDraft();
+      return;
+    }
+    if (editingIndex > index) {
+      setEditingIndex(editingIndex - 1);
+    }
   };
 
   const saveChanges = async () => {
-    const city = draftCity.trim();
-    const nextAreas =
-      hasValidState && city
-        ? addCityToServiceAreas(areas, normalizedState, city)
+    const cities = normalizeCities(draftCities);
+    const nextAreas = hasValidState && draftEntireState
+      ? setEntireStateServiceArea(areas, normalizedState)
+      : hasValidState && cities.length > 0
+        ? editingIndex != null
+          ? replaceServiceAreaCities(areas, normalizedState, cities)
+          : addCitiesToServiceAreas(areas, normalizedState, cities)
         : areas;
 
     const validation = validateServiceAreas(
       nextAreas,
-      hasValidState && !city ? normalizedState : '',
-      city ? [city] : [],
+      hasValidState && cities.length === 0 && !draftEntireState ? normalizedState : '',
+      cities,
+      hasValidState && draftEntireState,
     );
     if (validation !== true) {
       setErrorMessage(validation);
@@ -166,6 +219,10 @@ function LawyerEditServiceRadiusContent() {
     }
   };
 
+  const canAdd =
+    hasValidState &&
+    (draftEntireState || normalizeCities(draftCities).length > 0);
+
   return (
     <AccountStackScreen
       onBack={() => requestLeave(() => router.back())}
@@ -178,27 +235,47 @@ function LawyerEditServiceRadiusContent() {
             placeholder="Selecione o estado"
             options={STATE_OPTIONS}
           />
-          <InputSelectField
-            name="draftCity"
-            label="Cidade"
-            labelLoading={isFetching}
-            placeholder={
-              isFetching
-                ? 'Carregando cidades...'
-                : isCitiesError
-                  ? 'Não foi possível carregar as cidades'
-                  : 'Selecione a cidade'
-            }
-            options={cityOptions}
-            optionsLoading={isFetching}
-            disabled={!hasValidState}
-          />
+          <Pressable
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: draftEntireState }}
+            hitSlop={Spacing.xxs}
+            onPress={toggleEntireState}
+            style={styles.checkboxRow}>
+            <OptionCheckbox checked={draftEntireState} />
+            <InputCaption
+              color={
+                draftEntireState
+                  ? BrandColors.primary.light
+                  : BrandColors.neutral.light
+              }>
+              Atuo em todo o estado
+            </InputCaption>
+          </Pressable>
+          {draftEntireState ? null : (
+            <InputMultiSelectField
+              name="draftCities"
+              label="Cidade"
+              labelLoading={isFetching}
+              placeholder={
+                !hasValidState
+                  ? 'Selecione o estado primeiro'
+                  : isFetching
+                    ? 'Carregando cidades...'
+                    : isCitiesError
+                      ? 'Não foi possível carregar as cidades'
+                      : 'Selecione a cidade'
+              }
+              options={cityOptions}
+              optionsLoading={isFetching}
+              disabled={!hasValidState}
+            />
+          )}
           <View style={styles.addRow}>
             <Button
-              disabled={!hasValidState || draftCity.trim().length === 0}
-              onPress={addCity}
+              disabled={!canAdd}
+              onPress={addDraft}
               variant="link">
-              + Adicionar nova cidade
+              Adicionar
             </Button>
           </View>
         </View>
@@ -240,7 +317,7 @@ function LawyerEditServiceRadiusContent() {
             </View>
             <Separator size="xxs" />
             <Body1 color={BrandColors.neutral.white}>
-              {formatServiceAreaCities(entry.cities)}
+              {formatServiceAreaSummary(entry)}
             </Body1>
           </View>
         );
@@ -279,6 +356,11 @@ const styles = StyleSheet.create({
   },
   addRow: {
     alignItems: 'center',
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xxs,
   },
   savedCard: {
     width: '100%',

@@ -234,28 +234,48 @@ function mapPostgraduatesFromWire(
 function mapServiceAreasFromWire(
   areas: MeAreaAtuacaoWire[] | null | undefined,
 ): LawyerServiceArea[] {
-  const byState = new Map<string, string[]>();
+  const byState = new Map<string, LawyerServiceArea>();
 
   for (const area of areas ?? []) {
     const state = asText(area.estado).toUpperCase();
-    const city = asText(area.cidade);
-    if (state.length !== 2 || !city) {
+    if (state.length !== 2) {
+      continue;
+    }
+    if (area.todoEstado) {
+      byState.set(state, { state, cities: [], entireState: true });
       continue;
     }
 
-    const current = byState.get(state) ?? [];
+    const existing = byState.get(state);
+    if (existing?.entireState) {
+      continue;
+    }
+
+    const city = asText(area.cidade);
+    if (!city) {
+      continue;
+    }
+
+    const current = existing?.cities ?? [];
     const key = city.toLocaleLowerCase('pt-BR');
     if (current.some((item) => item.toLocaleLowerCase('pt-BR') === key)) {
       continue;
     }
     current.push(city);
-    byState.set(state, current);
+    byState.set(state, {
+      state,
+      cities: current,
+    });
   }
 
-  return [...byState.entries()].map(([state, cities]) => ({
-    state,
-    cities: [...cities].sort((a, b) => a.localeCompare(b, 'pt-BR')),
-  }));
+  return [...byState.values()].map((entry) =>
+    entry.entireState
+      ? entry
+      : {
+          ...entry,
+          cities: [...entry.cities].sort((a, b) => a.localeCompare(b, 'pt-BR')),
+        },
+  );
 }
 
 function mapLawyerProfile(wire: MeWireResponse): LawyerEditProfile | null {

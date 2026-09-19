@@ -59,6 +59,7 @@ export type MeAreaAtuacaoWire = {
   id?: string | null;
   estado?: string | null;
   cidade?: string | null;
+  todoEstado?: boolean | null;
 };
 
 export type MePosGraduacaoWire = {
@@ -128,6 +129,7 @@ export type LawyerEditOabEntry = {
 export type LawyerServiceArea = {
   state: string;
   cities: string[];
+  entireState?: boolean;
 };
 
 /** Postgraduate entry ready for the lawyer education editor. */

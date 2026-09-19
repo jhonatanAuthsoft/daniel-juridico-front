@@ -80,6 +80,7 @@ describe('StepServiceRadius', () => {
     const screen = render(<StepHarness />);
 
     expect(screen.getByText('Estado')).toBeTruthy();
+    expect(screen.getByText('Atuo em todo o estado')).toBeTruthy();
     expect(screen.getByText('Cidade')).toBeTruthy();
     expect(screen.getByText('Selecione o estado')).toBeTruthy();
     expect(screen.getByText('Selecione o estado primeiro')).toBeTruthy();
@@ -185,6 +186,24 @@ describe('StepServiceRadius', () => {
     expect(screen.queryByText('Campo obrigatório')).toBeNull();
   });
 
+  it('saves the whole state without opening the city select', async () => {
+    const screen = render(<StepHarness />);
+
+    selectState(screen, 'São Paulo');
+    fireEvent.press(screen.getByText('Atuo em todo o estado'));
+
+    expect(screen.queryByText('Cidade')).toBeNull();
+    expect(screen.queryByText('Selecione a cidade')).toBeNull();
+
+    fireEvent.press(screen.getByText('Salvar'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Todo o estado')).toBeTruthy();
+    });
+    expect(screen.getByText('São Paulo')).toBeTruthy();
+    expect(screen.getByText('Selecione o estado')).toBeTruthy();
+  });
+
   it('asks to save when cities are selected but not saved', async () => {
     const screen = render(<StepHarness />);
 
@@ -221,6 +240,18 @@ describe('validateServiceAreas', () => {
     );
     expect(validateServiceAreas([], '', [])).toBe(
       'Selecione ao menos uma cidade de atuação',
+    );
+  });
+
+  it('passes when the saved area covers the entire state', () => {
+    expect(
+      validateServiceAreas([{ state: 'SP', cities: [], entireState: true }], '', []),
+    ).toBe(true);
+  });
+
+  it('asks to save an unsaved entire-state draft', () => {
+    expect(validateServiceAreas([], 'SP', [], true)).toBe(
+      'Salve o estado selecionado para continuar',
     );
   });
 });

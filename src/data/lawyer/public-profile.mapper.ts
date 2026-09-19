@@ -127,9 +127,9 @@ export function mapPublicLawyerProfileWireToResult(
     serviceAreas: (wire.areasAtuacao ?? [])
       .map((area) => ({
         state: asText(area?.estado).toUpperCase(),
-        city: asText(area?.cidade),
+        city: area?.todoEstado ? 'Todo o estado' : asText(area?.cidade),
       }))
-      .filter((area) => area.state || area.city),
+      .filter((area) => area.state && area.city),
   };
 }
 

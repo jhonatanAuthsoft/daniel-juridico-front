@@ -18,8 +18,10 @@ export type PostgraduateEntry = {
 export type ServiceAreaEntry = {
   /** UF code, e.g. `SP`. */
   state: string;
-  /** City names as listed by the cities catalog. */
+  /** City names as listed by the cities catalog. Empty when `entireState`. */
   cities: string[];
+  /** Covers every city in the UF; skips city selection. */
+  entireState?: boolean;
 };
 
 export type LawyerSignupFormValues = {
@@ -61,6 +63,8 @@ export type LawyerSignupFormValues = {
   serviceDraftState: string;
   /** Draft cities of the "raio de atuação" editor; not submitted. */
   serviceDraftCities: string[];
+  /** Draft "atuar em todo o estado"; not submitted. */
+  serviceDraftEntireState: boolean;
   billingMethods: string[];
   pronouns: string;
   profileImageUri: string;

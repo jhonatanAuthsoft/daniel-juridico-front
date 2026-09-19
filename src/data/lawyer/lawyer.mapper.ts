@@ -137,14 +137,17 @@ function mapSupplementalOabs(entries: SupplementalOabEntry[]): OabWireRequest[] 
     );
 }
 
-/** Flattens the per-state city groups into one `{estado, cidade}` pair per city. */
+/** Flattens the per-state groups into wire rows. Entire-state skips cities. */
 function mapServiceAreas(
-  entries: readonly { state: string; cities: string[] }[],
+  entries: readonly { state: string; cities: string[]; entireState?: boolean }[],
 ): PracticeAreaWireRequest[] {
   return entries.flatMap((entry) => {
     const estado = entry.state.trim().toUpperCase();
     if (!estado) {
       return [];
+    }
+    if (entry.entireState) {
+      return [{ estado, todoEstado: true }];
     }
 
     return (entry.cities ?? [])

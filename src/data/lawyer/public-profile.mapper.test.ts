@@ -57,6 +57,15 @@ describe('mapPublicLawyerProfileWireToResult', () => {
     expect(profile.specialties[0]?.name).toBe('Direito Civil');
     expect(profile.modalities[0]?.name).toBe('Pautista');
     expect(profile.isAvailable).toBe(true);
+    expect(profile.serviceAreas).toEqual([{ state: 'SP', city: 'São Paulo' }]);
+  });
+
+  it('maps entire-state coverage on the public profile', () => {
+    const profile = mapPublicLawyerProfileWireToResult({
+      ...sampleWire,
+      areasAtuacao: [{ id: 'a1', estado: 'SP', todoEstado: true }],
+    });
+    expect(profile.serviceAreas).toEqual([{ state: 'SP', city: 'Todo o estado' }]);
   });
 
   it('marks the profile as unavailable when disponibilidade is INDISPONIVEL', () => {
