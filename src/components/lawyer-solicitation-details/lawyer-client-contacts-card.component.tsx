@@ -1,7 +1,7 @@
-import { SymbolView } from 'expo-symbols';
 import { StyleSheet, View } from 'react-native';
 
-import { Body1, Heading1 } from '@/atomic/typography';
+import { Heading1 } from '@/atomic/typography';
+import { UnlockedContactActions } from '@/components/unlocked-contacts/unlocked-contact-actions.component';
 import { BrandColors, Radius, Spacing } from '@/constants/theme';
 
 import type { LawyerClientProfile } from './mock-lawyer-solicitation-details';
@@ -20,26 +20,11 @@ export function LawyerClientContactsCard({
         <Heading1 color={BrandColors.neutral.white}>
           Contatos do cliente
         </Heading1>
-        <View style={styles.contact}>
-          <SymbolView
-            name={{ ios: 'phone', android: 'call', web: 'call' }}
-            size={22}
-            tintColor={BrandColors.neutral.white}
-          />
-          <Body1 color={BrandColors.neutral.white} style={styles.value}>
-            {client.phone.trim() || 'Não informado'}
-          </Body1>
-        </View>
-        <View style={styles.contact}>
-          <SymbolView
-            name={{ ios: 'envelope', android: 'mail', web: 'mail' }}
-            size={22}
-            tintColor={BrandColors.neutral.white}
-          />
-          <Body1 color={BrandColors.neutral.white} style={styles.value}>
-            {client.email.trim() || 'Não informado'}
-          </Body1>
-        </View>
+        <UnlockedContactActions
+          email={client.email}
+          iconSize={22}
+          phone={client.phone}
+        />
       </View>
     </View>
   );
@@ -60,14 +45,5 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: Spacing.xs,
     padding: Spacing.sm,
-  },
-  contact: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xs,
-  },
-  value: {
-    flexShrink: 1,
-    textDecorationLine: 'underline',
   },
 });
